@@ -72,8 +72,10 @@ const toToday = r => act(r, sounds.today, t => view.actions.toToday(t));
       @touchend="r.sw.end"
       @touchcancel="r.sw.cancel"
     >
-      <span class="winx-missed__text winx-grow">{{ r.repeats }}<TaskText :task="r.task" /></span>
-      <em class="winx-missed__date">{{ r.shortDay }}</em>
+      <span class="winx-missed__text winx-grow winx-task-content">
+        {{ r.repeats }}<TaskText :task="r.task" />
+      </span>
+      <em class="winx-missed__date winx-task-content">{{ r.shortDay }}</em>
       <div class="winx-task-actions">
         <div class="winx-task-btns">
           <TaskButtons :task="r.task" @gone="gone.add(r.task.key)" />
@@ -85,7 +87,12 @@ const toToday = r => act(r, sounds.today, t => view.actions.toToday(t));
           tip="pink"
           @click="r.sw.run"
         >✓</WinxButton>
-        <WinxButton title="move to today" tip="pink" @click="toToday(r)">☀️</WinxButton>
+        <WinxButton
+          class="winx-task-btns__today"
+          title="move to today"
+          tip="pink"
+          @click="toToday(r)"
+        >☀️</WinxButton>
       </div>
     </div>
   </div>

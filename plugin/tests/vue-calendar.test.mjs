@@ -247,9 +247,11 @@ test("phone: a short left swipe opens actions; a long one arms completion, movin
     await vue.nextTick();
     assert.equal(walk.dataset.swipe, "open");
     assert.equal(walk.querySelector("input").checked, false);
-    swipe(walk, 60);
+    // The strip covers the row; a right swipe starting on any button closes it without a click.
+    swipe(walk.querySelector('[aria-label="remove date"]'), 60);
     await vue.nextTick();
     assert.equal(walk.dataset.swipe, undefined);
+    assert.equal(unplanned.length, 0);
     swipe(walk, -180);
     await vue.nextTick();
     assert.ok(walk.querySelector("input").checked);

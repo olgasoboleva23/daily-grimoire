@@ -24,7 +24,8 @@ export function useSwipe(view, key, primary, when = () => true) {
     if (!when() || !document.body.classList.contains("is-mobile")) return;
     e.stopPropagation();
     if (e.touches.length !== 1) return cancel();
-    if (e.target.closest("button, input, a")) return;
+    // An open strip fills the row: a swipe starting on its buttons must still close it.
+    if (!swipe.kind && e.target.closest("button, input, a")) return;
     view.drag.on = false;
     s = { x: e.touches[0].clientX, y: e.touches[0].clientY, axis: null,
       open: !!swipe.kind, dx: 0 };

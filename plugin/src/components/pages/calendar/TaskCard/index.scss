@@ -53,35 +53,71 @@ $fade: 18px;   // the buttons' background fades in over this much of the text
     }
 }
 #{context.$mobile} {
-    :is(.winx-cal__task, .winx-missed__row, .winx-task-card) { touch-action: pan-y; }
-    .winx-cal {
-      .winx-task-btns { margin-top: $space-s; }
+  :is(.winx-cal__task, .winx-missed__row, .winx-task-card) { touch-action: pan-y; }
+  .winx-cal {
+    // Without swipe support (e.g. Tasks disabled), keep the actions in the normal flow.
+    .winx-task-actions { display: flex; flex-wrap: wrap; gap: $space-s; }
+
+    [data-swipeable] {
+      overflow: hidden;
+      min-height: $btn-touch + 2 * $space-s;
+
+      .winx-task-content {
+        transition: translate $fast ease, opacity $fast ease, visibility $fast;
+      }
       .winx-task-actions {
+        position: absolute;
+        inset: 0;
         display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: $space-s;
-        width: 100%;
-        margin-top: $space-s;
-        padding: $space-xs;
-        border-radius: $radius-m;
-        background: alpha(--winx-surface, 40%);
-        button { flex-shrink: 0; }
+        flex-wrap: nowrap;
+        gap: 0;
+        margin: 0;
+        padding: 0;
+        translate: 100% 0;
+        visibility: hidden;
+        transition: translate $fast ease, visibility $fast;
+
+        .winx-task-btns { display: contents; }
+        button.winx-btn {
+          flex: 1 1 0;
+          min-width: 0;
+          width: auto;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+          border: none;
+          border-radius: 0;
+          box-shadow: none;
+          transform: none;
+          background: var(--winx-purple);
+          color: var(--winx-on-accent);
+          font-size: $text-2xl;
+          transition: background $fast ease, box-shadow $fast ease;
+
+          &.winx-task-primary {
+            order: -1;
+            background: color-mix(in srgb, var(--winx-gold) calc(var(--winx-swipe-progress, 0) * 100%), var(--winx-pink-deep));
+          }
+          &.winx-task-btns__edit { background: var(--winx-blue-deep); }
+          &:is(.winx-task-btns__skip, .winx-task-btns__today) {
+            background: var(--winx-gold);
+            color: var(--winx-on-gold);
+          }
+          &.winx-task-btns__del { background: var(--winx-danger); }
+        }
       }
-      [data-swipeable]:not([data-swipe]) .winx-task-actions { display: none; }
-      .winx-task-primary {
-        order: -1;
-        background: color-mix(in srgb, var(--winx-gold) calc(var(--winx-swipe-progress, 0) * 100%), var(--winx-pink-light));
-        transition: scale $fast ease, box-shadow $fast ease;
+      &[data-swipe] {
+        .winx-task-content { translate: -100% 0; opacity: 0; visibility: hidden; }
+        .winx-task-actions { translate: 0; visibility: visible; }
       }
-      [data-swipe="ready"] .winx-task-primary {
-        scale: 1.15;
+      &[data-swipe="ready"] .winx-task-actions button.winx-task-primary {
         color: var(--winx-on-gold);
-        border-color: var(--winx-gold-deep);
-        box-shadow: 0 0 12px var(--winx-gold);
+        box-shadow: inset 0 0 0 $border-width-l var(--winx-gold-deep), inset 0 0 16px var(--winx-highlight);
+        font-size: $text-3xl;
       }
       @media (prefers-reduced-motion: reduce) {
-        .winx-task-primary { transition: none; }
+        .winx-task-content, .winx-task-actions, .winx-task-actions button.winx-btn { transition: none; }
       }
     }
   }
+}

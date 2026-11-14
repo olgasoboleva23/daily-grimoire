@@ -146,10 +146,13 @@
     &[draggable="true"]:hover { background: fade(var(--winx-surface), 35%); border-radius: 8px; }
     &--ghost   { opacity: 0.5; }
     &--done    { opacity: 0.55; text-decoration: line-through; text-decoration-color: var(--winx-gold-deep); }
-    // room for the checkbox (left: $space-xs, ~16px wide, then a gap)
-    // stylelint-disable-next-line declaration-property-value-disallowed-list
-    &:has(> input.task-list-item-checkbox) { padding-left: 26px; }
-    > input.task-list-item-checkbox { position: absolute; left: $space-xs; top: 5px; margin: 0; }
+    .winx-task-content {
+      position: relative;
+      // room for the checkbox (~16px wide, then a gap)
+      // stylelint-disable-next-line declaration-property-value-disallowed-list
+      &:has(> input.task-list-item-checkbox) { padding-left: 22px; }
+      > input.task-list-item-checkbox { position: absolute; left: 0; top: 1px; margin: 0; }
+    }
   }
   /* stickers from ![[...]] in the task text */
   &__sticker { height: 24px; width: auto; vertical-align: middle; }

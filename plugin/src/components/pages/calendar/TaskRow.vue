@@ -78,26 +78,28 @@ function onTick(e) {
     @touchend="touch.end"
     @touchcancel="touch.cancel"
   >
-    <span v-if="after" class="winx-cal__after">↳</span>
-    <template v-if="box">
-      <input
-        v-if="kind === 'done'"
-        type="checkbox"
-        class="task-list-item-checkbox"
-        aria-label="done"
-        checked
-        disabled
-      >
-      <input
-        v-else
-        ref="input"
-        type="checkbox"
-        class="task-list-item-checkbox"
-        aria-label="done"
-        :disabled="done"
-        @change="onTick"
-      >
-    </template>{{ repeat }}<TaskText :task="task" />
+    <div class="winx-task-content">
+      <span v-if="after" class="winx-cal__after">↳</span>
+      <template v-if="box">
+        <input
+          v-if="kind === 'done'"
+          type="checkbox"
+          class="task-list-item-checkbox"
+          aria-label="done"
+          checked
+          disabled
+        >
+        <input
+          v-else
+          ref="input"
+          type="checkbox"
+          class="task-list-item-checkbox"
+          aria-label="done"
+          :disabled="done"
+          @change="onTick"
+        >
+      </template>{{ repeat }}<TaskText :task="task" />
+    </div>
     <div v-if="live && !done" class="winx-task-btns winx-task-actions">
       <WinxButton
         v-if="box"

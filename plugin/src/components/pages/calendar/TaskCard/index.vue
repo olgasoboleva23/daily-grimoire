@@ -46,8 +46,10 @@ const { swipe, ...touch } = useSwipe(view, key, t => {
     @touchend="touch.end"
     @touchcancel="touch.cancel"
   >
-    <div class="winx-task-card__text"><slot name="text"><TaskText :task="task" /></slot></div>
-    <div class="winx-task-card__meta"><slot name="meta">{{ meta }}</slot></div>
+    <div class="winx-task-card__text winx-task-content">
+      <slot name="text"><TaskText :task="task" /></slot>
+    </div>
+    <div class="winx-task-card__meta winx-task-content"><slot name="meta">{{ meta }}</slot></div>
     <div class="winx-task-btns winx-task-actions">
       <WinxButton
         v-if="task.pool || view.ctx.TASKS"
