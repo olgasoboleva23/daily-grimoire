@@ -11,7 +11,7 @@ import WinxCard from "#/components/uikit/WinxCard/index.vue";
 import { Form } from "#/components/uikit/Form/index.ts";
 import { app } from "#/helpers/app.js";
 import {
-  addStage, saveProject, askEditProject,
+  addStage, saveProject, askEditProject, askDeleteProject,
 } from "#/controllers/projects.js";
 import { stageTasks, taskStore } from "#/store/tasks.js";
 import { FILTERS } from "#/store/projects.js";
@@ -65,6 +65,11 @@ async function newStage(name) {
   stageName.value = "";
 }
 
+async function remove() {
+  const key = page.value.key;
+
+  if (await askDeleteProject(app, key) && state.open === key) projects.open(null);
+}
 </script>
 
 <template>
@@ -93,6 +98,7 @@ async function newStage(name) {
       <WinxProgress v-if="page.total" :value="page.done" :max="page.total" />
       <div class="winx-row winx-gap-s">
         <WinxButton kind="chip" @click="askEditProject(app, page.key)">Edit project</WinxButton>
+        <WinxButton kind="chip" @click="remove">Delete project</WinxButton>
       </div>
     </WinxCard>
     <div class="winx-project__body">

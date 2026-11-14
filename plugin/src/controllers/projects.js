@@ -75,6 +75,28 @@ export async function askEditProject(
   if (!saved) changedProject();
 }
 
+export async function askDeleteProject(app, key, ask = (...a) => Form.ask(...a)) {
+  const before = (await readJson(PROJECTS, {}))[key];
+
+  if (!before) return false;
+  const yes = await ask(app, "Delete project?", [
+    { name: "Project", key: "name", label: true },
+    { name: "Kept", key: "kept", label: true },
+  ], {
+    values: { name: before.name, kept: "Tasks, calendar and history stay." }, submit: "Delete",
+  });
+
+  if (!yes) return false;
+  const saved = await projects.edit(all => {
+    if (JSON.stringify(all[key]) !== JSON.stringify(before)) return null;
+    delete all[key];
+    return all;
+  });
+
+  if (!saved) changedProject();
+  return saved;
+}
+
 export const addStage = (key, name) => projects.update(key, p =>
   ({ ...p, stages: [...p.stages ?? [], { name, tasks: [] }] }));
 

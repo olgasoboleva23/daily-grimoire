@@ -251,3 +251,28 @@ test("Edit when the project is removed while the Form is open writes nothing and
     assert.equal(files[PROJECTS], "{}");
   } finally { Form.ask = ask; }
 });
+
+test("Edit project opens the shared form; Delete cancels or returns to the list on confirmation", async () => {
+  const ask = Form.ask;
+  try {
+    const { el, view } = mount({ open: "p1" });
+    Form.ask = async () => ({ name: "Green garden", description: "New beds" });
+    button(el, "Edit project").click();
+    await until(() => saved().name === "Green garden");
+    assert.equal(saved().name, "Green garden");
+    assert.equal(saved().stages.length, 2);
+    Form.ask = async () => null;
+    button(el, "Delete project").click();
+    await new Promise(r => setTimeout(r, 10));
+    assert.equal(view.state.open, "p1");
+    assert.ok(saved());
+    Form.ask = async () => ({});
+    button(el, "Delete project").click();
+    await until(() => view.state.open === null);
+    assert.equal(view.state.open, null);
+    assert.equal(saved(), undefined);
+    taskStore.putProjects(JSON.parse(files[PROJECTS]));
+    await vue.nextTick();
+    assert.deepEqual(names(el), ["Shed", "Poem", "Kite"]);
+  } finally { Form.ask = ask; }
+});

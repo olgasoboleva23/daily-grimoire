@@ -6,7 +6,7 @@ import { taskStore } from "#/store/tasks.js";
 import { PROJECTS } from "#/helpers/paths.js";
 import {
   createProject, saveProject, addStage, addToStage, toCalendar, askNewProject,
-  askEditProject,
+  askEditProject, askDeleteProject,
 } from "#/controllers/projects.js";
 
 const MASTER = "00 System/Data/Tasks/Master.md";
@@ -147,4 +147,33 @@ test("cancelled, stale and deleted project forms preserve current data", async (
     return { name: "Old form", description: "" };
   });
   assert.deepEqual(json(files), {});
+});
+
+test("deletion confirms the project and preserves tasks, history, other projects and images", async () => {
+  const { files, app } = vault({
+    [MASTER]: "- [x] t1 [completion:: 2026-11-13]\n- [ ] t2 [due:: 2026-11-15]\n",
+    [RECORDS]: '{"t1":{"name":"Plant"},"t2":{"name":"Water"}}', "cover.webp": "image",
+  });
+  await createProject({ name: "Garden", cover: "cover.webp" });
+  await addStage("p1", "Plant");
+  await addToStage("p1", 0, "Plant", async () => "t1");
+  await createProject({ name: "Shed" });
+  const before = { ...files };
+  assert.equal(await askDeleteProject(app, "p1", async () => null), false);
+  assert.deepEqual(files, before);
+  assert.equal(await askDeleteProject(app, "p1", async (_app, _title, _rows, options) => {
+    assert.equal(options.values.name, "Garden");
+    return {};
+  }), true);
+  assert.deepEqual(files, { ...before, [PROJECTS]: JSON.stringify({ p2: json(before).p2 }, null, 2) });
+});
+
+test("confirmation does not delete a project changed while its dialog is open", async () => {
+  const { files, app } = vault();
+  await createProject({ name: "Garden" });
+  assert.equal(await askDeleteProject(app, "p1", async () => {
+    await addStage("p1", "New stage");
+    return {};
+  }), false);
+  assert.equal(json(files).p1.stages.length, 1);
 });
