@@ -1,3 +1,4 @@
+@use "context";
 @use "mixins" as *;
 /* ===== A medication course (block winx-meds): inside its card. The chips are buttons, as are the
    grid's ticks: the block in front (& &__chip) outweighs Obsidian's button styles ===== */
@@ -49,7 +50,7 @@
     b { color: var(--winx-purple-deep); font-family: $font-deco; font-size: $text-s; letter-spacing: 0.06em; }
   }
 
-  body.is-mobile & {
+  #{context.$mobile} & {
     &__note { display: none; }
     &__date { font-size: $text-l; }
   }

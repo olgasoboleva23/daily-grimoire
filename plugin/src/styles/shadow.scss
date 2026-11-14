@@ -1,0 +1,4 @@
+// Only the application tab: native modals, tooltips and fonts keep styles.css.
+@use "context" with ($shadow: true);
+@use "shadow-base";
+@use "components";

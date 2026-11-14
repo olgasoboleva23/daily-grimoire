@@ -1,9 +1,10 @@
-import { ItemView, Keymap, Notice, type ViewStateResult } from "obsidian";
+import { ItemView, Keymap, Notice, Platform, type ViewStateResult } from "obsidian";
 import { reactive, watch } from "vue";
 import { useVueApp } from "#/composables/vueApp.ts";
 import { isStep, readState, saved, withParams } from "#/store/router.js";
 import { pages, WINX_VIEW } from "./pages.js";
 import Winx from "./index.vue";
+import styles from "#/styles/shadow.scss";
 
 export { WINX_VIEW } from "./pages.js";
 
@@ -43,13 +44,24 @@ export class WinxView extends ItemView {
 
     await super.setState(s, result);
     if (this.closed) return;
-    this.mounted ??= useVueApp(this, this.contentEl, Winx, {
-      provide: { winx: this },
-      onError: error => {
-        console.error(error);
-        new Notice(`${this.getDisplayText()}: couldn't draw: ${error.message}`);
-      },
-    });
+    if (!this.mounted) {
+      const root = this.contentEl.shadowRoot ?? this.contentEl.attachShadow({ mode: "open" });
+
+      const win = this.contentEl.ownerDocument.defaultView as Window
+        & { CSSStyleSheet: typeof CSSStyleSheet };
+      const sheet = new win.CSSStyleSheet();
+
+      sheet.replaceSync(styles);
+      root.adoptedStyleSheets = [sheet];
+      this.mounted = useVueApp(this, root, Winx, {
+        provide: { winx: this },
+        onError: error => {
+          console.error(error);
+          new Notice(`${this.getDisplayText()}: couldn't draw: ${error.message}`);
+        },
+      });
+    }
+
     (this.leaf as any).updateHeader?.();
   }
 
@@ -70,11 +82,16 @@ export class WinxView extends ItemView {
   async onOpen() {
     this.closed = false;
     this.contentEl.addClass("winx-host");
+    this.contentEl.classList.toggle("is-mobile", Platform.isMobile);
+    this.contentEl.classList.toggle("is-phone", Platform.isPhone);
   }
   onResize() { this.app.workspace.trigger("winx:page"); }
   async onClose() {
     this.closed = true;
     this.mounted?.unmount();
     this.mounted = null;
+    const root = this.contentEl.shadowRoot;
+
+    if (root) { root.replaceChildren(); root.adoptedStyleSheets = []; }
   }
 }

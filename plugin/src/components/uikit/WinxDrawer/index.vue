@@ -4,7 +4,7 @@
      Open, its panel takes focus; desktop Tab stays inside. The phone sheet leaves the bottom
      navigation reachable. Closed, focus returns unless it already moved outside the panel -->
 <script setup>
-import { nextTick, ref, watch } from "vue";
+import { getCurrentInstance, nextTick, ref, watch } from "vue";
 
 const props = defineProps({
   open: { type: Boolean, default: false },
@@ -13,17 +13,18 @@ const props = defineProps({
 });
 const emit = defineEmits(["close"]);
 
-const panel = ref(null);
+const panel = ref(null), instance = getCurrentInstance();
+const focusRoot = () => instance.vnode.el?.getRootNode() ?? document;
 let back = null;   // what had the focus before the drawer opened
 
 watch(() => props.open, async open => {
   if (!open) {
-    if (panel.value?.contains(document.activeElement)) back?.focus({ preventScroll: true });
+    if (panel.value?.contains(focusRoot().activeElement)) back?.focus({ preventScroll: true });
     back = null;
     return;
   }
 
-  back = document.activeElement;
+  back = focusRoot().activeElement;
   await nextTick();
   // the entering sheet is still outside its final box
   panel.value?.focus({ preventScroll: true });
@@ -35,7 +36,7 @@ function tab(event) {
   const items = [...el.querySelectorAll("button, a[href], input, select, textarea, [tabindex]")]
     .filter(item => item.tabIndex >= 0 && !item.matches(":disabled") && item.isShown());
   const first = items[0] ?? el, last = items.at(-1) ?? el;
-  const active = el.ownerDocument.activeElement;
+  const active = focusRoot().activeElement;
 
   if (active === el || active === (event.shiftKey ? first : last)) {
     event.preventDefault();

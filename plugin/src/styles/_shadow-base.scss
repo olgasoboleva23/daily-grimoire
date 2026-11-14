@@ -1,0 +1,78 @@
+@use "mixins" as *;
+
+// Obsidian's element rules cannot enter the tab. Keep the small baseline our UI kit relies on.
+*, *::before, *::after { box-sizing: border-box; }
+.winx-view { font-size: var(--font-ui-medium); line-height: var(--line-height-tight); }
+.markdown-preview-view {
+  position: relative;
+  width: 100%;
+  font-size: var(--font-preferred-size);
+  line-height: var(--line-height-normal);
+  overflow-wrap: break-word;
+  user-select: text;
+  scrollbar-gutter: stable;
+}
+button, input, select, textarea { font-family: inherit; color: inherit; }
+button {
+  font-size: var(--font-ui-small);
+  font-weight: var(--input-font-weight);
+  color: var(--text-normal);
+  user-select: none;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--input-height);
+  padding: var(--size-4-1) var(--size-4-3);
+  border: none;
+  border-radius: var(--button-radius);
+  background: var(--interactive-normal);
+  cursor: var(--cursor);
+}
+button:disabled, input:disabled { cursor: default; opacity: 0.4; }
+:focus-visible { outline: $border-width-l solid var(--winx-purple); outline-offset: $space-2xs; }
+input { min-width: 0; }
+input[type="date"] {
+  position: relative;
+  font-variant-numeric: tabular-nums;
+  &::-webkit-calendar-picker-indicator { position: absolute; left: var(--size-4-1); right: auto; }
+}
+input[type="checkbox"] {
+  appearance: none;
+  position: relative;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  margin: 0 $space-s 0 0;
+  padding: 0;
+  border: $border-width-s solid var(--checkbox-border-color);
+  border-radius: var(--checkbox-radius);
+  vertical-align: middle;
+  flex-shrink: 0;
+  &:checked {
+    background: var(--checkbox-color);
+    border-color: var(--checkbox-color);
+    &::after {
+      content: "";
+      position: absolute;
+      inset: (-$border-width-s);
+      background: var(--checkbox-marker-color);
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3E%3Cpath d='M1 5l3 3 7-7' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 52% 52% / 65% no-repeat;
+    }
+  }
+}
+h1, h2, h3, h4 { line-height: var(--line-height-tight); }
+h2 { font-size: var(--h2-size); font-weight: var(--h2-weight); margin: 0 0 var(--p-spacing); }
+p { margin-block: var(--p-spacing); }
+a { color: var(--link-color); cursor: pointer; text-decoration: var(--link-decoration); }
+img { max-width: 100%; vertical-align: middle; }
+svg.svg-icon { width: var(--icon-size); height: var(--icon-size); stroke-width: var(--icon-stroke); }
+.callout { margin: 1em 0; }
+
+.callout-title {
+  display: flex;
+  gap: var(--size-4-1);
+  line-height: var(--line-height-tight);
+  align-items: flex-start;
+}
+.callout-title-inner { --font-weight: var(--callout-title-weight); font-weight: var(--font-weight); }
+b, strong { font-weight: calc(var(--font-weight) + var(--bold-modifier)); color: var(--bold-color); }

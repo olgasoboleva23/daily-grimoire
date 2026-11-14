@@ -20,6 +20,18 @@ mkdirSync(out, { recursive: true });
 const styles = () => writeFileSync(resolve(out, "styles.css"), sass.compile(resolve(here, "src/styles/main.scss"), {
   style: watch ? "expanded" : "compressed", loadPaths: [resolve(here, "src/styles")], charset: false,
 }).css);
+const shadowStyles = {
+  name: "shadow-styles",
+  setup(build) {
+    build.onLoad({ filter: /shadow\.scss$/ }, ({ path }) => {
+      const result = sass.compile(path, {
+        style: watch ? "expanded" : "compressed", loadPaths: [resolve(here, "src/styles")], charset: false,
+      });
+      return { contents: result.css, loader: "text", watchFiles: result.loadedUrls.map(fileURLToPath) };
+    });
+  },
+};
+
 const extras = {
   name: "winx-extras",   // styles and manifest go with every JS build
   setup(build) {
@@ -46,7 +58,7 @@ const ctx = await esbuild.context({
   // Vue: templates compiled at build time (no compiler in main.js), no Options API, no devtools
   define: { __VUE_OPTIONS_API__: "false", __VUE_PROD_DEVTOOLS__: "false", __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: "false" },
   // isProduction: no __file (a path on this computer) in a release build
-  plugins: [Vue({ isProduction: !watch }), extras],
+  plugins: [Vue({ isProduction: !watch }), shadowStyles, extras],
 });
 if (watch) {
   await ctx.watch();
@@ -54,7 +66,7 @@ if (watch) {
   const { watch: watchDir } = await import("node:fs");
   watchDir(resolve(here, "src"), { recursive: true }, (_, file) => {
     if (!file?.endsWith(".scss")) return;
-    try { styles(); } catch (e) { console.error(e.message); }
+    void ctx.rebuild().catch(e => console.error(e.message));
   });
 } else {
   await ctx.rebuild();

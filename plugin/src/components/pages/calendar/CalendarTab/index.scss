@@ -1,3 +1,4 @@
+@use "context";
 /* ── Calendar (week / month) ── */
 
 @use "mixins" as *;
@@ -50,7 +51,7 @@
   &__cell--today { border-color: var(--winx-blue); background: linear-gradient(135deg, var(--winx-sky-start), var(--winx-sky-end) 60%, var(--winx-purple-light)); }
   &__day { min-height: 220px; padding: $space-m $space-s; }
   /* the phone: the week's days one under another, each as tall as its tasks */
-  body.is-mobile & {
+  #{context.$mobile} & {
     &__week { grid-template-columns: minmax(0, 1fr); }
     &__day { min-height: 0; }
   }

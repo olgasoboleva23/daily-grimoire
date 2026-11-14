@@ -1,3 +1,4 @@
+@use "context";
 @use "mixins" as *;
 /* ============================================
  * WINX THEME — Grid & Column Layout
@@ -109,7 +110,7 @@
 /* ── Phone: reclaim side space ──
    Page margins + grid padding + card padding stack up to ~70px per side,
    too much on a ~390px screen. Desktop is untouched. */
-.is-phone :is(.dashboard, .kanban-board) {
+#{context.$phone} :is(.dashboard, .kanban-board) {
   --file-margins: 12px 8px;
   /* the floating navbar covers the page's end (the panel's "show less"): room for it below, as Obsidian
      leaves for Bases (--view-bottom-spacing: navbar + safe area, 0 when the navbar doesn't float) */

@@ -12,14 +12,15 @@ interface Options {
 interface Mounted { unmount: () => void; instance: any }
 
 export function useVueApp(
-  owner: Component, el: HTMLElement, root: VueComponent,
+  owner: Component, el: HTMLElement | ShadowRoot, root: VueComponent,
   { props = {}, provide = {}, onError = e => console.error(e) }: Options = {},
 ): Mounted {
   const app = createApp(root, props);
 
   for (const [key, value] of Object.entries(provide)) app.provide(key, value);
   app.config.errorHandler = error => onError(error as Error);
-  const instance = app.mount(el);
+  // Vue supports open ShadowRoot containers; its public mount type only lists Element.
+  const instance = (app.mount as (container: HTMLElement | ShadowRoot) => any)(el);
 
   let mounted = true;
   const unmount = () => {

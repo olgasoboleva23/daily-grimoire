@@ -1,3 +1,4 @@
+@use "context";
 /* Button (WinxButton), block winx-btn: one set of rules per kind (a modifier), each `&.winx-btn--kind`:
    button + two classes (0,2,1), so Obsidian's button styles don't win */
 @use "mixins" as *;
@@ -22,7 +23,7 @@ button.winx-btn {
     transition: transform $fast ease, box-shadow $fast ease;
 
     &:hover { transform: scale(1.12); box-shadow: 0 0 10px alpha(--winx-gold, 90%); }
-    body.is-mobile & { width: $btn-touch; height: $btn-touch; font-size: $text-2xl; }
+    #{context.$mobile} & { width: $btn-touch; height: $btn-touch; font-size: $text-2xl; }
   }
 
   // nav ‹ ›, chip (＋ task, today, week), toggle (✓ done, 🔁 repeats): white on the calendar's and dashboard's rows
