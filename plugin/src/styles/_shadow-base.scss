@@ -35,7 +35,8 @@ input { min-width: 0; }
 input[type="date"] {
   position: relative;
   font-variant-numeric: tabular-nums;
-  &::-webkit-calendar-picker-indicator { position: absolute; left: var(--size-4-1); right: auto; }
+  cursor: text;
+  &::-webkit-calendar-picker-indicator { position: absolute; left: var(--size-4-1); right: auto; cursor: pointer; }
 }
 input[type="checkbox"] {
   appearance: none;
@@ -48,6 +49,7 @@ input[type="checkbox"] {
   border-radius: var(--checkbox-radius);
   vertical-align: middle;
   flex-shrink: 0;
+  &:not(:disabled) { cursor: pointer; }
   &:checked {
     background: var(--checkbox-color);
     border-color: var(--checkbox-color);

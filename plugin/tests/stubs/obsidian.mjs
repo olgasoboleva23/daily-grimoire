@@ -27,6 +27,12 @@ export const prepareFuzzySearch = q => text => {
 };
 // a tooltip: its text as aria-label, its classes noted
 export const setTooltip = (el, text, o = {}) => { el.setAttribute("aria-label", text); if (o.classes) el.dataset.tip = o.classes.join(" "); };
+export function displayTooltip(el, text, { classes = [], placement } = {}) {
+  el.ownerDocument.querySelector(".tooltip")?.remove();
+  const tip = el.ownerDocument.body.appendChild(el.ownerDocument.createElement("div"));
+  tip.className = ["tooltip", ...classes].join(" "); tip.textContent = text;
+  tip.dataset.placement = placement;
+}
 export class Modal { constructor(app) { this.app = app; } open() {} close() {} }
 export class SuggestModal extends Modal { setPlaceholder() {} }
 // a tab: its leaf's app, its content element; the layout's state saved by Obsidian (setState: nothing here)

@@ -60,3 +60,29 @@ test("task sounds recognise a checkbox across the shadow boundary and in native 
     owner.unload(); host.remove(); native.remove(); AudioEngine.prototype.play = play;
   }
 });
+
+test("shadow tooltips use the native body popup, update and clean up on leave, click and unmount", async () => {
+  const { vTip } = await import("#/components/uikit/tooltip.js");
+  const host = document.body.appendChild(document.createElement("div"));
+  const root = host.attachShadow({ mode: "open" });
+  const button = root.appendChild(document.createElement("button"));
+  const binding = value => ({ value, modifiers: { pink: true }, arg: "bottom" });
+  const hover = () => button.dispatchEvent(new PointerEvent("pointerenter", { pointerType: "mouse" }));
+  const wait = () => new Promise(resolve => setTimeout(resolve, 120));
+  try {
+    vTip.mounted(button, binding("First"));
+    hover(); await wait();
+    const tip = document.body.querySelector(".tooltip.winx-tooltip--pink");
+    assert.equal(tip.textContent, "First");
+    assert.equal(tip.dataset.placement, "bottom");
+    button.dispatchEvent(new PointerEvent("pointerleave"));
+    assert.equal(tip.isConnected, false);
+    vTip.updated(button, binding("Second"));
+    hover(); await wait();
+    assert.equal(document.body.querySelector(".tooltip").textContent, "Second");
+    button.dispatchEvent(new PointerEvent("pointerdown"));
+    assert.equal(document.body.querySelector(".tooltip"), null);
+    hover(); vTip.beforeUnmount(button); await wait();
+    assert.equal(document.body.querySelector(".tooltip"), null);
+  } finally { vTip.beforeUnmount(button); host.remove(); }
+});
