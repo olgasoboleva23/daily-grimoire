@@ -9,6 +9,7 @@ import { useVueApp } from "#/composables/vueApp.ts";
 //                                                   of text; color: the colour picker, "#rrggbb")
 //   { name, key, check: description }               a checkbox
 //   { name, key, label: true }                      its value as text, not edited
+//   { name, key, file: accept }                     a local File, saved only by the caller
 //   { name, key, list: rows, required?, fixed? }    groups of those rows, + adds one, × takes it
 //                                                   off (fixed: neither, the groups as given);
 //                                                   the value: an array of the groups' values.
@@ -30,6 +31,7 @@ export type Row = Tab & (
   }
   | { name: string; key: string; check: string }
   | { name: string; key: string; label: true }
+  | { name: string; key: string; file: string }
   | { name: string; key: string; list: Row[]; required?: string[]; fixed?: boolean });
 
 export type Values = Record<string, any>;

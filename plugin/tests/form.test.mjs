@@ -13,7 +13,7 @@ before(async () => {
   ({ Form } = await import("#/components/uikit/Form/index.ts"));
 });
 
-const open = (rows, values) => {
+const createForm = (rows, values) => {
   const app = { vault: { getResourcePath: () => "app://icon.webp" } };
   const form = new Form(app, "✦ Test", rows, { values });
 
@@ -23,13 +23,34 @@ const open = (rows, values) => {
   });
   form.onOpen();
 
-  return form.contentEl;
+  return form;
 };
+const open = (rows, values) => createForm(rows, values).contentEl;
 const classes = els => [...els].map(e => e.className);
 const cols = win => win.querySelector(".winx-form__list--lines").style
   .getPropertyValue("--winx-form-cols");
 // no inline style but a lines list's columns
 const styled = win => [...win.querySelectorAll("[style]")].map(e => e.getAttribute("style"));
+
+test("Form file row keeps the selected File in its values until submission", async () => {
+  const form = createForm([{ name: "Cover", key: "cover", file: "image/*" }]);
+  const win = form.contentEl;
+  const input = win.querySelector("input[type=file]");
+  const file = new File(["picture"], "garden.png", { type: "image/png" });
+  const transfer = new DataTransfer();
+  transfer.items.add(file);
+  input.files = transfer.files;
+  input.dispatchEvent(new Event("change"));
+  await nextTick();
+  assert.equal(input.accept, "image/*");
+  assert.equal(input.getAttribute("aria-label"), "Cover");
+  assert.equal(form.values.cover, file);
+  let submitted;
+  form.resolve = value => { submitted = value; };
+  form.close = () => form.onClose();
+  win.querySelector(".modal-button-container button").click();
+  assert.equal(submitted.cover, file);
+});
 
 test("Form: a list of text boxes and checkboxes is a line of names, then one line a group", async () => {
   const win = open([

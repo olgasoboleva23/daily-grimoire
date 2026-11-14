@@ -10,7 +10,9 @@ import WinxButton from "#/components/uikit/WinxButton/index.vue";
 import WinxCard from "#/components/uikit/WinxCard/index.vue";
 import { Form } from "#/components/uikit/Form/index.ts";
 import { app } from "#/helpers/app.js";
-import { addStage, saveProject } from "#/controllers/projects.js";
+import {
+  addStage, saveProject, askEditProject,
+} from "#/controllers/projects.js";
 import { stageTasks, taskStore } from "#/store/tasks.js";
 import { FILTERS } from "#/store/projects.js";
 import { coverUrl } from "../cover.js";
@@ -62,6 +64,7 @@ async function newStage(name) {
   await addStage(page.value.key, name.trim());
   stageName.value = "";
 }
+
 </script>
 
 <template>
@@ -88,6 +91,9 @@ async function newStage(name) {
       <div v-if="page.p.description" class="winx-project__description">{{
         page.p.description }}</div>
       <WinxProgress v-if="page.total" :value="page.done" :max="page.total" />
+      <div class="winx-row winx-gap-s">
+        <WinxButton kind="chip" @click="askEditProject(app, page.key)">Edit project</WinxButton>
+      </div>
     </WinxCard>
     <div class="winx-project__body">
       <div class="winx-col winx-gap-l">

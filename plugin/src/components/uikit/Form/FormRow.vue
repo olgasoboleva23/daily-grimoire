@@ -115,6 +115,14 @@ const model = computed({
   </template>
   <span v-else-if="'label' in row" class="winx-form__label">{{ values[row.key] ?? "" }}</span>
   <input
+    v-else-if="'file' in row"
+    type="file"
+    class="winx-form__upload"
+    :accept="row.file"
+    :aria-label="row.name"
+    @change="values[row.key] = $event.target.files?.[0] ?? null"
+  >
+  <input
     v-else-if="'check' in row"
     type="checkbox"
     :aria-label="row.name"

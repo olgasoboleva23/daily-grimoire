@@ -16,9 +16,6 @@ export const TASK_RECORDS = `${TASKS}/tasks.json`;
 // the projects (stages of task ids), an object by id, in the order of the file
 export const PROJECTS = `${DATA}/Projects/projects.json`;
 
-// the pictures (a project's cover is picked from here)
-export const MEDIA = "03 Resources/Media";
-
 export const GOALS = `${DATA}/Goals`;
 
 export const FINANCE_PAGE = "02 Areas/Finance.md";

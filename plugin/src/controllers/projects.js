@@ -2,9 +2,10 @@
 // so two writes never lose each other. A stage found changed meanwhile (another device) writes
 // nothing.
 import { Notice } from "obsidian";
-import { MEDIA } from "#/helpers/paths.js";
+import { PROJECTS } from "#/helpers/paths.js";
+import { readJson } from "#/helpers/files.js";
+import { importCover } from "#/helpers/images.js";
 import { Form } from "#/components/uikit/Form/index.ts";
-import { Search } from "#/components/uikit/Search/index.ts";
 import { openWinx } from "#/components/app/open.ts";
 import { projects } from "#/store/tasks.js";
 import { Task } from "#/models/task.js";
@@ -13,39 +14,32 @@ import { editTaskLine, newTask } from "#/controllers/tasks.js";
 export const createProject = ({ name, description = "", status = "active", cover = null }) =>
   projects.add({ name, status, description, result: "", notes: "", cover, stages: [] }, "p");
 
-// a picture of 03 Resources/Media by a search window: its path, null when closed
-const pickCover = app => {
-  const images = app.vault.getFiles().filter(f =>
-    f.path.startsWith(`${MEDIA}/`) && /\.(webp|png|jpe?g|gif|avif)$/i.test(f.path));
-
-  return Search.pick(
-    app, "A cover picture…",
-    q => images.filter(f => f.name.toLowerCase().includes(q.trim().toLowerCase())).slice(0, 50),
-    (f, el) => void el.createDiv({ text: f.name }),
-  ).then(f => f?.path ?? null);
-};
-
 const STATUSES = ["idea", "active", "paused", "done"];
+const projectFields = [
+  { name: "Name", key: "name", text: "what it is" },
+  { name: "Description", key: "description", text: "a line about it", lines: true },
+  { name: "Cover", key: "cover", file: "image/*,.heic,.heif,.tif,.tiff" },
+];
 
-// ✦ New project: its window (the cover: a tick that opens the picture search), saved, then the
-// Winx tab on it (its Projects page). The new key, null when closed.
+// A local cover is imported only after submission, then the new project's page is opened.
 export async function askNewProject(
-  app, ask = (...a) => Form.ask(...a), pick = pickCover, open = openWinx,
+  app, ask = (...a) => Form.ask(...a), upload = importCover, open = openWinx,
 ) {
   const v = await ask(app, "✦ New project", [
-    { name: "Name", key: "name", text: "what it is" },
-    { name: "Description", key: "description", text: "a line about it", lines: true },
+    ...projectFields,
     {
       name: "Status", key: "status",
       options: STATUSES.map(s => ({ label: `${s[0].toUpperCase()}${s.slice(1)}`, value: s })),
     },
-    { name: "Cover", key: "cover", check: "pick a picture" },
   ], { values: { status: "active" }, required: ["name"], submit: "Create" });
 
-  if (!v) return null;
+  if (!v?.name?.trim()) return null;
+  const cover = v.cover ? await upload(app, v.cover) : null;
+
+  if (v.cover && !cover) return null;
   const key = await createProject({
     name: v.name.trim(), description: v.description ?? "", status: v.status,
-    cover: v.cover ? await pick(app) : null,
+    cover,
   });
   await open("projects", { open: key });
   return key;
@@ -53,6 +47,33 @@ export async function askNewProject(
 
 // merge fields (name, status, description, result, notes, cover) into a project
 export const saveProject = (key, patch) => projects.update(key, p => ({ ...p, ...patch }));
+
+// Only these fields belong to this form: changes to stages/status/notes may happen meanwhile.
+const editable = p => [p.name, p.description ?? "", p.cover ?? null];
+const changedProject = () => new Notice("✦ project changed or was deleted; open it again");
+
+export async function askEditProject(
+  app, key, ask = (...a) => Form.ask(...a), upload = importCover,
+) {
+  const before = (await readJson(PROJECTS, {}))[key];
+
+  if (!before) return void changedProject();
+  const v = await ask(app, "✦ Edit project", projectFields, {
+    values: { name: before.name, description: before.description ?? "" },
+    required: ["name"], submit: "Save",
+  });
+
+  if (!v?.name?.trim()) return;
+  const cover = v.cover ? await upload(app, v.cover) : before.cover ?? null;
+
+  if (v.cover && !cover) return;
+  const saved = await projects.update(key, p => {
+    if (JSON.stringify(editable(p)) !== JSON.stringify(editable(before))) return null;
+    return { ...p, name: v.name.trim(), description: v.description ?? "", cover };
+  });
+
+  if (!saved) changedProject();
+}
 
 export const addStage = (key, name) => projects.update(key, p =>
   ({ ...p, stages: [...p.stages ?? [], { name, tasks: [] }] }));
