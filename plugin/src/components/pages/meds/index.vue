@@ -18,7 +18,11 @@ const picked = computed({
 </script>
 
 <template>
-  <WinxEmpty v-if="!list.length" on-background text="No courses yet: Winx: New medication course" />
+  <WinxEmpty
+    v-if="!list.length"
+    on-background
+    text="No courses yet: Daily Grimoire: New medication course"
+  />
   <div v-else>
     <!-- one row, sideways scroll -->
     <WinxTabs

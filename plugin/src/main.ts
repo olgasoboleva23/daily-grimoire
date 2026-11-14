@@ -10,7 +10,7 @@ import { installSounds } from "./helpers/sounds.js";
 import { useTheme } from "./controllers/theme.js";
 import { useTaskStore } from "./store/tasks.js";
 
-// The Winx plugin: the ```winx blocks (widgets), the Winx tab, the task window and the
+// Daily Grimoire: the ```winx blocks (widgets), the Winx tab, the task window and the
 // commands, and the styles (styles.css, built from src/styles/main.scss and the components'
 // index.scss).
 
@@ -27,7 +27,7 @@ export default class WinxPlugin extends Plugin {
     // last, or open it, pinned, on the dashboard
     this.registerView(WINX_VIEW, leaf => new WinxView(leaf));
     this.addCommand({ id: "open", name: "Open", callback: () => openWinx() });
-    this.addRibbonIcon("sparkles", "Winx", () => openWinx());
+    this.addRibbonIcon("sparkles", this.manifest.name, () => openWinx());
     this.addCommand({   // after a rebuild: load the new main.js without restarting Obsidian
       id: "reload",
       name: "Reload",

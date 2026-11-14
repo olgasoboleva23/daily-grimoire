@@ -1,7 +1,7 @@
 // Builds the plugin: src/main.ts → main.js, src/styles/main.scss (and the components' index.scss it
 // uses) → styles.css, plus manifest.json.
 //   npm run build   into dist/
-//   npm run dev     into $WINX_VAULT/.obsidian/plugins/winx/ (without it: dist/), again on every save
+//   npm run dev     into $WINX_VAULT/.obsidian/plugins/daily-grimoire/ (without it: dist/), again on every save
 import esbuild from "esbuild";
 import Vue from "unplugin-vue/esbuild";
 import * as sass from "sass";
@@ -11,7 +11,7 @@ import { fileURLToPath } from "node:url";
 
 const here  = dirname(fileURLToPath(import.meta.url));
 const watch = process.argv.includes("--watch");
-const out   = watch && process.env.WINX_VAULT ? resolve(process.env.WINX_VAULT, ".obsidian/plugins/winx") : resolve(here, "dist");
+const out   = watch && process.env.WINX_VAULT ? resolve(process.env.WINX_VAULT, ".obsidian/plugins/daily-grimoire") : resolve(here, "dist");
 mkdirSync(out, { recursive: true });
 
 // a release build is minified (the vault syncs it to the phone); the dev one stays readable, with a source map
@@ -27,7 +27,7 @@ const extras = {
       if (result.errors.length) return;
       try { styles(); } catch (e) { if (!watch) throw e; console.error(e.message); }   // a build without styles must fail
       copyFileSync(resolve(here, "manifest.json"), resolve(out, "manifest.json"));
-      if (watch) console.log(`winx → ${out}`);
+      if (watch) console.log(`Daily Grimoire → ${out}`);
     });
   },
 };

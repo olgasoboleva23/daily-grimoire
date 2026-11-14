@@ -60,7 +60,7 @@ function settings() {
   >
     <div v-if="!phone" class="winx-page-navigation__head winx-row">
       <span class="winx-page-navigation__crest winx-center" aria-hidden="true">✦</span>
-      <span class="winx-page-navigation__title">Winx</span>
+      <span class="winx-page-navigation__title">Daily Grimoire</span>
     </div>
     <template v-for="p in rest" :key="p.key">
       <button

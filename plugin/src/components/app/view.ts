@@ -26,7 +26,9 @@ export class WinxView extends ItemView {
     this.register(watch(json, () => this.app.workspace.requestSaveLayout()));
   }
   getViewType() { return WINX_VIEW; }
-  getDisplayText() { return pages[this.state.page as keyof typeof pages]?.title ?? "Winx"; }
+  getDisplayText() {
+    return pages[this.state.page as keyof typeof pages]?.title ?? "Daily Grimoire";
+  }
   getIcon() { return "sparkles"; }
 
   getState() { return saved(this.state); }
