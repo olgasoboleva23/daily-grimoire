@@ -82,8 +82,11 @@ export class WinxView extends ItemView {
   async onOpen() {
     this.closed = false;
     this.contentEl.addClass("winx-host");
-    this.contentEl.classList.toggle("is-mobile", Platform.isMobile);
-    this.contentEl.classList.toggle("is-phone", Platform.isPhone);
+    // Native device classes reset Obsidian’s inherited header/navbar spacing.
+    this.contentEl.toggleAttribute("data-mobile", Platform.isMobile);
+    this.contentEl.toggleAttribute("data-phone", Platform.isPhone);
+    // Obsidian cannot see the shadow scroller when recognizing pull-down gestures.
+    this.contentEl.dataset.ignoreSwipe = "true";
   }
   onResize() { this.app.workspace.trigger("winx:page"); }
   async onClose() {
