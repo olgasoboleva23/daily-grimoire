@@ -14,7 +14,7 @@ const muted = ref(isMuted());
 const onDate = e => goTo(view.state, e.target.value || null, view.ctx);
 const mute = () => { toggleMute(); muted.value = isMuted(); };
 
-const newTask = () => app.commands.executeCommandById("winx:new-task");
+const newTask = () => app.commands.executeCommandById("daily-grimoire:new-task");
 </script>
 
 <template>
@@ -26,6 +26,10 @@ const newTask = () => app.commands.executeCommandById("winx:new-task");
       aria-label="sounds on/off"
       @click="mute"
     >{{ muted ? "🔇" : "🔊" }}</button>
-    <WinxButton kind="chip" title="new task (Winx: New task)" @click="newTask">＋ task</WinxButton>
+    <WinxButton
+      kind="chip"
+      title="new task (Daily Grimoire: New task)"
+      @click="newTask"
+    >＋ task</WinxButton>
   </div>
 </template>

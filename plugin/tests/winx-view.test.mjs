@@ -78,9 +78,9 @@ test(keeps, async () => {
   await view.go("calendar");
   assert.deepEqual(made, ["dashboard", "calendar"]);
   assert.deepEqual(unloaded, []);
-  const shown = [...view.contentEl.querySelectorAll(".winx-view__page")].map(e => e.isShown());
+  const shown = [...view.contentEl.shadowRoot.querySelectorAll(".winx-view__page")].map(e => e.isShown());
   assert.deepEqual(shown, [true]);
-  assert.equal(view.contentEl.querySelector(".winx-view__page").textContent, "calendar");
+  assert.equal(view.contentEl.shadowRoot.querySelector(".winx-view__page").textContent, "calendar");
   assert.equal(view.getDisplayText(), "Calendar");
 });
 
@@ -288,11 +288,11 @@ test("Finance route loads its ledger into the Vue page; closing removes its subs
   await ready;
   await leaf.setViewState({ state: { page: "finance" } });
   await new Promise(r => setTimeout(r));
-  assert.match(view.contentEl.querySelector(".winx-fin .winx-empty").textContent, /The ledger is empty/);
-  const card = view.contentEl.querySelector('.callout[data-callout="card"]');
+  assert.match(view.contentEl.shadowRoot.querySelector(".winx-fin .winx-empty").textContent, /The ledger is empty/);
+  const card = view.contentEl.shadowRoot.querySelector('.callout[data-callout="card"]');
   assert.equal(card.dataset.calloutMetadata, "hero");
   assert.ok(card.querySelector(".callout-content > .winx-fin"));
-  assert.equal(view.contentEl.querySelector("h2").textContent, "Finance");
+  assert.equal(view.contentEl.shadowRoot.querySelector("h2").textContent, "Finance");
   assert.ok(listeners.size > 0);
   await view.onClose();
   assert.equal(listeners.size, 0);
@@ -362,21 +362,21 @@ test("Medication route: empty state, JSON updates and marks, subscriptions relea
   await ready;
   await leaf.setViewState({ state: { page: "meds" } });
   await flushPromises();
-  assert.equal(view.contentEl.querySelector("h2").textContent, "Medication");
-  assert.match(view.contentEl.textContent, /No courses yet/);
+  assert.equal(view.contentEl.shadowRoot.querySelector("h2").textContent, "Medication");
+  assert.match(view.contentEl.shadowRoot.textContent, /No courses yet/);
   files[COURSES] = JSON.stringify({ c1: {
     start: "2026-11-13", meds: [{ name: "Тест", code: "ТЕ", times: ["morning", "evening"], days: 2 }],
     notes: "", marks: {}, dayNotes: {},
   } });
   fire("create");
   await flushPromises();
-  assert.equal(view.contentEl.querySelectorAll(".winx-meds__chip").length, 2);
-  view.contentEl.querySelector(".winx-meds__chip").click();
+  assert.equal(view.contentEl.shadowRoot.querySelectorAll(".winx-meds__chip").length, 2);
+  view.contentEl.shadowRoot.querySelector(".winx-meds__chip").click();
   await flushPromises();
   assert.equal(JSON.parse(files[COURSES]).c1.marks["2026-11-13"]["ТЕ☀️"], "✅");
   fire("modify");
   await flushPromises();
-  assert.equal(view.contentEl.querySelector(".winx-meds__chip").dataset.mark, "✅");
+  assert.equal(view.contentEl.shadowRoot.querySelector(".winx-meds__chip").dataset.mark, "✅");
   assert.ok(listeners.size > 0);
   await view.go("projects");
   assert.equal(listeners.size, 0);

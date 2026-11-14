@@ -120,6 +120,6 @@ export const drawBlock = (source, el, ctx) => {
   const { name, args } = parseBlock(source);
   const def = blocks[name];
 
-  if (!def) return void el.createDiv({ text: `winx: no widget "${name}"` });
+  if (!def) return void el.createDiv({ text: `Daily Grimoire: no widget "${name}"` });
   ctx.addChild(block(def, el, ctx.sourcePath, args, source));
 };

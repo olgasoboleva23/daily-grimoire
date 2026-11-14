@@ -4,7 +4,9 @@ export function chartColor(token, alpha = 1) {
   const root = document.querySelector(
     '.workspace-leaf-content[data-type="winx"], .block-language-winx')
     ?? document.body;
-  const hex = getComputedStyle(root).getPropertyValue(token).trim();
+  const palette = root.shadowRoot?.querySelector(".winx-view")
+    ?? root.querySelector(".winx-host")?.shadowRoot?.querySelector(".winx-view") ?? root;
+  const hex = getComputedStyle(palette).getPropertyValue(token).trim();
   const m = hex.match(/^#?([0-9a-f]{6})$/i);
 
   if (!m) return `rgba(150, 150, 150, ${alpha})`;

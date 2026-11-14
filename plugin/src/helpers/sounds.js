@@ -103,7 +103,7 @@ export function installSounds(plugin) {
   const flower = new AudioEngine(`${SOUNDS}/snd_pickup_dragon_flower.wav`);
   // capture phase: the checkbox already shows its new state, before Tasks re-renders it
   plugin.registerDomEvent(document, "click", e => {
-    const box = e.target.closest?.("input.task-list-item-checkbox");
+    const box = e.composedPath()[0]?.closest?.("input.task-list-item-checkbox");
 
     if (!box) return;
     // unticked: the same gem, slowed down

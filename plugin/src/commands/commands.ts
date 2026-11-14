@@ -12,7 +12,7 @@ import { editCourse, newCourse, pickCourse } from "#/controllers/meds.js";
 import { askNewProject } from "#/controllers/projects.js";
 
 
-// The commands in Cmd+P ("Winx: …"); each one window, then saved.
+// The commands in Cmd+P ("Daily Grimoire: …"); each one window, then saved.
 export function registerCommands(plugin: Plugin) {
   const { app } = plugin;
   const add = (id: string, name: string, run: () => Promise<void>) =>
@@ -83,8 +83,8 @@ export function registerCommands(plugin: Plugin) {
 class WinxMenu extends FuzzySuggestModal<any> {
   getItems() {
     return (this.app as any).commands.listCommands()
-      .filter((c: any) => c.id.startsWith("winx:") && c.id !== "winx:menu");
+      .filter((c: any) => c.id.startsWith("daily-grimoire:") && c.id !== "daily-grimoire:menu");
   }
-  getItemText(c: any) { return c.name.replace(/^Winx: /, ""); }
+  getItemText(c: any) { return c.name.replace(/^Daily Grimoire: /, ""); }
   onChooseItem(c: any) { (this.app as any).commands.executeCommandById(c.id); }
 }

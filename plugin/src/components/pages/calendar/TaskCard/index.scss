@@ -1,3 +1,4 @@
+@use "context";
 /* ── Task cards (calendar backlog) ── */
 
 @use "mixins" as *;
@@ -30,8 +31,7 @@ $fade: 18px;   // the buttons' background fades in over this much of the text
     font-size: $text-m;
   }
 }
-body {
-  &:not(.is-mobile) {
+#{context.$desktop} {
     .winx-cal {
       .winx-task-btns {
         position: absolute;
@@ -51,8 +51,8 @@ body {
       opacity: 1;
       pointer-events: auto;
     }
-  }
-  &.is-mobile {
+}
+#{context.$mobile} {
     :is(.winx-cal__task, .winx-missed__row, .winx-task-card) { touch-action: pan-y; }
     .winx-cal {
       .winx-task-btns { margin-top: $space-s; }
@@ -85,4 +85,3 @@ body {
       }
     }
   }
-}

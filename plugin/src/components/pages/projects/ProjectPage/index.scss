@@ -1,3 +1,4 @@
+@use "context";
 /* A project's page (ProjectPage), block winx-project: ← Projects, the header card over a grid of
    the stages (two thirds) and Result / Notes (a third); one column on the phone */
 @use "mixins" as *;
@@ -45,7 +46,7 @@
   &__text { margin-bottom: $space-m; white-space: pre-wrap; }
   &__edit { margin-left: auto; }
 
-  body.is-mobile & {
+  #{context.$mobile} & {
     &__body { grid-template-columns: minmax(0, 1fr); }
   }
 }

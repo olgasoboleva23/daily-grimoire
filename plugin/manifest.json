@@ -1,9 +1,9 @@
 {
-  "id": "winx",
-  "name": "Winx",
+  "id": "daily-grimoire",
+  "name": "Daily Grimoire",
   "version": "0.2.0",
   "minAppVersion": "1.9.0",
-  "description": "Winx RPG dashboard: widgets, task window, commands, styles.",
+  "description": "A personal RPG dashboard with tasks, projects, habits and four themes: Winx, Winx dark, Gothic and Dragon Age 2.",
   "author": "helga",
   "isDesktopOnly": false
 }

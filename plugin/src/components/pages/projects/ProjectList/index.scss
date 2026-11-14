@@ -1,3 +1,4 @@
+@use "context";
 /* The projects' list (ProjectList), block winx-projects: the title and the status tabs over a grid
    of project cards (WinxCard), two columns on the desktop, one on the phone */
 @use "mixins" as *;
@@ -15,7 +16,7 @@
 
   &__next { margin-top: $space-m; cursor: default; }
 
-  body.is-mobile & {
+  #{context.$mobile} & {
     &__grid { grid-template-columns: minmax(0, 1fr); }
   }
 }

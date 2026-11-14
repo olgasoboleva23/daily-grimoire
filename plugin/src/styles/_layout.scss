@@ -1,3 +1,4 @@
+@use "context";
 @use "mixins" as *;
 /* ============================================
  * WINX THEME — Layout & Backgrounds
@@ -20,10 +21,7 @@
 }
 
 /* ── Dashboard / kanban workspace backgrounds ── */
-:is(
-  .workspace-leaf-content:has(.dashboard),
-  .workspace-leaf-content:has(.kanban-board)
-) {
+#{if(sass(context.$shadow): ".winx-view"; else: ':is( .workspace-leaf-content:has(.dashboard), .workspace-leaf-content:has(.kanban-board) )')} {
   --background-primary: transparent;
   position: relative;
   z-index: $z-base; /* stacking context so the z-index:-1 photo stays inside this leaf */
@@ -81,7 +79,4 @@
 }
 
 // Utility pages keep the page colour; only Dashboard, Calendar and Projects have the photo.
-.workspace-leaf-content[data-type="winx"]:not(:has(
-  .winx-view[data-page="dashboard"], .winx-view[data-page="calendar"],
-  .winx-view[data-page="projects"]
-))::before { display: none; }
+#{if(sass(context.$shadow): '.winx-view:not([data-page="dashboard"], [data-page="calendar"], [data-page="projects"])'; else: '.workspace-leaf-content[data-type="winx"]:not(:has( .winx-view[data-page="dashboard"], .winx-view[data-page="calendar"], .winx-view[data-page="projects"] ))')}::before { display: none; }
