@@ -257,12 +257,12 @@ test("the drawer: Projects, Finance, Shop, Supplies, Medication, Food, then ⚙ 
 
   assert.equal(shell.find(".winx-drawer").exists(), false);
   await shell.findAll(".winx-btn--rail").at(-1).trigger("click");
-  const rows = shell.findAll(".winx-page-navigation__row .winx-grow");
+  const rows = shell.findAll(".winx-menu__row .winx-grow");
 
   assert.deepEqual(rows.map(r => r.findAll("span").at(-1).text()),
     ["Projects", "Finance", "Shop", "Supplies", "Medication", "Food", "Settings"]);
   assert.match(rows[6].text(), /⚙/);
-  await shell.find(".winx-page-navigation__open-tab").trigger("click");
+  await shell.find(".winx-menu__open-tab").trigger("click");
   await new Promise(r => setTimeout(r));
   assert.equal(w.made.length, 1);
   assert.equal(w.made[0].pinned, false);

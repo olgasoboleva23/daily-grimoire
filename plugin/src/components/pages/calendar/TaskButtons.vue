@@ -57,20 +57,20 @@ async function remove() {
 <template>
   <WinxButton
     v-if="task.canSkip"
-    class="winx-task-btns__skip"
+    class="winx-task__btns-skip"
     title="skip this time"
     @click="skip"
   >⏭</WinxButton>
   <WinxButton
     v-if="task.canUnplan"
-    class="winx-task-mobile winx-task-btns__unplan"
+    class="winx-task__mobile winx-task__btns-unplan"
     title="remove date"
     @click="unplan"
   >↩</WinxButton>
-  <WinxButton class="winx-task-btns__edit" :title="editTitle" @click="edit">✏️</WinxButton>
+  <WinxButton class="winx-task__btns-edit" :title="editTitle" @click="edit">✏️</WinxButton>
   <WinxButton
     :title="del.title"
-    :class="['winx-task-btns__del', { 'winx-task-btns__del--armed': armed }]"
+    :class="['winx-task__btns-del', { 'winx-task__btns-del--armed': armed }]"
     @click="remove"
   >{{ del.text }}</WinxButton>
 </template>

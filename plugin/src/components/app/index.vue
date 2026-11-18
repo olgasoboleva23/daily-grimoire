@@ -50,6 +50,6 @@ watch(() => winx.state.page, async () => {
         />
       </div>
     </div>
-    <div class="winx-view__nav winx-page-navigation"><PageNavigation /></div>
+    <div class="winx-view__nav winx-menu"><PageNavigation /></div>
   </div>
 </template>

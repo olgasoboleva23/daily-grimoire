@@ -2,7 +2,7 @@
 // a month's totals, categories against their budgets, a 6-month trend and the latest operations;
 // ◀ ▶ step through the months. The data (00 System/Data/Finance) stays in the vault. The markup:
 // pages/finance (the Finance page; its styles also hold the dashboard card's
-// winx-fin-month block), widgets/finance/index.vue (the dashboard's card).
+// winx-fin__month block), widgets/finance/index.vue (the dashboard's card).
 import { dm } from "#/helpers/dates.js";
 import { money } from "#/helpers/format.js";
 import { readJson } from "#/helpers/files.js";

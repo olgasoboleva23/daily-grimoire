@@ -30,7 +30,7 @@
       &__nav { display: contents; }
     }
 
-    .winx-page-navigation {
+    .winx-menu {
       &__rail {
         grid-area: 2 / 1;
         // Obsidian includes the safe area in this space; paint it behind its floating navbar.

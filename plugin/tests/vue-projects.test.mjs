@@ -60,8 +60,8 @@ test("the list: a card per project in file order with its status pill, descripti
   const { el } = mount();
   assert.deepEqual(names(el), ["Garden", "Shed", "Poem", "Kite"]);
   const garden = cards(el)[0];
-  assert.equal(garden.querySelector(".winx-project-status").className, "winx-project-status winx-project-status--active");
-  assert.equal(garden.querySelector(".winx-project-status").textContent, "Active");
+  assert.equal(garden.querySelector(".winx-status").className, "winx-status winx-status--active");
+  assert.equal(garden.querySelector(".winx-status").textContent, "Active");
   assert.equal(garden.querySelector(".winx-projects__description").textContent, "beds by the wall");
   const bar = garden.querySelector("progress.winx-progress__bar");
   assert.equal([bar.value, bar.max].join("/"), "3/8");
@@ -148,7 +148,7 @@ test("the header: the name, status, description, 3/8; ← Projects clears state.
   const { el, view } = mount({ open: "p1" });
   const header = el.querySelector(".winx-project__header");
   assert.equal(header.querySelector(".callout-title-inner").textContent, "Garden");
-  assert.equal(header.querySelector(".winx-project-status").textContent, "Active");
+  assert.equal(header.querySelector(".winx-status").textContent, "Active");
   assert.equal(header.querySelector(".winx-project__description").textContent, "beds by the wall");
   assert.equal(header.querySelector(".winx-progress__count").textContent, "3/8");
   button(el, "← Projects").click();

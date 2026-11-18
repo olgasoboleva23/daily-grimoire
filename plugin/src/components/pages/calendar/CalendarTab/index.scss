@@ -146,7 +146,7 @@
     &[draggable="true"]:hover { background: fade(var(--winx-surface), 35%); border-radius: 8px; }
     &--ghost   { opacity: 0.5; }
     &--done    { opacity: 0.55; text-decoration: line-through; text-decoration-color: var(--winx-gold-deep); }
-    .winx-task-content {
+    .winx-task__content {
       position: relative;
       // room for the checkbox (~16px wide, then a gap)
       // stylelint-disable-next-line declaration-property-value-disallowed-list

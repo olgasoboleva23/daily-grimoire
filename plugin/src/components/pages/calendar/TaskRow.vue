@@ -78,7 +78,7 @@ function onTick(e) {
     @touchend="touch.end"
     @touchcancel="touch.cancel"
   >
-    <div class="winx-task-content">
+    <div class="winx-task__content">
       <span v-if="after" class="winx-cal__after">↳</span>
       <template v-if="box">
         <input
@@ -100,10 +100,10 @@ function onTick(e) {
         >
       </template>{{ repeat }}<TaskText :task="task" />
     </div>
-    <div v-if="live && !done" class="winx-task-btns winx-task-actions">
+    <div v-if="live && !done" class="winx-task__btns winx-task__actions">
       <WinxButton
         v-if="box"
-        class="winx-task-primary winx-task-mobile"
+        class="winx-task__primary winx-task__mobile"
         title="complete task"
         :disabled="ticking"
         @click="touch.run"

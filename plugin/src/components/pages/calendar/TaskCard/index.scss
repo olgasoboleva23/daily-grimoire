@@ -19,10 +19,10 @@
 
 $fade: 18px;   // the buttons' background fades in over this much of the text
 /* round buttons on a task: ⏭ ✏️ 🗑 */
-.winx-cal .winx-task-btns {
+.winx-cal .winx-task__btns {
   display: flex;
   gap: $space-xs;
-  button.winx-task-btns__del--armed {
+  button.winx-task__btns-del--armed {
     width: auto;
     padding: 0 $space-m;
     border-color: var(--winx-danger);
@@ -33,7 +33,7 @@ $fade: 18px;   // the buttons' background fades in over this much of the text
 }
 #{context.$desktop} {
     .winx-cal {
-      .winx-task-btns {
+      .winx-task__btns {
         position: absolute;
         right: $space-xs;
         top: 50%;
@@ -45,9 +45,9 @@ $fade: 18px;   // the buttons' background fades in over this much of the text
         pointer-events: none;
         transition: opacity $fast ease;
       }
-      .winx-task-mobile { display: none; }
+      .winx-task__mobile { display: none; }
     }
-    :is(.winx-task-card, .winx-cal__task, .winx-missed__row):hover .winx-task-btns {
+    :is(.winx-task-card, .winx-cal__task, .winx-missed__row):hover .winx-task__btns {
       opacity: 1;
       pointer-events: auto;
     }
@@ -56,16 +56,16 @@ $fade: 18px;   // the buttons' background fades in over this much of the text
   :is(.winx-cal__task, .winx-missed__row, .winx-task-card) { touch-action: pan-y; }
   .winx-cal {
     // Without swipe support (e.g. Tasks disabled), keep the actions in the normal flow.
-    .winx-task-actions { display: flex; flex-wrap: wrap; gap: $space-s; }
+    .winx-task__actions { display: flex; flex-wrap: wrap; gap: $space-s; }
 
     [data-swipeable] {
       overflow: hidden;
       min-height: $btn-touch + 2 * $space-s;
 
-      .winx-task-content {
+      .winx-task__content {
         transition: translate $fast ease, opacity $fast ease, visibility $fast;
       }
-      .winx-task-actions {
+      .winx-task__actions {
         position: absolute;
         inset: 0;
         display: flex;
@@ -77,7 +77,7 @@ $fade: 18px;   // the buttons' background fades in over this much of the text
         visibility: hidden;
         transition: translate $fast ease, visibility $fast;
 
-        .winx-task-btns { display: contents; }
+        .winx-task__btns { display: contents; }
         button.winx-btn {
           flex: 1 1 0;
           min-width: 0;
@@ -94,29 +94,29 @@ $fade: 18px;   // the buttons' background fades in over this much of the text
           font-size: $text-2xl;
           transition: background $fast ease, box-shadow $fast ease;
 
-          &.winx-task-primary {
+          &.winx-task__primary {
             order: -1;
             background: color-mix(in srgb, var(--winx-gold) calc(var(--winx-swipe-progress, 0) * 100%), var(--winx-pink-deep));
           }
-          &.winx-task-btns__edit { background: var(--winx-blue-deep); }
-          &:is(.winx-task-btns__skip, .winx-task-btns__today) {
+          &.winx-task__btns-edit { background: var(--winx-blue-deep); }
+          &:is(.winx-task__btns-skip, .winx-task__btns-today) {
             background: var(--winx-gold);
             color: var(--winx-on-gold);
           }
-          &.winx-task-btns__del { background: var(--winx-danger); }
+          &.winx-task__btns-del { background: var(--winx-danger); }
         }
       }
       &[data-swipe] {
-        .winx-task-content { translate: -100% 0; opacity: 0; visibility: hidden; }
-        .winx-task-actions { translate: 0; visibility: visible; }
+        .winx-task__content { translate: -100% 0; opacity: 0; visibility: hidden; }
+        .winx-task__actions { translate: 0; visibility: visible; }
       }
-      &[data-swipe="ready"] .winx-task-actions button.winx-task-primary {
+      &[data-swipe="ready"] .winx-task__actions button.winx-task__primary {
         color: var(--winx-on-gold);
         box-shadow: inset 0 0 0 $border-width-l var(--winx-gold-deep), inset 0 0 16px var(--winx-highlight);
         font-size: $text-3xl;
       }
       @media (prefers-reduced-motion: reduce) {
-        .winx-task-content, .winx-task-actions, .winx-task-actions button.winx-btn { transition: none; }
+        .winx-task__content, .winx-task__actions, .winx-task__actions button.winx-btn { transition: none; }
       }
     }
   }
