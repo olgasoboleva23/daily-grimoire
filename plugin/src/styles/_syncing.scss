@@ -1,4 +1,7 @@
 @use "mixins" as *;
+
+@keyframes ui-spin { to { transform: rotate(360deg); } }   /* the ✦ pills and the syncing badge */
+
 /* the phone: "✦ syncing" at the top while Remotely Save syncs, the star spinning (src/main.ts) */
 .ui-syncing {
   position: fixed;

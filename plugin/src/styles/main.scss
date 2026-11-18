@@ -1,17 +1,12 @@
 // The document sheet: what Obsidian's own windows draw. The tab (pages, widgets) has its own sheet,
-// shadow.scss, so only these partials are here: tokens and themes for them, the Form / Search
-// windows, the tooltip, the syncing badge and the Finance note's cards (cssclasses: dashboard).
+// shadow.scss, so only these partials are here: fonts, tokens and themes for the Form / Search
+// windows, those windows, the tooltip, the syncing badge, the tabs component, the file explorer's colours.
 // Keep the order: rules of the same weight win by order.
 @use "fonts";
 @use "utilities";
-@use "animations";
-@use "assets";
-@use "callout-grid";
-@use "../components/uikit/UiCard";
-@use "layout";
+@use "file-explorer";
 @use "tokens";
 @use "themes";
-@use "scroll-cards";
 @use "../components/uikit/Search";
 @use "../components/uikit/Form";
 @use "host";

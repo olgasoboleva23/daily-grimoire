@@ -1,9 +1,7 @@
 /* The widget's card, block ui-widget (src/uikit/card.js): a pink gradient, fairy wings, a glow on hover, a thin
-   scrollbar. The card is a callout, and cards written in Markdown ("> [!card] Title", the Finance note's) are the same
-   callout without our classes, so the look is on .callout[data-callout="card"]; what only a widget has is on
-   ui-widget__*. */
+   scrollbar. UiCard renders it as a .callout element (the tab's sheet only), so the look is on
+   .callout[data-callout="card"]; what only a widget has is on ui-widget__*. */
 
-@use "context";
 @use "mixins" as *;
 
 .dashboard {
@@ -14,10 +12,10 @@
       135deg,
       var(--ui-pink-light),
       var(--ui-pink)
-    ) #{context.$imp};
-    border: $border #{context.$imp};
-    border-radius: $radius-xl #{context.$imp};
-    overflow: visible #{context.$imp};
+    );
+    border: $border;
+    border-radius: $radius-xl;
+    overflow: visible;
     padding: $space-xl;
     transition:
       border-color $slow ease,
@@ -54,30 +52,26 @@
       right: var(--ui-corner-inset, #{$space-xs});
       transform: scale(-1, -1);
     }
-    @if context.$shadow {
-      /* no wings (UiCard :wings="false", the projects' cards): the title without their room */
-      &.ui-widget--wingless {
-        &::before,
-        &::after { display: none; }
-        > .callout-title { padding-inline: 0 #{context.$imp}; }
-      }
+    /* no wings (UiCard :wings="false", the projects' cards): the title without their room */
+    &.ui-widget--wingless {
+      &::before,
+      &::after { display: none; }
+      > .callout-title { padding-inline: 0; }
     }
 
     /* Title */
     > .callout-title {
-      justify-content: center #{context.$imp};
-      font-family: $font-deco #{context.$imp};
-      color: var(--ui-purple-deep) #{context.$imp};
-      letter-spacing: 2px #{context.$imp};
-      text-transform: uppercase #{context.$imp};
-      font-size: $text-2xl #{context.$imp};
-      padding-inline: $deco + $space-m #{context.$imp}; /* room for the wings */
-      @if context.$shadow {
-        /* a widget's button next to the title (the market's +, UiButton add): on the title's line */
-        .ui-btn.ui-widget__add {
-          align-self: center;
-          margin: (-$space-xs) 0 (-$space-xs) $space-s;   /* centred on the title's line without making it taller */
-        }
+      justify-content: center;
+      font-family: $font-deco;
+      color: var(--ui-purple-deep);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-size: $text-2xl;
+      padding-inline: $deco + $space-m; /* room for the wings */
+      /* a widget's button next to the title (the market's +, UiButton add): on the title's line */
+      .ui-btn.ui-widget__add {
+        align-self: center;
+        margin: (-$space-xs) 0 (-$space-xs) $space-s;   /* centred on the title's line without making it taller */
       }
     }
 
@@ -114,7 +108,6 @@
   }
 }
 
-@if context.$shadow {
 /* a hero card: no title */
 .callout[data-callout="card"][data-callout-metadata~="hero"] > .callout-title { display: none; }
 
@@ -144,5 +137,4 @@ $cover-h: 150px; /* a cover's height: a picture's frame, not a spacing value */
    squircles. Pin the shape back for anything inside a ui widget. */
 :is(.dashboard, .ui-pomodoro, .ui-shop) :is(button, input) {
   corner-shape: round;
-}
 }

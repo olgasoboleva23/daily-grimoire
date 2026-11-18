@@ -1,4 +1,4 @@
-/* ── Fixed-height scrolling card: [!card|scroll] (300px) or [!card|scroll tall] (70vh) ── */
+/* ── Fixed-height scrolling card: UiCard with meta "scroll" (300px) ── */
 
 @use "mixins" as *;
 .dashboard .callout[data-callout="card"][data-callout-metadata~="scroll"] {
@@ -6,8 +6,6 @@
     max-height: 300px;
     overflow-y: auto !important;
   }
-  /* [!card|scroll tall]: for page-wide cards (Week, Finance) */
-  &[data-callout-metadata~="tall"] > .callout-content { max-height: 70vh; }
 }
 
 /* ── Scroll hint: a bouncing sparkly arrow at the bottom of scrollable cards ──

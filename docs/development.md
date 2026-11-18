@@ -134,7 +134,7 @@ defineProps({ state: { type: Object, required: true } });
   component's own state.
 - Class names are BEM: `ui-block__element--modifier` (`ui-weight__now`, `ui-cal__day--today`, `ui-btn--on`), one block per `index.scss` next to its component (shared ones in `plugin/src/styles/`); states the code sets are modifiers; layout utilities (`ui-row`, `ui-gap-*`…) are in `plugin/src/styles/_utilities.scss`.
 - Two style builds from the same partials (`_context.scss` switches `:root` / `body.is-mobile` to `.ui-view` / `:host([data-mobile])`):
-  - `main.scss` → `styles.css`, the **document sheet**: only what Obsidian's own windows draw (Form, Search, the tooltip, the syncing badge, tokens and themes for them, the Finance note's `> [!card]` callout cards). There `!important` still fights Obsidian's rules.
+  - `main.scss` → `styles.css`, the **document sheet**: only what Obsidian's own windows draw (Form, Search, the tooltip, the syncing badge, tokens and themes for them, the file explorer's colours). Cards and pages are not there: the tab draws them (`UiCard` renders a `.callout` element, styled in the tab's sheet only), no note uses Markdown callouts with our look. Two `!important` are left, both in `_themes.scss`.
   - `shadow.scss` → compiled to text and inlined into `main.js`, adopted by the tab's Shadow DOM root. It is in cascade layers: `@layer base, components;` with `tokens` and `utilities` as sublayers of `components` (the `layer` mixin in `_context.scss` puts a partial in its layer), so a later layer wins whatever the selector's weight.
 - A page is a component of the tab (see [Dashboard](dashboard.md)); notes are only data.
 

@@ -1,26 +1,13 @@
-@use "context";
 @use "mixins" as *;
 /* ============================================
- * WINX THEME — Layout & Backgrounds
+ * WINX THEME — Layout & Backgrounds (the tab's sheet only)
  *
- * • File explorer (.workspace-leaf-content[data-type="file-explorer"])
- *   nav color overrides
- * • Full-bleed background for the dashboard
- *   workspace leaf
+ * • Full-bleed background of the tab
  * • Base typography
  * ============================================ */
 
-/* ── File explorer nav ── */
-.workspace-leaf-content[data-type="file-explorer"] {
-  --nav-item-color: var(--ui-lavender);
-  --nav-item-color-hover: white;
-  --nav-item-color-active: white;
-  --nav-collapse-icon-color: var(--ui-lavender);
-  --nav-collapse-icon-color-collapsed: var(--ui-lavender);
-}
-
-/* ── Dashboard workspace background ── */
-#{if(sass(context.$shadow): ".ui-view"; else: '.workspace-leaf-content:has(.dashboard)')} {
+/* ── Tab background ── */
+.ui-view {
   --background-primary: transparent;
   position: relative;
   z-index: $z-base; /* stacking context so the z-index:-1 photo stays inside this leaf */
@@ -65,7 +52,6 @@
 
 /* ── Base styles of the dashboard ── */
 .dashboard {
-  --callout-blend-mode: normal;
   font-family: Quicksand, sans-serif;
   color: var(--ui-text);
 
@@ -78,7 +64,4 @@
 }
 
 // Utility pages keep the page colour; only Dashboard, Calendar and Projects have the photo.
-// (The document has no such ::before: the tab's pages live in its shadow root.)
-@if context.$shadow {
-  .ui-view:not([data-page="dashboard"], [data-page="calendar"], [data-page="projects"])::before { display: none; }
-}
+.ui-view:not([data-page="dashboard"], [data-page="calendar"], [data-page="projects"])::before { display: none; }

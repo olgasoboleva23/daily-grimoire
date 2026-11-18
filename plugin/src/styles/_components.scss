@@ -11,7 +11,7 @@
 @use "utilities";   // layout utilities first: the blocks win over them
 @use "animations";
 @use "assets";
-@use "callout-grid";
+@use "dashboard-cards";   // card tweaks on the pages, the columns' sparkles
 @use "../components/uikit/UiCard";   // the widget's card, where the card snippet was
 @use "../components/pages/dashboard/widgets/market";
 @use "../components/pages/dashboard/widgets/xp/XpToday";

@@ -1,0 +1,8 @@
+// Obsidian's own file explorer: nav colours (the document sheet only; the tab has no file explorer)
+.workspace-leaf-content[data-type="file-explorer"] {
+  --nav-item-color: var(--ui-lavender);
+  --nav-item-color-hover: white;
+  --nav-item-color-active: white;
+  --nav-collapse-icon-color: var(--ui-lavender);
+  --nav-collapse-icon-color-collapsed: var(--ui-lavender);
+}

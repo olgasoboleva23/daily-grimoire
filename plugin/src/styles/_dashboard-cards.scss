@@ -1,0 +1,99 @@
+@use "context";
+@use "mixins" as *;
+/* ============================================
+ * WINX THEME — Cards on the tab's pages and column sparkles (the tab's sheet only)
+ * ============================================ */
+
+/* ── Cards: no icon, content may overflow ── */
+.dashboard {
+  .callout[data-callout="card"] .callout-icon {
+    display: none;
+  }
+  /* overflow fix for card content (merged from the old theme) */
+  .callout[data-callout="card"] > .callout-content {
+    overflow: visible !important;
+  }
+}
+
+/* ── Phone: reclaim side space ──
+   Page margins + grid padding + card padding stack up to ~70px per side,
+   too much on a ~390px screen. Desktop is untouched.
+   The shell and its pages set their own bottom padding (app/index.scss); only the card's padding is here. */
+#{context.$phone} .dashboard {
+  .callout[data-callout="card"] { padding: $space-l; }
+}
+
+/* ── Column sparkles ── */
+.dashboard {
+  /*
+     * Each dashboard column gets a ::before and ::after star.
+     * Position & delay are driven by scoped custom
+     * properties set per nth-child — one place to
+     * edit instead of 6 separate selector blocks.
+     */
+  .ui-dash__column {
+    position: relative;
+
+    /* Fallback values (star hidden off-screen if unset) */
+    --star-before-top: auto;
+    --star-before-bottom: auto;
+    --star-before-left: auto;
+    --star-before-right: auto;
+    --star-before-delay: 0s;
+    --star-after-top: auto;
+    --star-after-bottom: auto;
+    --star-after-left: auto;
+    --star-after-right: auto;
+    --star-after-delay: 0s;
+
+    &:nth-child(1) {
+      --star-before-top: 30%;
+      --star-before-right: -12px;
+      --star-before-delay: 0s;
+      --star-after-bottom: 12%;
+      --star-after-left: -10px;
+      --star-after-delay: 1.4s;
+    }
+    &:nth-child(2) {
+      --star-before-top: 8%;
+      --star-before-left: -12px;
+      --star-before-delay: 0.7s;
+      --star-after-bottom: 30%;
+      --star-after-right: -10px;
+      --star-after-delay: 2.1s;
+    }
+    &:nth-child(3) {
+      --star-before-top: 45%;
+      --star-before-left: -12px;
+      --star-before-delay: 0.4s;
+      --star-after-top: 5%;
+      --star-after-right: -10px;
+      --star-after-delay: 1.8s;
+    }
+
+    /* Shared star styles */
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      z-index: $z-raised !important;
+      width: $deco;
+      height: $deco;
+      translate: -16px -16px;          /* wider canvas for sparkles, star stays put */
+      background: var(--ui-star-sparkle-svg) 0 0 / contain no-repeat;
+      pointer-events: none;
+      animation: ui-twinkle 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 3px alpha(--ui-gold, 60%));
+    }
+
+    /* Position wired to scoped custom props above */
+    &::before {
+      inset: var(--star-before-top) var(--star-before-right) var(--star-before-bottom) var(--star-before-left);
+      animation-delay: var(--star-before-delay);
+    }
+    &::after {
+      inset: var(--star-after-top) var(--star-after-right) var(--star-after-bottom) var(--star-after-left);
+      animation-delay: var(--star-after-delay);
+    }
+  }
+}
