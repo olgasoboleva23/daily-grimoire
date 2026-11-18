@@ -51,7 +51,8 @@ test("MedsPage: a tab per course in one row, the running one first and shown", a
   const tabs = w.findAll(".winx-tabs__tab");
 
   assert.ok(w.find(".winx-tabs").classes("winx-tabs--scroll"));
-  assert.deepEqual(tabs.map(t => t.text()), ["Аевит, Магний · 7 ноя", "Цинк · 1 окт"]);
+  assert.deepEqual(tabs.map(t => t.text()), ["7 ноя", "1 окт"]);
+  assert.equal(tabs[0].attributes("data-tip"), "winx-tooltip");
   assert.ok(tabs[0].classes("winx-tabs__tab--on"));
   assert.equal(w.find(".winx-meds__sum").text().replace(/\s+/g, " "),
     "день 2 из 3 · принято 3 из 6");

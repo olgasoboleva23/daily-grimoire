@@ -27,7 +27,7 @@ const picked = computed({
     <!-- one row, sideways scroll -->
     <WinxTabs
       v-model="picked"
-      :tabs="list.map(c => ({ key: c.id, text: c.label }))"
+      :tabs="list.map(c => ({ key: c.id, text: c.label, title: c.title }))"
       on-background
       scroll
     />

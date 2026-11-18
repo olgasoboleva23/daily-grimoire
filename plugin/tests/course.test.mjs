@@ -152,7 +152,12 @@ test("forFood: the codes taken by day; courseList: running first, then the newes
 
   assert.deepEqual(list.map(c => c.id), ["c1", "c2", "c3"]);
   assert.deepEqual(list.map(c => c.running), [true, false, false]);
-  assert.equal(list[0].label, "Аевит, Магний · 7 ноя");
+  assert.deepEqual(list.map(c => c.label), ["7 ноя", "9 ноя", "1 окт"]);
+  assert.equal(list[0].title, "Аевит, Магний · 7 ноя");
+  // two courses that start one day: the name tells them apart
+  const twin = courseList({ c1: REC, c2: { ...REC, meds: [REC.meds[0]] } }, "2026-11-08");
+
+  assert.deepEqual(twin.map(c => c.label).sort(), ["7 ноя · Аевит", "7 ноя · Аевит, Магний"]);
 });
 
 test("renaming a medicine updates its labels while table and Food retain its marked history", () => {

@@ -218,14 +218,21 @@ export function forFood(id, rec) {
   };
 }
 
-// the courses for the tabs: running first, then the newest start
-export const courseList = (json, today) => Object.entries(json)
-  .map(([id, rec]) => ({
-    id, name: courseName(rec), start: rec.start,
-    label: `${courseName(rec)} · ${dayLabel(rec.start).split(",")[0]}`,
-    running: isRunning(rec, today),
-  }))
-  .sort((a, b) => b.running - a.running || b.start.localeCompare(a.start));
+// the courses for the tabs: running first, then the newest start. A tab says the start date
+// ("7 ноя", the name after it when another course starts that day); `title`: the whole name, a tip
+export const courseList = (json, today) => {
+  const date = rec => dayLabel(rec.start).split(",")[0];
+  const same = rec => Object.values(json).filter(r => r.start === rec.start).length > 1;
+
+  return Object.entries(json)
+    .map(([id, rec]) => ({
+      id, name: courseName(rec), start: rec.start,
+      label: same(rec) ? `${date(rec)} · ${courseName(rec)}` : date(rec),
+      title: `${courseName(rec)} · ${date(rec)}`,
+      running: isRunning(rec, today),
+    }))
+    .sort((a, b) => b.running - a.running || b.start.localeCompare(a.start));
+};
 
 // ranges of a medicine: [{ from, to }] course days (1-based); old records: days → 1..days
 export const rangesOf = m =>
