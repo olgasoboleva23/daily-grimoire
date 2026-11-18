@@ -1,12 +1,12 @@
-/* The widget's card, block ui-widget (src/uikit/card.js): a pink gradient, fairy wings, a glow on hover, a thin
-   scrollbar. UiCard renders it as a .callout element (the tab's sheet only), so the look is on
-   .callout[data-callout="card"]; what only a widget has is on ui-widget__*. */
+/* The card, block ui-card (UiCard.vue): a pink gradient, fairy wings, a glow on hover, a thin
+   scrollbar. Modifiers: --wingless, and one per `meta` word (--scroll, --hero). The look is in the
+   tab's sheet only; the cover and the skeleton, which only a widget has, are at the end. */
 
 @use "mixins" as *;
 
 .dashboard {
   /* ── Card ─────────────────────────────────── */
-  .callout[data-callout="card"] {
+  .ui-card {
     position: relative;
     background: linear-gradient(
       135deg,
@@ -53,14 +53,14 @@
       transform: scale(-1, -1);
     }
     /* no wings (UiCard :wings="false", the projects' cards): the title without their room */
-    &.ui-widget--wingless {
+    &.ui-card--wingless {
       &::before,
       &::after { display: none; }
-      > .callout-title { padding-inline: 0; }
+      > .ui-card__title { padding-inline: 0; }
     }
 
     /* Title */
-    > .callout-title {
+    > .ui-card__title {
       justify-content: center;
       font-family: $font-deco;
       color: var(--ui-purple-deep);
@@ -69,7 +69,7 @@
       font-size: $text-2xl;
       padding-inline: $deco + $space-m; /* room for the wings */
       /* a widget's button next to the title (the market's +, UiButton add): on the title's line */
-      .ui-btn.ui-widget__add {
+      .ui-btn.ui-card__add {
         align-self: center;
         margin: (-$space-xs) 0 (-$space-xs) $space-s;   /* centred on the title's line without making it taller */
       }
@@ -84,7 +84,7 @@
     }
 
     /* Custom scrollbar */
-    > .callout-content {
+    > .ui-card__body {
       overflow: auto;
       scrollbar-width: thin;
       scrollbar-color: var(--ui-pink-deep) transparent;
@@ -109,12 +109,12 @@
 }
 
 /* a hero card: no title */
-.callout[data-callout="card"][data-callout-metadata~="hero"] > .callout-title { display: none; }
+.ui-card.ui-card--hero > .ui-card__title { display: none; }
 
 /* a card widget until its first draw */
 $cover-h: 150px; /* a cover's height: a picture's frame, not a spacing value */
 
-.ui-widget {
+.ui-card {
   &__cover {
     display: block;
     width: 100%;

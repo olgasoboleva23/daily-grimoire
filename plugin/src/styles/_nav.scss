@@ -5,7 +5,7 @@
   margin-bottom: $space-l;
   &__title {
     font-family: $font-deco; font-size: $text-3xl; color: var(--ui-lavender); min-width: 220px;
-    .callout & { color: var(--ui-purple-deep); }   /* on a pink card */
+    .ui-card & { color: var(--ui-purple-deep); }   /* on a pink card */
   }
   /* the phone: ‹ the title › on the first line, the chips (today, week / month, ✓ done, 🔁) under it */
   #{context.$mobile} & {

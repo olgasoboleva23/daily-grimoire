@@ -105,10 +105,10 @@ test("a card: its placeholder until the first data, then the view inside it; ui-
   el.addEventListener("ui-drawn", () => drawn++);
   const { host } = mount({ load: s.load, card: { title: "Weight" } }, el);
   await settle();
-  assert.ok(el.querySelector(".ui-widget .ui-widget__body .ui-widget__skeleton"));
+  assert.ok(el.querySelector(".ui-card .ui-card__body .ui-card__skeleton"));
   s.loads[0].ok({ n: 4 }); await settle();
-  assert.equal(el.querySelector(".ui-widget__body").textContent, "4");
-  assert.equal(el.querySelector(".callout-title-inner").textContent, "Weight");
+  assert.equal(el.querySelector(".ui-card__body").textContent, "4");
+  assert.equal(el.querySelector(".ui-card__title-inner").textContent, "Weight");
   assert.equal(drawn, 1);
   host.unload();
 });
@@ -134,7 +134,7 @@ test("a card's button goes next to its title", async () => {
   const s = slow(), el = document.body.appendChild(document.createElement("div"));
   const host = new VueHost(el, { view: View(), load: s.load, card: { title: "Market" }, cardButton: Plus });
   host.load(); await settle();
-  el.querySelector(".callout-title-inner + button").click();
+  el.querySelector(".ui-card__title-inner + button").click();
   assert.equal(added, 1);
   host.unload();
 });

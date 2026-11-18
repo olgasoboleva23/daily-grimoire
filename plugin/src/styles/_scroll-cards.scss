@@ -1,8 +1,8 @@
 /* ── Fixed-height scrolling card: UiCard with meta "scroll" (300px) ── */
 
 @use "mixins" as *;
-.dashboard .callout[data-callout="card"][data-callout-metadata~="scroll"] {
-  > .callout-content {
+.dashboard .ui-card.ui-card--scroll {
+  > .ui-card__body {
     max-height: 300px;
     overflow-y: auto !important;
   }
@@ -23,7 +23,7 @@
 @keyframes ui-bounce-up   { 0%, 100% { translate: 0 0; } 50% { translate: 0 -5px; } }
 @keyframes ui-bounce-down { 0%, 100% { translate: 0 0; } 50% { translate: 0 5px; } }
 
-.dashboard .callout[data-callout="card"][data-callout-metadata~="scroll"] > .callout-content {
+.dashboard .ui-card.ui-card--scroll > .ui-card__body {
   &::before, &::after {
     content: "";
     position: sticky;

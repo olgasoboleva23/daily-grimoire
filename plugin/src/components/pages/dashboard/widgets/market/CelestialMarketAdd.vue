@@ -8,7 +8,7 @@ import { addMarketItem } from "#/controllers/widgets/market.js";
   <UiButton
     kind="add"
     title="add item"
-    class="ui-widget__add"
+    class="ui-card__add"
     @click="addMarketItem()"
   >+</UiButton>
 </template>

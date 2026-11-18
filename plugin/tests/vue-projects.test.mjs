@@ -54,7 +54,7 @@ function mount(over = {}) {
   return { el, view };
 }
 const cards = el => [...el.querySelectorAll(".ui-projects__card")];
-const names = el => cards(el).map(c => c.querySelector(".callout-title-inner").textContent);
+const names = el => cards(el).map(c => c.querySelector(".ui-card__title-inner").textContent);
 
 test("the list: a card per project in file order with its status pill, description, 3/8 and the next task", () => {
   const { el } = mount();
@@ -88,8 +88,8 @@ test("A project with no tasks has no progress bar", () => {
 
 test("No cover: the placeholder picture; a cover: its resource path", () => {
   const [garden, shed] = cards(mount().el);
-  assert.equal(garden.querySelector(".ui-widget__cover").getAttribute("src"), PLACEHOLDER);
-  assert.equal(shed.querySelector(".ui-widget__cover").getAttribute("src"), "app://x/Media/shed.webp");
+  assert.equal(garden.querySelector(".ui-card__cover").getAttribute("src"), PLACEHOLDER);
+  assert.equal(shed.querySelector(".ui-card__cover").getAttribute("src"), "app://x/Media/shed.webp");
   assert.match(PLACEHOLDER, /^data:image\/svg\+xml,/);
 });
 
@@ -147,7 +147,7 @@ const button = (el, label) => [...el.querySelectorAll("button")].find(b => b.tex
 test("the header: the name, status, description, 3/8; ← Projects clears state.open", async () => {
   const { el, view } = mount({ open: "p1" });
   const header = el.querySelector(".ui-project__header");
-  assert.equal(header.querySelector(".callout-title-inner").textContent, "Garden");
+  assert.equal(header.querySelector(".ui-card__title-inner").textContent, "Garden");
   assert.equal(header.querySelector(".ui-status").textContent, "Active");
   assert.equal(header.querySelector(".ui-project__description").textContent, "beds by the wall");
   assert.equal(header.querySelector(".ui-progress__count").textContent, "3/8");

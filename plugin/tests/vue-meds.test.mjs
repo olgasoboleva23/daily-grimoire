@@ -67,7 +67,7 @@ test("MedsCourse: Приём, Заметки when there are notes, the counts, c
   assert.deepEqual(w.findAll(".ui-meds__intake").map(e => e.text()),
     ["☀️ утро, перед едой: Магний 2 таблетки", "🌙 на ночь, перед едой: Магний 2 таблетки",
       "в любое время, после еды: Аевит 1 таблетка"]);
-  assert.ok(w.findAll(".callout-title-inner").map(e => e.text()).includes("Заметки"));
+  assert.ok(w.findAll(".ui-card__title-inner").map(e => e.text()).includes("Заметки"));
   assert.equal(w.find(".ui-meds__notes").element.textContent, C1.notes);
   assert.deepEqual(w.findAll(".ui-meds__chip").map(c => [c.text(), c.attributes("data-mark")]),
     [["Магний", "✅"], ["Магний", "☐"], ["Аевит", "☐"]]);
@@ -78,7 +78,7 @@ test("MedsCourse: Приём, Заметки when there are notes, the counts, c
   assert.equal(w.findAll(".ui-meds__tick").length, 8);   // Аевит's last day is blank
   assert.equal(w.find(".ui-meds__row--past .ui-meds__tick").classes("ui-check--on"), true);
   await w.findAll(".ui-tabs__tab")[1].trigger("click");
-  assert.ok(!w.findAll(".callout-title-inner").map(e => e.text()).includes("Заметки"));
+  assert.ok(!w.findAll(".ui-card__title-inner").map(e => e.text()).includes("Заметки"));
 });
 
 test("MedsCourse: a tick or a chip goes round at once and writes its key; a note as typed", async () => {
@@ -143,9 +143,9 @@ test("MedsCourse: ✎ in the Курс card edits the course shown", async () => 
   Form.ask = async (app, t) => { title = t; return null; };
   try {
     await w.findAll(".ui-tabs__tab")[1].trigger("click");
-    const card = w.findAll(".ui-widget").find(c => c.find(".ui-meds__sum").exists());
+    const card = w.findAll(".ui-card").find(c => c.find(".ui-meds__sum").exists());
 
-    await card.find(".ui-widget__title .ui-widget__add").trigger("click"); await tick();
+    await card.find(".ui-card__title .ui-card__add").trigger("click"); await tick();
     assert.equal(title, "✦ Edit medication course");
   } finally { Form.ask = ask; }
 });

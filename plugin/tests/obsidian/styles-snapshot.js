@@ -19,7 +19,7 @@
     const root = leaf.view.containerEl.querySelector(ROOT ?? ".markdown-source-view");
     if (!root) throw new Error(`${page}: no ${ROOT}`);
     const els = [...root.querySelectorAll("*")].filter(e => e.getClientRects().length);
-    const path = e => { const p = []; for (; e && e !== root; e = e.parentElement) p.unshift(`${e.tagName}${[...e.classList].filter(c => /^ui|^callout|^dashboard|^task|^block/.test(c)).map(c => "." + c).join("")}:${[...e.parentElement.children].indexOf(e)}`); return p.join(">"); };
+    const path = e => { const p = []; for (; e && e !== root; e = e.parentElement) p.unshift(`${e.tagName}${[...e.classList].filter(c => /^ui|^dashboard|^task|^block/.test(c)).map(c => "." + c).join("")}:${[...e.parentElement.children].indexOf(e)}`); return p.join(">"); };
     for (const e of els) {
       for (const pseudo of [null, "::before", "::after"]) {
         const cs = getComputedStyle(e, pseudo);

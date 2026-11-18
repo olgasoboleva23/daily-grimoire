@@ -63,7 +63,7 @@ test("UiNoteLink, UiEmpty, UiMissing, UiFailed, UiGroupHeader, UiAddForm, UiCard
   draws(mount(ui.UiAddForm, { props: { input, submit: "Save" } }),
     '<form class="ui-add-form ui-flex ui-gap-s"><input class="ui-input ui-input--field ui-add-form__input" type="number" placeholder="today, kg" name="kg"><button class="ui-add-form__submit" type="submit">Save</button></form>');
   draws(mount(ui.UiCard, { props: { title: "Weight", meta: ["scroll"] }, slots: { default: "<b>40 kg</b>" } }),
-    '<div class="callout ui-widget" data-callout="card" data-callout-metadata="scroll" data-callout-fold=""><div class="callout-title ui-widget__title" dir="auto"><div class="callout-icon"></div><div class="callout-title-inner">Weight</div></div><div class="callout-content ui-widget__body"><b>40 kg</b></div></div>');
+    '<div class="ui-card ui-card--scroll"><div class="ui-card__title" dir="auto"><div class="ui-card__title-inner">Weight</div></div><div class="ui-card__body"><b>40 kg</b></div></div>');
 });
 
 test("UiButton: a mirrored nav chevron (next) gets its modifier", () => {
@@ -73,7 +73,7 @@ test("UiButton: a mirrored nav chevron (next) gets its modifier", () => {
 
 test("UiCard puts a widget's own class on its body (the shop's ui-shop)", () => {
   const card = mount(ui.UiCard, { props: { title: "Shop", bodyClass: "ui-shop" } });
-  assert.equal(card.find(".ui-widget__body").classes().join(" "), "callout-content ui-widget__body ui-shop");
+  assert.equal(card.find(".ui-card__body").classes().join(" "), "ui-card__body ui-shop");
 });
 
 test("UiFailed's retry and UiAddForm's submit reach the parent", async () => {
@@ -117,18 +117,18 @@ test("Search.pickGrouped: a header over each group's first row, the name and its
 
 test("UiCard: a cover picture above the title; none without one", () => {
   const card = mount(ui.UiCard, { props: { title: "Trip", cover: "app://x/trip.webp" } });
-  const img = card.find("img.ui-widget__cover");
+  const img = card.find("img.ui-card__cover");
   assert.equal(img.attributes("src"), "app://x/trip.webp");
   assert.equal(img.attributes("alt"), "");
-  assert.equal(card.find(".ui-widget").element.firstElementChild, img.element);
+  assert.equal(card.find(".ui-card").element.firstElementChild, img.element);
   assert.equal(mount(ui.UiCard, { props: { title: "Trip" } }).find("img").exists(), false);
 });
 
 test("UiCard: wings by default, :wings=false draws it without (the --wingless modifier)", () => {
   const wingless = mount(ui.UiCard, { props: { title: "Trip", wings: false } });
 
-  assert.equal(wingless.classes().includes("ui-widget--wingless"), true);
-  assert.equal(mount(ui.UiCard, { props: { title: "Trip" } }).classes().includes("ui-widget--wingless"), false);
+  assert.equal(wingless.classes().includes("ui-card--wingless"), true);
+  assert.equal(mount(ui.UiCard, { props: { title: "Trip" } }).classes().includes("ui-card--wingless"), false);
 });
 
 test("UiTabs: on the page background (a page without a card) the light look", async () => {

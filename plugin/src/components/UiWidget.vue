@@ -42,7 +42,7 @@ async function refresh() {
     Object.assign(state, { data, error: null });
     await nextTick();
     if (gone || n !== runs) return;
-    const body = el().querySelector(".ui-widget__body") ?? el();
+    const body = el().querySelector(".ui-card__body") ?? el();
 
     if (!heights.has(def.view)) heights.set(def.view, new Map());
     heights.get(def.view).set(sourcePath, body.offsetHeight);
@@ -90,7 +90,7 @@ defineExpose({ state, refresh });
     <UiFailed v-if="state.error" :text="state.error" @retry="retry" />
     <div
       v-else-if="state.data === null"
-      class="ui-widget__skeleton"
+      class="ui-card__skeleton"
       :style="kept ? { minHeight: `${kept}px` } : null"
     />
     <component :is="def.view" v-else :state="state" />

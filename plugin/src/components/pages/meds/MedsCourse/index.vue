@@ -90,7 +90,7 @@ const note = (r, el) => {
         <UiButton
           kind="add"
           title="edit course"
-          class="ui-widget__add"
+          class="ui-card__add"
           @click="editCourse(id)"
         >✎</UiButton>
       </template>

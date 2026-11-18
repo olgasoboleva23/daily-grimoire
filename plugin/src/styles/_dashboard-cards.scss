@@ -4,13 +4,10 @@
  * WINX THEME — Cards on the tab's pages and column sparkles (the tab's sheet only)
  * ============================================ */
 
-/* ── Cards: no icon, content may overflow ── */
+/* ── Cards: content may overflow ── */
 .dashboard {
-  .callout[data-callout="card"] .callout-icon {
-    display: none;
-  }
   /* overflow fix for card content (merged from the old theme) */
-  .callout[data-callout="card"] > .callout-content {
+  .ui-card > .ui-card__body {
     overflow: visible !important;
   }
 }
@@ -20,7 +17,7 @@
    too much on a ~390px screen. Desktop is untouched.
    The shell and its pages set their own bottom padding (app/index.scss); only the card's padding is here. */
 #{context.$phone} .dashboard {
-  .callout[data-callout="card"] { padding: $space-l; }
+  .ui-card { padding: $space-l; }
 }
 
 /* ── Column sparkles ── */

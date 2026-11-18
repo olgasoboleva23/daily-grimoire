@@ -68,13 +68,14 @@ p { margin-block: var(--p-spacing); }
 a { color: var(--link-color); cursor: pointer; text-decoration: var(--link-decoration); }
 img { max-width: 100%; vertical-align: middle; }
 svg.svg-icon { width: var(--icon-size); height: var(--icon-size); stroke-width: var(--icon-stroke); }
-.callout { margin: 1em 0; }
-
-.callout-title {
-  display: flex;
-  gap: var(--size-4-1);
-  line-height: var(--line-height-tight);
-  align-items: flex-start;
+.ui-card {
+  margin: 1em 0;
+  &__title {
+    display: flex;
+    gap: var(--size-4-1);
+    line-height: var(--line-height-tight);
+    align-items: flex-start;
+    &-inner { --font-weight: var(--ui-card-title-weight); font-weight: var(--font-weight); }
+  }
 }
-.callout-title-inner { --font-weight: var(--callout-title-weight); font-weight: var(--font-weight); }
 b, strong { font-weight: calc(var(--font-weight) + var(--bold-modifier)); color: var(--bold-color); }

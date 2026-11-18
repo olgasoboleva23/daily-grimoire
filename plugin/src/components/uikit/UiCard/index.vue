@@ -1,5 +1,5 @@
-<!-- a dashboard card: the markup Obsidian draws for a "> [!card] Title" callout (as uikit/card.js),
-     with a slot; the button slot: one next to the title -->
+<!-- a card: a title and a body slot; the button slot: one next to the title;
+     each `meta` word becomes a modifier (ui-card--scroll, ui-card--hero) -->
 <script setup>
 defineProps({
   title: { type: String, default: "" },
@@ -15,22 +15,18 @@ defineProps({
 
 <template>
   <div
-    :class="['callout ui-widget', { 'ui-widget--wingless': !wings }]"
-    data-callout="card"
-    :data-callout-metadata="meta.join(' ')"
-    data-callout-fold=""
+    :class="['ui-card', { 'ui-card--wingless': !wings }, ...meta.map(m => `ui-card--${m}`)]"
   >
     <img
       v-if="cover"
-      class="ui-widget__cover"
+      class="ui-card__cover"
       :src="cover"
       alt=""
     >
-    <div class="callout-title ui-widget__title" dir="auto">
-      <div class="callout-icon" />
-      <div class="callout-title-inner">{{ title }}</div>
+    <div class="ui-card__title" dir="auto">
+      <div class="ui-card__title-inner">{{ title }}</div>
       <slot name="button" />
     </div>
-    <div :class="['callout-content ui-widget__body', bodyClass]"><slot /></div>
+    <div :class="['ui-card__body', bodyClass]"><slot /></div>
   </div>
 </template>
