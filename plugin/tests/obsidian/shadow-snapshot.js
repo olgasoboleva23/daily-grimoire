@@ -10,7 +10,9 @@
     "text-transform", "letter-spacing", "opacity", "transform", "filter", "gap", "flex-direction", "justify-content",
     "align-items", "grid-template-columns", "z-index", "visibility", "content", "text-shadow", "outline", "overflow"];
   const wait = ms => new Promise(r => setTimeout(r, ms));
-  const leaf = app.workspace.getLeavesOfType("ui-app")[0];
+  const leaves = app.workspace.getLeavesOfType("ui-app");
+  // the one on screen: a background tab has no layout, so nothing in it is "visible"
+  const leaf = leaves.find(l => l.view.containerEl.getClientRects().length) ?? leaves[0];
   if (!leaf) throw new Error("no open ui-app tab");
   const was = leaf.getViewState();
   // every shadow root under the tab (hosts can nest), with the path of its host
