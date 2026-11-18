@@ -13,6 +13,7 @@ import { Form } from "#/components/uikit/Form/index.ts";
 import { app } from "#/helpers/app.js";
 import {
   addStage, saveProject, askEditProject, askDeleteProject, askAddLink, removeLink,
+  copyProjectPrompt,
 } from "#/controllers/projects.js";
 import { stageTasks, taskStore } from "#/store/tasks.js";
 import { FILTERS } from "#/store/projects.js";
@@ -151,6 +152,11 @@ async function remove() {
           <div class="ui-project__text">{{ page.p[f.key] }}</div>
           <div class="ui-row ui-gap-s">
             <UiButton kind="chip" class="ui-project__edit" @click="edit(f)">Edit</UiButton>
+            <UiButton
+              v-if="f.key === 'result'"
+              kind="chip"
+              @click="copyProjectPrompt(page.p.name)"
+            >Скопировать промпт</UiButton>
           </div>
         </UiCard>
       </div>

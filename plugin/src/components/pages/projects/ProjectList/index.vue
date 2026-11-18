@@ -12,7 +12,7 @@ import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
 import UiTabs from "#/components/uikit/UiTabs/index.vue";
 import { app } from "#/helpers/app.js";
 import { tasksApi } from "#/helpers/plugins.js";
-import { askNewProject } from "#/controllers/projects.js";
+import { askNewProject, editProjectPrompt } from "#/controllers/projects.js";
 import { tickTask } from "#/controllers/tasks.js";
 import { T } from "#/models/calendarData.js";
 import { stageTasks, taskStore } from "#/store/tasks.js";
@@ -51,9 +51,10 @@ const canTick = computed(() => { void projects.version.value; return !!tasksApi(
 <template>
   <div class="ui-projects">
     <div class="ui-projects__header ui-row ui-between ui-wrap ui-gap-m">
-      <div class="ui-row ui-gap-m">
+      <div class="ui-row ui-wrap ui-gap-m">
         <h1 class="ui-projects__title">Projects</h1>
         <UiButton kind="chip" @click="askNewProject(app)">✦ New project</UiButton>
+        <UiButton kind="chip" @click="editProjectPrompt(app)">Изменить промпт</UiButton>
       </div>
       <UiTabs v-model="state.filter" :tabs="tabs" on-background />
     </div>

@@ -3,8 +3,8 @@
 // area whose key changed with ☑ apply, its tasks' records moved to the new key. Values that can't
 // be saved: a notice, nothing written.
 import { Notice } from "obsidian";
-import { app } from "#/helpers/app.js";
 import config, { applyConfig } from "#/helpers/config.js";
+import { editJson } from "#/helpers/files.js";
 import { CONFIG } from "#/helpers/paths.js";
 import { taskStore } from "#/store/tasks.js";
 import { saveRecords } from "#/controllers/tasks.js";
@@ -18,12 +18,14 @@ export async function openSettings() {
   const problem = settingsProblem(v, taskStore.records, config);
 
   if (problem) return void new Notice(`✦ Settings not saved: ${problem}`);
-  const json = toConfig(v), text = JSON.stringify(json, null, 2);
-  const file = app.vault.getFileByPath(CONFIG), moves = areaMoves(v, taskStore.records);
+  const json = toConfig(v);
+  const moves = areaMoves(v, taskStore.records);
   const moved = Object.keys(moves).length;
 
-  if (file) await app.vault.modify(file, text); else await app.vault.create(CONFIG, text);
-  applyConfig(json);
+  let merged;
+
+  await editJson(CONFIG, current => (merged = { ...current, ...json }));
+  applyConfig(merged);
   if (moved) await saveRecords(moves);
   new Notice(`✦ Settings saved${moved ? ` · ${moved} tasks moved` : ""}`);
 }

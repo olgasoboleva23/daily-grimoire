@@ -45,6 +45,7 @@ const LEVEL_COST = { base: 100, step: 25 };
 
 // filled by applyConfig below
 const config = {
+  projectPrompt: "",
   theme: "winx", difficulties: [], areas: [], levels: [], levelCost: { base: 0, step: 0 },
   xpMap: {}, areaMap: {}, areaIcons: {}, areaColors: {},
   marketCategories: [
@@ -65,6 +66,7 @@ export function applyConfig(json = {}) {
   const areas = Array.isArray(json.areas) && json.areas.length ? json.areas : AREAS;
   const lv = { ...LEVELS, ...json.levels }, cost = { ...LEVEL_COST, ...json.levelCost };
 
+  config.projectPrompt = typeof json.projectPrompt === "string" ? json.projectPrompt.trim() : "";
   config.theme = THEMES.some(t => t.value === json.theme) ? json.theme : "winx";
   config.difficulties = DIFFICULTIES.map(x =>
     ({ ...x, xp: x.key === "none" ? 0 : num(d[x.key]?.xp, x.xp),
