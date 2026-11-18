@@ -1,4 +1,4 @@
-// Where Winx keeps its notes and files: 00 System/Data (and the pictures and sounds in 00
+// Where the plugin keeps its notes and files: 00 System/Data (and the pictures and sounds in 00
 // System/Assets), the same in every vault. Dataview takes a note's path without ".md"
 // (`"${GOALS}"`), the vault with it (`${GOALS}.md`).
 export const DATA = "00 System/Data";
@@ -10,7 +10,7 @@ export const MASTER = `${TASKS}/Master.md`, POOL = `${TASKS}/Pool.md`;
 // the old notes kept by the Migrate tasks command
 export const MASTER_OLD = `${TASKS}/Master (old).md`, POOL_OLD = `${TASKS}/Pool (old).md`;
 
-// Winx's part of every task (name, difficulty, area…), an object by id
+// the plugin's part of every task (name, difficulty, area…), an object by id
 export const TASK_RECORDS = `${TASKS}/tasks.json`;
 
 // the projects (stages of task ids), an object by id, in the order of the file

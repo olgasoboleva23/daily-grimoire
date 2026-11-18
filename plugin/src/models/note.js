@@ -1,6 +1,6 @@
-// A note Winx makes, from plain data: its properties (YAML), a # title (only the daily note has
-// one: its name is the date; the rest are named by their file, shown by Obsidian's inline title),
-// a body and its ## sections.
+// A note the plugin makes, from plain data: its properties (YAML), a # title (only the daily note
+// has one: its name is the date; the rest are named by their file, shown by Obsidian's inline
+// title), a body and its ## sections.
 //   new Note({ props: { type: "recipe", tags: [] }, sections: { Steps: "", Notes: "" } }).text
 // written as is; anything else in "quotes"
 const PLAIN = /^[\p{L}\p{N}][\p{L}\p{N} _.,!?()&'-]*$/u;

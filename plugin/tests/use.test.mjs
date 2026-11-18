@@ -127,7 +127,7 @@ test("openNote in an app tab: an ordinary note opens in a new tab", () => {
   assert.deepEqual(went, []);
 });
 
-test("openNote in an app tab: a short link to a Winx page's note switches the page", () => {
+test("openNote in an app tab: a short link to an app page's note switches the page", () => {
   const short = clickIn("Finance", { ui: true });
   const full = clickIn("02 Areas/Finance", { ui: true });
   const mod = clickIn("Finance", { ui: true, mod: true });
@@ -139,6 +139,6 @@ test("openNote in an app tab: a short link to a Winx page's note switches the pa
   assert.equal(mod.went[0][2].mod, true);   // go() opens a new app tab for it
 });
 
-test("openNote outside an app tab: a Winx page's note opens as a note", () => {
+test("openNote outside an app tab: an app page's note opens as a note", () => {
   assert.deepEqual(clickIn("Finance").opened, [["Finance", false]]);
 });

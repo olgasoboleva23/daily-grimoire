@@ -33,7 +33,7 @@ test("UiButton: kinds, on, title, extra classes", () => {
   draws(mount(ui.UiButton, { props: { kind: "toggle" }, slots: { default: "✓ done" } }), '<button class="ui-btn ui-btn--toggle">✓ done</button>');
 });
 
-test("UiNoteLink: a short link to a Winx page's note switches the page in place", async () => {
+test("UiNoteLink: a short link to an app page's note switches the page in place", async () => {
   const { setApp } = await import("#/helpers/app.js");
   const went = [], opened = [];
   const tab = { go: (...a) => went.push(a) };

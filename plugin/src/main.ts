@@ -8,7 +8,7 @@ import { installSounds } from "./helpers/sounds.js";
 import { useTheme } from "./controllers/theme.js";
 import { useTaskStore } from "./store/tasks.js";
 
-// Daily Grimoire: the Winx tab, the task window and the
+// Daily Grimoire: the app tab, the task window and the
 // commands, and the styles (styles.css, built from src/styles/main.scss and the components'
 // index.scss).
 
@@ -19,7 +19,7 @@ export default class UiPlugin extends Plugin {
     useTheme(this);
     installSounds(this);
     registerCommands(this);
-    // the Winx tab (its pages: components/app/pages.js); ✨ and the command go to the one used
+    // the app tab (its pages: components/app/pages.js); ✨ and the command go to the one used
     // last, or open it, pinned, on the dashboard
     this.registerView(UI_VIEW, leaf => new UiView(leaf));
     this.addCommand({ id: "open", name: "Open", callback: () => openUi() });
@@ -49,7 +49,7 @@ export default class UiPlugin extends Plugin {
       }, 500));
     }
 
-    // desktop: today's reminders; a click opens the calendar in the Winx tab
+    // desktop: today's reminders; a click opens the calendar in the app tab
     useNotify(this, () => openUi("calendar"));
   }
 }

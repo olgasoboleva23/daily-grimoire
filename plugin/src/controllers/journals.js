@@ -29,7 +29,7 @@ export async function readJournals() {
   }));
 }
 
-// ＋ a new free journal in its window (Winx: New journal's); its path, null when closed
+// ＋ a new free journal in its window (Daily Grimoire: New journal's); its path, null when closed
 export async function addJournal() {
   const { rows, values, required } = KINDS.journal.form();
   const v = await Form.ask(app, "✦ New journal", rows, { values, required, submit: "Create" });

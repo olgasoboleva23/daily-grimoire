@@ -30,7 +30,7 @@ function go(key, event) {
   if (key !== "other") void ui.go(key, {}, event);
 }
 
-// ↗: the page in a new, unpinned Winx tab
+// ↗: the page in a new, unpinned app tab
 function openTab(key) {
   other.value = false;
   void openUi(key, {}, true);

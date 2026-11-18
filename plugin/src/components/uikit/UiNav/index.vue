@@ -1,4 +1,4 @@
-<!-- The Winx tab's nav (block ui-rail): a UiButton kind rail per item ({ key, icon, text }),
+<!-- The app tab's nav (block ui-rail): a UiButton kind rail per item ({ key, icon, text }),
      the current one on; a click says which (go(key, event)). Desktop: a short pill at the left edge
      over the page, opened by hover or focus (labels shown), shut by a click until the pointer
      leaves; phone: the bottom bar, an icon above a small label -->

@@ -1,6 +1,7 @@
 // The one-off move from the old emoji notes to the id format: Master.md's lines become
-// `- [s] tN [field:: …]`, Winx's part of each task (tags, sticker, name) a record of tasks.json,
-// Pool.md's lines records with pool: true: migrate() pure (tested), migrateTasks() the command.
+// `- [s] tN [field:: …]`, the plugin's part of each task (tags, sticker, name) a record of
+// tasks.json, Pool.md's lines records with pool: true: migrate() pure (tested), migrateTasks() the
+// command.
 // The old emoji parsing lives here only.
 import { Notice } from "obsidian";
 import { app } from "#/helpers/app.js";

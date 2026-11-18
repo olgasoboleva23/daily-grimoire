@@ -1,4 +1,5 @@
-// The notes Winx makes (a command each, "Winx: New …"): the window's rows and the note's data.
+// The notes the plugin makes (a command each, "Daily Grimoire: New …"): the window's rows and the
+// note's data.
 //   form() → { rows, values, required } for Form.ask; note(values, today) → { props, body?,
 //   sections } for Note (a note's name is its file's: no title property, no # heading)
 

@@ -195,7 +195,7 @@ test("the calendar's state is saved with the layout: unfolded days are, area isn
   assert.equal(saves.length, before + 1);
 });
 
-// the workspace openUi sees: its Winx leaves, the leaves it makes, what it reveals
+// the workspace openUi sees: its app leaves, the leaves it makes, what it reveals
 function workspace(leaves) {
   const made = [], revealed = [];
   const leaf = () => {

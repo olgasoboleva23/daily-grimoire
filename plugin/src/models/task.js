@@ -1,7 +1,7 @@
-// One task: its line in the Tasks plugin's Dataview format (status, rule, dates) and Winx's own
-// part, its record in tasks.json (name, difficulty, area, daytime, goal, sticker, after),
-// found by the line's id. What it is (getters) and how to change its line (methods that return
-// the new line; widgets write it). The only place that knows the format:
+// One task: its line in the Tasks plugin's Dataview format (status, rule, dates) and the
+// plugin's own part, its record in tasks.json (name, difficulty, area, daytime, goal, sticker,
+// after), found by the line's id. What it is (getters) and how to change its line (methods that
+// return the new line; widgets write it). The only place that knows the format:
 //   - [ ] / [x] done / [-] skipped · t12 (its id: the record's key)
 //   fields [key:: value]: repeat (the rule, up to its ]) · due · scheduled (wins over due) · start
 //   · completion · cancelled · created

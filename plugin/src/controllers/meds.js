@@ -1,7 +1,7 @@
 // The medication courses (courses.json, a record by id: models/course.js) and their page
 // (components/pages/meds): the courses for the tabs and each one's table, notes and doses; a mark
-// or a day's note written; a course made or edited in its window ("Winx: New / Edit medication
-// course", the ✎ on its card); which course, when several (a picker).
+// or a day's note written; a course made or edited in its window ("Daily Grimoire: New / Edit
+// medication course", the ✎ on its card); which course, when several (a picker).
 import { Notice } from "obsidian";
 import { app } from "#/helpers/app.js";
 import { readJson } from "#/helpers/files.js";

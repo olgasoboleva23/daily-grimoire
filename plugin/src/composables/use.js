@@ -6,7 +6,7 @@ import { debounce } from "obsidian";
 import { todayYmd } from "#/helpers/dates.js";
 import { dataview } from "#/helpers/plugins.js";
 
-// redraw(): drawn now when shown, else once it shows (a leaf or the layout changes, the Winx tab
+// redraw(): drawn now when shown, else once it shows (a leaf or the layout changes, the app tab
 // switches its page) — catchUp() asks again
 export function useRedraw(c, isShown, draw) {
   let stale = false;

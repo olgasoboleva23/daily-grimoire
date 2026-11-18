@@ -1,4 +1,4 @@
-// A line of a Winx log in the Tasks plugin's Dataview format and its record: the line holds the
+// A line of a plugin log in the Tasks plugin's Dataview format and its record: the line holds the
 // checkbox, the id (its first word) and Tasks' fields, the record (a JSON entry by that id) the
 // rest. What a task (models/task.js) and a market item (models/market.js) share; each names its
 // id's letter (static ID). No Obsidian globals.

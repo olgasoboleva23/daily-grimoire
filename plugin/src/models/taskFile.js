@@ -2,7 +2,7 @@
 // Dataview): { path, line, text, status, parent }. status: the checkbox's character (" ", "x",
 // "-"), null for a plain "- item" (a pool line); text: after the checkbox (what Task.of takes);
 // parent: the line of the list item it's indented under (a line that isn't a list item, blank or
-// not, ends the nesting). Only "- " items: Winx writes that form. A code block's or an HTML
+// not, ends the nesting). Only "- " items: the plugin writes that form. A code block's or an HTML
 // comment's lines are examples, not items. Pure (tests/task-store.test.mjs).
 const ITEM = /^(\s*)- (?:\[(.)\] )?(.*)$/;
 

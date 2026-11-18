@@ -3,7 +3,7 @@ import { app } from "#/helpers/app.js";
 import { pageOf, UI_VIEW } from "./pages.js";
 import type { UiView } from "./view.ts";
 
-// Opening Winx: ✨, the command and the reminders go to the Winx tab used last, or open one
+// Opening the app: ✨, the command and the reminders go to the app tab used last, or open one
 // (pinned) on the dashboard; `newTab`: another one, not pinned. With a page: that page in it.
 export async function openUi(page?: string, params = {}, newTab = false) {
   const { workspace } = app;
@@ -27,19 +27,19 @@ export async function openUi(page?: string, params = {}, newTab = false) {
   return leaf;
 }
 
-// the Winx tab in front, if it is one
+// the app tab in front, if it is one
 export const activeUi = (): UiView | null => {
   const view = app.workspace.getActiveViewOfType(ItemView);
 
   return view?.getViewType() === UI_VIEW ? view as UiView : null;
 };
 
-// is a Winx tab the one in front?
+// is an app tab the one in front?
 export const inUi = () => activeUi() !== null;
 
-// A link to a note: a Winx page's note (Finance, Shop, Supplies, Food) switches the page of the
-// Winx tab in front, in place (Cmd/Ctrl: in a new Winx tab); any other note opens as a note
-// does, in a new tab from a Winx tab, so that one stays where it is. `href` may be a short link
+// A link to a note: an app page's note (Finance, Shop, Supplies, Food) switches the page of the
+// app tab in front, in place (Cmd/Ctrl: in a new app tab); any other note opens as a note
+// does, in a new tab from an app tab, so that one stays where it is. `href` may be a short link
 // ("Finance").
 export function openNote(href: string, sourcePath: string, e?: MouseEvent | null,
   tab: UiView | null = activeUi()) {

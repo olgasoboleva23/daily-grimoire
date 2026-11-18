@@ -68,13 +68,13 @@ export function registerCommands(plugin: Plugin) {
   // (then restart)
   if (Platform.isMobile) add("update-mobile-config", "Update mobile config", mirrorMobileConfig);
 
-  // ⚙ the numbers and areas (config.json); the Winx tab's drawer opens it too
+  // ⚙ the numbers and areas (config.json); the app tab's drawer opens it too
   add("settings", "Settings", openSettings);
 
   // once: the old emoji Master.md and Pool.md to ids, Dataview fields and tasks.json
   add("migrate-tasks", "Migrate tasks", migrateTasks);
 
-  // every Winx command in one list to pick from (Alt+T in this vault's hotkeys.json)
+  // every Daily Grimoire command in one list to pick from (Alt+T in this vault's hotkeys.json)
   plugin.addCommand({
     id: "menu", name: "Menu",
     callback: () => new UiMenu(app).open(),

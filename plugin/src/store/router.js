@@ -1,4 +1,4 @@
-// The single Winx tab's state: the page shown and each page's own state. Obsidian saves it with
+// The single app tab's state: the page shown and each page's own state. Obsidian saves it with
 // the layout; `saved` is what goes in, `readState` makes a whole state of whatever comes back.
 
 import { readState as readCalendar, SAVED as CALENDAR_SAVED } from "#/store/calendar.js";

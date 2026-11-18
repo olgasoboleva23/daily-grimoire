@@ -9,7 +9,7 @@
   color: var(--ui-purple-deep);
   &::before { content: "●"; color: var(--status); }
   &--idea { --status: var(--ui-purple); }
-  &--active { --status: var(--color-green);   /* Obsidian's green: no Winx token */ }
+  &--active { --status: var(--color-green);   /* Obsidian's green: no plugin token */ }
   &--paused { --status: var(--ui-gold-deep); }
   &--done { --status: var(--ui-blue-deep); }
 }

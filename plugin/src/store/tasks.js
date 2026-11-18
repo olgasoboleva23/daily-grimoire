@@ -1,7 +1,7 @@
 // The tasks, read by the plugin itself and kept up to date: `tasks` (every task of Master.md, each
-// with its record as `rec`, null when its id has none), `records` (tasks.json: Winx's part of every
-// task, by id), `pool` (the records with pool: true, as { id, pool: true, rec, path }), `projects`
-// (projects.json by id, in file order; `records` and `projects` are the two collections'
+// with its record as `rec`, null when its id has none), `records` (tasks.json: the plugin's part
+// of every task, by id), `pool` (the records with pool: true, as { id, pool: true, rec, path }),
+// `projects` (projects.json by id, in file order; `records` and `projects` are the two collections'
 // loaded copies, helpers/collection.js), `inProject` (the ids on any project's stages), `ready`
 // (the first read is done), `version` (a Vue ref, bumped on every change: a computed that reads it
 // is worked out again). stageTasks(stage) gives a stage's tasks with their state.
