@@ -5,9 +5,9 @@
 ## 🗂 Structure
 
 ```
-├── 📁 plugin — the Winx plugin
+├── 📁 plugin — the Daily Grimoire plugin
 │   ├── 📁 src
-│   │   ├── main.ts               — loads everything: the ```winx block, the Winx tab, ✨,
+│   │   ├── main.ts               — loads everything: the ```winx block, the Daily Grimoire tab, ✨,
 │   │   │                           the commands
 │   │   ├── 📁 components         — every .vue (a styled one: a folder with index.vue and its index.scss)
 │   │   │   ├── 📁 uikit          — the shared parts: WinxButton (round, nav, pill, chip, toggle, text),
@@ -36,7 +36,7 @@
 │   │   │                           rules), ledger (finance), timer (pomodoro), vitals (HP / MP), xp, market
 │   │   │                           (MarketItem, the categories, supply stats), kinds (watch / read / game /
 │   │   │                           recipe notes), taskFile (a task note's lines as tasks and pool lines)
-│   │   ├── 📁 migrations         — tasks.js, market.js, meds.js, food.js: the one-off migrations (Winx: Migrate tasks /
+│   │   ├── 📁 migrations         — tasks.js, market.js, meds.js, food.js: the one-off migrations (Daily Grimoire: Migrate tasks /
 │   │   │                           market / medication / food; install the new build on both devices first, then
 │   │   │                           migrate medication, then food, on the desktop)
 │   │   ├── 📁 composables        — use.js (useRedraw, useDataviewChanges, useWhenIndexed, useNewDay,
@@ -46,7 +46,7 @@
 │   │   │                           calendar's), notify.js (desktop reminders)
 │   │   ├── 📁 store              — tasks.js (the tasks of 00 System/Data/Tasks, read by the plugin itself and
 │   │   │                           kept up to date on Obsidian's own file events: no Dataview, no wait for its
-│   │   │                           index), calendar.js (the calendar's state: its saved and data keys), router.js (the Winx tab's pages and Back / Forward history)
+│   │   │                           index), calendar.js (the calendar's state: its saved and data keys), router.js (the Daily Grimoire tab's pages and Back / Forward history)
 │   │   ├── 📁 helpers            — paths (where the data lives), app, dates, files (edit / editLine /
 │   │   │                           appendLine), config, format (money, amount), sounds, chart, plugins
 │   │   │                           (Dataview, Tasks, blockDv), find, parse (a block's lines), panelGroups
@@ -57,8 +57,8 @@
 │   └── 📁 tests                  — npm test; tests/obsidian/ checks styles inside Obsidian
 ├── 📁 00 System
 │   ├── 📁 Assets                 — sounds, task stickers (stickers/)
-│   └── 📁 Data                   — everything Winx reads and writes (paths: plugin/src/helpers/paths.js):
-│                                   Tasks/ (Master.md: the lines, tasks.json: Winx's fields by id), Goals.md, Finance/ (Ledger/, rules.json),
+│   └── 📁 Data                   — everything Daily Grimoire reads and writes (paths: plugin/src/helpers/paths.js):
+│                                   Tasks/ (Master.md: the lines, tasks.json: Daily Grimoire's fields by id), Goals.md, Finance/ (Ledger/, rules.json),
 │                                   Shop.md, Celestial Market.md (the log; Market/items.json: the items by id;
 │                                   Celestial Market (old).md: the copy before the migration), Supplies.md, Cycle.md, Weight.md, Body log.md, Savings/
 ├── 📁 02 Areas/Personal/Daily Notes — daily notes (the folder set in Obsidian's Daily notes)
@@ -74,10 +74,10 @@ npm test                                   # unit tests
 npm run check                              # types (vue-tsc: .ts, .js and .vue)
 npm run lint                               # ESLint with Obsidian's rules (eslint-plugin-obsidianmd), lines ≤ 100,
                                            # blank lines between blocks; Stylelint (standard SCSS, BEM names)
-WINX_VAULT=/path/to/your/vault npm run dev # build into <vault>/.obsidian/plugins/winx on every save
+WINX_VAULT=/path/to/your/vault npm run dev # build into <vault>/.obsidian/plugins/daily-grimoire on every save
 ```
 
-After a rebuild run **Winx: Reload** (Cmd+P) (the open notes redraw their widgets). `npm run build` makes `plugin/dist/` (`main.js`, `styles.css`, `manifest.json`); a Sass error fails it.
+After a rebuild run **Daily Grimoire: Reload** (Cmd+P) (the open notes redraw their widgets). `npm run build` makes `plugin/dist/` (`main.js`, `styles.css`, `manifest.json`); a Sass error fails it.
 
 `tests/obsidian/styles-snapshot.js` records the computed styles of every element on a set of pages (run it inside Obsidian); `compare-snapshots.mjs` diffs two such records, to check a style change moved nothing it shouldn't.
 
@@ -139,7 +139,7 @@ defineProps({ state: { type: Object, required: true } });
 
 ## The calendar
 
-The calendar is a Vue page of the Winx tab (`plugin/src/components/pages/calendar/index.vue`, containing
+The calendar is a Vue page of the Daily Grimoire tab (`plugin/src/components/pages/calendar/index.vue`, containing
 `CalendarTab`). Its state (date, view, tab, folds; `store/calendar.js`) is Vue's `reactive`, saved
 with the layout; the model (`models/calendarData.js`) is recomputed
 when the date, the view or a filter changes, or when a task file does (`store/tasks.js` reads it again as soon as
@@ -149,3 +149,16 @@ Elements carry the task's key (`data-task`: file, line, status, words), the `:ke
 the tab's drag (`data-drag` → `data-drop`) and swipe (`data-swipeable`) listeners
 (`composables/drag.js`, `swipe.js`) find the task by.
 
+
+## Product name and stable identifiers
+
+The plugin is called **Daily Grimoire**. Winx, Winx dark, Gothic and Dragon Age 2 are its visual themes.
+
+The plugin ID is `daily-grimoire`, the installation folder is `.obsidian/plugins/daily-grimoire/`,
+and Obsidian command IDs start with `daily-grimoire:`. When moving an existing installation, back up
+its config first, move the plugin folder with its `data.json`, and update the enabled-plugin list
+and hotkey command IDs. The visible mobile config copy needs the same changes before syncing.
+
+The saved view type, `winx` Markdown blocks, data paths and CSS names remain unchanged. They are
+independent of the installation ID, so existing notes, page states and data need no conversion.
+`WINX_VAULT` remains the development build destination variable.

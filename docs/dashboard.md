@@ -2,7 +2,7 @@
 
 # 🖥 Dashboard
 
-The dashboard is a page of the [Winx tab](#the-winx-tab) (below). At the top: the day it shows (‹ › and **today**; no date set means today, and it moves on at midnight), and **✦ Open** for that day's daily note. After a change to the tasks or the data the tab dims with a pink ✦ until the cards have redrawn. Its layout is `plugin/src/components/pages/dashboard/index.vue`: Vue cards inside the tab’s single Vue application. The dashboard and calendar stay mounted when switching pages; closing the tab disposes both.
+The dashboard is a page of the [Daily Grimoire tab](#the-winx-tab) (below). At the top: the day it shows (‹ › and **today**; no date set means today, and it moves on at midnight), and **✦ Open** for that day's daily note. After a change to the tasks or the data the tab dims with a pink ✦ until the cards have redrawn. Its layout is `plugin/src/components/pages/dashboard/index.vue`: Vue cards inside the tab’s single Vue application. The dashboard and calendar stay mounted when switching pages; closing the tab disposes both.
 
 ![Dashboard](images/dashboard.webp)
 
@@ -27,22 +27,22 @@ card: Weight
 ```
 ````
 
-## The Winx tab
+## The Daily Grimoire tab
 
-One tab holds all of Winx. The ✨ icon on the left or **Winx: Open** (Cmd+P) opens it, pinned, or reveals it if it is already open. Inside it are the pages **Dashboard**, **Calendar**, **Projects**, **Finance**, **Shop**, **Supplies** and **Food**; the tab remembers the page you were on. Finance, Shop, Supplies and Food are notes (their `winx` blocks) drawn inside the tab.
+One tab holds all of Daily Grimoire. The ✨ icon on the left or **Daily Grimoire: Open** (Cmd+P) opens it, pinned, or reveals it if it is already open. Inside it are the pages **Dashboard**, **Calendar**, **Projects**, **Finance**, **Shop**, **Supplies** and **Food**; the tab remembers the page you were on. Finance, Shop, Supplies and Food are notes (their `winx` blocks) drawn inside the tab.
 
 - **Desktop:** a floating pill at the top: ✦ Dashboard, 🗓 Calendar, ⋯ Other. The labels show on hover, and the pill collapses after a click. **⋯ Other** opens a drawer from the left with every page, one row each; the ↗ on a row opens that page in a new tab, and **⚙ Settings** (XP, gold, areas, XP Today, the level cost) is the last row.
 - **Phone:** a bottom bar of three (the same three) and a sheet for the rest.
-- **A page in a new tab:** Cmd-click a page, or its ↗, opens it in a new Winx tab that is not pinned.
+- **A page in a new tab:** Cmd-click a page, or its ↗, opens it in a new Daily Grimoire tab that is not pinned.
 - **Back / Forward** walk the pages you visited in the tab, not the notes.
-- **Links:** a link to an ordinary note opens it in a new tab; a link to the note of a Winx page (say `Shop`) switches the page instead.
-- **Old tabs:** a saved dashboard, calendar or projects tab from before turns into a Winx tab on that page when it is shown.
+- **Links:** a link to an ordinary note opens it in a new tab; a link to the note of a Daily Grimoire page (say `Shop`) switches the page instead.
+- **Old tabs:** a saved dashboard, calendar or projects tab from before turns into a Daily Grimoire tab on that page when it is shown.
 
 **Food** (the food journal): a week, a row a day: what was eaten with its marks, the marks counted, each free journal's level after its lag, 💊 a course on that day, a note; ＋ a fuzzy search of the foods or a new one, ✎ a food, ⚙ the marks.
 
 ## 🎮 XP & Levels
 
-Completing a task awards XP and gold by its difficulty (the `difficulty` of its record in `tasks.json`). The defaults below; **⚙ Settings** (the last row of the Winx tab's drawer, or **Winx: Settings**) changes them, the areas, XP Today's thresholds (SPARK 10 / GLOW 20 / AURA 30) and the level cost, saved in `00 System/Data/config.json`:
+Completing a task awards XP and gold by its difficulty (the `difficulty` of its record in `tasks.json`). The defaults below; **⚙ Settings** (the last row of the Daily Grimoire tab's drawer, or **Daily Grimoire: Settings**) changes them, the areas, XP Today's thresholds (SPARK 10 / GLOW 20 / AURA 30) and the level cost, saved in `00 System/Data/config.json`:
 
 | Difficulty | XP | Gold |
 |---|---|---|
@@ -75,13 +75,13 @@ A task whose area isn't in the list (an old one) shows no icon or colour and cou
 
 ## 🛍 Shop
 
-Gold from tasks buys real-world rewards listed in `00 System/Data/Shop.md` (`- name:: Cozy Coffee cost:: 20`). The Shop page shows the balance; a click on an affordable item logs it to `Purchases.md` (or use **Winx: Buy reward**).
+Gold from tasks buys real-world rewards listed in `00 System/Data/Shop.md` (`- name:: Cozy Coffee cost:: 20`). The Shop page shows the balance; a click on an affordable item logs it to `Purchases.md` (or use **Daily Grimoire: Buy reward**).
 
 ## 🌌 Celestial Market
 
 A shopping list card. `00 System/Data/Market/items.json` holds each item's name and category by ID (the first item added starts it), and `00 System/Data/Celestial Market.md` is its log, in the Tasks plugin's Dataview format (`- [ ] m12`, then `- [x] m12 [completion:: 2026-11-11]`; lines bought earlier keep their `✅ 2026-11-11`). Ticking an item clears it from the card. Renaming its catalog record keeps its purchase history and Supplies estimates attached to the same ID. The add/search window also finds catalog items never bought yet; adding an already-open ID leaves one open copy.
 
-A log of old name/tag lines (`- [ ] green tea #food`) needs **Winx: Migrate market** once; until then such a line shows its words under ✦ Other. The migration is explicit, preserves the log's lines/statuses/dates and keeps `Celestial Market (old).md`. If its final write fails, running it again resumes from the catalog; lines added meanwhile are migrated too, and the backup stays the log as it was at the first run. To restore the pre-migration state, copy the backup over the log and remove `Market/items.json`; keep any later purchases separately before restoring.
+A log of old name/tag lines (`- [ ] green tea #food`) needs **Daily Grimoire: Migrate market** once; until then such a line shows its words under ✦ Other. The migration is explicit, preserves the log's lines/statuses/dates and keeps `Celestial Market (old).md`. If its final write fails, running it again resumes from the catalog; lines added meanwhile are migrated too, and the backup stays the log as it was at the first run. To restore the pre-migration state, copy the backup over the log and remove `Market/items.json`; keep any later purchases separately before restoring.
 
 Categories: 🌿 Harvest `#food`, 🌸 Bloom `#care`, 🐾 Familiar `#pet`, 🏰 Sanctuary `#home`, ✨ Vitality `#health`; untagged items land in ✦ Other.
 
@@ -97,7 +97,7 @@ A goal is a recurring task whose record in `tasks.json` has `"goal": "<key>"`, t
   plan:: when I shut the laptop in the evening, I roll out the mat
 ```
 
-- `key` is the goal's key: a task counts for it when its record says `"goal": "stretch"`. **Winx: Migrate tasks** turns an old `tag:: #goal/stretch` into `key:: stretch`.
+- `key` is the goal's key: a task counts for it when its record says `"goal": "stretch"`. **Daily Grimoire: Migrate tasks** turns an old `tag:: #goal/stretch` into `key:: stretch`.
 - `days` sets the weekly plan; otherwise `perWeek:: N` (`days` wins if both are given). A day counts when a done task of the goal has its `✅` on that day. Weeks start on Monday.
 - A missed goal task stays on its day: the calendar's **Missed?** lists it, to tick it for that day or move it to today.
 
