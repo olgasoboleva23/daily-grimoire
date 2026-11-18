@@ -75,7 +75,10 @@ export async function askEditProject(
   if (!saved) changedProject();
 }
 
-export async function askDeleteProject(app, key, ask = (...a) => Form.ask(...a)) {
+// `trash`: moves a file to Obsidian's trash (injected for the tests)
+export async function askDeleteProject(
+  app, key, ask = (...a) => Form.ask(...a), trash = f => app.fileManager.trashFile(f),
+) {
   const before = (await readJson(PROJECTS, {}))[key];
 
   if (!before) return false;
@@ -83,19 +86,90 @@ export async function askDeleteProject(app, key, ask = (...a) => Form.ask(...a))
     { name: "Project", key: "name", label: true },
     { name: "Kept", key: "kept", label: true },
   ], {
-    values: { name: before.name, kept: "Tasks, calendar and history stay." }, submit: "Delete",
+    values: {
+      name: before.name,
+      kept: "Tasks, calendar and history stay."
+        + (before.cover ? " The cover goes to the trash." : ""),
+    },
+    submit: "Delete",
   });
 
   if (!yes) return false;
+  let shared = false;
   const saved = await projects.edit(all => {
     if (JSON.stringify(all[key]) !== JSON.stringify(before)) return null;
     delete all[key];
+    shared = Object.values(all).some(p => p?.cover === before.cover);
     return all;
   });
 
-  if (!saved) changedProject();
+  if (!saved) {
+    changedProject();
+    return saved;
+  }
+
+  const file = before.cover && !shared && app.vault.getFileByPath(before.cover);
+
+  if (file) await trash(file);
   return saved;
 }
+
+// a stage is found by index and name, so one that moved or changed meanwhile is not written
+function onStage(key, index, name, change) {
+  return projects.update(key, p => {
+    if (p.stages?.[index]?.name !== name) {
+      new Notice("✦ project changed, try again");
+      return null;
+    }
+
+    return { ...p, stages: change(p.stages, index) };
+  });
+}
+
+export async function askRenameStage(app, key, index, name, ask = (...a) => Form.ask(...a)) {
+  const v = await ask(app, "✦ Rename stage", [{ name: "Name", key: "name", text: "" }],
+    { values: { name }, required: ["name"], submit: "Save" });
+  const next = v?.name?.trim();
+
+  if (!next || next === name) return false;
+  return onStage(key, index, name, (st, i) => st.map((s, j) => j === i ? { ...s, name: next } : s));
+}
+
+// the stage's tasks stay tasks: only the stage leaves the project
+export async function askDeleteStage(app, key, index, name, ask = (...a) => Form.ask(...a)) {
+  const yes = await ask(app, "Delete stage?", [
+    { name: "Stage", key: "name", label: true },
+    { name: "Kept", key: "kept", label: true },
+  ], { values: { name, kept: "Its tasks stay as tasks." }, submit: "Delete" });
+
+  if (!yes) return false;
+  return onStage(key, index, name, (st, i) => st.filter((_, j) => j !== i));
+}
+
+// web links of a project: [{ title, url }], none in the older projects
+export const isWebUrl = u => /^https?:\/\/\S+$/i.test(u);
+
+export async function askAddLink(app, key, ask = (...a) => Form.ask(...a)) {
+  const v = await ask(app, "✦ New link", [
+    { name: "Title", key: "title", text: "what it is" },
+    { name: "URL", key: "url", text: "https://…" },
+  ], { required: ["url"], submit: "Add" });
+  const url = v?.url?.trim();
+
+  if (!url) return false;
+  if (!isWebUrl(url)) {
+    new Notice("✦ a link must be a web address");
+    return false;
+  }
+
+  return projects.update(key, p => ({
+    ...p, links: [...p.links ?? [], { title: v.title?.trim() || url, url }],
+  }));
+}
+
+// by index and url, so a link that moved meanwhile is not removed instead
+export const removeLink = (key, index, url) => projects.update(key, p =>
+  p.links?.[index]?.url === url ? { ...p, links: p.links.filter((_, i) => i !== index) } : null);
 
 export const addStage = (key, name) => projects.update(key, p =>
   ({ ...p, stages: [...p.stages ?? [], { name, tasks: [] }] }));

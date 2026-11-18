@@ -6,7 +6,7 @@ import { taskStore } from "#/store/tasks.js";
 import { PROJECTS } from "#/helpers/paths.js";
 import {
   createProject, saveProject, addStage, addToStage, toCalendar, askNewProject,
-  askEditProject, askDeleteProject,
+  askEditProject, askDeleteProject, askRenameStage, askDeleteStage, askAddLink, removeLink,
 } from "#/controllers/projects.js";
 
 const MASTER = "00 System/Data/Tasks/Master.md";
@@ -165,7 +165,8 @@ test("deletion confirms the project and preserves tasks, history, other projects
     assert.equal(options.values.name, "Garden");
     return {};
   }), true);
-  assert.deepEqual(files, { ...before, [PROJECTS]: JSON.stringify({ p2: json(before).p2 }, null, 2) });
+  const { "cover.webp": _gone, ...rest } = before;  // the cover went to the trash
+  assert.deepEqual(files, { ...rest, [PROJECTS]: JSON.stringify({ p2: json(before).p2 }, null, 2) });
 });
 
 test("confirmation does not delete a project changed while its dialog is open", async () => {
@@ -176,4 +177,76 @@ test("confirmation does not delete a project changed while its dialog is open", 
     return {};
   }), false);
   assert.equal(json(files).p1.stages.length, 1);
+});
+
+test("deleting a project trashes its cover, unless another project uses the file or it is gone", async () => {
+  const { files, app } = vault({ "a.webp": "i", "b.webp": "i" });
+  const trashed = [], trash = async f => { trashed.push(f.path); };
+  const yes = async (_a, _t, rows, o) => { yes.kept = o.values.kept; return {}; };
+  await createProject({ name: "One", cover: "a.webp" });
+  await createProject({ name: "Two", cover: "a.webp" });
+  await createProject({ name: "Three", cover: "b.webp" });
+  await createProject({ name: "Four", cover: "gone.webp" });
+  await createProject({ name: "Five" });
+  assert.equal(await askDeleteProject(app, "p1", async () => null, trash), false);
+  assert.deepEqual(trashed, []);
+  await askDeleteProject(app, "p1", yes, trash);
+  assert.match(yes.kept, /cover goes to the trash/);
+  assert.deepEqual(trashed, []);
+  await askDeleteProject(app, "p2", yes, trash);
+  await askDeleteProject(app, "p3", yes, trash);
+  await askDeleteProject(app, "p4", yes, trash);
+  await askDeleteProject(app, "p5", yes, trash);
+  assert.deepEqual(trashed, ["a.webp", "b.webp"]);
+  assert.deepEqual(json(files), {});
+});
+
+test("a project changed while its delete dialog is open keeps its cover", async () => {
+  const { app } = vault({ "a.webp": "i" });
+  const trashed = [];
+  await createProject({ name: "One", cover: "a.webp" });
+  await askDeleteProject(app, "p1", async () => { await addStage("p1", "S"); return {}; },
+    async f => trashed.push(f));
+  assert.deepEqual(trashed, []);
+});
+
+test("rename and delete a stage by index and name; tasks and the other stages stay", async () => {
+  const { files, app } = vault();
+  await createProject({ name: "Garden" });
+  await addStage("p1", "A");
+  await addStage("p1", "B");
+  await addToStage("p1", 0, "A", async () => "t1");
+  assert.equal(await askRenameStage(app, "p1", 0, "A", async () => ({ name: " Dig " })), true);
+  assert.deepEqual(json(files).p1.stages[0], { name: "Dig", tasks: ["t1"] });
+  const before = files[PROJECTS];
+  assert.equal(await askRenameStage(app, "p1", 0, "Dig", async () => null), false);
+  assert.equal(await askRenameStage(app, "p1", 0, "Dig", async () => ({ name: "  " })), false);
+  assert.equal(await askRenameStage(app, "p1", 1, "Zzz", async () => ({ name: "X" })), false);
+  assert.match(Notice.last, /project changed/);
+  assert.equal(files[PROJECTS], before);
+
+  assert.equal(await askDeleteStage(app, "p1", 0, "Dig", async () => null), false);
+  assert.equal(await askDeleteStage(app, "p1", 0, "Old", async () => ({})), false);
+  assert.equal(files[PROJECTS], before);
+  assert.equal(await askDeleteStage(app, "p1", 0, "Dig", async () => ({})), true);
+  assert.deepEqual(json(files).p1.stages, [{ name: "B", tasks: [] }]);
+});
+
+test("links: added (title defaults to the url), only http(s), removed by index and url", async () => {
+  const { files, app } = vault();
+  await createProject({ name: "Garden" });
+  assert.equal(await askAddLink(app, "p1", async () => ({ title: " Seeds ", url: "https://a.com/x" })), true);
+  assert.equal(await askAddLink(app, "p1", async () => ({ title: "", url: "http://b.com" })), true);
+  assert.deepEqual(json(files).p1.links, [
+    { title: "Seeds", url: "https://a.com/x" }, { title: "http://b.com", url: "http://b.com" },
+  ]);
+  const before = files[PROJECTS];
+  assert.equal(await askAddLink(app, "p1", async () => ({ title: "x", url: "javascript:alert(1)" })), false);
+  assert.match(Notice.last, /web address/);
+  assert.equal(await askAddLink(app, "p1", async () => null), false);
+  assert.equal(files[PROJECTS], before);
+
+  assert.equal(await removeLink("p1", 0, "http://b.com"), false);
+  assert.equal(await removeLink("p1", 0, "https://a.com/x"), true);
+  assert.deepEqual(json(files).p1.links, [{ title: "http://b.com", url: "http://b.com" }]);
 });

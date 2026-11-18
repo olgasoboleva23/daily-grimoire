@@ -71,6 +71,7 @@ const canTick = computed(() => { void projects.version.value; return !!tasksApi(
         class="ui-projects__card"
         :title="p.name"
         :cover="p.cover"
+        placeholder="project"
         @click="projects.open(p.key, $event)"
       >
         <template #button>

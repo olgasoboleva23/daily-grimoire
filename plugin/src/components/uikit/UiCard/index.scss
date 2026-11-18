@@ -122,6 +122,15 @@ $cover-h: 150px; /* a cover's height: a picture's frame, not a spacing value */
     object-fit: cover;
     border-radius: $radius-l;
     margin-bottom: $space-m;
+    &--empty {
+      @include center;
+      background: var(--ui-purple);
+      color: var(--ui-on-accent);
+      font-family: $font-deco;
+      font-size: $text-2xl;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
   }
   &__skeleton {
     height: 72px;

@@ -9,7 +9,7 @@ import { PROJECTS } from "#/helpers/paths.js";
 // and a project's page (header, stages, task rows, Result and Notes)
 const MASTER = "00 System/Data/Tasks/Master.md";
 const RECORDS = "00 System/Data/Tasks/tasks.json";
-let vue, Projects, taskStore, PLACEHOLDER, Form, Search, files, app;
+let vue, Projects, taskStore, Form, Search, files, app;
 before(async () => {
   GlobalRegistrator.register();
   window.moment = () => ({ format: () => "2026-11-12" });
@@ -17,7 +17,6 @@ before(async () => {
   ({ Form } = await import("#/components/uikit/Form/index.ts"));
   ({ Search } = await import("#/components/uikit/Search/index.ts"));
   ({ taskStore } = await import("#/store/tasks.js"));
-  ({ PLACEHOLDER } = await import("#/components/pages/projects/cover.js"));
   Projects = (await import("#/components/pages/projects/index.vue")).default;
 });
 
@@ -86,11 +85,30 @@ test("A project with no tasks has no progress bar", () => {
   assert.equal(shed.querySelector(".ui-projects__next"), null);
 });
 
-test("No cover: the placeholder picture; a cover: its resource path", () => {
+test("No cover: a block with the word project; a cover: its picture", () => {
   const [garden, shed] = cards(mount().el);
-  assert.equal(garden.querySelector(".ui-card__cover").getAttribute("src"), PLACEHOLDER);
-  assert.equal(shed.querySelector(".ui-card__cover").getAttribute("src"), "app://x/Media/shed.webp");
-  assert.match(PLACEHOLDER, /^data:image\/svg\+xml,/);
+  const block = garden.querySelector(".ui-card__cover--empty");
+  assert.equal(block.textContent, "project");
+  assert.equal(garden.querySelector("img.ui-card__cover"), null);
+  assert.equal(shed.querySelector("img.ui-card__cover").getAttribute("src"), "app://x/Media/shed.webp");
+  assert.equal(shed.querySelector(".ui-card__cover--empty"), null);
+});
+
+test("a project page: stage buttons, the Links card with its links", () => {
+  taskStore.putProjects({ p1: { name: "Garden", status: "active", cover: null,
+    links: [{ title: "Seeds", url: "https://example.com/s" }], stages: [{ name: "A", tasks: [] }] } });
+  const el = mount({ open: "p1" }).el;
+  assert.ok(el.querySelector(".ui-project__stage [aria-label=rename]"));
+  assert.ok(el.querySelector(".ui-project__stage [aria-label=delete]"));
+  const a = el.querySelector(".ui-project__links a");
+  assert.equal([a.textContent, a.getAttribute("href"), a.target].join(" "), "Seeds https://example.com/s _blank");
+  assert.equal(el.querySelector(".ui-project__header .ui-card__cover--empty").textContent, "project");
+});
+
+test("a project without links field has a Links card with + link only", () => {
+  const el = mount({ open: "p1" }).el;
+  assert.equal(el.querySelectorAll(".ui-project__links a").length, 0);
+  assert.match(el.querySelector(".ui-project__links").textContent, /\+ link/);
 });
 
 test("Clicking a card sets state.open", () => {

@@ -1,11 +1,12 @@
 <!-- a stage's card: its number (01, 02…), name, done/total, ✓ when complete (then it starts
-     folded; the fold is this card's own, not saved), its task rows and + task (the New task
-     window, then the id onto this stage) -->
+     folded; the fold is this card's own, not saved), ✏️ rename and 🗑️ delete (its tasks stay
+     tasks), its task rows and + task (the New task window, then the id onto this stage) -->
 <script setup>
 import { computed, ref } from "vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import UiCard from "#/components/uikit/UiCard/index.vue";
-import { addToStage } from "#/controllers/projects.js";
+import { app } from "#/helpers/app.js";
+import { addToStage, askDeleteStage, askRenameStage } from "#/controllers/projects.js";
 import ProjectTask from "./ProjectTask.vue";
 
 const props = defineProps({
@@ -29,6 +30,12 @@ const folded = ref(complete.value);
       <span class="ui-project__stage-name ui-grow">{{ stage.name }}</span>
       <span class="ui-project__stage-count">{{ done }}/{{ total }}</span>
       <span v-if="complete" class="ui-project__stage-done">✓</span>
+      <UiButton title="rename" @click="askRenameStage(app, project, index, stage.name)">
+        ✏️
+      </UiButton>
+      <UiButton title="delete" @click="askDeleteStage(app, project, index, stage.name)">
+        🗑️
+      </UiButton>
       <UiButton
         kind="text"
         class="ui-project__fold"

@@ -1,6 +1,7 @@
 <!-- A project's page (block ui-project): ← Projects, the header card (cover, name, the status
      pill: a menu of the statuses, description, progress) over two columns: the stages (+ stage
-     adds one) | Result and Notes, each with Edit (a Form). One column on the phone -->
+     adds one) | Links (+ link, × removes), Result and Notes, each with Edit (a Form). One
+     column on the phone -->
 <script setup>
 import { computed, inject, ref } from "vue";
 import { Menu } from "obsidian";
@@ -11,7 +12,7 @@ import UiCard from "#/components/uikit/UiCard/index.vue";
 import { Form } from "#/components/uikit/Form/index.ts";
 import { app } from "#/helpers/app.js";
 import {
-  addStage, saveProject, askEditProject, askDeleteProject,
+  addStage, saveProject, askEditProject, askDeleteProject, askAddLink, removeLink,
 } from "#/controllers/projects.js";
 import { stageTasks, taskStore } from "#/store/tasks.js";
 import { FILTERS } from "#/store/projects.js";
@@ -82,6 +83,7 @@ async function remove() {
       class="ui-project__header"
       :title="page.p.name"
       :cover="page.cover"
+      placeholder="project"
     >
       <template #button>
         <UiButton
@@ -119,6 +121,26 @@ async function remove() {
         />
       </div>
       <div class="ui-col ui-gap-l">
+        <UiCard :wings="false" class="ui-project__links" title="Links">
+          <div
+            v-for="(l, i) in page.p.links ?? []"
+            :key="`${i} ${l.url}`"
+            class="ui-project__link ui-row ui-gap-s"
+          >
+            <a
+              class="ui-project__link-a ui-grow"
+              :href="l.url"
+              target="_blank"
+              rel="noopener"
+            >{{ l.title }}</a>
+            <UiButton title="remove" @click="removeLink(page.key, i, l.url)">×</UiButton>
+          </div>
+          <div class="ui-row ui-gap-s">
+            <UiButton kind="chip" class="ui-project__edit" @click="askAddLink(app, page.key)">
+              + link
+            </UiButton>
+          </div>
+        </UiCard>
         <UiCard
           v-for="f in SIDE"
           :key="f.key"
