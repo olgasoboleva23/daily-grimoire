@@ -52,7 +52,8 @@
 │   │   │                           (Dataview, Tasks, blockDv), find, parse (a block's lines), panelGroups
 │   │   ├── 📁 styles             — main.scss (every block in cascade order) and the shared look: tokens,
 │   │   │                           mixins ($space-*, $text-*, $radius-*, $btn-*, row / center, sparkles: stars flying out on hover, drawn from `--winx-sparkles-svg` in `_assets.scss`), fonts,
-│   │   │                           layout, the cards' grid, nav, busy, syncing, helpers (.winx-is-*)
+│   │   │                           layout, the cards' grid, nav, busy, syncing, utilities (_utilities.scss);
+│   │   │                           shadow.scss: the Winx tab's own build (see below)
 │   │   └── 📁 commands           — commands.ts (the Cmd+P commands, the Alt+T menu)
 │   └── 📁 tests                  — npm test; tests/obsidian/ checks styles inside Obsidian
 ├── 📁 00 System
@@ -134,7 +135,8 @@ defineProps({ state: { type: Object, required: true } });
 - The data comes ready from `load` (labels, sums, dates); the template has values, `v-for` with a `:key` and
   `v-if`. A click is `@click` calling an action; what a card only shows (a mode, a fold, a picked level) is the
   component's own state.
-- Class names are BEM: `winx-block__element--modifier` (`winx-weight__now`, `winx-cal__day--today`, `winx-btn--on`), one block per `index.scss` next to its component (shared ones in `plugin/src/styles/`); states the code sets are modifiers; global helpers are `.winx-is-*` in `plugin/src/styles/_helpers.scss`.
+- Class names are BEM: `winx-block__element--modifier` (`winx-weight__now`, `winx-cal__day--today`, `winx-btn--on`), one block per `index.scss` next to its component (shared ones in `plugin/src/styles/`); states the code sets are modifiers; layout utilities (`winx-row`, `winx-gap-*`…) are in `plugin/src/styles/_utilities.scss`.
+- Two style builds from the same partials: `main.scss` → `styles.css` (notes, modals, tooltips, fonts: Obsidian's own page) and `shadow.scss` → compiled to text and inlined into `main.js`, adopted by the Winx tab's shadow root (`_context.scss` switches `:root` / `body.is-mobile` to `.winx-view` / `:host([data-mobile])`).
 - A note shows a widget with a `winx` block (see [Dashboard](dashboard.md)).
 
 ## The calendar

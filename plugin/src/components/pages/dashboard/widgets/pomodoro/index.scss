@@ -1,10 +1,9 @@
 @use "mixins" as *;
 /* ============================================
  * WINX THEME — Pomodoro Widget (block winx-pomodoro)
- * File: pomodoro.css
  *
  * Wing decoration references var(--winx-wing-svg)
- * from winx-assets.css — inline data URI removed.
+ * from _assets.scss — inline data URI removed.
  * ============================================ */
 
 /* Register --p so the conic-gradient ring can transition
@@ -115,7 +114,7 @@
     }
   }
 
-  /* Wing decoration — SVG lives in winx-assets.css */
+  /* Wing decoration — SVG lives in _assets.scss */
   &__wing {
     position: absolute;
     width: $deco;

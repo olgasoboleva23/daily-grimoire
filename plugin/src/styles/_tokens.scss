@@ -1,11 +1,10 @@
 @use "context";
 /* ============================================
  * WINX THEME — Design Tokens
- * File: winx-tokens.css
  *
  * All --winx-* custom properties (palette &
  * gradients). Image/SVG data URIs live in
- * winx-assets.css so this file stays readable.
+ * _assets.scss so this file stays readable.
  * ============================================ */
 
 #{context.$root} {
@@ -60,7 +59,7 @@
   --winx-sky: linear-gradient(135deg, var(--winx-sky-start), var(--winx-sky-end), var(--winx-purple-light));
 
   /* Workspace background — deep dusk purple → rose.
-     Endpoint colors exposed for the fade overlay in winx-layout.css */
+     Endpoint colors exposed for the fade overlay in _layout.scss */
   --winx-dusk-dark: #5a4878;
   --winx-dusk-rose: #d8a0c0;
   --winx-dusk: linear-gradient(

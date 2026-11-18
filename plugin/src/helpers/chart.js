@@ -1,4 +1,4 @@
-// Palette color for charts, read from the winx-tokens.css custom props so
+// Palette color for charts, read from the _tokens.scss custom props so
 // charts follow re-theming. Returns an rgba() string Chart.js accepts.
 export function chartColor(token, alpha = 1) {
   const root = document.querySelector(

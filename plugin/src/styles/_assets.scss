@@ -1,10 +1,9 @@
 @use "context";
 /* ============================================
  * WINX THEME — Embedded Assets
- * File: winx-assets.css
  *
  * Data-URI images only — no rules. Kept apart
- * from winx-tokens.css so the palette file stays
+ * from _tokens.scss so the palette file stays
  * small and pleasant to edit.
  *
  * Used as: background-image: var(--winx-wing-svg)

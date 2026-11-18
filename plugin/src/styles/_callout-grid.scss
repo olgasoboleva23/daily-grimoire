@@ -2,12 +2,11 @@
 @use "mixins" as *;
 /* ============================================
  * WINX THEME — Grid & Column Layout
- * File: callout-grid.css
  *
  * • .callout[data-callout="grid"] container queries
  * • .callout[data-callout="col"] flex layout (dashboard)
  * • .callout[data-callout="grid"] CSS grid (kanban)
- * • Overflow visibility fixes (merged from theme.css)
+ * • Overflow visibility fixes (merged from the old theme)
  * ============================================ */
 
 /* ── Grid base ── */
@@ -46,7 +45,7 @@
 /* ── Dashboard: flex columns ── */
 
 .dashboard {
-  /* overflow fix for card content (merged from theme.css) */
+  /* overflow fix for card content (merged from the old theme) */
   .callout[data-callout="card"] > .callout-content {
     overflow: visible !important;
   }

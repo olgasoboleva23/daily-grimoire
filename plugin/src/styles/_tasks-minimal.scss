@@ -1,6 +1,5 @@
 /* ============================================
  * WINX THEME — Tasks Minimal
- * File: tasks-minimal.css
  *
  * Hides tags except difficulty stars (area shows as the group heading),
  * fades task metadata
@@ -39,7 +38,7 @@
   .tag:is([data-tag-name="#⭐⭐⭐hard"], [data-difficulty="hard"])::before { width: 39px; }
   .tag:is([data-tag-name="#⭐⭐⭐⭐epic"], [data-difficulty="epic"])::before { width: 53px; }
 
-  /* beats the blue !important heading color in winx-layout.css */
+  /* beats the blue !important heading color in _layout.scss */
   h4.tasks-group-heading {
     color: color-mix(in srgb, var(--winx-pink-deep) 65%, var(--winx-purple-deep)) !important;
     /* pill like the Celestial Market group headers */
