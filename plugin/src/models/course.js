@@ -234,22 +234,23 @@ export const courseList = (json, today) => {
     .sort((a, b) => b.running - a.running || b.start.localeCompare(a.start));
 };
 
-// ranges of a medicine: [{ from, to }] course days (1-based); old records: days → 1..days
-export const rangesOf = m =>
-  Array.isArray(m.ranges) && m.ranges.length
-    ? m.ranges
-    : [{ from: 1, to: Number(m.days) || 90 }];
-
 const MAX_DAY = 365;
+const DEFAULT_RANGES = [{ from: 1, to: 90 }];
+
+// ranges of a medicine: [{ from, to }] course days (1-based); none: 1-90
+export const rangesOf = m => m.ranges?.length ? m.ranges : DEFAULT_RANGES;
+
 const RANGE = /^(\d+)\s*(?:[-–—]\s*(\d+))?$/;
 const partsOf = input => String(input ?? "").split(/[,;]/).map(p => p.trim()).filter(Boolean);
+
+// { from, to } if it is course days from 1 up to MAX_DAY, else null
+const checked = ({ from, to }) => from >= 1 && to >= from && to <= MAX_DAY ? { from, to } : null;
 
 // "30" or "45-60": course days from 1 up to MAX_DAY; else null
 const rangeOf = part => {
   const m = part.match(RANGE);
-  const from = m && +m[1], to = m && (m[2] ? +m[2] : from);
 
-  return m && from >= 1 && to >= from && to <= MAX_DAY ? { from, to } : null;
+  return m && checked({ from: +m[1], to: m[2] ? +m[2] : +m[1] });
 };
 
 // the first part of a typed list that isn't a range of course days, else null
@@ -271,8 +272,8 @@ export const courseProblem = v => {
 // "1-30, 45-60, 70" → [{from:1,to:30},{from:45,to:60},{from:70,to:70}], sorted, merged if touching;
 // nothing readable: 1-90
 export const parseRanges = input => {
-  const found = (Array.isArray(input) ? input.filter(r => r.from >= 1 && r.to >= r.from)
-    : partsOf(input).map(rangeOf).filter(Boolean)).sort((a, b) => a.from - b.from);
+  const found = (Array.isArray(input) ? input.map(checked) : partsOf(input).map(rangeOf))
+    .filter(Boolean).sort((a, b) => a.from - b.from);
   const merged = [];
 
   for (const r of found) {
@@ -282,7 +283,7 @@ export const parseRanges = input => {
     else merged.push({ ...r });
   }
 
-  return merged.length ? merged : [{ from: 1, to: 90 }];
+  return merged.length ? merged : DEFAULT_RANGES;
 };
 
 export const formatRanges = ranges =>

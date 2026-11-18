@@ -20,8 +20,8 @@ before(async () => {
 const C1 = {
   start: "2026-11-07",
   meds: [
-    { name: "Аевит", code: "АЕ", dose: "1 таблетка", times: [], meal: "after", days: 2 },
-    { name: "Магний 2 таблетки", code: "МГ", dose: "", times: ["morning", "evening"], meal: "before", days: 3 },
+    { name: "Аевит", code: "АЕ", dose: "1 таблетка", times: [], meal: "after", ranges: [{ from: 1, to: 2 }] },
+    { name: "Магний 2 таблетки", code: "МГ", dose: "", times: ["morning", "evening"], meal: "before", ranges: [{ from: 1, to: 3 }] },
   ],
   notes: "После еды\nЗапивать водой",
   marks: {
@@ -32,7 +32,7 @@ const C1 = {
 };
 const C2 = {
   start: "2026-10-01",
-  meds: [{ name: "Цинк", code: "ЦИ", dose: "", times: [], meal: "any", days: 2 }],
+  meds: [{ name: "Цинк", code: "ЦИ", dose: "", times: [], meal: "any", ranges: [{ from: 1, to: 2 }] }],
   notes: "", marks: { "2026-10-01": { "ЦИ": "✅" } }, dayNotes: {},
 };
 const tick = () => new Promise(r => setTimeout(r));

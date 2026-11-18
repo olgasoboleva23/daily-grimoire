@@ -20,7 +20,7 @@ test("medication form: time checkboxes can be combined, cleared, saved and reope
   const { reactive } = await import("vue");
   const { courseForm, courseOf, formValues, columns } = await import("#/models/course.js");
   const Form = (await import("../src/components/uikit/Form/index.vue")).default;
-  const values = reactive({ meds: [{ name: "Тест", days: 2 }] });
+  const values = reactive({ meds: [{ name: "Тест", ranges: [{ from: 1, to: 2 }] }] });
   const form = mount(Form, {
     props: { rows: courseForm().rows, values, ready: true, submit: "Save" },
     global: { provide: { resourcePath: () => "" } },

@@ -70,10 +70,10 @@ test("foodWeek: a row per day: what was eaten with its marks, the marks counted,
   const marks = [...DEFAULT_MARKS];
   const entries = new Map([["2026-11-03", { level: 2, reasons: ["🍰"] }]]);
   const journals = [{ path: "J/Skin.md", name: "Skin", lag: 1, entries }];
-  // a course as courses.json keeps it; АЕ has no days: 90, as the course's grid shows it
+  // a course as courses.json keeps it; АЕ has no ranges: 1-90, as the course's grid shows it
   const courses = [forFood("c1", { start: "2026-11-02", meds: [
-    { name: "мастодинон", code: "МА", times: ["morning", "evening"], days: 10 },
-    { name: "баксет", code: "БА", times: [], days: 1 }, { name: "аевит", code: "АЕ" },
+    { name: "мастодинон", code: "МА", times: ["morning", "evening"], ranges: [{ from: 1, to: 10 }] },
+    { name: "баксет", code: "БА", times: [], ranges: [{ from: 1, to: 1 }] }, { name: "аевит", code: "АЕ" },
   ], marks: { "2026-11-02": { "МА☀️": "✅", "БА": "❌" } } })];
   const days = ["2026-11-02", "2026-11-03"];
   const [mon, tue] =

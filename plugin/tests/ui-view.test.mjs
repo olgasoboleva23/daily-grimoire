@@ -365,7 +365,7 @@ test("Medication route: empty state, JSON updates and marks, subscriptions relea
   assert.equal(view.contentEl.shadowRoot.querySelector("h2").textContent, "Medication");
   assert.match(view.contentEl.shadowRoot.textContent, /No courses yet/);
   files[COURSES] = JSON.stringify({ c1: {
-    start: "2026-11-13", meds: [{ name: "Тест", code: "ТЕ", times: ["morning", "evening"], days: 2 }],
+    start: "2026-11-13", meds: [{ name: "Тест", code: "ТЕ", times: ["morning", "evening"], ranges: [{ from: 1, to: 2 }] }],
     notes: "", marks: {}, dayNotes: {},
   } });
   fire("create");
