@@ -1,4 +1,4 @@
-// The other plugins' APIs winx uses (undefined while one is off)
+// The other plugins' APIs the app uses (undefined while one is off)
 import { app } from "./app.js";
 
 export const dataview = () => app.plugins.plugins.dataview?.api;

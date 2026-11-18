@@ -23,7 +23,7 @@ test("Daily note: ✦ Open for the page's date opens its note; no date, no butto
   assert.equal(none.find("button").exists(), false);
 });
 
-test("openDaily from a Winx tab opens the note in a new tab", async () => {
+test("openDaily from a app tab opens the note in a new tab", async () => {
   const { openDaily } = await import("#/controllers/widgets/dailyNote.js");
   const { UiView } = await import("#/components/app/view.ts");
   const { app } = vault({ "2026-11-04.md": "" });

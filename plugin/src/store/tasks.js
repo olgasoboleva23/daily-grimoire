@@ -12,6 +12,7 @@
 // folder's other files (backups) are not read.
 import { ref } from "vue";
 import { app } from "#/helpers/app.js";
+import { APP_NAME } from "#/helpers/name.js";
 import { parseNote } from "#/models/taskFile.js";
 import { Task } from "#/models/task.js";
 import { collection } from "#/helpers/collection.js";
@@ -112,7 +113,7 @@ const take = (path, text) => {
     if (c) loadJson(c, JSON.parse(text));
     else { applyConfig(JSON.parse(text)); refresh(); }
   } catch (e) {
-    console.error(`winx: ${path} isn't JSON, it's left as it was`, e);
+    console.error(`${APP_NAME}: ${path} isn't JSON, it's left as it was`, e);
   }
 };
 
@@ -149,7 +150,7 @@ export function useTaskStore(plugin) {
     } catch (e) {
       started = false;   // the next "resolved" reads again
 
-      return console.error("winx: the tasks' notes weren't read", e);
+      return console.error(`${APP_NAME}: the tasks' notes weren't read`, e);
     }
 
     taskStore.ready = true;

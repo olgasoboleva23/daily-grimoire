@@ -125,7 +125,7 @@ test("opening a project is a history step; ← list too", async () => {
   assert.equal(view.state.projects.open, null);
 });
 
-test("Cmd-click opens a new, unpinned Winx tab with a copy", async () => {
+test("Cmd-click opens a new, unpinned app tab with a copy", async () => {
   const { view, leaf, opened, pinned, ready } = open();
 
   await ready;
@@ -163,7 +163,7 @@ test("closing while the initial state is being restored leaves the tab unmounted
   assert.equal(view.contentEl.childElementCount, 0);
 });
 
-test("two Winx tabs keep their own state: one's dashboard date isn't the other's", async () => {
+test("two app tabs keep their own state: one's dashboard date isn't the other's", async () => {
   const a = open(), b = open();
 
   await a.ready;
@@ -216,7 +216,7 @@ function workspace(leaves) {
   return { made, revealed };
 }
 
-test("openUi: the newest Winx tab, else one new pinned tab", async () => {
+test("openUi: the newest app tab, else one new pinned tab", async () => {
   const old = { activeTime: 1 }, recent = { activeTime: 5 };
   let w = workspace([old, recent]);
 

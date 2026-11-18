@@ -73,7 +73,7 @@ test("toCalendar puts the task on a day", async () => {
   assert.equal(files[MASTER], "- [ ] t1 [due:: 2026-11-12]\n");
 });
 
-test("askNewProject opens the Winx tab on the new project", async () => {
+test("askNewProject opens the app tab on the new project", async () => {
   const { files, app } = vault();
   const seen = [];
   const open = async (...a) => seen.push(a);

@@ -104,7 +104,7 @@ test("useTabDate: the dashboard's date change reaches a block inside a dated tab
 const vaultNotes = { Finance: "02 Areas/Finance.md", Ideas: "Notes/Ideas.md" };
 const resolve = (href) => { const p = vaultNotes[href.replace(/^.*\//, "")]; return p && { path: p }; };
 
-// a link clicked; `ui` is the tab in front (null: not a Winx tab), here one that notes its go()
+// a link clicked; `ui` is the tab in front (null: not an app tab), here one that notes its go()
 const clickIn = (href, { mod = false, ui = null } = {}) => {
   const c = component(), went = [];
 
@@ -120,14 +120,14 @@ test("openNote: a note link opens its note (Cmd/Ctrl: a new tab)", () => {
   assert.deepEqual(mod.opened, [["Ideas", true]]);
 });
 
-test("openNote in a Winx tab: an ordinary note opens in a new tab", () => {
+test("openNote in an app tab: an ordinary note opens in a new tab", () => {
   const { opened, went } = clickIn("Ideas", { ui: true });
 
   assert.deepEqual(opened, [["Ideas", true]]);
   assert.deepEqual(went, []);
 });
 
-test("openNote in a Winx tab: a short link to a Winx page's note switches the page", () => {
+test("openNote in an app tab: a short link to a Winx page's note switches the page", () => {
   const short = clickIn("Finance", { ui: true });
   const full = clickIn("02 Areas/Finance", { ui: true });
   const mod = clickIn("Finance", { ui: true, mod: true });
@@ -136,9 +136,9 @@ test("openNote in a Winx tab: a short link to a Winx page's note switches the pa
     assert.deepEqual(r.went.map(a => [a[0], a[1]]), [["finance", {}]]);
     assert.deepEqual(r.opened, []);
   }
-  assert.equal(mod.went[0][2].mod, true);   // go() opens a new Winx tab for it
+  assert.equal(mod.went[0][2].mod, true);   // go() opens a new app tab for it
 });
 
-test("openNote outside a Winx tab: a Winx page's note opens as a note", () => {
+test("openNote outside an app tab: a Winx page's note opens as a note", () => {
   assert.deepEqual(clickIn("Finance").opened, [["Finance", false]]);
 });
