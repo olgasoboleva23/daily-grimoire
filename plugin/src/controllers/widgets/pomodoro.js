@@ -75,31 +75,22 @@ export async function syncMusic(timer) {
   if (music?.key === key) music.handle = handle; else handle?.stop();
 }
 
-// ⚙: the lengths of the mode on (the pomodoro's focus and break, or the meditation's and its
-// music) in the shared window; the settings with them, null when closed or a length isn't above
-// zero
-/** @param {PomodoroSettings} settings @param {boolean} meditation */
-export async function askLengths(settings, meditation = false) {
-  const rows = meditation
-    ? [
-      { name: "Meditation", key: "meditationMin", text: "minutes", number: true },
-      { name: "Music", key: "music", options: [
-        { label: "—", value: null },
-        ...Object.entries(MUSIC).map(([value, label]) => ({ label, value })),
-      ] },
-    ]
-    : [
-      { name: "Focus", key: "focusMin", text: "minutes", number: true },
-      { name: "Break", key: "breakMin", text: "minutes", number: true },
-    ];
-  const keys = rows.map(r => r.key);
-  const v = await Form.ask(app, meditation ? "✦ Meditation" : "✦ Pomodoro", rows,
-    { values: settings, required: keys.filter(k => k.endsWith("Min")), submit: "Save" });
+/** @param {PomodoroSettings} settings */
+export async function askLengths(settings) {
+  const minutes = ["focusMin", "breakMin", "meditationMin"];
+  const v = await Form.ask(app, "✦ Pomodoro & Meditation", [
+    { name: "Focus", key: "focusMin", text: "minutes", number: true },
+    { name: "Break", key: "breakMin", text: "minutes", number: true },
+    { name: "Meditation", key: "meditationMin", text: "minutes", number: true, divider: true },
+    { name: "Music", key: "music", options: [
+      { label: "—", value: null },
+      ...Object.entries(MUSIC).map(([value, label]) => ({ label, value })),
+    ] },
+  ], { values: settings, required: minutes, submit: "Save" });
 
-  const minutes = keys.filter(k => k.endsWith("Min"));
-
-  return v && minutes.every(k => v[k] > 0)
-    ? { ...settings, ...Object.fromEntries(keys.map(k => [k, v[k] ?? null])) } : null;
+  return v && minutes.every(k => Number.isFinite(v[k]) && v[k] > 0)
+    ? { ...settings, focusMin: v.focusMin, breakMin: v.breakMin,
+      meditationMin: v.meditationMin, music: v.music ?? null } : null;
 }
 
 // the save: settings, the current session, mini and today's stats (a finished focus session adds

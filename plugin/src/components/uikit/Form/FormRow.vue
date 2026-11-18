@@ -44,6 +44,7 @@ const model = computed({
 </script>
 
 <template>
+  <hr v-if="row.divider">
   <template v-if="list">
     <div v-if="row.name !== row.tab" class="setting-item">
       <div class="setting-item-info"><div class="setting-item-name">{{ row.name }}</div></div>

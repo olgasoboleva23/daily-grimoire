@@ -20,7 +20,7 @@ import { useVueApp } from "#/composables/vueApp.ts";
 // greyed out; a list: one group at least, each with its own required keys). Form.ask(...) resolves
 // to the values on the button (or Enter), null when closed. Drawn by index.vue (a row:
 // FormRow.vue), its look: index.scss (block ui-form).
-type Tab = { tab?: string };
+type Tab = { tab?: string; divider?: boolean };
 type Choice = { label: string; value: unknown; img?: TFile };
 
 export type Row = Tab & (

@@ -91,7 +91,7 @@ const switchMode = () => act(t => t.reset(t.type === "meditation" ? "focus" : "m
 const toggle = () => { mini.value = !mini.value; return save(); };
 
 async function gear() {
-  const lengths = await askLengths(timer.settings, timer.type === "meditation");
+  const lengths = await askLengths(timer.settings);
 
   if (lengths) await act(t => { t.settings = lengths; t.reset(); });
 }
