@@ -1,4 +1,5 @@
 import { FuzzySuggestModal, Notice, Platform, Plugin } from "obsidian";
+import { APP_NAME } from "#/helpers/name.js";
 import { KINDS } from "#/models/kinds.js";
 import { mirrorMobileConfig } from "#/controllers/mobileConfig.js";
 import { Form } from "#/components/uikit/Form/index.ts";
@@ -85,6 +86,6 @@ class WinxMenu extends FuzzySuggestModal<any> {
     return (this.app as any).commands.listCommands()
       .filter((c: any) => c.id.startsWith("daily-grimoire:") && c.id !== "daily-grimoire:menu");
   }
-  getItemText(c: any) { return c.name.replace(/^Daily Grimoire: /, ""); }
+  getItemText(c: any) { return c.name.replace(`${APP_NAME}: `, ""); }
   onChooseItem(c: any) { (this.app as any).commands.executeCommandById(c.id); }
 }

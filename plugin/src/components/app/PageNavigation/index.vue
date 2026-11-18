@@ -11,6 +11,7 @@ import WinxDrawer from "#/components/uikit/WinxDrawer/index.vue";
 import { openWinx } from "#/components/app/open.ts";
 import { pages } from "#/components/app/pages.js";
 import { openSettings } from "#/controllers/settings.js";
+import { APP_NAME } from "#/helpers/name.js";
 
 const winx = inject("winx");
 const phone = Platform.isMobile;
@@ -60,7 +61,7 @@ function settings() {
   >
     <div v-if="!phone" class="winx-menu__head winx-row">
       <span class="winx-menu__crest winx-center" aria-hidden="true">✦</span>
-      <span class="winx-menu__title">Daily Grimoire</span>
+      <span class="winx-menu__title">{{ APP_NAME }}</span>
     </div>
     <template v-for="p in rest" :key="p.key">
       <button

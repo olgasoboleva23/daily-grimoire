@@ -36,6 +36,7 @@ import WeightCard from "#/components/pages/dashboard/widgets/weight/index.vue";
 import DailyNoteOpen from "#/components/pages/dashboard/widgets/DailyNoteOpen.vue";
 import PomodoroTimer from "#/components/pages/dashboard/widgets/pomodoro/index.vue";
 // the Vue pages: components/pages/<page>/
+import { APP_NAME } from "#/helpers/name.js";
 import MedsPage from "#/components/pages/meds/index.vue";
 import FoodPage from "#/components/pages/food/index.vue";
 
@@ -120,6 +121,6 @@ export const drawBlock = (source, el, ctx) => {
   const { name, args } = parseBlock(source);
   const def = blocks[name];
 
-  if (!def) return void el.createDiv({ text: `Daily Grimoire: no widget "${name}"` });
+  if (!def) return void el.createDiv({ text: `${APP_NAME}: no widget "${name}"` });
   ctx.addChild(block(def, el, ctx.sourcePath, args, source));
 };

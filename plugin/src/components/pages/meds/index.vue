@@ -5,6 +5,7 @@
 import { computed, ref } from "vue";
 import WinxEmpty from "#/components/uikit/WinxEmpty/index.vue";
 import WinxTabs from "#/components/uikit/WinxTabs/index.vue";
+import { APP_NAME } from "#/helpers/name.js";
 import MedsCourse from "./MedsCourse/index.vue";
 
 const props = defineProps({ state: { type: Object, required: true } });
@@ -21,7 +22,7 @@ const picked = computed({
   <WinxEmpty
     v-if="!list.length"
     on-background
-    text="No courses yet: Daily Grimoire: New medication course"
+    :text="`No courses yet: ${APP_NAME}: New medication course`"
   />
   <div v-else>
     <!-- one row, sideways scroll -->

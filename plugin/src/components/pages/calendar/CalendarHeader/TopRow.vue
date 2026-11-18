@@ -5,6 +5,7 @@ import WinxButton from "#/components/uikit/WinxButton/index.vue";
 import { goTo } from "#/store/calendar.js";
 import { isMuted, toggleMute } from "#/helpers/sounds.js";
 import { app } from "#/helpers/app.js";
+import { APP_NAME } from "#/helpers/name.js";
 
 const view = inject("calendar");
 const base = computed(() => view.ctx.base);
@@ -28,7 +29,7 @@ const newTask = () => app.commands.executeCommandById("daily-grimoire:new-task")
     >{{ muted ? "🔇" : "🔊" }}</button>
     <WinxButton
       kind="chip"
-      title="new task (Daily Grimoire: New task)"
+      :title="`new task (${APP_NAME}: New task)`"
       @click="newTask"
     >＋ task</WinxButton>
   </div>

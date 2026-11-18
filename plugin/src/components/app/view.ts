@@ -2,6 +2,7 @@ import { ItemView, Keymap, Notice, Platform, type ViewStateResult } from "obsidi
 import { reactive, watch } from "vue";
 import { useVueApp } from "#/composables/vueApp.ts";
 import { isStep, readState, saved, withParams } from "#/store/router.js";
+import { APP_NAME } from "#/helpers/name.js";
 import { pages, WINX_VIEW } from "./pages.js";
 import Winx from "./index.vue";
 import styles from "#/styles/shadow.scss";
@@ -28,7 +29,7 @@ export class WinxView extends ItemView {
   }
   getViewType() { return WINX_VIEW; }
   getDisplayText() {
-    return pages[this.state.page as keyof typeof pages]?.title ?? "Daily Grimoire";
+    return pages[this.state.page as keyof typeof pages]?.title ?? APP_NAME;
   }
   getIcon() { return "sparkles"; }
 
