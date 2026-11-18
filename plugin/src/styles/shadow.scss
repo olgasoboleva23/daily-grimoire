@@ -1,4 +1,13 @@
 // Only the application tab: native modals, tooltips and fonts keep styles.css.
+// Every rule here is in a cascade layer (an unlayered rule would beat all of them). Later layer wins,
+// whatever the selector's weight; inside `components` the partials keep the order of _components.scss, and its
+// own rules win over its sublayers. base: the baseline Obsidian's element rules would give; components.utilities
+// and components.tokens: the layout utilities and the colour variables, both below the blocks.
+@use "sass:meta";
 @use "context" with ($shadow: true);
-@use "shadow-base";
-@use "components";
+
+@layer base, components;
+@layer components { @layer tokens, utilities; }
+
+@layer base { @include meta.load-css("shadow-base"); }
+@layer components { @include meta.load-css("components"); }

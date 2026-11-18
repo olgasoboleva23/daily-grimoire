@@ -7,66 +7,68 @@
  * _assets.scss so this file stays readable.
  * ============================================ */
 
-#{context.$root} {
-  /* ── Palette ── */
-  --ui-pink-light: #fce4f1;
-  --ui-pink: #f4c8e4;
-  --ui-pink-deep: #d878a8;
-  --ui-purple-light: #e8d5f5;
-  --ui-purple: #b88ad8;
-  --ui-purple-deep: #6e2a6e;
-  --ui-blue: #a8c8f0;
-  --ui-blue-deep: #7ab0e0;
-  --ui-gold: #ffd966;
-  --ui-gold-bright: #ffe88f;
-  --ui-gold-deep: #c89540;
-  --ui-lavender: #f4e4f5;
-  --ui-sheet: #fffafd;   /* the nav pill, the drawer and the phone's sheet: a near-white pink */
-  --ui-text: #4a1f4a;
-  --ui-border: #d4a5d8;
+@include context.layer(tokens) {
+  #{context.$root} {
+    /* ── Palette ── */
+    --ui-pink-light: #fce4f1;
+    --ui-pink: #f4c8e4;
+    --ui-pink-deep: #d878a8;
+    --ui-purple-light: #e8d5f5;
+    --ui-purple: #b88ad8;
+    --ui-purple-deep: #6e2a6e;
+    --ui-blue: #a8c8f0;
+    --ui-blue-deep: #7ab0e0;
+    --ui-gold: #ffd966;
+    --ui-gold-bright: #ffe88f;
+    --ui-gold-deep: #c89540;
+    --ui-lavender: #f4e4f5;
+    --ui-sheet: #fffafd;   /* the nav pill, the drawer and the phone's sheet: a near-white pink */
+    --ui-text: #4a1f4a;
+    --ui-border: #d4a5d8;
 
-  /* Surfaces, text and decoration have separate roles in dark themes. */
-  --ui-surface: #ffffff;
-  --ui-surface-warm: #fff8fc;
-  --ui-surface-done: #fffcf0;
-  --ui-surface-skipped: #fff0f4;
-  --ui-crest-text: #6e2a6e;
-  --ui-on-gold: #4a1f4a;
-  --ui-on-selected: #ffffff;
-  --ui-on-accent: #ffffff;
-  --ui-on-background: #ffffff;
-  --ui-highlight: #ffffff;
-  --ui-heading: #a8c8f0;
-  --ui-danger: #d0457a;
-  --ui-overdue: #b0306a;
-  --ui-savings-text: #8a5a1a;
-  --ui-sky-start: #c8e0f5;
-  --ui-sky-end: #d8d0f0;
-  --ui-chart-text: #666666;
-  --ui-chart-grid: #000000;
-  --ui-bg-blend: multiply;
-  --ui-font-deco: "Cinzel";
+    /* Surfaces, text and decoration have separate roles in dark themes. */
+    --ui-surface: #ffffff;
+    --ui-surface-warm: #fff8fc;
+    --ui-surface-done: #fffcf0;
+    --ui-surface-skipped: #fff0f4;
+    --ui-crest-text: #6e2a6e;
+    --ui-on-gold: #4a1f4a;
+    --ui-on-selected: #ffffff;
+    --ui-on-accent: #ffffff;
+    --ui-on-background: #ffffff;
+    --ui-highlight: #ffffff;
+    --ui-heading: #a8c8f0;
+    --ui-danger: #d0457a;
+    --ui-overdue: #b0306a;
+    --ui-savings-text: #8a5a1a;
+    --ui-sky-start: #c8e0f5;
+    --ui-sky-end: #d8d0f0;
+    --ui-chart-text: #666666;
+    --ui-chart-grid: #000000;
+    --ui-bg-blend: multiply;
+    --ui-font-deco: "Cinzel";
 
-  /* ── Gradients ── */
-  --ui-twilight: linear-gradient(
-    135deg,
-    #8aa8d8 0%,
-    #a89cd0 50%,
-    #b89cc8 100%
-  );
+    /* ── Gradients ── */
+    --ui-twilight: linear-gradient(
+      135deg,
+      #8aa8d8 0%,
+      #a89cd0 50%,
+      #b89cc8 100%
+    );
 
-  /* Kanban card wash — cool blue → lilac */
-  --ui-sky: linear-gradient(135deg, var(--ui-sky-start), var(--ui-sky-end), var(--ui-purple-light));
+    /* Kanban card wash — cool blue → lilac */
+    --ui-sky: linear-gradient(135deg, var(--ui-sky-start), var(--ui-sky-end), var(--ui-purple-light));
 
-  /* Workspace background — deep dusk purple → rose.
-     Endpoint colors exposed for the fade overlay in _layout.scss */
-  --ui-dusk-dark: #5a4878;
-  --ui-dusk-rose: #d8a0c0;
-  --ui-dusk: linear-gradient(
-    135deg,
-    var(--ui-dusk-dark) 0%,
-    #7a5a98 40%,
-    #a878a8 80%,
-    var(--ui-dusk-rose) 100%
-  );
+    /* Workspace background — deep dusk purple → rose.
+       Endpoint colors exposed for the fade overlay in _layout.scss */
+    --ui-dusk-dark: #5a4878;
+    --ui-dusk-rose: #d8a0c0;
+    --ui-dusk: linear-gradient(
+      135deg,
+      var(--ui-dusk-dark) 0%,
+      #7a5a98 40%,
+      #a878a8 80%,
+      var(--ui-dusk-rose) 100%
+    );
+  }
 }

@@ -9,3 +9,10 @@ $phone: if(sass($shadow): ":host([data-phone])"; else: ".is-phone");
   @if $shadow { @return '.ui-view[data-theme="#{$name}"]'; }
   @return 'body.ui-theme-#{$name} :is(.workspace-leaf-content[data-type="ui-app"], .ui-tooltip, .ui-syncing)';
 }
+
+// The tab's sheet puts a partial in a named cascade layer (shadow.scss orders them); the document sheet has none
+// (there Obsidian's unlayered rules would beat any layer), so it just gets the content.
+@mixin layer($name) {
+  // stylelint-disable-next-line layer-name-pattern -- the name is the mixin's argument
+  @if $shadow { @layer #{$name} { @content; } } @else { @content; }
+}
