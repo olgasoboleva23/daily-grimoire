@@ -1,6 +1,9 @@
 import { FINANCE_PAGE, SHOP, SUPPLIES } from "#/helpers/paths.js";
 
-export const UI_VIEW = "winx";
+export const UI_VIEW = "ui-app";
+
+// the view type saved layouts used before the rename (see OldUiView in open.ts)
+export const OLD_UI_VIEW = "winx";
 
 export const pages = {
   dashboard: { title: "Dashboard", icon: "✦", main: true },

@@ -2,7 +2,7 @@
 // charts follow re-theming. Returns an rgba() string Chart.js accepts.
 export function chartColor(token, alpha = 1) {
   const root = document.querySelector(
-    '.workspace-leaf-content[data-type="winx"]')
+    '.workspace-leaf-content[data-type="ui-app"]')
     ?? document.body;
   const palette = root.shadowRoot?.querySelector(".ui-view")
     ?? root.querySelector(".ui-host")?.shadowRoot?.querySelector(".ui-view") ?? root;

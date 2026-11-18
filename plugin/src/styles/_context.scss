@@ -7,5 +7,5 @@ $phone: if(sass($shadow): ":host([data-phone])"; else: ".is-phone");
 
 @function theme($name) {
   @if $shadow { @return '.ui-view[data-theme="#{$name}"]'; }
-  @return 'body.ui-theme-#{$name} :is(.workspace-leaf-content[data-type="winx"], .ui-tooltip, .ui-syncing)';
+  @return 'body.ui-theme-#{$name} :is(.workspace-leaf-content[data-type="ui-app"], .ui-tooltip, .ui-syncing)';
 }

@@ -75,7 +75,7 @@ test("each theme defines the palette in Winx only and ships its AVIF and heading
   const expected = { "winx-dark": "Cinzel", gothic: "Pirata One", da2: "Cinzel Decorative" };
   for (const [name, font] of Object.entries(expected)) {
     const rule = themes.nodes.find(r => r.selector?.startsWith(`body.ui-theme-${name} `));
-    assert.ok(rule.selector.includes('.workspace-leaf-content[data-type=winx]'));
+    assert.ok(rule.selector.includes('.workspace-leaf-content[data-type=ui-app]'));
     const declarations = new Map(rule.nodes.map(d => [d.prop, d.value]));
     for (const token of required) assert.ok(declarations.has(token), `${name}: ${token}`);
     assert.equal(declarations.get("--ui-font-deco"), `"${font}"`);
@@ -86,7 +86,7 @@ test("each theme defines the palette in Winx only and ships its AVIF and heading
 
 test("chart colors come from the Winx container instead of Obsidian's palette", () => {
   const root = document.createElement("div");
-  root.className = "workspace-leaf-content"; root.dataset.type = "winx";
+  root.className = "workspace-leaf-content"; root.dataset.type = "ui-app";
   root.style.setProperty("--ui-pink-deep", "#f4a6c8");
   document.body.style.setProperty("--ui-pink-deep", "#d878a8");
   document.body.append(root);

@@ -78,4 +78,4 @@
 }
 
 // Utility pages keep the page colour; only Dashboard, Calendar and Projects have the photo.
-#{if(sass(context.$shadow): '.ui-view:not([data-page="dashboard"], [data-page="calendar"], [data-page="projects"])'; else: '.workspace-leaf-content[data-type="winx"]:not(:has( .ui-view[data-page="dashboard"], .ui-view[data-page="calendar"], .ui-view[data-page="projects"] ))')}::before { display: none; }
+#{if(sass(context.$shadow): '.ui-view:not([data-page="dashboard"], [data-page="calendar"], [data-page="projects"])'; else: '.workspace-leaf-content[data-type="ui-app"]:not(:has( .ui-view[data-page="dashboard"], .ui-view[data-page="calendar"], .ui-view[data-page="projects"] ))')}::before { display: none; }

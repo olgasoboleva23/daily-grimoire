@@ -1,6 +1,7 @@
 import { Platform, Plugin } from "obsidian";
 import { UI_VIEW, UiView } from "./components/app/view.ts";
-import { openUi } from "./components/app/open.ts";
+import { OLD_UI_VIEW } from "./components/app/pages.js";
+import { OldUiView, openUi } from "./components/app/open.ts";
 import { registerCommands } from "./commands/commands.ts";
 import { useNotify } from "./composables/notify.js";
 import { setApp } from "./helpers/app.js";
@@ -22,6 +23,7 @@ export default class UiPlugin extends Plugin {
     // the Winx tab (its pages: components/app/pages.js); ✨ and the command go to the one used
     // last, or open it, pinned, on the dashboard
     this.registerView(UI_VIEW, leaf => new UiView(leaf));
+    this.registerView(OLD_UI_VIEW, leaf => new OldUiView(leaf));   // delete after one release
     this.addCommand({ id: "open", name: "Open", callback: () => openUi() });
     this.addRibbonIcon("sparkles", this.manifest.name, () => openUi());
     this.addCommand({   // after a rebuild: load the new main.js without restarting Obsidian

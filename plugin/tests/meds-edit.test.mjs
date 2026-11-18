@@ -121,7 +121,7 @@ test("newCourse: saving c1 and c2 opens their Medication Vue page in a new tab",
   assert.equal(await newCourse(ask), "c2");
   assert.deepEqual(Object.keys(read(files)), ["c1", "c2"]);
   assert.deepEqual(opened, Array(2).fill({
-    type: "winx", active: true, state: { page: "meds", meds: {} },
+    type: "ui-app", active: true, state: { page: "meds", meds: {} },
   }));
 });
 
