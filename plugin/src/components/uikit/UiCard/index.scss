@@ -117,12 +117,6 @@
 /* a hero card: no title */
 .callout[data-callout="card"][data-callout-metadata~="hero"] > .callout-title { display: none; }
 
-/* a ```winx block that draws its own card: the block's wrapper steps out of the layout, so the card sits in the
-   column like a "> [!card]" callout does */
-.block-language-winx:has(> .ui-widget) {
-  display: contents;
-}
-
 /* a card widget until its first draw */
 $cover-h: 150px; /* a cover's height: a picture's frame, not a spacing value */
 

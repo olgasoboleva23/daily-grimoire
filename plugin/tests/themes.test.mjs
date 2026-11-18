@@ -76,7 +76,6 @@ test("each theme defines the palette in Winx only and ships its AVIF and heading
   for (const [name, font] of Object.entries(expected)) {
     const rule = themes.nodes.find(r => r.selector?.startsWith(`body.ui-theme-${name} `));
     assert.ok(rule.selector.includes('.workspace-leaf-content[data-type=winx]'));
-    assert.ok(rule.selector.includes('.block-language-winx'));
     const declarations = new Map(rule.nodes.map(d => [d.prop, d.value]));
     for (const token of required) assert.ok(declarations.has(token), `${name}: ${token}`);
     assert.equal(declarations.get("--ui-font-deco"), `"${font}"`);

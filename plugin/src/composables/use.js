@@ -1,5 +1,5 @@
 // Composables: a piece of behaviour — its listeners and their removal — added to any Obsidian
-// component, a tab (ItemView) or a widget's VueHost (composables/vueHost.ts). They listen through
+// component, a tab (ItemView) or a widget. They listen through
 // the component's registerDomEvent / registerEvent / registerInterval, so Obsidian drops it all
 // when the component unloads.
 import { debounce } from "obsidian";

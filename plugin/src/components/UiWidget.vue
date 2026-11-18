@@ -1,5 +1,5 @@
 <script>
-// Preserve a Markdown block's height while its replacement loads.
+// Preserve a page widget's height while its replacement loads.
 const heights = new WeakMap();
 </script>
 
@@ -34,8 +34,9 @@ async function refresh() {
   const n = ++runs;
 
   try {
-    const data = await def.load({ get dv() { return blockDv(sourcePath, el()); }, app,
-      args: def.args ?? {}, sourcePath, source: def.source ?? "" });
+    const data = await def.load({
+      get dv() { return blockDv(sourcePath, el()); }, app, sourcePath,
+    });
 
     if (gone || n !== runs) return;
     Object.assign(state, { data, error: null });

@@ -16,7 +16,18 @@ before(async () => {
   // Obsidian's own: shown unless it or a parent is marked hidden here, or has no box (display: contents)
   HTMLElement.prototype.isShown = function () { return !this.closest("[data-hidden]") && this.style.display !== "contents"; };
   setApp({ workspace: bus, metadataCache: bus, vault: bus, plugins: { plugins: { dataview: { api: { index: { initialized: true } } } } } });
-  ({ VueHost } = await import("#/composables/vueHost.ts"));
+  const { Component } = await import("obsidian");
+  const { useVueApp } = await import("#/composables/vueApp.ts");
+  const { default: Widget } = await import("#/components/UiWidget.vue");
+  // what a page does: UiWidget on an element, owned by an Obsidian component
+  VueHost = class extends Component {
+    constructor(el, definition) { super(); Object.assign(this, { el, definition }); }
+    get state() { return this.mounted.instance.state; }
+    refresh() { return this.mounted.instance.refresh(); }
+    onload() {
+      this.mounted = useVueApp(this, this.el, Widget, { props: { definition: this.definition } });
+    }
+  };
   ({ defineComponent, h, nextTick } = await import("vue"));
 });
 
@@ -187,44 +198,6 @@ test("a watched JSON file (Dataview doesn't index it) reloads on the vault's own
   assert.equal(s.loads.length, 2);
   host.unload();
 });
-
-test("a Markdown block passes its own arguments, source and dated context to its loader", async () => {
-  const { blocks, drawBlock } = await import("#/controllers/blocks.js");
-  const { Component } = await import("obsidian");
-  const source = "probe\ncard: Example\nmeta: scroll\ndays: 7\n| medicine | morning |";
-  const note = "Notes/Example.md", contexts = [];
-  const parent = document.body.appendChild(document.createElement("div"));
-  parent.dataset.date = "2026-11-13";
-  const el = parent.appendChild(document.createElement("div"));
-  blocks.probe = { view: View(), bodyClass: "probe-body", watches: [],
-    load: ctx => { contexts.push(ctx); return { n: 7 }; } };
-  const owner = new Component();
-  owner.sourcePath = note;
-  owner.load();
-  try {
-    drawBlock(source, el, owner);
-    await settle();
-    const ctx = contexts[0];
-    assert.equal(ctx.sourcePath, note);
-    assert.equal(ctx.source, source);
-    assert.deepEqual(ctx.args, { card: "Example", meta: "scroll", days: 7 });
-    assert.equal(el.querySelector(".probe-body").textContent, "7");
-    assert.equal(el.querySelector(".callout-title-inner").textContent, "Example");
-    const { app } = await import("#/helpers/app.js");
-    const api = app.plugins.plugins.dataview.api;
-    Object.assign(api, { page: path => ({ path }), date: d => d });
-    assert.deepEqual(ctx.dv.current(), { path: note, date: "2026-11-13" });
-    parent.dataset.date = "2026-11-14";
-    assert.equal(ctx.dv.current().date, "2026-11-14");
-    bus.fire("changed", { path: note });
-    assert.equal(contexts.length, 2);
-  } finally {
-    owner.unload();
-    parent.remove();
-    delete blocks.probe;
-  }
-});
-
 
 test("a theme change redraws visible widgets and catches up a kept hidden widget when shown", async () => {
   const s = slow(), { host, el } = mount({ load: s.load });

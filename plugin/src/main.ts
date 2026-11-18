@@ -2,15 +2,13 @@ import { Platform, Plugin } from "obsidian";
 import { UI_VIEW, UiView } from "./components/app/view.ts";
 import { openUi } from "./components/app/open.ts";
 import { registerCommands } from "./commands/commands.ts";
-import { drawBlock } from "./controllers/blocks.js";
 import { useNotify } from "./composables/notify.js";
-import { redrawNotes } from "./helpers/plugins.js";
 import { setApp } from "./helpers/app.js";
 import { installSounds } from "./helpers/sounds.js";
 import { useTheme } from "./controllers/theme.js";
 import { useTaskStore } from "./store/tasks.js";
 
-// Daily Grimoire: the ```winx blocks (widgets), the Winx tab, the task window and the
+// Daily Grimoire: the Winx tab, the task window and the
 // commands, and the styles (styles.css, built from src/styles/main.scss and the components'
 // index.scss).
 
@@ -21,8 +19,6 @@ export default class UiPlugin extends Plugin {
     useTheme(this);
     installSounds(this);
     registerCommands(this);
-    // a ```winx block in a note: a widget by name (controllers/blocks.js)
-    this.registerMarkdownCodeBlockProcessor("winx", drawBlock);
     // the Winx tab (its pages: components/app/pages.js); ✨ and the command go to the one used
     // last, or open it, pinned, on the dashboard
     this.registerView(UI_VIEW, leaf => new UiView(leaf));
@@ -35,7 +31,6 @@ export default class UiPlugin extends Plugin {
         const plugins = (this.app as any).plugins;
         await plugins.disablePlugin(this.manifest.id);
         await plugins.enablePlugin(this.manifest.id);
-        redrawNotes();   // the widgets already drawn were unmounted with the old code
       },
     });
     // the phone has no status bar: "✦ syncing" (the star spinning) at the top while Remotely Save

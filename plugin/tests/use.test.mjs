@@ -142,13 +142,3 @@ test("openNote in a Winx tab: a short link to a Winx page's note switches the pa
 test("openNote outside a Winx tab: a Winx page's note opens as a note", () => {
   assert.deepEqual(clickIn("Finance").opened, [["Finance", false]]);
 });
-
-test("redrawNotes: every open note's preview is rendered anew (after a Winx reload)", async () => {
-  const { redrawNotes } = await import("#/helpers/plugins.js");
-  const drawn = [];
-  const leaf = name => ({ view: { previewMode: { rerender: full => drawn.push([name, full]) } } });
-
-  setApp({ workspace: { getLeavesOfType: t => t === "markdown" ? [leaf("a"), { view: {} }, leaf("b")] : [] } });
-  redrawNotes();
-  assert.deepEqual(drawn, [["a", true], ["b", true]]);
-});

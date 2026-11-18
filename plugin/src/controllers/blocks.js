@@ -1,6 +1,5 @@
-// The ```winx block: the widgets by name (each a .vue on a VueHost) and what the plugin does
-// with a block. A widget's writes aren't here: its .vue imports them from its controller.
-import { VueHost } from "#/composables/vueHost.ts";
+// The pages' widgets by name (each a .vue drawn by UiWidget). A widget's writes aren't here: its
+// .vue imports them from its controller.
 import { loadLevelToday, loadLifeAreas, loadXpToday } from "#/controllers/widgets/xp.js";
 import { loadQuests } from "#/controllers/widgets/quests.js";
 import { loadShop } from "#/controllers/widgets/shop.js";
@@ -36,15 +35,13 @@ import WeightCard from "#/components/pages/dashboard/widgets/weight/index.vue";
 import DailyNoteOpen from "#/components/pages/dashboard/widgets/DailyNoteOpen.vue";
 import PomodoroTimer from "#/components/pages/dashboard/widgets/pomodoro/index.vue";
 // the Vue pages: components/pages/<page>/
-import { APP_NAME } from "#/helpers/name.js";
 import MedsPage from "#/components/pages/meds/index.vue";
 import FoodPage from "#/components/pages/food/index.vue";
 
 // the widgets: name → { view: the .vue, load(ctx): its data, cardButton: a .vue next to the
 // card's title, bodyClass: a class on the card's body, watches: the files it reads (a folder:
 // ending in /): only their changes load it again (any other note's doesn't), follows: false to
-// load once }, where ctx is { dv, app, args, sourcePath, source: the block's own text } (dv:
-// blockDv)
+// load once }, where ctx is { dv, app, sourcePath } (dv: blockDv)
 const TASK_FILES = `${TASKS}/`, LEDGER_FILES = `${LEDGER}/`;
 
 export const blocks = {
@@ -80,47 +77,4 @@ export const blocks = {
     view: FoodPage, load: loadFood,
     watches: [FOOD_DATA, FOOD_LOG, COURSES, `${JOURNALS}/`, TASK_FILES],
   },
-};
-
-// a widget on its block: its VueHost, with the card when the block has a "card:" line
-function block(def, el, sourcePath, args, source) {
-  const { bodyClass, ...widget } = def;
-  const meta = args.meta ? String(args.meta).split(/\s+/) : [];
-  const card = args.card ? { title: String(args.card), meta, bodyClass } : undefined;
-
-  // no card: the class goes on the block itself
-  if (!card && bodyClass) el.addClass(bodyClass);
-  return new VueHost(el, { ...widget, note: sourcePath, card, args, source });
-}
-
-// A ```winx block's text: the widget's name on the first line, then "key: value" lines (a JSON
-//   value, else text); a table's lines (| …) are the block's own text, not arguments.
-//   ```winx
-//   weight
-//   input: true
-//   ```
-export function parseBlock(source) {
-  const [name = "", ...rest] = source.split("\n").map(l => l.trim()).filter(Boolean);
-  const args = {};
-
-  for (const line of rest) {
-    const i = line.indexOf(":");
-
-    if (i < 1 || line.startsWith("|")) continue;
-    const value = line.slice(i + 1).trim();
-
-    const key = line.slice(0, i).trim();
-
-    try { args[key] = JSON.parse(value); } catch { args[key] = value; }
-  }
-
-  return { name, args };
-}
-
-export const drawBlock = (source, el, ctx) => {
-  const { name, args } = parseBlock(source);
-  const def = blocks[name];
-
-  if (!def) return void el.createDiv({ text: `${APP_NAME}: no widget "${name}"` });
-  ctx.addChild(block(def, el, ctx.sourcePath, args, source));
 };
