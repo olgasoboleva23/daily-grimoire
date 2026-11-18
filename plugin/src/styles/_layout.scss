@@ -5,9 +5,9 @@
  *
  * • File explorer (.workspace-leaf-content[data-type="file-explorer"])
  *   nav color overrides
- * • Full-bleed background for dashboard & kanban
- *   workspace leaves
- * • Base typography shared by both views
+ * • Full-bleed background for the dashboard
+ *   workspace leaf
+ * • Base typography
  * ============================================ */
 
 /* ── File explorer nav ── */
@@ -19,8 +19,8 @@
   --nav-collapse-icon-color-collapsed: var(--ui-lavender);
 }
 
-/* ── Dashboard / kanban workspace backgrounds ── */
-#{if(sass(context.$shadow): ".ui-view"; else: ':is( .workspace-leaf-content:has(.dashboard), .workspace-leaf-content:has(.kanban-board) )')} {
+/* ── Dashboard workspace background ── */
+#{if(sass(context.$shadow): ".ui-view"; else: '.workspace-leaf-content:has(.dashboard)')} {
   --background-primary: transparent;
   position: relative;
   z-index: $z-base; /* stacking context so the z-index:-1 photo stays inside this leaf */
@@ -63,8 +63,8 @@
   }
 }
 
-/* ── Shared base styles for both views ── */
-:is(.dashboard, .kanban-board) {
+/* ── Base styles of the dashboard ── */
+.dashboard {
   --callout-blend-mode: normal;
   font-family: Quicksand, sans-serif;
   color: var(--ui-text);

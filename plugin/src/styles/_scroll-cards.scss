@@ -25,10 +25,7 @@
 @keyframes ui-bounce-up   { 0%, 100% { translate: 0 0; } 50% { translate: 0 -5px; } }
 @keyframes ui-bounce-down { 0%, 100% { translate: 0 0; } 50% { translate: 0 5px; } }
 
-:is(
-  .dashboard .callout[data-callout="card"][data-callout-metadata~="scroll"],
-  .kanban-board .callout[data-callout="card"]
-) > .callout-content {
+.dashboard .callout[data-callout="card"][data-callout-metadata~="scroll"] > .callout-content {
   &::before, &::after {
     content: "";
     position: sticky;

@@ -1,11 +1,11 @@
 /* The widget's card, block ui-widget (src/uikit/card.js): a pink gradient, fairy wings, a glow on hover, a thin
-   scrollbar. The card is a callout, and cards written in Markdown ("> [!card] Quests", the Kanban) are the same
+   scrollbar. The card is a callout, and cards written in Markdown ("> [!card] Title", the Finance note's) are the same
    callout without our classes, so the look is on .callout[data-callout="card"]; what only a widget has is on
    ui-widget__*. */
 
 @use "mixins" as *;
 
-:is(.dashboard, .kanban-board) {
+.dashboard {
   /* ── Card ─────────────────────────────────── */
   .callout[data-callout="card"] {
     position: relative;
@@ -84,11 +84,6 @@
         0 0 8px alpha(--ui-pink-deep, 60%);
     }
 
-    /* Dataview error */
-    .dataview-error-box {
-      border-color: var(--ui-pink-deep);
-    }
-
     /* Custom scrollbar */
     > .callout-content {
       overflow: auto;
@@ -141,7 +136,7 @@ $cover-h: 150px; /* a cover's height: a picture's frame, not a spacing value */
 /* Obsidian 1.13 sets --corner-shape: superellipse(1.33) on .mod-macos, and app.css
    applies it to every <button>/<input> — which turns our round controls into
    squircles. Pin the shape back for anything inside a ui widget. */
-:is(.dashboard, .kanban-board, .ui-pomodoro, .ui-shop) :is(button, input) {
+:is(.dashboard, .ui-pomodoro, .ui-shop) :is(button, input) {
   corner-shape: round;
 }
 

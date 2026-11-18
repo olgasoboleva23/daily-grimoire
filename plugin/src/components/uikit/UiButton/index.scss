@@ -147,10 +147,8 @@ button.ui-btn {
   }
 }
 
-// pill: a word on the pink Cinzel ticket (✦ Open, running low, dates); the date fields (the calendar's, the
-// dashboard's) share its look
-:is(.dashboard, .kanban-board) {
-  .mb-input-type-date input,
+// pill: a word on the pink Cinzel ticket (✦ Open, running low, dates)
+.dashboard {
   .ui-btn.ui-btn--pill {
     background: linear-gradient(
       135deg,
@@ -165,15 +163,6 @@ button.ui-btn {
     font-size: $text-xl !important;
     letter-spacing: 1px !important;
     box-shadow: 0 0 8px alpha(--ui-gold, 40%) !important;
-  }
-
-  .mb-input-type-date input {
-    &::-webkit-calendar-picker-indicator {
-      opacity: 0;
-    }
-    &::-webkit-datetime-edit-text {
-      color: var(--ui-gold-deep) !important;
-    }
   }
 
   .ui-btn.ui-btn--pill {

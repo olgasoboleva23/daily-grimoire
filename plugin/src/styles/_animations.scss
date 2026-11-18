@@ -2,7 +2,6 @@
  * WINX THEME — Animations
  *
  * • @keyframes ui-twinkle (col star sparkles)
- * • Date input golden styling (.mb-input-type-date)
  * ============================================ */
 
 @use "mixins" as *;
@@ -46,7 +45,7 @@
 
 /* ── Accessibility — stop decorative motion ── */
 @media (prefers-reduced-motion: reduce) {
-  :is(.dashboard, .kanban-board, .ui-pomodoro) :is(*, *::before, *::after),
+  :is(.dashboard, .ui-pomodoro) :is(*, *::before, *::after),
   .ui-level__icon,
   .ui-level__progress-fill {
     animation: none !important;
