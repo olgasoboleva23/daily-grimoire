@@ -85,7 +85,7 @@
 /* ── Cards: no icon, content may overflow ── */
 .dashboard {
   .callout[data-callout="card"] .callout-icon {
-    display: none !important;
+    display: none #{context.$imp};
   }
   /* overflow fix for card content (merged from the old theme) */
   .callout[data-callout="card"] > .callout-content {
@@ -107,7 +107,7 @@
 
     .callout[data-callout="grid"] { padding: $space-xs !important; }
   }
-  .callout[data-callout="card"] { padding: $space-l !important; }
+  .callout[data-callout="card"] { padding: $space-l #{context.$imp}; }
 }
 
 /* ── Column sparkles ── */

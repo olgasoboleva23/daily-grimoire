@@ -14,10 +14,10 @@
       135deg,
       var(--ui-pink-light),
       var(--ui-pink)
-    ) !important;
-    border: $border !important;
-    border-radius: $radius-xl !important;
-    overflow: visible !important;
+    ) #{context.$imp};
+    border: $border #{context.$imp};
+    border-radius: $radius-xl #{context.$imp};
+    overflow: visible #{context.$imp};
     padding: $space-xl;
     transition:
       border-color $slow ease,
@@ -59,19 +59,19 @@
       &.ui-widget--wingless {
         &::before,
         &::after { display: none; }
-        > .callout-title { padding-inline: 0 !important; }
+        > .callout-title { padding-inline: 0 #{context.$imp}; }
       }
     }
 
     /* Title */
     > .callout-title {
-      justify-content: center !important;
-      font-family: $font-deco !important;
-      color: var(--ui-purple-deep) !important;
-      letter-spacing: 2px !important;
-      text-transform: uppercase !important;
-      font-size: $text-2xl !important;
-      padding-inline: $deco + $space-m !important; /* room for the wings */
+      justify-content: center #{context.$imp};
+      font-family: $font-deco #{context.$imp};
+      color: var(--ui-purple-deep) #{context.$imp};
+      letter-spacing: 2px #{context.$imp};
+      text-transform: uppercase #{context.$imp};
+      font-size: $text-2xl #{context.$imp};
+      padding-inline: $deco + $space-m #{context.$imp}; /* room for the wings */
       @if context.$shadow {
         /* a widget's button next to the title (the market's +, UiButton add): on the title's line */
         .ui-btn.ui-widget__add {

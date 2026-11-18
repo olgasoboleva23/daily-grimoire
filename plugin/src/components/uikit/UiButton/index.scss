@@ -161,9 +161,9 @@ button.ui-btn {
     border-radius: $radius-m !important;
     padding: $space-s $space-2xl !important;
     color: var(--ui-gold-deep) !important;
-    font-family: $font-deco !important;
+    font-family: $font-deco #{context.$imp};
     font-size: $text-xl !important;
-    letter-spacing: 1px !important;
+    letter-spacing: 1px #{context.$imp};
     box-shadow: 0 0 8px alpha(--ui-gold, 40%) !important;
   }
 
@@ -172,7 +172,7 @@ button.ui-btn {
       opacity: 0;
     }
     &::-webkit-datetime-edit-text {
-      color: var(--ui-gold-deep) !important;
+      color: var(--ui-gold-deep) #{context.$imp};
     }
   }
 
