@@ -92,7 +92,7 @@ const note = (r, el) => {
           title="edit course"
           class="ui-card__add"
           @click="editCourse(id)"
-        >✎</UiButton>
+        ><span class="ui-pencil">✎</span></UiButton>
       </template>
       <div class="ui-meds__sum">
         день {{ course.day }} из {{ course.days }}

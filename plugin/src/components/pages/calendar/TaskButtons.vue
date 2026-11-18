@@ -67,7 +67,9 @@ async function remove() {
     title="remove date"
     @click="unplan"
   >↩</UiButton>
-  <UiButton class="ui-task__btns-edit" :title="editTitle" @click="edit">✏️</UiButton>
+  <UiButton class="ui-task__btns-edit" :title="editTitle" @click="edit">
+    <span class="ui-pencil">✏️</span>
+  </UiButton>
   <UiButton
     :title="del.title"
     :class="['ui-task__btns-del', { 'ui-task__btns-del--armed': armed }]"

@@ -28,8 +28,8 @@ test("✓ sparkles the row at once and writes it as bought after the sparkle, on
   const { files } = vault({ [`${MARKET}.md`]: NOTE });
   const w = mount(View, { props: { state: { data } } });
   const tea = w.findAll(".ui-market__item")[0];
-  await tea.find("button").trigger("click");
-  await tea.find("button").trigger("click");
+  await tea.find('[aria-label="bought"]').trigger("click");
+  await tea.find('[aria-label="bought"]').trigger("click");
   assert.ok(tea.classes().includes("ui-market__item--bought"));
   assert.equal(files[`${MARKET}.md`], NOTE);
   await new Promise(r => setTimeout(r, 700));
@@ -46,7 +46,7 @@ test("a bought item back on the list can be bought again; a line that changed me
   const state = reactive({ data });
   const { files } = vault({ [`${MARKET}.md`]: NOTE });
   const w = mount(View, { props: { state } });
-  await w.findAll(".ui-market__item")[0].find("button").trigger("click");
+  await w.findAll(".ui-market__item")[0].find('[aria-label="bought"]').trigger("click");
   await new Promise(r => setTimeout(r, 700));
   // written: the list comes back without it, then with it again (unticked in the note)
   state.data = { ...data, groups: [{ label: "🌿 Harvest", rows: [{ line: 5, id: "m2", name: "rice" }] }] }; await nextTick();
@@ -54,7 +54,7 @@ test("a bought item back on the list can be bought again; a line that changed me
   const tea = () => w.findAll(".ui-market__item")[0];
   assert.ok(!tea().classes().includes("ui-market__item--bought"));
   files[`${MARKET}.md`] = NOTE.replace("m1", "m3");   // the line changed meanwhile: nothing written
-  await tea().find("button").trigger("click");
+  await tea().find('[aria-label="bought"]').trigger("click");
   await new Promise(r => setTimeout(r, 700)); await nextTick();
   assert.match(files[`${MARKET}.md`], /- \[ \] m3/);
   assert.match(String(Notice.last), /changed meanwhile/);

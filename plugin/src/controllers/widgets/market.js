@@ -9,14 +9,37 @@ import {
   supplyStats,
 } from "#/models/market.js";
 import { Notice } from "obsidian";
+import { collection } from "#/helpers/collection.js";
 import { nextId } from "#/helpers/ids.js";
 import { Search } from "#/components/uikit/Search/index.ts";
 import { Form } from "#/components/uikit/Form/index.ts";
-import { appendLine, editJson, editLine, readJson, serial } from "#/helpers/files.js";
+import { appendLine, editLine, readJson, serial } from "#/helpers/files.js";
 import { findChoices } from "#/helpers/find.js";
 import { parseNote } from "#/models/taskFile.js";
 import { app } from "#/helpers/app.js";
 import { MARKET_NOTE, MARKET_RECORDS } from "#/helpers/paths.js";
+
+const catalog = collection(MARKET_RECORDS);
+const categoryRow = {
+  name: "Category", key: "tag",
+  options: marketCats.map(c => ({ label: c.label, value: c.tag })),
+};
+
+export async function editMarketItem(id, ask = Form.ask.bind(Form)) {
+  const item = (await readJson(catalog.path, {}))[id];
+
+  if (!item) return void new Notice("Item no longer exists");
+  const values = await ask(app, "Edit item", [
+    { name: "Name", key: "name", text: "Item name" }, categoryRow,
+  ], { values: { ...item }, required: ["name", "tag"], submit: "Save" });
+
+  if (!values) return;
+  const saved = await catalog.update(id, current =>
+    current.name === item.name && current.tag === item.tag
+      ? { ...current, name: values.name, tag: values.tag } : null);
+
+  if (!saved) new Notice("Item changed. Open it again to edit.");
+}
 
 // Read the log and catalog together, without waiting for Dataview's index. Missing records show
 // their ID instead of another item.
@@ -85,11 +108,7 @@ export async function addMarketItem() {
   if (!pick) return;
   if (pick.onList) return void new Notice(`✦ ${pick.name} is on the list already`);
   const tag = pick.isNew ? (await Form.ask(app, `✦ ${pick.name}`, [
-    {
-      name: "Category",
-      key: "tag",
-      options: marketCats.map(c => ({ label: c.label, value: c.tag })),
-    },
+    categoryRow,
   ], { required: ["tag"], submit: "Add" }))?.tag : pick.tag;
 
   if (tag) await addToMarket(pick.name, tag, pick.id);
@@ -104,7 +123,7 @@ export const addToMarket = (name, tag, id = null) => adding(() => addItem(name, 
 async function addItem(name, tag, id) {
   const state = await marketState();
 
-  await editJson(MARKET_RECORDS, records => {
+  await catalog.edit(records => {
     if (id && !records[id]) throw new Error(`Market record ${id} is missing`);
     id ??= Object.keys(records)
       .find(k => records[k].name.trim().toLowerCase() === name.trim().toLowerCase());

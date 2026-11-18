@@ -43,7 +43,9 @@ function dateMenu(e) {
     <UiCheckbox v-else :static="!canTick" @tick="tickTask(entry.t)" />
     <span class="ui-project__task-text ui-grow"><TaskText :task="info" /></span>
     <template v-if="!entry.done">
-      <UiButton title="edit" @click="editTaskModal(entry.t)">✏️</UiButton>
+      <UiButton title="edit" @click="editTaskModal(entry.t)">
+        <span class="ui-pencil">✏️</span>
+      </UiButton>
       <UiButton title="to the calendar" @click="dateMenu">📅</UiButton>
       <input
         ref="picker"

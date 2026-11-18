@@ -1,4 +1,4 @@
-import { addToMarket, loadCelestialMarket, loadSupplies, buyMarketItem } from "#/controllers/widgets/market.js";
+import { editMarketItem, addToMarket, loadCelestialMarket, loadSupplies, buyMarketItem } from "#/controllers/widgets/market.js";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { MARKET, MARKET_RECORDS } from "#/helpers/paths.js";
@@ -55,4 +55,16 @@ test("A new vault's first market item starts the catalog", async () => {
   assert.deepEqual(JSON.parse(files[MARKET_RECORDS]), { m1: { name: "Tea", tag: "#food" } }
 );
   assert.equal(files[note], "- [ ] m1\n");
+});
+
+test("editing a catalog item changes both lists and preserves the purchase log", async () => {
+  globalThis.window = { moment: () => ({ format: () => "2026-11-11" }) };
+  const log = "- [x] m1 ✅ 2026-10-01\n- [x] m1 ✅ 2026-10-11\n- [ ] m1\n";
+  const { files } = vault({ [note]: log, [MARKET_RECORDS]: JSON.stringify({ m1: { name: "Tea", tag: "#other" } }) });
+  await editMarketItem("m1", async () => ({ name: "Green tea", tag: "#food" }));
+  assert.equal(files[note], log);
+  assert.deepEqual(JSON.parse(files[MARKET_RECORDS]).m1, { name: "Green tea", tag: "#food" });
+  for (const load of [loadCelestialMarket, loadSupplies]) {
+    assert.equal((await load()).groups[0].rows[0].name, "Green tea");
+  }
 });

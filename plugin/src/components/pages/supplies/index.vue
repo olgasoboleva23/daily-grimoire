@@ -4,7 +4,7 @@
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
 import UiGroupHeader from "#/components/uikit/UiGroupHeader.vue";
-import { runsLow } from "#/controllers/widgets/market.js";
+import { editMarketItem, runsLow } from "#/controllers/widgets/market.js";
 
 defineProps({ state: { type: Object, required: true } });
 </script>
@@ -21,6 +21,9 @@ defineProps({ state: { type: Object, required: true } });
       >
         <span class="ui-supplies__name ui-grow">{{ r.name }}</span>
         <span class="ui-supplies__info">{{ r.info }}</span>
+        <UiButton v-if="r.id" title="edit item" @click="editMarketItem(r.id)">
+          <span class="ui-pencil">✎</span>
+        </UiButton>
         <UiButton
           v-if="!r.listed"
           kind="pill"

@@ -31,7 +31,7 @@ const folded = ref(complete.value);
       <span class="ui-project__stage-count">{{ done }}/{{ total }}</span>
       <span v-if="complete" class="ui-project__stage-done">✓</span>
       <UiButton title="rename" @click="askRenameStage(app, project, index, stage.name)">
-        ✏️
+        <span class="ui-pencil">✏️</span>
       </UiButton>
       <UiButton title="delete" @click="askDeleteStage(app, project, index, stage.name)">
         🗑️

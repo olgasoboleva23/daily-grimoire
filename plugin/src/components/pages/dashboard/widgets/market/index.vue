@@ -10,7 +10,7 @@ import UiGroupHeader from "#/components/uikit/UiGroupHeader.vue";
 import UiNoteLink from "#/components/uikit/UiNoteLink.vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import { MARKET } from "#/helpers/paths.js";
-import { buyMarketItem } from "#/controllers/widgets/market.js";
+import { editMarketItem, buyMarketItem } from "#/controllers/widgets/market.js";
 
 const props = defineProps({ state: { type: Object, required: true } });
 const ui = inject("ui", null);
@@ -56,6 +56,9 @@ watch(() => props.state.data.groups, groups => {
           :class="{ 'ui-market__item--bought': bought.has(key(r)) }"
         >
           <span class="ui-market__text ui-grow">{{ r.name }}</span>
+          <UiButton v-if="r.id" title="edit item" @click="editMarketItem(r.id)">
+            <span class="ui-pencil">✎</span>
+          </UiButton>
           <UiButton
             kind="add"
             jump
