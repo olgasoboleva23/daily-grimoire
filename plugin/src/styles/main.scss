@@ -1,3 +1,19 @@
-// Native windows and Markdown widgets stay in Obsidian; fonts are shared with the tab.
+// The document sheet: what Obsidian's own windows draw. The tab (pages, widgets) has its own sheet,
+// shadow.scss, so only these partials are here: tokens and themes for them, the Form / Search
+// windows, the tooltip, the syncing badge and the Finance note's cards (cssclasses: dashboard).
+// Keep the order: rules of the same weight win by order.
 @use "fonts";
-@use "components";
+@use "utilities";
+@use "animations";
+@use "assets";
+@use "callout-grid";
+@use "../components/uikit/UiCard";
+@use "layout";
+@use "tokens";
+@use "themes";
+@use "scroll-cards";
+@use "../components/uikit/Search";
+@use "../components/uikit/Form";
+@use "syncing";
+@use "tooltip";
+@use "../components/uikit/UiTabs";

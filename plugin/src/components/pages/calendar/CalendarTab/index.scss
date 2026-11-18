@@ -286,4 +286,3 @@
   &__zone--plan { font-family: $font-deco; font-size: $text-2xl; text-align: center; }
 }
 @keyframes ui-tick-shimmer { from { background-position: 100% 0; } to { background-position: -50% 0; } }
-@keyframes ui-spin { to { transform: rotate(360deg); } }

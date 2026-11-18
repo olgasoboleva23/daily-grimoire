@@ -3,6 +3,7 @@
    callout without our classes, so the look is on .callout[data-callout="card"]; what only a widget has is on
    ui-widget__*. */
 
+@use "context";
 @use "mixins" as *;
 
 .dashboard {
@@ -53,11 +54,13 @@
       right: var(--ui-corner-inset, #{$space-xs});
       transform: scale(-1, -1);
     }
-    /* no wings (UiCard :wings="false", the projects' cards): the title without their room */
-    &.ui-widget--wingless {
-      &::before,
-      &::after { display: none; }
-      > .callout-title { padding-inline: 0 !important; }
+    @if context.$shadow {
+      /* no wings (UiCard :wings="false", the projects' cards): the title without their room */
+      &.ui-widget--wingless {
+        &::before,
+        &::after { display: none; }
+        > .callout-title { padding-inline: 0 !important; }
+      }
     }
 
     /* Title */
@@ -69,10 +72,12 @@
       text-transform: uppercase !important;
       font-size: $text-2xl !important;
       padding-inline: $deco + $space-m !important; /* room for the wings */
-      /* a widget's button next to the title (the market's +, UiButton add): on the title's line */
-      .ui-btn.ui-widget__add {
-        align-self: center;
-        margin: (-$space-xs) 0 (-$space-xs) $space-s;   /* centred on the title's line without making it taller */
+      @if context.$shadow {
+        /* a widget's button next to the title (the market's +, UiButton add): on the title's line */
+        .ui-btn.ui-widget__add {
+          align-self: center;
+          margin: (-$space-xs) 0 (-$space-xs) $space-s;   /* centred on the title's line without making it taller */
+        }
       }
     }
 
@@ -109,6 +114,7 @@
   }
 }
 
+@if context.$shadow {
 /* a hero card: no title */
 .callout[data-callout="card"][data-callout-metadata~="hero"] > .callout-title { display: none; }
 
@@ -139,4 +145,4 @@ $cover-h: 150px; /* a cover's height: a picture's frame, not a spacing value */
 :is(.dashboard, .ui-pomodoro, .ui-shop) :is(button, input) {
   corner-shape: round;
 }
-
+}

@@ -4,102 +4,109 @@
  * WINX THEME — Grid & Column Layout
  *
  * • .callout[data-callout="grid"] container queries
- * • .callout[data-callout="col"] flex layout (dashboard)
+ * • .callout[data-callout="col"] flex layout (the Finance note)
  * • Overflow visibility fixes (merged from the old theme)
  * ============================================ */
 
-/* ── Grid base ── */
-.callout[data-callout="grid"] {
-  container-type: inline-size;
-  .callout[data-callout="card"] {
-    margin: 0;
+// The [!grid] / [!col] callouts are the Finance note's layout (document sheet only); the tab has
+// no such markup. The card parts and the phone padding serve both sheets.
+@if not context.$shadow {
+  /* ── Grid base ── */
+  .callout[data-callout="grid"] {
+    container-type: inline-size;
+    .callout[data-callout="card"] {
+      margin: 0;
+    }
+  }
+
+  .dashboard {
+    .markdown-preview-sizer.markdown-preview-section {
+      max-width: none !important;
+    }
+
+    .callout[data-callout="grid"] > .callout-title {
+      display: none !important;
+    }
+
+    /* Overflow fixes */
+    .callout[data-callout="col"] {
+      overflow: visible !important;
+      > .callout-content {
+        overflow: visible !important;
+      }
+    }
+    .callout[data-callout="grid"] > .callout-content {
+      overflow: visible !important;
+    }
+
+    /* ── Flex columns ── */
+    .callout[data-callout="col"] {
+      background: none !important;
+      border: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+
+      > .callout-title {
+        display: none !important;
+      }
+      > .callout-content {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: $space-3xl;
+      }
+    }
+
+    .callout[data-callout="grid"] > .callout-content {
+      display: flex;
+      gap: $space-3xl;
+      align-items: flex-start;
+
+      > .callout[data-callout="col"] {
+        flex: 1;
+        min-width: 0;
+      }
+
+      @container (max-width: 900px) {
+        flex-wrap: wrap;
+        > .callout[data-callout="col"]:first-child {
+          flex-basis: 100%;
+        }
+      }
+      @container (max-width: 600px) {
+        flex-direction: column;
+        > .callout[data-callout="col"] {
+          width: 100%;
+        }
+      }
+    }
   }
 }
 
-/* ── Shared: hide grid title + card icon, overflow ── */
+/* ── Cards: no icon, content may overflow ── */
 .dashboard {
-  .markdown-preview-sizer.markdown-preview-section {
-    max-width: none !important;
-  }
-
-  .callout[data-callout="grid"] > .callout-title {
-    display: none !important;
-  }
   .callout[data-callout="card"] .callout-icon {
     display: none !important;
   }
-
-  /* Overflow fixes */
-  .callout[data-callout="col"] {
-    overflow: visible !important;
-    > .callout-content {
-      overflow: visible !important;
-    }
-  }
-  .callout[data-callout="grid"] > .callout-content {
-    overflow: visible !important;
-  }
-}
-
-/* ── Dashboard: flex columns ── */
-
-.dashboard {
   /* overflow fix for card content (merged from the old theme) */
   .callout[data-callout="card"] > .callout-content {
     overflow: visible !important;
-  }
-
-  .callout[data-callout="col"] {
-    background: none !important;
-    border: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-
-    > .callout-title {
-      display: none !important;
-    }
-    > .callout-content {
-      display: flex !important;
-      flex-direction: column !important;
-      gap: $space-3xl;
-    }
-  }
-
-  .callout[data-callout="grid"] > .callout-content {
-    display: flex;
-    gap: $space-3xl;
-    align-items: flex-start;
-
-    > .callout[data-callout="col"] {
-      flex: 1;
-      min-width: 0;
-    }
-
-    @container (max-width: 900px) {
-      flex-wrap: wrap;
-      > .callout[data-callout="col"]:first-child {
-        flex-basis: 100%;
-      }
-    }
-    @container (max-width: 600px) {
-      flex-direction: column;
-      > .callout[data-callout="col"] {
-        width: 100%;
-      }
-    }
   }
 }
 
 /* ── Phone: reclaim side space ──
    Page margins + grid padding + card padding stack up to ~70px per side,
-   too much on a ~390px screen. Desktop is untouched. */
+   too much on a ~390px screen. Desktop is untouched.
+   In the tab the shell and its pages set their own bottom padding (app/index.scss), so only the card's
+   padding is left there. */
 #{context.$phone} .dashboard {
-  --file-margins: 12px 8px;
-  /* the floating navbar covers the page's end (the panel's "show less"): room for it below, as Obsidian
-     leaves for Bases (--view-bottom-spacing: navbar + safe area, 0 when the navbar doesn't float) */
-  padding-bottom: calc(var(--view-bottom-spacing, 0px) + #{$space-2xl}) !important;
+  @if not context.$shadow {
+    --file-margins: 12px 8px;
+    /* the floating navbar covers the page's end: room for it below, as Obsidian leaves for Bases
+       (--view-bottom-spacing: navbar + safe area, 0 when the navbar doesn't float) */
+    padding-bottom: calc(var(--view-bottom-spacing, 0px) + #{$space-2xl}) !important;
 
-  .callout[data-callout="grid"] { padding: $space-xs !important; }
+    .callout[data-callout="grid"] { padding: $space-xs !important; }
+  }
   .callout[data-callout="card"] { padding: $space-l !important; }
 }
 

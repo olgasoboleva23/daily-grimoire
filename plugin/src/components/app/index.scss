@@ -49,10 +49,7 @@
   }
 
   // the bar sits above the navbar: the shell and its pages leave it no room of their own
-  // (.is-phone .dashboard does, for a page the navbar floats over); !important to beat that
-  // rule's own !important (_callout-grid.scss)
   #{context.$phone} & {
-    &.dashboard { padding-bottom: 0 !important; }
     .ui-view__page { padding-bottom: $space-2xl !important; }
   }
 }
