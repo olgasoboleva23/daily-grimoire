@@ -144,3 +144,32 @@ test("loadMeds: no courses.json: nothing", async () => {
   vault();
   assert.deepEqual(await loadMeds(), { list: [], data: {}, notes: {}, intake: {} });
 });
+
+test("newCourse: days that don't read keep the window open, with what was typed, and say why", async () => {
+  const { app, files } = vault(), asked = [];
+  app.workspace.getLeaf = () => ({ setViewState: async () => {} });
+  app.workspace.revealLeaf = async () => {};
+  const ask = async (title, rows, opts) => {
+    asked.push(opts.values.meds?.[0]?.ranges);
+    return asked.length === 1
+      ? { meds: [{ name: "Аевит", ranges: "1-3O" }], start: "", notes: "" }
+      : { ...opts.values, meds: [{ name: "Аевит", ranges: "1-3" }] };
+  };
+  Notice.last = "";
+  const id = await newCourse(ask);
+
+  assert.equal(id, "c1");
+  assert.equal(asked.length, 2);
+  assert.equal(asked[1], "1-3O");
+  assert.equal(Notice.last.startsWith("✦ days of «Аевит»: can't read «1-3O»"), true);
+  assert.deepEqual(read(files).c1.meds[0].ranges, [{ from: 1, to: 3 }]);
+});
+
+test("newCourse: closing the window after a problem saves nothing", async () => {
+  const { files } = vault();
+  let n = 0;
+  const ask = async () => (n++ ? null : { meds: [{ name: "Аевит", ranges: "bad" }], start: "", notes: "" });
+
+  assert.equal(await newCourse(ask), null);
+  assert.equal(COURSES in files, false);
+});

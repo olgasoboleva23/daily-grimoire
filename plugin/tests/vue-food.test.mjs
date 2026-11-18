@@ -86,7 +86,7 @@ test("loadFood: the foods and marks, the log, the journals, the medication cours
   assert.deepEqual(d.marks.map(m => m.icon), ["🍫"]);
   assert.deepEqual(d.log, LOG);
   assert.deepEqual([d.journals[0].name, d.journals[0].lag], ["Высыпания", 1]);
-  assert.deepEqual(d.courses.map(({ taken, ...c }) => c), [{ id: "c1", name: "мастодинон", start: "2026-11-02", days: 2, meds: [{ code: "МА", name: "мастодинон", days: 2 }] }]);
+  assert.deepEqual(d.courses.map(({ taken, ...c }) => c), [{ id: "c1", name: "мастодинон", start: "2026-11-02", days: 2, meds: [{ code: "МА", name: "мастодинон", days: 2, ranges: [{ from: 1, to: 2 }] }] }]);
   assert.deepEqual([...d.courses[0].taken], [["2026-11-02", new Set(["МА"])], ["2026-11-03", new Set()]]);   // a ✅ that day (❌ isn't one)
 });
 

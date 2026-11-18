@@ -4,7 +4,8 @@
 // nothing eaten and no note isn't kept. The week's rows for the food page: what was eaten with
 // its marks' icons, the marks counted, each free journal's level after its lag (a rash shows the
 // next day), the medication courses on that day, the note.
-import { addDays } from "#/helpers/dates.js";
+import { addDays, diffDays } from "#/helpers/dates.js";
+import { inRanges, rangesOf } from "#/models/course.js";
 import { nextId } from "#/helpers/ids.js";
 
 export const DEFAULT_MARKS = [
@@ -79,7 +80,7 @@ export function foodWeek({ foods, marks, log, journals, courses, days, task = nu
       // a course on that day, its medicines still on then (each its own days)
       courses: courses.filter(c => c.start <= date && date < addDays(c.start, c.days)).map(c => ({
         id: c.id, name: c.name,
-        meds: (c.meds ?? []).filter(m => date < addDays(c.start, m.days))
+        meds: (c.meds ?? []).filter(m => inRanges(rangesOf(m), diffDays(date, c.start) + 1))
           .map(m => ({ code: m.code, name: m.name, taken: !!c.taken?.get(date)?.has(m.code) })),
       })),
     };

@@ -105,3 +105,15 @@ test("foodWeek: a task set puts its done days on the rows; no task, no field", (
   assert.deepEqual([mon.trained, tue.trained], [true, false]);
   assert.equal(foodWeek(args)[0].trained, undefined);
 });
+
+test("foodWeek: a medicine with ranges is off the course's gap days (days 3-4 here)", () => {
+  const courses = [forFood("c1", { start: "2026-11-02", marks: {}, meds: [
+    { name: "мастодинон", code: "МА", times: [], ranges: [{ from: 1, to: 2 }, { from: 5, to: 6 }] },
+    { name: "аевит", code: "АЕ", times: [], ranges: [{ from: 1, to: 6 }] },
+  ] })];
+  const days = ["2026-11-02", "2026-11-04", "2026-11-06", "2026-11-08"];
+  const rows = foodWeek({ foods: [], marks: [...DEFAULT_MARKS], log: {}, journals: [], courses, days });
+
+  assert.deepEqual(rows.map(r => r.courses.flatMap(c => c.meds.map(m => m.code))),
+    [["МА", "АЕ"], ["АЕ"], ["МА", "АЕ"], []]);
+});

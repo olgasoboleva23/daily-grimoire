@@ -9,7 +9,8 @@ import { collection } from "#/helpers/collection.js";
 import { todayYmd } from "#/helpers/dates.js";
 import { COURSES } from "#/helpers/paths.js";
 import {
-  courseData, courseForm, courseList, courseOf, edited, formValues, intake, withDayNote, withMark,
+  courseData, courseForm, courseList, courseOf, courseProblem, edited, formValues, intake,
+  withDayNote, withMark,
 } from "#/models/course.js";
 import { Form } from "#/components/uikit/Form/index.ts";
 import { Search } from "#/components/uikit/Search/index.ts";
@@ -34,11 +35,25 @@ export const setDayNote = (id, date, text) => courses.update(id, r => withDayNot
 
 const formAsk = (...a) => Form.ask(app, ...a);
 
+// the window again, with what was typed, until the days of every medicine read (null: closed)
+export async function askValid(ask, title, rows, opts) {
+  let v = null;
+
+  for (;;) {
+    v = await ask(title, rows, v ? { ...opts, values: v } : opts);
+    const problem = v && courseProblem(v);
+
+    if (!problem) return v;
+    new Notice(`✦ ${problem}`);
+  }
+}
+
 // the window, then the course saved; the Medication page opened in a new tab. The new id, null
 // when closed.
 export async function newCourse(ask = formAsk) {
   const { rows, values, required } = courseForm();
-  const v = await ask("✦ New medication course", rows, { values, required, submit: "Create" });
+  const v = await askValid(ask, "✦ New medication course", rows,
+    { values, required, submit: "Create" });
 
   if (!v) return null;
   const id = await courses.add(courseOf(v, todayYmd()), "c");
@@ -56,7 +71,7 @@ export async function editCourse(id, ask = formAsk) {
   if (!rec) return gone();
   const { rows, required } = courseForm();
   const values = formValues(rec), before = JSON.stringify(values);
-  const v = await ask("✦ Edit medication course", rows,
+  const v = await askValid(ask, "✦ Edit medication course", rows,
     { values, required, submit: "Save" });
 
   if (!v) return;

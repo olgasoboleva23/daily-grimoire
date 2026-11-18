@@ -60,7 +60,7 @@ export const medicine = g => {
 
   return {
     name, dose: g.dose?.trim() || dose, times: timesOf(g.times),
-    meal: MEAL_TEXT[g.meal] ?? "", days: Number(g.days) || 90, code: g.code,
+    meal: MEAL_TEXT[g.meal] ?? "", ranges: rangesOf(g), code: g.code,
   };
 };
 
@@ -82,7 +82,7 @@ export const courseForm = () => ({
             ["неважно", "any"],
           ]),
         },
-        { name: "Days", key: "days", text: "90", number: true },
+        { name: "Days", key: "ranges", text: "1-30, 45-60 (empty: 1-90)" },
       ],
     },
     { name: "Start", key: "start", text: "YYYY-MM-DD (empty: today)" },
@@ -97,7 +97,9 @@ export const courseForm = () => ({
 // the medicines as the record keeps them: as typed, a code each
 const normal = meds => withCodes(meds).map(g => ({
   name: g.name, code: g.code, dose: g.dose ?? "", times: TIME_KEYS.filter(t => g[t]),
-  meal: g.meal ?? "any", days: Number(g.days) || 90,
+  meal: g.meal ?? "any",
+  ranges: typeof g.ranges === "string" || Array.isArray(g.ranges)
+    ? parseRanges(g.ranges) : rangesOf(g),
 }));
 
 export const courseOf = (v, today) => ({
@@ -111,7 +113,8 @@ export const edited = (rec, v) => ({
 
 export const formValues = rec => ({
   meds: rec.meds.map(g => ({
-    ...g, ...Object.fromEntries(TIME_KEYS.map(t => [t, timesOf(g.times).includes(WHEN[t][0])])),
+    ...g, ranges: formatRanges(rangesOf(g)),
+    ...Object.fromEntries(TIME_KEYS.map(t => [t, timesOf(g.times).includes(WHEN[t][0])])),
   })),
   start: rec.start, notes: rec.notes,
 });
@@ -121,11 +124,11 @@ export const columns = meds => {
   const labels = labelsOf(meds);
 
   return meds.flatMap(m => {
-    const times = timesOf(m.times);
+    const times = timesOf(m.times), ranges = rangesOf(m);
 
     return (times.length ? times : [""]).map(time => ({
       key: m.code + time, code: labels.get(m.code), time,
-      name: nameOf(m.name), days: Number(m.days) || 90,
+      name: nameOf(m.name), ranges, days: lastDay(ranges),
     }));
   });
 };
@@ -160,7 +163,7 @@ export function courseData(rec, today) {
     return {
       date, label: dayLabel(date),
       when: date < today ? "past" : date === today ? "today" : "future",
-      marks: cols.map(c => i < c.days ? rec.marks[date]?.[c.key] ?? "☐" : ""),
+      marks: cols.map(c => inRanges(c.ranges, i + 1) ? rec.marks[date]?.[c.key] ?? "☐" : ""),
       note: rec.dayNotes[date] ?? "",
     };
   });
@@ -173,7 +176,7 @@ export function courseData(rec, today) {
   const gone = rows.filter(r => r.when !== "future").flatMap(r => r.marks).filter(Boolean);
 
   return {
-    columns: cols.map(({ days: _, ...c }) => c), rows, today: groups || null,
+    columns: cols.map(({ days: _d, ranges: _r, ...c }) => c), rows, today: groups || null,
     day: at >= 0 ? at + 1 : rows[0].when === "past" ? days + 1 : 0,
     days, taken: gone.filter(m => m === "✅").length, due: gone.length,
   };
@@ -205,9 +208,11 @@ export function forFood(id, rec) {
 
   return {
     id, name: courseName(rec), start: rec.start, days: courseDays(rec),
-    meds: rec.meds.map(m => ({
-      code: labels.get(m.code), name: nameOf(m.name), days: Number(m.days) || 90,
-    })),
+    meds: rec.meds.map(m => {
+      const ranges = rangesOf(m);
+
+      return { code: labels.get(m.code), name: nameOf(m.name), days: lastDay(ranges), ranges };
+    }),
     taken: new Map(Object.entries(rec.marks).map(([date, marks]) => [date,
       new Set(Object.keys(marks).filter(k => marks[k] === "✅" && code[k]).map(k => code[k]))])),
   };
@@ -221,3 +226,61 @@ export const courseList = (json, today) => Object.entries(json)
     running: isRunning(rec, today),
   }))
   .sort((a, b) => b.running - a.running || b.start.localeCompare(a.start));
+
+// ranges of a medicine: [{ from, to }] course days (1-based); old records: days → 1..days
+export const rangesOf = m =>
+  Array.isArray(m.ranges) && m.ranges.length
+    ? m.ranges
+    : [{ from: 1, to: Number(m.days) || 90 }];
+
+const MAX_DAY = 365;
+const RANGE = /^(\d+)\s*(?:[-–—]\s*(\d+))?$/;
+const partsOf = input => String(input ?? "").split(/[,;]/).map(p => p.trim()).filter(Boolean);
+
+// "30" or "45-60": course days from 1 up to MAX_DAY; else null
+const rangeOf = part => {
+  const m = part.match(RANGE);
+  const from = m && +m[1], to = m && (m[2] ? +m[2] : from);
+
+  return m && from >= 1 && to >= from && to <= MAX_DAY ? { from, to } : null;
+};
+
+// the first part of a typed list that isn't a range of course days, else null
+export const rangesProblem = input => partsOf(input).find(p => !rangeOf(p)) ?? null;
+
+// the window's problem with the days of a medicine, else null
+export const courseProblem = v => {
+  for (const g of v.meds ?? []) {
+    const bad = rangesProblem(g.ranges);
+
+    if (bad) {
+      return `days of «${g.name}»: can't read «${bad}» (like 1-30, 45-60, 70; up to ${MAX_DAY})`;
+    }
+  }
+
+  return null;
+};
+
+// "1-30, 45-60, 70" → [{from:1,to:30},{from:45,to:60},{from:70,to:70}], sorted, merged if touching;
+// nothing readable: 1-90
+export const parseRanges = input => {
+  const found = (Array.isArray(input) ? input.filter(r => r.from >= 1 && r.to >= r.from)
+    : partsOf(input).map(rangeOf).filter(Boolean)).sort((a, b) => a.from - b.from);
+  const merged = [];
+
+  for (const r of found) {
+    const last = merged[merged.length - 1];
+
+    if (last && r.from <= last.to + 1) last.to = Math.max(last.to, r.to);
+    else merged.push({ ...r });
+  }
+
+  return merged.length ? merged : [{ from: 1, to: 90 }];
+};
+
+export const formatRanges = ranges =>
+  ranges.map(r => (r.from === r.to ? `${r.from}` : `${r.from}-${r.to}`)).join(", ");
+
+export const inRanges = (ranges, day) => ranges.some(r => day >= r.from && day <= r.to);
+
+const lastDay = ranges => Math.max(...ranges.map(r => r.to));

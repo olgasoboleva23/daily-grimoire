@@ -1,9 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  columns, courseData, courseForm, courseList, courseOf, dayLabel, edited, forFood, formValues,
-  intake, next,
-  withDayNote, withMark,
+  columns, courseData, courseForm, courseList, courseOf, courseProblem, dayLabel, edited, forFood,
+  formValues, inRanges, intake, next, parseRanges, rangesProblem, withDayNote, withMark,
 } from "#/models/course.js";
 
 test("a mark goes round ☐ → ✅ → ❌ → ☐; a day's label in Russian", () => {
@@ -102,7 +101,7 @@ test("course times reopen as checkboxes and keep the existing mark keys after sa
   assert.deepEqual(saved.meds.map(m => m.times), [[], ["morning", "evening"]]);
   assert.deepEqual(courseData(saved, "2026-11-08"), courseData(REC, "2026-11-08"));
   assert.deepEqual(forFood("c1", saved), forFood("c1", REC));
-  assert.deepEqual(formValues(saved), { ...values, meds: values.meds.map((m, i) =>
+  assert.deepEqual(formValues(saved), { ...values, meds: values.meds.map(({ days: _, ...m }, i) =>
     ({ ...m, times: saved.meds[i].times })) });
 });
 
@@ -110,7 +109,8 @@ test("courseOf / edited: the window's values as a record, the marks kept through
   assert.deepEqual(courseOf({ meds: [{ name: "Мастодинон 30 капель" }] }, "2026-11-10"), {
     start: "2026-11-10",
     meds: [{
-      name: "Мастодинон 30 капель", code: "МА", dose: "", times: [], meal: "any", days: 90,
+      name: "Мастодинон 30 капель", code: "МА", dose: "", times: [], meal: "any",
+      ranges: [{ from: 1, to: 90 }],
     }],
     notes: "", marks: {}, dayNotes: {},
   });
@@ -135,7 +135,7 @@ test("courseOf / edited: a code per medicine, unique, kept through a rename; the
 
   assert.deepEqual(rows.map(r => r.key), ["meds", "start", "notes"]);
   assert.deepEqual(rows[0].list.map(r => r.key),
-    ["name", "dose", "morning", "day", "evening", "meal", "days"]);
+    ["name", "dose", "morning", "day", "evening", "meal", "ranges"]);
   assert.deepEqual([rows[0].required, required, rows[2].lines], [["name"], ["meds"], true]);
   assert.deepEqual(rows[0].list[5].options.map(o => o.label),
     ["перед едой", "после еды", "перед сном", "неважно"]);
@@ -176,4 +176,48 @@ test("renaming a medicine updates its labels while table and Food retain its mar
   assert.deepEqual(food.taken.get("2026-11-13"), new Set(["ВА"]));
   const toggled = withMark(renamed, "2026-11-14", data.columns[0].key, "✅");
   assert.equal(toggled.marks["2026-11-14"]["НО🌙"], "✅");
+});
+
+test("ranges: typed days read, sorted and merged; a gap is a gap; nothing readable: 1-90", () => {
+  assert.deepEqual(parseRanges("45-60, 1-30; 70, 31"),
+    [{ from: 1, to: 31 }, { from: 45, to: 60 }, { from: 70, to: 70 }]);
+  assert.deepEqual(parseRanges("10-20, 15-25"), [{ from: 10, to: 25 }]);
+  assert.deepEqual(parseRanges(""), [{ from: 1, to: 90 }]);
+  assert.deepEqual(parseRanges([{ from: 5, to: 6 }, { from: 1, to: 2 }]),
+    [{ from: 1, to: 2 }, { from: 5, to: 6 }]);
+  assert.equal(inRanges(parseRanges("1-30, 45-60"), 31), false);
+  assert.equal(inRanges(parseRanges("1-30, 45-60"), 45), true);
+});
+
+test("ranges: the first part that isn't days 1-365 is the problem; the window names the medicine", () => {
+  assert.equal(rangesProblem("1-30, 45-60"), null);
+  assert.equal(rangesProblem(""), null);
+  assert.equal(rangesProblem("1-3O"), "1-3O");
+  assert.equal(rangesProblem("1-30, 5-3"), "5-3");
+  assert.equal(rangesProblem("0-5"), "0-5");
+  assert.equal(rangesProblem("1-100000"), "1-100000");
+  assert.match(courseProblem({ meds: [{ name: "Аевит", ranges: "1-30" }, { name: "Магний", ranges: "x" }] }),
+    /«Магний».*«x»/);
+  assert.equal(courseProblem({ meds: [{ name: "Аевит", ranges: "1-30" }] }), null);
+});
+
+test("ranges: the grid is blank on the days a medicine is not taken; the course runs to the last", () => {
+  const rec = courseOf({ meds: [{ name: "Тест", ranges: "1-2, 4-5" }] }, "2026-11-08");
+  const data = courseData(rec, "2026-11-08");
+
+  assert.deepEqual(data.rows.map(r => r.marks[0]), ["☐", "☐", "", "☐", "☐"]);
+  assert.equal(data.days, 5);
+  assert.deepEqual(rec.meds[0].ranges, [{ from: 1, to: 2 }, { from: 4, to: 5 }]);
+  assert.equal(formValues(rec).meds[0].ranges, "1-2, 4-5");
+  assert.equal(data.due, 1);
+  const food = forFood("c1", rec);
+
+  assert.deepEqual([food.days, food.meds[0].days, food.meds[0].ranges.length], [5, 5, 2]);
+});
+
+test("ranges: an old record with days: N reads as 1..N and is shown as such in the window", () => {
+  const old = { start: "2026-11-08", notes: "", marks: {}, dayNotes: {}, meds: [{ name: "Тест", code: "ТЕ", days: 3 }] };
+
+  assert.equal(formValues(old).meds[0].ranges, "1-3");
+  assert.equal(courseData(old, "2026-11-08").days, 3);
 });
