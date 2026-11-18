@@ -20,7 +20,7 @@ const newTask = () => app.commands.executeCommandById("daily-grimoire:new-task")
 
 <template>
   <div class="ui-cal__top ui-row ui-gap-s" data-part="header">
-    <div class="mb-input-type-date"><input type="date" :value="base" @change="onDate"></div>
+    <div class="ui-date"><input type="date" :value="base" @change="onDate"></div>
     <button
       class="ui-cal__mute"
       title="sounds on/off"

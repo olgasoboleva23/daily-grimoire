@@ -16,7 +16,7 @@ const label = props.phone ? "☀️" : "today";
 </script>
 
 <template>
-  <div class="mb-input-type-date"><input type="date" :value="date" @change="typed"></div>
+  <div class="ui-date"><input type="date" :value="date" @change="typed"></div>
   <UiButton kind="nav" title="previous" @click="step(-1)">‹</UiButton>
   <UiButton
     kind="nav"
