@@ -17,10 +17,10 @@ $pill-radius: 22px;   // the pill's corners: it is tall, not a capsule
   flex-direction: column;
   gap: $space-s;
   padding: $space-m $space-s;
-  border: $border-width-m solid var(--winx-gold);   // a half-step border, as the mockup's
+  border: $border-width-m solid var(--ui-gold);   // a half-step border, as the mockup's
   border-radius: $pill-radius;
-  background: alpha(--winx-surface, 92%);
-  box-shadow: 0 4px 16px alpha(--winx-purple-deep, 22%);
+  background: alpha(--ui-surface, 92%);
+  box-shadow: 0 4px 16px alpha(--ui-purple-deep, 22%);
 
   // the item's 32px less its border
   &__icon { flex-shrink: 0; width: 30px; text-align: center; font-size: $text-2xl; }
@@ -55,7 +55,7 @@ $pill-radius: 22px;   // the pill's corners: it is tall, not a capsule
     gap: 0;
     padding: $space-xs $space-s;
     border: none;
-    border-top: $border-width-m solid var(--winx-gold);
+    border-top: $border-width-m solid var(--ui-gold);
     border-radius: 0;
     box-shadow: none;
 
@@ -65,11 +65,11 @@ $pill-radius: 22px;   // the pill's corners: it is tall, not a capsule
       justify-content: center;
       gap: $space-2xs;
       height: $tap;
-      color: alpha(--winx-purple-deep, 70%);
+      color: alpha(--ui-purple-deep, 70%);
       &::after { mask-position: center; }
       &.ui-btn--on {
-        border-color: transparent; background: none; color: var(--winx-purple-deep);
-        .ui-rail__icon { filter: drop-shadow(0 0 6px alpha(--winx-gold, 95%)); }
+        border-color: transparent; background: none; color: var(--ui-purple-deep);
+        .ui-rail__icon { filter: drop-shadow(0 0 6px alpha(--ui-gold, 95%)); }
       }
     }
 

@@ -59,7 +59,7 @@ const toToday = r => act(r, sounds.today, t => view.actions.toToday(t));
       class="ui-missed__row ui-row ui-gap-s"
       :style="{
         '--area': r.task.color ?? undefined,
-        '--winx-swipe-progress': r.sw.swipe.progress,
+        '--ui-swipe-progress': r.sw.swipe.progress,
       }"
       :data-area="r.task.area ?? undefined"
       :data-swipe="r.sw.swipe.kind"

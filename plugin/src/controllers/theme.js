@@ -12,7 +12,7 @@ export function useTheme(plugin) {
     .map(t => `${THEME_IMAGES}/${t.value}.avif`);
   const clear = () => {
     body.classList.remove(...classes);
-    body.style.removeProperty("--winx-theme-image");
+    body.style.removeProperty("--ui-theme-image");
   };
 
   const apply = () => {
@@ -21,7 +21,7 @@ export function useTheme(plugin) {
       body.classList.add(`ui-theme-${config.theme}`);
       const file = app.vault.getFileByPath(`${THEME_IMAGES}/${config.theme}.avif`);
 
-      body.style.setProperty("--winx-theme-image",
+      body.style.setProperty("--ui-theme-image",
         file ? `url(${JSON.stringify(app.vault.getResourcePath(file))})` : "none");
     }
 

@@ -17,7 +17,7 @@ export function chartColor(token, alpha = 1) {
 
 // Chart.js doesn't inherit CSS colours, including the labels and grid around its data.
 export const chartScale = () => ({
-  ticks: { color: chartColor("--winx-chart-text"),
-    backdropColor: chartColor("--winx-surface", 0.75) },
-  grid: { color: chartColor("--winx-chart-grid", 0.1) },
+  ticks: { color: chartColor("--ui-chart-text"),
+    backdropColor: chartColor("--ui-surface", 0.75) },
+  grid: { color: chartColor("--ui-chart-grid", 0.1) },
 });

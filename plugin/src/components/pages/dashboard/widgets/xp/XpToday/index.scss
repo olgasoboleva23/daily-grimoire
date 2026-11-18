@@ -12,11 +12,11 @@
   display: grid;
   gap: $space-2xs;
   font-size: $text-xs;
-  color: var(--winx-text);
+  color: var(--ui-text);
 
   &__bonus {
     font-size: $text-2xs;
-    color: var(--winx-purple);
+    color: var(--ui-purple);
     margin-bottom: $space-xs;
     opacity: 0.85;
   }
@@ -45,7 +45,7 @@
 
   &__cell,
   &__swatch {
-    background: var(--winx-xp-color, var(--winx-purple-deep));
+    background: var(--ui-xp-color, var(--ui-purple-deep));
     opacity: var(--cell-opacity, 0.9);
 
     &--v0 {
@@ -84,8 +84,8 @@
         position: absolute;
         bottom: calc(100% + $space-s);
         right: 0;
-        background: var(--winx-purple-deep);
-        color: var(--winx-on-selected);
+        background: var(--ui-purple-deep);
+        color: var(--ui-on-selected);
         font-size: $text-2xs;
         white-space: nowrap;
         padding: $space-xs $space-m;

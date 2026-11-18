@@ -10,9 +10,9 @@
     width: $pill-w;
     height: $pill-h;
     border-radius: $pill;
-    background: alpha(--winx-pink-deep, 85%);
-    box-shadow: 0 0 12px alpha(--winx-pink-deep, 60%), 0 0 4px var(--winx-highlight) inset;
-    color: var(--winx-on-accent);
+    background: alpha(--ui-pink-deep, 85%);
+    box-shadow: 0 0 12px alpha(--ui-pink-deep, 60%), 0 0 4px var(--ui-highlight) inset;
+    color: var(--ui-on-accent);
     font-size: $text-3xl;
   }
   &__star { animation: ui-spin 0.9s linear infinite; }

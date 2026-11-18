@@ -6,7 +6,7 @@
   &__columns { display: flex; align-items: flex-start; gap: $space-3xl; }
   &__column { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: $space-3xl; }
   .callout[data-callout="card"] { margin: 0; }
-  &__finance > .ui-widget__body > div + div { margin-top: $space-l; padding-top: $space-l; border-top: $border-width-s dashed fade(var(--winx-gold-deep), 35%); }
+  &__finance > .ui-widget__body > div + div { margin-top: $space-l; padding-top: $space-l; border-top: $border-width-s dashed fade(var(--ui-gold-deep), 35%); }
   &--busy {
     .ui-busy__pill { display: flex; }
     .ui-dash__content { opacity: 0.55; transition: opacity $medium; pointer-events: none; }

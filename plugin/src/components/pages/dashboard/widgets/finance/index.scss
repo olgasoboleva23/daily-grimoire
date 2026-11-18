@@ -5,7 +5,7 @@
 .ui-fin {
   &__month {
     display: grid; gap: $space-s; justify-items: start; font-weight: 600; letter-spacing: .02em;
-    color: var(--winx-text);
-    &-sum { color: var(--winx-purple-deep); }
+    color: var(--ui-text);
+    &-sum { color: var(--ui-purple-deep); }
   }
 }

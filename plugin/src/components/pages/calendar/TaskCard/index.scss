@@ -5,16 +5,16 @@
 .ui-task-card {
   position: relative;
   padding: $space-m;
-  border-bottom: $border-width-s dashed fade(var(--winx-gold-deep), 35%);
-  color: var(--winx-text);
+  border-bottom: $border-width-s dashed fade(var(--ui-gold-deep), 35%);
+  color: var(--ui-text);
   cursor: grab;
   transition: background $fast ease;
 
   &:last-child { border-bottom: none; }
-  &:hover { background: fade(var(--winx-surface), 35%); border-radius: $radius-m; }
+  &:hover { background: fade(var(--ui-surface), 35%); border-radius: $radius-m; }
   &--paused { opacity: 0.55; }
   &__text { font-size: $text-xl; line-height: 1.35; }
-  &__meta { margin-top: $space-2xs; font-size: $text-s; color: fade(var(--winx-purple-deep), 75%); }
+  &__meta { margin-top: $space-2xs; font-size: $text-s; color: fade(var(--ui-purple-deep), 75%); }
 }
 
 $fade: 18px;   // the buttons' background fades in over this much of the text
@@ -25,9 +25,9 @@ $fade: 18px;   // the buttons' background fades in over this much of the text
   button.ui-task__btns-del--armed {
     width: auto;
     padding: 0 $space-m;
-    border-color: var(--winx-danger);
-    background: var(--winx-danger);
-    color: var(--winx-on-accent);
+    border-color: var(--ui-danger);
+    background: var(--ui-danger);
+    color: var(--ui-on-accent);
     font-size: $text-m;
   }
 }
@@ -39,7 +39,7 @@ $fade: 18px;   // the buttons' background fades in over this much of the text
         top: 50%;
         translate: 0 -50%;
         padding-left: $fade;   /* the fade in from the text */
-        background: linear-gradient(90deg, transparent, var(--winx-pink-light) $fade);
+        background: linear-gradient(90deg, transparent, var(--ui-pink-light) $fade);
         border-radius: $pill;
         opacity: 0;
         pointer-events: none;
@@ -89,21 +89,21 @@ $fade: 18px;   // the buttons' background fades in over this much of the text
           border-radius: 0;
           box-shadow: none;
           transform: none;
-          background: var(--winx-purple);
-          color: var(--winx-on-accent);
+          background: var(--ui-purple);
+          color: var(--ui-on-accent);
           font-size: $text-2xl;
           transition: background $fast ease, box-shadow $fast ease;
 
           &.ui-task__primary {
             order: -1;
-            background: color-mix(in srgb, var(--winx-gold) calc(var(--winx-swipe-progress, 0) * 100%), var(--winx-pink-deep));
+            background: color-mix(in srgb, var(--ui-gold) calc(var(--ui-swipe-progress, 0) * 100%), var(--ui-pink-deep));
           }
-          &.ui-task__btns-edit { background: var(--winx-blue-deep); }
+          &.ui-task__btns-edit { background: var(--ui-blue-deep); }
           &:is(.ui-task__btns-skip, .ui-task__btns-today) {
-            background: var(--winx-gold);
-            color: var(--winx-on-gold);
+            background: var(--ui-gold);
+            color: var(--ui-on-gold);
           }
-          &.ui-task__btns-del { background: var(--winx-danger); }
+          &.ui-task__btns-del { background: var(--ui-danger); }
         }
       }
       &[data-swipe] {
@@ -111,8 +111,8 @@ $fade: 18px;   // the buttons' background fades in over this much of the text
         .ui-task__actions { translate: 0; visibility: visible; }
       }
       &[data-swipe="ready"] .ui-task__actions button.ui-task__primary {
-        color: var(--winx-on-gold);
-        box-shadow: inset 0 0 0 $border-width-l var(--winx-gold-deep), inset 0 0 16px var(--winx-highlight);
+        color: var(--ui-on-gold);
+        box-shadow: inset 0 0 0 $border-width-l var(--ui-gold-deep), inset 0 0 16px var(--ui-highlight);
         font-size: $text-3xl;
       }
       @media (prefers-reduced-motion: reduce) {

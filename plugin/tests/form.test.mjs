@@ -28,7 +28,7 @@ const createForm = (rows, values) => {
 const open = (rows, values) => createForm(rows, values).contentEl;
 const classes = els => [...els].map(e => e.className);
 const cols = win => win.querySelector(".ui-form__list--lines").style
-  .getPropertyValue("--winx-form-cols");
+  .getPropertyValue("--ui-form-cols");
 // no inline style but a lines list's columns
 const styled = win => [...win.querySelectorAll("[style]")].map(e => e.getAttribute("style"));
 
@@ -82,7 +82,7 @@ test("Form: a list of text boxes and checkboxes is a line of names, then one lin
   assert.equal(win.querySelectorAll(".ui-form__line").length, 2);
   // one grid: a text box's column shares the width, a colour's, a checkbox's and the ×'s fit them
   assert.equal(cols(win), "minmax(0, 1fr) auto auto auto");
-  assert.deepEqual(styled(win), ["--winx-form-cols: minmax(0, 1fr) auto auto auto;"]);
+  assert.deepEqual(styled(win), ["--ui-form-cols: minmax(0, 1fr) auto auto auto;"]);
 });
 
 test("Form: a fixed list has no + or ×, a label row shows its value as text", () => {

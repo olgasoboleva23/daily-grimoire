@@ -8,12 +8,12 @@
     width: $deco;
     height: $deco;
     border-radius: $round;
-    background: var(--winx-star-icon) center / contain no-repeat;
+    background: var(--ui-star-icon) center / contain no-repeat;
     animation: pulse-glow 2s infinite alternate;
   }
 
   &__text {
-    color: var(--winx-text);
+    color: var(--ui-text);
     font-size: $text-xl;
   }
 
@@ -21,17 +21,17 @@
     margin-top: $space-s;
     height: 10px;
     border-radius: $radius-s;
-    background: alpha(--winx-surface, 40%);
+    background: alpha(--ui-surface, 40%);
     position: relative;   /* no overflow clip, so the (optional) tip sparkles can fly out */
   }
 
   &__progress-fill {
     height: 100%;
-    background: var(--winx-progress-fill, linear-gradient(
+    background: var(--ui-progress-fill, linear-gradient(
       90deg,
-      var(--winx-pink-deep),
-      var(--winx-gold),
-      var(--winx-pink-deep)
+      var(--ui-pink-deep),
+      var(--ui-gold),
+      var(--ui-pink-deep)
     ));
     background-size: 200% 100%;
     animation: ui-shimmer 3s linear infinite;
@@ -43,14 +43,14 @@
   &__vitals { display: grid; gap: $space-xs; margin-top: $space-m; }
   &__vital {
     font-size: $text-s;
-    color: var(--winx-purple-deep);
+    color: var(--ui-purple-deep);
     &-name { flex: 0 0 2.6em; white-space: nowrap; font-family: $font-deco; letter-spacing: 1px; }
     &-value { min-width: 5ch; text-align: right; font-variant-numeric: tabular-nums; }   /* 50/50 and 0/4: bars of one length */
     &-bar {
       height: $space-m;
       overflow: hidden;
       border-radius: $pill;
-      background: alpha(--winx-purple, 20%);
+      background: alpha(--ui-purple, 20%);
     }
     &-fill { display: block; height: 100%; border-radius: $pill; transition: width $slow; }
     &--hp &-fill { background: linear-gradient(90deg, #c2304a, #ff6b81); box-shadow: 0 0 6px rgb(255 107 129 / 70%); }

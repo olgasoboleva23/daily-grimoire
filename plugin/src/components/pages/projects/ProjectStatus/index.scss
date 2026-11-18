@@ -5,11 +5,11 @@
 .ui-status {
   @include row;
   gap: $space-xs; margin-left: $space-m; padding: $space-2xs $space-m; border-radius: $pill;
-  background: alpha(--winx-purple, 30%); font-size: $text-s; letter-spacing: 0.06em;
-  color: var(--winx-purple-deep);
+  background: alpha(--ui-purple, 30%); font-size: $text-s; letter-spacing: 0.06em;
+  color: var(--ui-purple-deep);
   &::before { content: "●"; color: var(--status); }
-  &--idea { --status: var(--winx-purple); }
+  &--idea { --status: var(--ui-purple); }
   &--active { --status: var(--color-green);   /* Obsidian's green: no Winx token */ }
-  &--paused { --status: var(--winx-gold-deep); }
-  &--done { --status: var(--winx-blue-deep); }
+  &--paused { --status: var(--ui-gold-deep); }
+  &--done { --status: var(--ui-blue-deep); }
 }

@@ -6,21 +6,21 @@
   &__balance {
     padding: $space-4xl;
     margin-bottom: $space-5xl;
-    background: var(--winx-twilight);
-    border: $border-width-l solid var(--winx-border);
+    background: var(--ui-twilight);
+    border: $border-width-l solid var(--ui-border);
     border-radius: 18px;
-    color: var(--winx-on-background);
+    color: var(--ui-on-background);
     font-size: 1.4em;
     font-weight: 600;
-    box-shadow: 0 4px 16px alpha(--winx-purple-deep, 25%);
-    text-shadow: 0 1px 2px alpha(--winx-text, 30%);
+    box-shadow: 0 4px 16px alpha(--ui-purple-deep, 25%);
+    text-shadow: 0 1px 2px alpha(--ui-text, 30%);
 
     &-icon {
       font-size: 1.3em;
     }
 
     &-amount {
-      color: var(--winx-gold-bright);
+      color: var(--ui-gold-bright);
       font-weight: 700;
       font-size: 1.2em;
     }
@@ -32,10 +32,10 @@
     justify-content: space-between;
     width: 100%;
     padding: $space-2xl $space-4xl;
-    background: var(--winx-pink-light);
+    background: var(--ui-pink-light);
     border: $border;
     border-radius: $radius-xl;
-    color: var(--winx-text);
+    color: var(--ui-text);
     font-size: 1em;
     font-weight: 500;
     cursor: pointer;
@@ -46,15 +46,15 @@
 
 
     &:not(:disabled):hover {
-      background: var(--winx-pink);
+      background: var(--ui-pink);
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px alpha(--winx-pink-deep, 30%);
+      box-shadow: 0 6px 16px alpha(--ui-pink-deep, 30%);
     }
 
     &:disabled {
       opacity: 0.55;
       cursor: not-allowed;
-      background: var(--winx-purple-light);
+      background: var(--ui-purple-light);
     }
   }
 
@@ -69,18 +69,18 @@
     padding: $space-xs $space-xl;
     background: linear-gradient(
       135deg,
-      var(--winx-gold-bright),
-      var(--winx-gold)
+      var(--ui-gold-bright),
+      var(--ui-gold)
     );
     border: $border;
     border-radius: $pill;
-    color: var(--winx-text);
+    color: var(--ui-text);
     font-weight: 700;
     font-size: 0.9em;
   }
   & &__item:disabled &__item-cost {
-    background: var(--winx-border);
-    color: var(--winx-purple-deep);
+    background: var(--ui-border);
+    color: var(--ui-purple-deep);
     filter: grayscale(0.5);
   }
 }

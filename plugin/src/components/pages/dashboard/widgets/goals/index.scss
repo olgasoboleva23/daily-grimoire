@@ -2,12 +2,12 @@
 /* ── Goals (src/widgets/goals/goals.js): a block ui-goal per goal ── */
 .ui-goal {
   &__head {
-    color: var(--winx-text);
+    color: var(--ui-text);
   }
 
   &__name { font-weight: 600; }
   &__count,
-  &__min { font-size: $text-m; color: var(--winx-purple-deep); }
+  &__min { font-size: $text-m; color: var(--ui-purple-deep); }
 
   &__dots {
     margin: $space-xs 0 $space-2xs;
@@ -19,12 +19,12 @@
     width: 14px;
     height: 14px;
     border-radius: $round;
-    border: $border-width-m solid var(--winx-border);
-    background: alpha(--winx-surface, 40%);
+    border: $border-width-m solid var(--ui-border);
+    background: alpha(--ui-surface, 40%);
 
-    &--done    { background: var(--winx-gold); border-color: var(--winx-gold-deep); }
-    &--missed  { border-color: var(--winx-pink-deep); border-style: dashed; }
-    &--planned { border-color: var(--winx-purple); }
-    &--sel     { box-shadow: 0 0 6px var(--winx-pink-deep); }
+    &--done    { background: var(--ui-gold); border-color: var(--ui-gold-deep); }
+    &--missed  { border-color: var(--ui-pink-deep); border-style: dashed; }
+    &--planned { border-color: var(--ui-purple); }
+    &--sel     { box-shadow: 0 0 6px var(--ui-pink-deep); }
   }
 }

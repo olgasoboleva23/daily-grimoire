@@ -10,9 +10,9 @@
   gap: $space-xs;
   padding: $space-2xs $space-l;
   border-radius: $pill;
-  background: alpha(--winx-pink-deep, 85%);
-  box-shadow: 0 0 12px alpha(--winx-pink-deep, 60%);
-  color: var(--winx-on-accent);
+  background: alpha(--ui-pink-deep, 85%);
+  box-shadow: 0 0 12px alpha(--ui-pink-deep, 60%);
+  color: var(--ui-on-accent);
   font-size: $text-m;
   &__star { animation: ui-spin 1.2s linear infinite; }
 }

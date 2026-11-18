@@ -2,53 +2,53 @@
 /* ============================================
  * WINX THEME — Design Tokens
  *
- * All --winx-* custom properties (palette &
+ * All --ui-* custom properties (palette &
  * gradients). Image/SVG data URIs live in
  * _assets.scss so this file stays readable.
  * ============================================ */
 
 #{context.$root} {
   /* ── Palette ── */
-  --winx-pink-light: #fce4f1;
-  --winx-pink: #f4c8e4;
-  --winx-pink-deep: #d878a8;
-  --winx-purple-light: #e8d5f5;
-  --winx-purple: #b88ad8;
-  --winx-purple-deep: #6e2a6e;
-  --winx-blue: #a8c8f0;
-  --winx-blue-deep: #7ab0e0;
-  --winx-gold: #ffd966;
-  --winx-gold-bright: #ffe88f;
-  --winx-gold-deep: #c89540;
-  --winx-lavender: #f4e4f5;
-  --winx-sheet: #fffafd;   /* the nav pill, the drawer and the phone's sheet: a near-white pink */
-  --winx-text: #4a1f4a;
-  --winx-border: #d4a5d8;
+  --ui-pink-light: #fce4f1;
+  --ui-pink: #f4c8e4;
+  --ui-pink-deep: #d878a8;
+  --ui-purple-light: #e8d5f5;
+  --ui-purple: #b88ad8;
+  --ui-purple-deep: #6e2a6e;
+  --ui-blue: #a8c8f0;
+  --ui-blue-deep: #7ab0e0;
+  --ui-gold: #ffd966;
+  --ui-gold-bright: #ffe88f;
+  --ui-gold-deep: #c89540;
+  --ui-lavender: #f4e4f5;
+  --ui-sheet: #fffafd;   /* the nav pill, the drawer and the phone's sheet: a near-white pink */
+  --ui-text: #4a1f4a;
+  --ui-border: #d4a5d8;
 
   /* Surfaces, text and decoration have separate roles in dark themes. */
-  --winx-surface: #ffffff;
-  --winx-surface-warm: #fff8fc;
-  --winx-surface-done: #fffcf0;
-  --winx-surface-skipped: #fff0f4;
-  --winx-crest-text: #6e2a6e;
-  --winx-on-gold: #4a1f4a;
-  --winx-on-selected: #ffffff;
-  --winx-on-accent: #ffffff;
-  --winx-on-background: #ffffff;
-  --winx-highlight: #ffffff;
-  --winx-heading: #a8c8f0;
-  --winx-danger: #d0457a;
-  --winx-overdue: #b0306a;
-  --winx-savings-text: #8a5a1a;
-  --winx-sky-start: #c8e0f5;
-  --winx-sky-end: #d8d0f0;
-  --winx-chart-text: #666666;
-  --winx-chart-grid: #000000;
-  --winx-bg-blend: multiply;
-  --winx-font-deco: "Cinzel";
+  --ui-surface: #ffffff;
+  --ui-surface-warm: #fff8fc;
+  --ui-surface-done: #fffcf0;
+  --ui-surface-skipped: #fff0f4;
+  --ui-crest-text: #6e2a6e;
+  --ui-on-gold: #4a1f4a;
+  --ui-on-selected: #ffffff;
+  --ui-on-accent: #ffffff;
+  --ui-on-background: #ffffff;
+  --ui-highlight: #ffffff;
+  --ui-heading: #a8c8f0;
+  --ui-danger: #d0457a;
+  --ui-overdue: #b0306a;
+  --ui-savings-text: #8a5a1a;
+  --ui-sky-start: #c8e0f5;
+  --ui-sky-end: #d8d0f0;
+  --ui-chart-text: #666666;
+  --ui-chart-grid: #000000;
+  --ui-bg-blend: multiply;
+  --ui-font-deco: "Cinzel";
 
   /* ── Gradients ── */
-  --winx-twilight: linear-gradient(
+  --ui-twilight: linear-gradient(
     135deg,
     #8aa8d8 0%,
     #a89cd0 50%,
@@ -56,17 +56,17 @@
   );
 
   /* Kanban card wash — cool blue → lilac */
-  --winx-sky: linear-gradient(135deg, var(--winx-sky-start), var(--winx-sky-end), var(--winx-purple-light));
+  --ui-sky: linear-gradient(135deg, var(--ui-sky-start), var(--ui-sky-end), var(--ui-purple-light));
 
   /* Workspace background — deep dusk purple → rose.
      Endpoint colors exposed for the fade overlay in _layout.scss */
-  --winx-dusk-dark: #5a4878;
-  --winx-dusk-rose: #d8a0c0;
-  --winx-dusk: linear-gradient(
+  --ui-dusk-dark: #5a4878;
+  --ui-dusk-rose: #d8a0c0;
+  --ui-dusk: linear-gradient(
     135deg,
-    var(--winx-dusk-dark) 0%,
+    var(--ui-dusk-dark) 0%,
     #7a5a98 40%,
     #a878a8 80%,
-    var(--winx-dusk-rose) 100%
+    var(--ui-dusk-rose) 100%
   );
 }

@@ -10,13 +10,13 @@
     box-shadow: none;
     padding: 0 $space-3xl;
     font-weight: 600;
-    color: var(--winx-on-accent);
+    color: var(--ui-on-accent);
     border-color: transparent;
-    background: linear-gradient(135deg, var(--winx-pink), var(--winx-pink-deep));
+    background: linear-gradient(135deg, var(--ui-pink), var(--ui-pink-deep));
   }
   /* on the photo: the field nearly opaque, so its text and placeholder read */
   &#{&}--on-background input#{&}__input {
-    background: alpha(--winx-surface, 90%);
-    &::placeholder { color: alpha(--winx-purple-deep, 55%); }
+    background: alpha(--ui-surface, 90%);
+    &::placeholder { color: alpha(--ui-purple-deep, 55%); }
   }
 }

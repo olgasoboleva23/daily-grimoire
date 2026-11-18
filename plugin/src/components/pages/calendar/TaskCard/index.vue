@@ -33,7 +33,7 @@ const { swipe, ...touch } = useSwipe(view, key, t => {
     v-if="!gone"
     :class="['ui-task-card', { 'ui-task-card--paused': paused }]"
     :style="{
-      '--area': task.color ?? undefined, '--winx-swipe-progress': swipe.progress,
+      '--area': task.color ?? undefined, '--ui-swipe-progress': swipe.progress,
     }"
     :data-area="task.area ?? undefined"
     :data-swipe="swipe.kind"

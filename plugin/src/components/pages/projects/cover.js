@@ -1,5 +1,5 @@
 // A project card's picture: its cover from the vault, else a pink-to-lavender sky with a pair of
-// the cards' fairy wings (the wing of --winx-wing-svg, mirrored on the left, as it is on the right)
+// the cards' fairy wings (the wing of --ui-wing-svg, mirrored on the left, as it is on the right)
 const WING =
   "<path d='M2 32 C2 14 14 2 32 2 C24 8 18 16 16 26 C22 22 30 22 36 26 C28 28 22 32 18 38 " +
   "C14 34 8 34 2 32 Z'/><path d='M4 38 C4 50 14 60 28 60 C22 54 18 46 16 38 C20 38 24 40 " +

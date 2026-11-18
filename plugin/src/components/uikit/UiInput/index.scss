@@ -1,7 +1,7 @@
 @use "mixins" as *;
 /* ===== A text field (block ui-input); the tag in front outweighs Obsidian's input styles ===== */
 input.ui-input {
-  color: var(--winx-text);
+  color: var(--ui-text);
   box-shadow: none;
   /* the field: a finger's height on the pink paper */
   &.ui-input--field {
@@ -9,9 +9,9 @@ input.ui-input {
     padding: 0 $space-xl;
     border: $border;
     border-radius: $radius-l;
-    background: alpha(--winx-surface, 65%);
+    background: alpha(--ui-surface, 65%);
     font-size: $text-2xl;
-    &::placeholder { color: var(--winx-purple); }
+    &::placeholder { color: var(--ui-purple); }
   }
   /* inline: bare, in a table's row, a gold line under it while typing */
   &.ui-input--inline {
@@ -21,7 +21,7 @@ input.ui-input {
     background: none;
     font: inherit;
     color: inherit;
-    &::placeholder { color: alpha(--winx-purple-deep, 30%); }
-    &:focus { outline: none; border-bottom: $border-width-s solid var(--winx-gold-deep); }
+    &::placeholder { color: alpha(--ui-purple-deep, 30%); }
+    &:focus { outline: none; border-bottom: $border-width-s solid var(--ui-gold-deep); }
   }
 }

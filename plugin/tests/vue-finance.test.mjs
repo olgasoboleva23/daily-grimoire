@@ -13,7 +13,7 @@ before(async () => {
 const month = (title, prev, next, over) => ({
   title, prev, next, transfers: null, trend: [], latest: [],
   totals: [{ label: "Spent", value: "900 ₽", sign: "neg" }],
-  categories: [{ name: "Food", over, amount: "900 ₽ / 1 000 ₽ · 90%", width: 90, fill: "var(--winx-pink)" }],
+  categories: [{ name: "Food", over, amount: "900 ₽ / 1 000 ₽ · 90%", width: 90, fill: "var(--ui-pink)" }],
 });
 
 test("Finance: starts on its month; ◀ ▶ step through the months there are, without reading again", async () => {

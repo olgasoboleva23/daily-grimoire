@@ -35,7 +35,7 @@
         grid-area: 2 / 1;
         // Obsidian includes the safe area in this space; paint it behind its floating navbar.
         padding-bottom: var(--view-bottom-spacing, 0);
-        background: var(--winx-sheet);
+        background: var(--ui-sheet);
       }
 
       // the drawer covers the page's grid cell, so the bar stays visible and clickable

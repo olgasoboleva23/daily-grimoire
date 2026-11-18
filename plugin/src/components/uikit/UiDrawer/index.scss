@@ -11,7 +11,7 @@ $sheet-radius: 22px;   // the phone sheet's top corners, as the nav pill's
   inset: 0;
   z-index: $z-drawer;
 
-  &__backdrop { position: absolute; inset: 0; background: alpha(--winx-purple-deep, 25%); }
+  &__backdrop { position: absolute; inset: 0; background: alpha(--ui-purple-deep, 25%); }
 
   &__panel {
     position: absolute;
@@ -22,9 +22,9 @@ $sheet-radius: 22px;   // the phone sheet's top corners, as the nav pill's
     width: $panel-w;
     padding: $space-2xl $space-l;
     overflow-y: auto;
-    background: var(--winx-sheet);
-    border-right: $border-width-m solid var(--winx-gold);
-    box-shadow: 6px 0 24px alpha(--winx-purple-deep, 18%);
+    background: var(--ui-sheet);
+    border-right: $border-width-m solid var(--ui-gold);
+    box-shadow: 6px 0 24px alpha(--ui-purple-deep, 18%);
     animation: ui-drawer-left $medium ease-out;
   }
 
@@ -44,13 +44,13 @@ $sheet-radius: 22px;   // the phone sheet's top corners, as the nav pill's
       height: 4px;
       margin-bottom: $space-xs;
       border-radius: $space-2xs;
-      background: var(--winx-purple-light);
+      background: var(--ui-purple-light);
     }
     padding: $space-l $space-2xl $space-xl;
     border: none;
-    border-top: $border-width-m solid var(--winx-gold);
+    border-top: $border-width-m solid var(--ui-gold);
     border-radius: $sheet-radius $sheet-radius 0 0;
-    box-shadow: 0 -8px 24px alpha(--winx-purple-deep, 18%);
+    box-shadow: 0 -8px 24px alpha(--ui-purple-deep, 18%);
     animation-name: ui-drawer-bottom;
   }
 }

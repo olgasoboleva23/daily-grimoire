@@ -51,7 +51,7 @@
 │   │   │                           appendLine), config, format (money, amount), sounds, chart, plugins
 │   │   │                           (Dataview, Tasks, blockDv), find, parse (a block's lines), panelGroups
 │   │   ├── 📁 styles             — main.scss (every block in cascade order) and the shared look: tokens,
-│   │   │                           mixins ($space-*, $text-*, $radius-*, $btn-*, row / center, sparkles: stars flying out on hover, drawn from `--winx-sparkles-svg` in `_assets.scss`), fonts,
+│   │   │                           mixins ($space-*, $text-*, $radius-*, $btn-*, row / center, sparkles: stars flying out on hover, drawn from `--ui-sparkles-svg` in `_assets.scss`), fonts,
 │   │   │                           layout, the cards' grid, nav, busy, syncing, utilities (_utilities.scss);
 │   │   │                           shadow.scss: the Winx tab's own build (see below)
 │   │   └── 📁 commands           — commands.ts (the Cmd+P commands, the Alt+T menu)

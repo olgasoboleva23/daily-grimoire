@@ -2,7 +2,7 @@
 /* ============================================
  * WINX THEME — Pomodoro Widget (block ui-pomodoro)
  *
- * Wing decoration references var(--winx-wing-svg)
+ * Wing decoration references var(--ui-wing-svg)
  * from _assets.scss — inline data URI removed.
  * ============================================ */
 
@@ -38,12 +38,12 @@
     height: 52px;
     flex: none;
     border-radius: $round;
-    border: $border-width-l solid var(--winx-border);
+    border: $border-width-l solid var(--ui-border);
     cursor: pointer;
     transition: --p $tick linear;
     background:
-      radial-gradient(circle, var(--winx-pink-light) 15px, var(--winx-border) 16px, transparent 17px),
-      conic-gradient(var(--winx-pink-deep) calc(var(--p) * 360deg), var(--winx-purple-light) 0);
+      radial-gradient(circle, var(--ui-pink-light) 15px, var(--ui-border) 16px, transparent 17px),
+      conic-gradient(var(--ui-pink-deep) calc(var(--p) * 360deg), var(--ui-purple-light) 0);
   }
 
   &__mini-info {
@@ -56,11 +56,11 @@
     font-size: $text-6xl;
     font-weight: 700;
     line-height: 1.1;
-    color: var(--winx-text);
+    color: var(--ui-text);
   }
 
   &__mini-mode {
-    color: var(--winx-text);
+    color: var(--ui-text);
     opacity: 0.75;
     margin-right: $space-xs;
   }
@@ -73,14 +73,14 @@
     flex: none;
     padding: 0;
     border-radius: $round;
-    border: $border-width-l solid var(--winx-border);
-    background: var(--winx-pink);
+    border: $border-width-l solid var(--ui-border);
+    background: var(--ui-pink);
     display: grid;
     place-items: center;
     cursor: pointer;
     transition: transform $fast ease;
     &:hover { transform: scale(1.05); }
-    svg { width: 20px; height: 20px; fill: var(--winx-text); }
+    svg { width: 20px; height: 20px; fill: var(--ui-text); }
   }
 
   &__body {
@@ -97,11 +97,11 @@
     position: relative;
     display: grid;
     place-items: center;
-    border: $border-width-l solid var(--winx-border);
+    border: $border-width-l solid var(--ui-border);
     transition: --p $tick linear;
     background: conic-gradient(
-      var(--winx-pink-deep) calc(var(--p) * 360deg),
-      var(--winx-purple-light) 0
+      var(--ui-pink-deep) calc(var(--p) * 360deg),
+      var(--ui-purple-light) 0
     );
 
     &::before {
@@ -109,8 +109,8 @@
       position: absolute;
       inset: $space-l;
       border-radius: $round;
-      background: var(--winx-pink-light);
-      border: $border-width-l solid var(--winx-border);
+      background: var(--ui-pink-light);
+      border: $border-width-l solid var(--ui-border);
     }
   }
 
@@ -119,7 +119,7 @@
     position: absolute;
     width: $deco;
     height: $deco;
-    background: var(--winx-wing-svg) 0 0 / contain no-repeat;
+    background: var(--ui-wing-svg) 0 0 / contain no-repeat;
     pointer-events: none;
 
     &--left {
@@ -141,8 +141,8 @@
     height: 20px;
 
     svg {
-      fill: var(--winx-gold);
-      stroke: var(--winx-border);
+      fill: var(--ui-gold);
+      stroke: var(--ui-border);
     }
   }
 
@@ -150,7 +150,7 @@
     position: relative;
     cursor: pointer;
     font-size: $text-6xl;
-    color: var(--winx-text);
+    color: var(--ui-text);
     z-index: $z-raised;
   }
 
@@ -162,8 +162,8 @@
 
   &#{&} &__btn {
     border-radius: $round;
-    border: $border-width-l solid var(--winx-border);
-    background: var(--winx-pink);
+    border: $border-width-l solid var(--ui-border);
+    background: var(--ui-pink);
     display: grid;
     place-items: center;
     cursor: pointer;
@@ -175,7 +175,7 @@
     }
 
     svg {
-      fill: var(--winx-text);
+      fill: var(--ui-text);
     }
 
     &--play {
@@ -209,13 +209,13 @@
     height: 18px;
     opacity: 0.3;
     svg {
-      fill: var(--winx-purple);
+      fill: var(--ui-purple);
     }
 
     &--on {
       opacity: 1;
       svg {
-        fill: var(--winx-gold);
+        fill: var(--ui-gold);
       }
     }
   }
@@ -230,7 +230,7 @@
     &-text {
       font-size: $text-l;
       font-weight: 600;
-      color: var(--winx-text);
+      color: var(--ui-text);
       text-transform: uppercase;
       letter-spacing: 0.08em;
     }
@@ -238,7 +238,7 @@
 
   &__session {
     font-size: $text-xs;
-    color: var(--winx-purple);
+    color: var(--ui-purple);
     opacity: 0.7;
   }
 
@@ -246,7 +246,7 @@
 
   &__settings-info {
     font-size: $text-xs;
-    color: var(--winx-purple);
+    color: var(--ui-purple);
     opacity: 0.6;
   }
 
@@ -267,7 +267,7 @@
     svg {
       width: 12px;
       height: 12px;
-      fill: var(--winx-purple);
+      fill: var(--ui-purple);
       flex-shrink: 0;
     }
 

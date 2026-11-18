@@ -3,7 +3,7 @@
 // a list with nothing in it, a widget whose note isn't there; --error: a widget that couldn't draw (Failed), ↻ retry after it
 .ui-empty {
   padding-block: $space-3xl;
-  color: var(--winx-purple-deep);
+  color: var(--ui-purple-deep);
   font-size: $text-xl;
   letter-spacing: 0.05em;
   &--error { color: var(--text-error); }

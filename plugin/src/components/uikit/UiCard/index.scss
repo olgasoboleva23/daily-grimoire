@@ -11,8 +11,8 @@
     position: relative;
     background: linear-gradient(
       135deg,
-      var(--winx-pink-light),
-      var(--winx-pink)
+      var(--ui-pink-light),
+      var(--ui-pink)
     ) !important;
     border: $border !important;
     border-radius: $radius-xl !important;
@@ -37,20 +37,20 @@
     &::after {
       content: "";
       position: absolute;
-      width: min(#{$deco}, var(--winx-corner-size, #{$deco}));
-      height: min(#{$deco}, var(--winx-corner-size, #{$deco}));
-      filter: var(--winx-corner-filter, none);
-      background: var(--winx-corner-svg, var(--winx-wing-svg)) 0 0 / contain no-repeat;
+      width: min(#{$deco}, var(--ui-corner-size, #{$deco}));
+      height: min(#{$deco}, var(--ui-corner-size, #{$deco}));
+      filter: var(--ui-corner-filter, none);
+      background: var(--ui-corner-svg, var(--ui-wing-svg)) 0 0 / contain no-repeat;
       pointer-events: none;
     }
 
     &::before {
-      top: var(--winx-corner-inset, #{$space-xs});
-      left: var(--winx-corner-inset, #{$space-xs});
+      top: var(--ui-corner-inset, #{$space-xs});
+      left: var(--ui-corner-inset, #{$space-xs});
     }
     &::after {
-      bottom: var(--winx-corner-inset, #{$space-xs});
-      right: var(--winx-corner-inset, #{$space-xs});
+      bottom: var(--ui-corner-inset, #{$space-xs});
+      right: var(--ui-corner-inset, #{$space-xs});
       transform: scale(-1, -1);
     }
     /* no wings (UiCard :wings="false", the projects' cards): the title without their room */
@@ -64,7 +64,7 @@
     > .callout-title {
       justify-content: center !important;
       font-family: $font-deco !important;
-      color: var(--winx-purple-deep) !important;
+      color: var(--ui-purple-deep) !important;
       letter-spacing: 2px !important;
       text-transform: uppercase !important;
       font-size: $text-2xl !important;
@@ -78,22 +78,22 @@
 
     /* Hover glow */
     &:hover {
-      border-color: var(--winx-pink-deep);
+      border-color: var(--ui-pink-deep);
       box-shadow:
-        0 0 24px alpha(--winx-gold, 70%),
-        0 0 8px alpha(--winx-pink-deep, 60%);
+        0 0 24px alpha(--ui-gold, 70%),
+        0 0 8px alpha(--ui-pink-deep, 60%);
     }
 
     /* Dataview error */
     .dataview-error-box {
-      border-color: var(--winx-pink-deep);
+      border-color: var(--ui-pink-deep);
     }
 
     /* Custom scrollbar */
     > .callout-content {
       overflow: auto;
       scrollbar-width: thin;
-      scrollbar-color: var(--winx-pink-deep) transparent;
+      scrollbar-color: var(--ui-pink-deep) transparent;
 
       &::-webkit-scrollbar {
         width: 6px;
@@ -104,11 +104,11 @@
       &::-webkit-scrollbar-thumb {
         background: linear-gradient(
           to bottom,
-          var(--winx-purple),
-          var(--winx-pink-deep)
+          var(--ui-purple),
+          var(--ui-pink-deep)
         );
         border-radius: 99px;
-        border: $border-width-s solid alpha(--winx-highlight, 30%);
+        border: $border-width-s solid alpha(--ui-highlight, 30%);
       }
     }
   }
@@ -138,7 +138,7 @@ $cover-h: 150px; /* a cover's height: a picture's frame, not a spacing value */
   &__skeleton {
     height: 72px;
     border-radius: $radius-l;
-    background: linear-gradient(90deg, alpha(--winx-highlight, 25%) 25%, alpha(--winx-highlight, 60%) 50%, alpha(--winx-highlight, 25%) 75%);
+    background: linear-gradient(90deg, alpha(--ui-highlight, 25%) 25%, alpha(--ui-highlight, 60%) 50%, alpha(--ui-highlight, 25%) 75%);
     background-size: 200% 100%;
     animation: ui-shimmer 1.6s linear infinite;
   }
@@ -146,7 +146,7 @@ $cover-h: 150px; /* a cover's height: a picture's frame, not a spacing value */
 
 /* Obsidian 1.13 sets --corner-shape: superellipse(1.33) on .mod-macos, and app.css
    applies it to every <button>/<input> — which turns our round controls into
-   squircles. Pin the shape back for anything inside a winx widget. */
+   squircles. Pin the shape back for anything inside a ui widget. */
 :is(.dashboard, .kanban-board, .ui-pomodoro, .ui-shop) :is(button, input) {
   corner-shape: round;
 }

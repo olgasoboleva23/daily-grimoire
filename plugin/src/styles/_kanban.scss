@@ -18,8 +18,8 @@
   overflow: hidden !important;
   display: flex !important;
   flex-direction: column !important;
-  background: var(--winx-sky) !important;
-  border-color: var(--winx-blue) !important;
+  background: var(--ui-sky) !important;
+  border-color: var(--ui-blue) !important;
 
   > .callout-content {
     overflow: auto;
@@ -28,7 +28,7 @@
   }
 
   &:hover {
-    border-color: var(--winx-blue-deep);
-    box-shadow: 0 0 16px alpha(--winx-blue, 60%);
+    border-color: var(--ui-blue-deep);
+    box-shadow: 0 0 16px alpha(--ui-blue, 60%);
   }
 }

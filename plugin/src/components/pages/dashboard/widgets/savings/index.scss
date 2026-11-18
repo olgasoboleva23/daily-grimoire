@@ -2,7 +2,7 @@
 /* ── Savings (src/widgets/savings/savings.js): a jar (block ui-jar) per goal ── */
 .ui-savings {   display: grid; gap: $space-4xl; }
 .ui-jar {
-  display: grid; gap: $space-m; color: var(--winx-purple-deep);
+  display: grid; gap: $space-m; color: var(--ui-purple-deep);
   /* the goal's picture: grey above the saved share, so the colour rises as the jar fills */
   &__pic {
     position: relative;
@@ -10,9 +10,9 @@
     width: 80px;
     height: 80px;
     overflow: hidden;
-    border: $border-width-l solid var(--winx-gold);
+    border: $border-width-l solid var(--ui-gold);
     border-radius: $radius-xl;
-    background: var(--winx-surface);
+    background: var(--ui-surface);
   }
   &__img {
     display: block; width: 100%; height: 100%; object-fit: cover;
@@ -21,34 +21,34 @@
   &__name { font-size: $text-xl; font-weight: 600; }
   &__big { font-size: $text-4xl; font-weight: 700; }
   &__note,
-  &__next { font-size: $text-s; color: alpha(--winx-purple-deep, 65%); }
+  &__next { font-size: $text-s; color: alpha(--ui-purple-deep, 65%); }
   &__bar {
     height: $space-l;
     overflow: hidden;
     border-radius: $pill;
-    background: alpha(--winx-pink-deep, 15%);
+    background: alpha(--ui-pink-deep, 15%);
   }
-  &__fill { display: block; height: 100%; background: linear-gradient(90deg, var(--winx-pink-deep), var(--winx-gold)); }
+  &__fill { display: block; height: 100%; background: linear-gradient(90deg, var(--ui-pink-deep), var(--ui-gold)); }
   /* a ✦ stamp per deposit, dashed ones for the next */
   &__stamp {
     width: $btn-m;
     height: $btn-m;
-    border: $border-width-l dashed alpha(--winx-pink-deep, 50%);
+    border: $border-width-l dashed alpha(--ui-pink-deep, 50%);
     border-radius: $round;
-    color: alpha(--winx-pink-deep, 50%);
+    color: alpha(--ui-pink-deep, 50%);
     font-size: $text-l;
     &--on {
-      border: $border-width-l solid var(--winx-gold-deep);
-      background: radial-gradient(var(--winx-gold-bright), var(--winx-gold));
-      color: var(--winx-savings-text);
-      box-shadow: 0 0 6px alpha(--winx-gold, 80%);
+      border: $border-width-l solid var(--ui-gold-deep);
+      background: radial-gradient(var(--ui-gold-bright), var(--ui-gold));
+      color: var(--ui-savings-text);
+      box-shadow: 0 0 6px alpha(--ui-gold, 80%);
     }
   }
   &__due {
     padding: $space-m $space-xl;
-    border: $border-width-l solid var(--winx-pink-deep);
+    border: $border-width-l solid var(--ui-pink-deep);
     border-radius: $radius-xl;
-    background: alpha(--winx-surface, 60%);
-    &-sum { color: var(--winx-pink-deep); white-space: nowrap; }
+    background: alpha(--ui-surface, 60%);
+    &-sum { color: var(--ui-pink-deep); white-space: nowrap; }
   }
 }

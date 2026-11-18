@@ -16,20 +16,20 @@
   &__item {
     position: relative;
     padding: $space-s $space-2xs $space-s $space-m;
-    border-bottom: $border-width-s dashed fade(var(--winx-gold-deep), 35%);
+    border-bottom: $border-width-s dashed fade(var(--ui-gold-deep), 35%);
     transition: background $fast ease;
 
     &:last-child { border-bottom: none; }
-    &:hover { background: fade(var(--winx-surface), 30%); border-radius: $radius-m; }
+    &:hover { background: fade(var(--ui-surface), 30%); border-radius: $radius-m; }
   }
 
   &__text {
-    color: var(--winx-text);
+    color: var(--ui-text);
     font-size: $text-xl;
   }
 
   /* the bought button's tick (a UiButton add, jump): its own soft glow at rest */
-  &__tick { width: 30px; height: 19.5px; filter: drop-shadow(0 0 1.5px var(--winx-highlight)); }
+  &__tick { width: 30px; height: 19.5px; filter: drop-shadow(0 0 1.5px var(--ui-highlight)); }
 
   /* bought: strike, sparkle burst over the button, slide away */
   &__item--bought {
@@ -45,17 +45,17 @@
       width: $deco;
       height: $deco;
       translate: 0 -50%;
-      background: var(--winx-star-sparkle-svg) center / contain no-repeat;
+      background: var(--ui-star-sparkle-svg) center / contain no-repeat;
       animation: ui-bought-flash 0.65s ease-out forwards;
     }
-    .ui-market__text { text-decoration: line-through; text-decoration-color: var(--winx-gold-deep); }
+    .ui-market__text { text-decoration: line-through; text-decoration-color: var(--ui-gold-deep); }
   }
 
-  &__soon { margin: $space-s 0 $space-2xs; font-size: $text-m; color: var(--winx-pink-deep); }
+  &__soon { margin: $space-s 0 $space-2xs; font-size: $text-m; color: var(--ui-pink-deep); }
 
   &__footer {
     text-align: center;
-    color: var(--winx-purple);
+    color: var(--ui-purple);
     font-size: $text-m;
     text-transform: uppercase;
     letter-spacing: 0.12em;
@@ -63,7 +63,7 @@
 
   &__link {
     cursor: pointer;
-    color: var(--winx-purple-deep);
+    color: var(--ui-purple-deep);
     margin-inline-start: $space-xl;
     opacity: 0.8;
     transition: opacity $fast ease;
@@ -92,11 +92,11 @@
   margin: $space-l 0 $space-xs;
   padding: $space-xs $space-xl;
   border-radius: $pill;
-  background: fade(var(--winx-border), 40%);
+  background: fade(var(--ui-border), 40%);
   font-size: $text-s;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: var(--winx-purple-deep);
+  color: var(--ui-purple-deep);
 
   &:first-child { margin-top: 0; }
 
@@ -107,7 +107,7 @@
     text-align: center;
     font-size: $text-xs;
     letter-spacing: 0;
-    color: var(--winx-on-accent);
-    background: var(--winx-pink-deep);
+    color: var(--ui-on-accent);
+    background: var(--ui-pink-deep);
   }
 }

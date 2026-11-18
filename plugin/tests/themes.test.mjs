@@ -39,10 +39,10 @@ test("theme follows loaded/synced settings, late images, reset and plugin unload
   useTaskStore(plugin); useTheme(plugin); await settle();
   assert.equal(config.theme, "gothic");
   assert.ok(document.body.classList.contains("ui-theme-gothic"));
-  assert.equal(document.body.style.getPropertyValue("--winx-theme-image"), "none");
+  assert.equal(document.body.style.getPropertyValue("--ui-theme-image"), "none");
   const image = `${THEME_IMAGES}/gothic.avif`;
   files[image] = "image"; fire("create", { path: image });
-  assert.match(document.body.style.getPropertyValue("--winx-theme-image"), /gothic\.avif/);
+  assert.match(document.body.style.getPropertyValue("--ui-theme-image"), /gothic\.avif/);
 
   for (const { value } of THEMES) {
     const json = toConfig({ ...settingsValues(config), theme: value });
@@ -54,12 +54,12 @@ test("theme follows loaded/synced settings, late images, reset and plugin unload
   }
   files[CONFIG] = '{"theme":"missing"}'; fire("modify", { path: CONFIG }); await settle();
   assert.equal(config.theme, "winx");
-  assert.equal(document.body.style.getPropertyValue("--winx-theme-image"), "");
+  assert.equal(document.body.style.getPropertyValue("--ui-theme-image"), "");
   files[CONFIG] = '{"theme":"winx-dark"}'; fire("modify", { path: CONFIG }); await settle();
   assert.ok(draws.includes("ui:theme"));
   plugin.unload();
   assert.equal(document.body.className, "");
-  assert.equal(document.body.style.getPropertyValue("--winx-theme-image"), "");
+  assert.equal(document.body.style.getPropertyValue("--ui-theme-image"), "");
   const count = draws.length;
   taskStore.version.value++; fire("create", { path: image });
   assert.equal(draws.length, count);
@@ -79,7 +79,7 @@ test("each theme defines the palette in Winx only and ships its AVIF and heading
     assert.ok(rule.selector.includes('.block-language-winx'));
     const declarations = new Map(rule.nodes.map(d => [d.prop, d.value]));
     for (const token of required) assert.ok(declarations.has(token), `${name}: ${token}`);
-    assert.equal(declarations.get("--winx-font-deco"), `"${font}"`);
+    assert.equal(declarations.get("--ui-font-deco"), `"${font}"`);
     assert.ok(fonts.includes(`font-family: ${font};`) || fonts.includes(`font-family: "${font}";`));
     assert.ok(existsSync(new URL(`../../00 System/Assets/themes/${name}.avif`, import.meta.url)));
   }
@@ -88,13 +88,13 @@ test("each theme defines the palette in Winx only and ships its AVIF and heading
 test("chart colors come from the Winx container instead of Obsidian's palette", () => {
   const root = document.createElement("div");
   root.className = "workspace-leaf-content"; root.dataset.type = "winx";
-  root.style.setProperty("--winx-pink-deep", "#f4a6c8");
-  document.body.style.setProperty("--winx-pink-deep", "#d878a8");
+  root.style.setProperty("--ui-pink-deep", "#f4a6c8");
+  document.body.style.setProperty("--ui-pink-deep", "#d878a8");
   document.body.append(root);
-  assert.equal(chartColor("--winx-pink-deep", 0.3), "rgba(244, 166, 200, 0.3)");
-  root.style.setProperty("--winx-pink-deep", "#a3201f");
-  assert.equal(chartColor("--winx-pink-deep"), "rgba(163, 32, 31, 1)");
-  root.remove(); document.body.style.removeProperty("--winx-pink-deep");
+  assert.equal(chartColor("--ui-pink-deep", 0.3), "rgba(244, 166, 200, 0.3)");
+  root.style.setProperty("--ui-pink-deep", "#a3201f");
+  assert.equal(chartColor("--ui-pink-deep"), "rgba(163, 32, 31, 1)");
+  root.remove(); document.body.style.removeProperty("--ui-pink-deep");
 });
 
 test("theme XP names follow the same custom thresholds and survive settings round trips", () => {

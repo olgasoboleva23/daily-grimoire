@@ -1,33 +1,33 @@
 @use "mixins" as *;
 /* ===== The food journal (block ui-food): inside its card; the grid is a UiTable ===== */
 .ui-food {
-  color: var(--winx-text);
+  color: var(--ui-text);
 
   &__head { margin-bottom: $space-l; }
-  &__week { font-family: $font-deco; font-size: $text-xl; color: var(--winx-purple-deep); }
-  &__grid { overflow-x: auto; padding: $space-xs $space-s; border-radius: $radius-m; background: alpha(--winx-surface, 40%); }
+  &__week { font-family: $font-deco; font-size: $text-xl; color: var(--ui-purple-deep); }
+  &__grid { overflow-x: auto; padding: $space-xs $space-s; border-radius: $radius-m; background: alpha(--ui-surface, 40%); }
   .ui-table .ui-food {
     &__day { white-space: nowrap; }
     &__items { min-width: 12em; }
-    &__note { min-width: 8em; font-size: $text-m; color: alpha(--winx-purple-deep, 65%); }
+    &__note { min-width: 8em; font-size: $text-m; color: alpha(--ui-purple-deep, 65%); }
   }
   &__row--today {
-    background: linear-gradient(90deg, fade(var(--winx-blue), 60%), fade(var(--winx-purple-light), 60%));
-    .ui-food__day { font-weight: 600; color: var(--winx-purple-deep); }
+    background: linear-gradient(90deg, fade(var(--ui-blue), 60%), fade(var(--ui-purple-light), 60%));
+    .ui-food__day { font-weight: 600; color: var(--ui-purple-deep); }
   }
 
   /* an eaten food: a chip, its name opens the food, × takes it off */
   &__item {
     @include row;
     gap: $space-xs; padding: $space-2xs $space-s; border: $border; border-radius: $pill;
-    background: alpha(--winx-surface, 70%); font-size: $text-l; white-space: nowrap;
+    background: alpha(--ui-surface, 70%); font-size: $text-l; white-space: nowrap;
   }
   &__item-name { cursor: pointer; }
-  &__off { cursor: pointer; opacity: 0.45; &:hover { opacity: 1; color: var(--winx-pink-deep); } }
+  &__off { cursor: pointer; opacity: 0.45; &:hover { opacity: 1; color: var(--ui-pink-deep); } }
   &__count, &__level { font-variant-numeric: tabular-nums; }
   &__med {
-    font-family: $font-deco; font-size: $text-s; letter-spacing: 0.06em; color: var(--winx-purple-deep);
+    font-family: $font-deco; font-size: $text-s; letter-spacing: 0.06em; color: var(--ui-purple-deep);
     &--not { opacity: 0.35; }   /* no ✅ that day */
   }
-  &__level { font-weight: 600; color: var(--winx-pink-deep); }
+  &__level { font-weight: 600; color: var(--ui-pink-deep); }
 }

@@ -177,10 +177,10 @@
         width: $deco;
         height: $deco;
         translate: -16px -16px;          /* wider canvas for sparkles, star stays put */
-        background: var(--winx-star-sparkle-svg) 0 0 / contain no-repeat;
+        background: var(--ui-star-sparkle-svg) 0 0 / contain no-repeat;
         pointer-events: none;
         animation: ui-twinkle 3s ease-in-out infinite;
-        filter: drop-shadow(0 0 3px alpha(--winx-gold, 60%));
+        filter: drop-shadow(0 0 3px alpha(--ui-gold, 60%));
       }
 
       /* Position wired to scoped custom props above */

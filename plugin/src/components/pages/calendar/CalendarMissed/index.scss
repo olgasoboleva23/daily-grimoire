@@ -12,14 +12,14 @@ $wing: 40px;   // the corner wings' size
   padding: $space-s $space-l;
   border-radius: $radius-l;
   /* the Kanban card's blue */
-  border: $border-width-s solid var(--winx-blue);
-  background: var(--winx-sky);
-  box-shadow: 0 0 16px alpha(--winx-blue, 60%);
+  border: $border-width-s solid var(--ui-blue);
+  background: var(--ui-sky);
+  box-shadow: 0 0 16px alpha(--ui-blue, 60%);
   /* the card's fairy wings in two corners */
   @include wings($wing, 3px);
   > * { position: relative; z-index: $z-over; }
 
-  &__head { grid-column: 1 / -1; padding-left: $wing - $space-s;   /* clear of the corner wing */ font-family: $font-deco; font-size: $text-l; color: var(--winx-purple-deep); margin-bottom: $space-2xs; }
+  &__head { grid-column: 1 / -1; padding-left: $wing - $space-s;   /* clear of the corner wing */ font-family: $font-deco; font-size: $text-l; color: var(--ui-purple-deep); margin-bottom: $space-2xs; }
   /* rounded coloured rows like the day entries; ✏️ 🗑 sit in the row, before the date */
   &__row {
     position: relative;
@@ -27,10 +27,10 @@ $wing: 40px;   // the corner wings' size
     padding: $space-xs $space-s;
     border-radius: $radius-m;
     font-size: $text-l;
-    color: var(--winx-text);
+    color: var(--ui-text);
     cursor: grab;
   }
-  &__date { font-size: $text-s; font-style: normal; color: fade(var(--winx-purple-deep), 65%); }
+  &__date { font-size: $text-s; font-style: normal; color: fade(var(--ui-purple-deep), 65%); }
   &__row > .ui-task__actions { display: flex; gap: $space-s; }
   /* desktop: the buttons float over the end of the text on hover (opacity only, so the row height stays) */
   #{context.$desktop} & {

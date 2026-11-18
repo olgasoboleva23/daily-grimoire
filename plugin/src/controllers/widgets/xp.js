@@ -58,14 +58,14 @@ export async function loadLifeAreas({ dv }) {
       type: "radar",
       data: { labels: Object.keys(scores), datasets: [{
         label: "Areas", data: Object.values(scores), borderWidth: 2,
-        backgroundColor: chartColor("--winx-pink-deep", 0.3),
-        borderColor: chartColor("--winx-pink-deep"),
+        backgroundColor: chartColor("--ui-pink-deep", 0.3),
+        borderColor: chartColor("--ui-pink-deep"),
       }] },
       options: {
         plugins: { legend: { display: false } },
         scales: { r: { ...chartScale(),
-          angleLines: { color: chartColor("--winx-chart-grid", 0.1) },
-          pointLabels: { color: chartColor("--winx-chart-text") },
+          angleLines: { color: chartColor("--ui-chart-grid", 0.1) },
+          pointLabels: { color: chartColor("--ui-chart-text") },
         } },
       },
     },

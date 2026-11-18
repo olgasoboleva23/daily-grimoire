@@ -1,7 +1,7 @@
 <!-- A row of the Form window (the shapes: Form/index.ts): Obsidian's setting row, its name and
      its control; `bare`: the control alone (a list's cell). A list row: its groups, each its rows
      again, a × each and a + under them (fixed: neither). Rows of text boxes, checkboxes and labels
-     only: one grid (--winx-form-cols), a line of the rows' names (a checkbox's description as its
+     only: one grid (--ui-form-cols), a line of the rows' names (a checkbox's description as its
      name's tooltip), then a line a group; a text box's column shares the width, the others fit
      what's in them. Other rows: the groups stacked. A list named as its tab has no heading -->
 <script setup>
@@ -51,7 +51,7 @@ const model = computed({
     <div
       v-if="lines"
       class="ui-form__list ui-form__list--lines"
-      :style="{ '--winx-form-cols': cols }"
+      :style="{ '--ui-form-cols': cols }"
     >
       <div v-if="groups.length" class="ui-form__line ui-form__line--head">
         <div

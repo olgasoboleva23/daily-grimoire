@@ -3,20 +3,20 @@
    paper, the pink paper (--pink) over a blue place; the arrow in the same colour */
 .tooltip.ui-tooltip {
   padding: $space-s $space-xl;
-  border: $border-width-s solid var(--winx-blue);
+  border: $border-width-s solid var(--ui-blue);
   border-radius: $radius-m;
-  background: var(--winx-sky);
-  color: var(--winx-text);
+  background: var(--ui-sky);
+  color: var(--ui-text);
   font-size: $text-m;
   line-height: 1.4;
   white-space: pre-line;   /* a hint of several lines (the cycle's MP) */
-  box-shadow: 0 4px 16px alpha(--winx-purple-deep, 25%);
-  .tooltip-arrow { border-top-color: var(--winx-blue); }
-  &.mod-bottom .tooltip-arrow { border-bottom-color: var(--winx-blue); }
+  box-shadow: 0 4px 16px alpha(--ui-purple-deep, 25%);
+  .tooltip-arrow { border-top-color: var(--ui-blue); }
+  &.mod-bottom .tooltip-arrow { border-bottom-color: var(--ui-blue); }
   &.ui-tooltip--pink {
-    border-color: var(--winx-border);
-    background: linear-gradient(135deg, var(--winx-pink-light), var(--winx-pink));
-    .tooltip-arrow { border-top-color: var(--winx-pink); }
-    &.mod-bottom .tooltip-arrow { border-bottom-color: var(--winx-pink-light); }
+    border-color: var(--ui-border);
+    background: linear-gradient(135deg, var(--ui-pink-light), var(--ui-pink));
+    .tooltip-arrow { border-top-color: var(--ui-pink); }
+    &.mod-bottom .tooltip-arrow { border-bottom-color: var(--ui-pink-light); }
   }
 }

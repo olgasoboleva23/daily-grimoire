@@ -14,15 +14,15 @@ button.ui-btn {
     padding: 0;
     border-radius: $round;
     border: $border;
-    background: alpha(--winx-surface, 85%);
-    color: var(--winx-purple-deep);
-    box-shadow: 0 0 6px alpha(--winx-pink-deep, 35%);
+    background: alpha(--ui-surface, 85%);
+    color: var(--ui-purple-deep);
+    box-shadow: 0 0 6px alpha(--ui-pink-deep, 35%);
     font-size: $text-l;
     line-height: 1;
     cursor: pointer;
     transition: transform $fast ease, box-shadow $fast ease;
 
-    &:hover { transform: scale(1.12); box-shadow: 0 0 10px alpha(--winx-gold, 90%); }
+    &:hover { transform: scale(1.12); box-shadow: 0 0 10px alpha(--ui-gold, 90%); }
     #{context.$mobile} & { width: $btn-touch; height: $btn-touch; font-size: $text-2xl; }
   }
 
@@ -32,9 +32,9 @@ button.ui-btn {
     padding: 0 $space-xl;
     border-radius: $pill;
     border: $border;
-    background: alpha(--winx-surface, 75%);
-    color: var(--winx-purple-deep);
-    box-shadow: 0 0 6px alpha(--winx-pink-deep, 35%);
+    background: alpha(--ui-surface, 75%);
+    color: var(--ui-purple-deep);
+    box-shadow: 0 0 6px alpha(--ui-pink-deep, 35%);
     font-size: $text-m;
     line-height: 1;
     cursor: pointer;
@@ -62,7 +62,7 @@ button.ui-btn {
   &.ui-btn--toggle {
     opacity: 0.55;
     box-shadow: none;
-    &.ui-btn--on { opacity: 1; border-color: var(--winx-gold-deep); box-shadow: 0 0 8px alpha(--winx-gold, 70%); }
+    &.ui-btn--on { opacity: 1; border-color: var(--ui-gold-deep); box-shadow: 0 0 8px alpha(--ui-gold, 70%); }
     button:not(.ui-btn--toggle) + & { margin-left: auto; }
   }
 
@@ -73,7 +73,7 @@ button.ui-btn {
     border: none;
     background: none;
     box-shadow: none;
-    color: var(--winx-purple-deep);
+    color: var(--ui-purple-deep);
     font: inherit;
     text-transform: inherit;
     letter-spacing: inherit;
@@ -90,9 +90,9 @@ button.ui-btn {
     padding: 0;
     border: none;
     border-radius: $round;
-    background: alpha(--winx-pink-deep, 85%);
-    box-shadow: 0 0 12px alpha(--winx-pink-deep, 60%), 0 0 4px var(--winx-highlight) inset;
-    color: var(--winx-on-accent);
+    background: alpha(--ui-pink-deep, 85%);
+    box-shadow: 0 0 12px alpha(--ui-pink-deep, 60%), 0 0 4px var(--ui-highlight) inset;
+    color: var(--ui-on-accent);
     font-family: var(--font-text);
     font-size: $text-3xl;
     line-height: 1;
@@ -101,9 +101,9 @@ button.ui-btn {
     transition: transform $fast ease, box-shadow $fast ease;
 
     @include sparkles {
-      box-shadow: 0 0 14px alpha(--winx-pink-deep, 80%), 0 0 4px var(--winx-highlight) inset;
-      text-shadow: 0 0 6px var(--winx-highlight), 0 0 2px var(--winx-highlight);
-      & > svg { filter: drop-shadow(0 0 3px var(--winx-highlight)); }
+      box-shadow: 0 0 14px alpha(--ui-pink-deep, 80%), 0 0 4px var(--ui-highlight) inset;
+      text-shadow: 0 0 6px var(--ui-highlight), 0 0 2px var(--ui-highlight);
+      & > svg { filter: drop-shadow(0 0 3px var(--ui-highlight)); }
     }
 
     &.ui-btn--jump:hover { transform: scale(1.08); }
@@ -123,7 +123,7 @@ button.ui-btn {
     border-radius: $rail-radius;
     background: none;
     box-shadow: none;
-    color: var(--winx-text);
+    color: var(--ui-text);
     font-family: var(--font-text);
     font-size: $text-l;
     font-weight: 500;
@@ -132,17 +132,17 @@ button.ui-btn {
     text-transform: none;
     cursor: pointer;
 
-    @include sparkles(var(--winx-gold-deep)) {
-      background: var(--winx-pink-light);
+    @include sparkles(var(--ui-gold-deep)) {
+      background: var(--ui-pink-light);
       box-shadow: none;
     }
     // Keep the sparkles around the icon, large enough to see beside the label.
     &::after { inset: -8px; mask-position: left center; mask-size: 72px 46.8px; }
-    &:focus-visible { background: var(--winx-pink-light); box-shadow: none; }
+    &:focus-visible { background: var(--ui-pink-light); box-shadow: none; }
     &.ui-btn--on,
     &.ui-btn--on:hover {
-      border-color: var(--winx-gold);
-      background: linear-gradient(135deg, var(--winx-pink-light), var(--winx-pink));
+      border-color: var(--ui-gold);
+      background: linear-gradient(135deg, var(--ui-pink-light), var(--ui-pink));
     }
   }
 }
@@ -154,17 +154,17 @@ button.ui-btn {
   .ui-btn.ui-btn--pill {
     background: linear-gradient(
       135deg,
-      var(--winx-pink-light),
-      var(--winx-pink)
+      var(--ui-pink-light),
+      var(--ui-pink)
     ) !important;
-    border: $border-width-m solid var(--winx-gold) !important;
+    border: $border-width-m solid var(--ui-gold) !important;
     border-radius: $radius-m !important;
     padding: $space-s $space-2xl !important;
-    color: var(--winx-gold-deep) !important;
+    color: var(--ui-gold-deep) !important;
     font-family: $font-deco !important;
     font-size: $text-xl !important;
     letter-spacing: 1px !important;
-    box-shadow: 0 0 8px alpha(--winx-gold, 40%) !important;
+    box-shadow: 0 0 8px alpha(--ui-gold, 40%) !important;
   }
 
   .mb-input-type-date input {
@@ -172,7 +172,7 @@ button.ui-btn {
       opacity: 0;
     }
     &::-webkit-datetime-edit-text {
-      color: var(--winx-gold-deep) !important;
+      color: var(--ui-gold-deep) !important;
     }
   }
 
@@ -182,8 +182,8 @@ button.ui-btn {
 
     &:hover {
       box-shadow:
-        0 0 16px alpha(--winx-gold, 70%),
-        0 0 8px alpha(--winx-pink-deep, 50%);
+        0 0 16px alpha(--ui-gold, 70%),
+        0 0 8px alpha(--ui-pink-deep, 50%);
     }
   }
 }

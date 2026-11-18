@@ -19,7 +19,7 @@
   /* a piece of the balance bar: its icon and done / all, the bar with the done part brighter */
   &__area {
     min-width: 2.6em; cursor: pointer;
-    &-label { display: block; overflow: hidden; white-space: nowrap; text-overflow: clip; font-size: $text-xs; color: var(--winx-lavender); }
+    &-label { display: block; overflow: hidden; white-space: nowrap; text-overflow: clip; font-size: $text-xs; color: var(--ui-lavender); }
     &--on &-label { font-weight: 600; }
     /* hover: the piece glows in its area's colour (a click filters by the area) */
     &:hover {
@@ -42,13 +42,13 @@
   &__cell {
     border-radius: $radius-xl;
     border: $border;
-    background: linear-gradient(135deg, var(--winx-pink-light), var(--winx-pink));
+    background: linear-gradient(135deg, var(--ui-pink-light), var(--ui-pink));
     transition: box-shadow $fast ease, border-color $fast ease;
     position: relative;
   }
   /* the Missed strip's blue */
   &__day--today,
-  &__cell--today { border-color: var(--winx-blue); background: linear-gradient(135deg, var(--winx-sky-start), var(--winx-sky-end) 60%, var(--winx-purple-light)); }
+  &__cell--today { border-color: var(--ui-blue); background: linear-gradient(135deg, var(--ui-sky-start), var(--ui-sky-end) 60%, var(--ui-purple-light)); }
   &__day { min-height: 220px; padding: $space-m $space-s; }
   /* the phone: the week's days one under another, each as tall as its tasks */
   #{context.$mobile} & {
@@ -60,17 +60,17 @@
   :is(&__day--source, &__cell--source) :is(&__zone--plan, &__zones:not(:has(.ui-cal__zone--done))) {
     display: none;
   }
-  &__task--drop-before { box-shadow: 0 -2px 0 var(--winx-gold-deep); }
-  &__task--drop-after { box-shadow: 0 2px 0 var(--winx-gold-deep); }
+  &__task--drop-before { box-shadow: 0 -2px 0 var(--ui-gold-deep); }
+  &__task--drop-after { box-shadow: 0 2px 0 var(--ui-gold-deep); }
   &__zone {
-    border: $border-width-s dashed var(--winx-border);
+    border: $border-width-s dashed var(--ui-border);
     border-radius: $radius-m;
-    background: alpha(--winx-surface-warm, 90%);
+    background: alpha(--ui-surface-warm, 90%);
     font-size: $text-4xl;
-    color: var(--winx-purple-deep);
+    color: var(--ui-purple-deep);
     transition: background $fast ease, box-shadow $fast ease;
 
-    &--over { border-style: solid; border-color: var(--winx-gold-deep); background: var(--winx-surface-done); box-shadow: 0 0 12px alpha(--winx-gold, 90%); }
+    &--over { border-style: solid; border-color: var(--ui-gold-deep); background: var(--ui-surface-done); box-shadow: 0 0 12px alpha(--ui-gold, 90%); }
   }
   /* drop bar: sticky at the top while dragging (zero height, so nothing below jumps) */
   &__dropbar {
@@ -81,9 +81,9 @@
       gap: $space-s;
       padding: $space-s;
       border-radius: $radius-xl;
-      border: $border-width-s solid var(--winx-gold-deep);
-      background: alpha(--winx-surface-warm, 95%);
-      box-shadow: 0 4px 16px alpha(--winx-purple-deep, 35%);
+      border: $border-width-s solid var(--ui-gold-deep);
+      background: alpha(--ui-surface-warm, 95%);
+      box-shadow: 0 4px 16px alpha(--ui-purple-deep, 35%);
     }
   }
   &--dragging {
@@ -99,25 +99,25 @@
   &__chip {
     padding: $space-l $space-xs;
     border-radius: $radius-m;
-    border: $border-width-s dashed var(--winx-border);
+    border: $border-width-s dashed var(--ui-border);
     font-family: $font-deco;
     font-size: $text-l;
-    color: var(--winx-purple-deep);
+    color: var(--ui-purple-deep);
     transition: background $fast ease, box-shadow $fast ease;
 
-    &--today { border-color: var(--winx-blue); }
-    &--over  { border-style: solid; border-color: var(--winx-gold-deep); background: var(--winx-surface-done); box-shadow: 0 0 12px alpha(--winx-gold, 90%); }
+    &--today { border-color: var(--ui-blue); }
+    &--over  { border-style: solid; border-color: var(--ui-gold-deep); background: var(--ui-surface-done); box-shadow: 0 0 12px alpha(--ui-gold, 90%); }
   }
   &__backlog {
     margin-top: $space-2xl;
     padding: $space-m $space-l;
     border-radius: $radius-xl;
     border: $border;
-    background: linear-gradient(135deg, var(--winx-pink-light), var(--winx-pink));
+    background: linear-gradient(135deg, var(--ui-pink-light), var(--ui-pink));
     transition: box-shadow $fast ease;
 
-    &--over { border-color: var(--winx-gold-deep); box-shadow: 0 0 14px alpha(--winx-gold, 90%); }
-    button.ui-cal__more { margin-top: $space-s; padding: $space-2xs $space-xl; border-radius: $pill; border: $border; background: alpha(--winx-surface, 75%); color: var(--winx-purple-deep); font-size: $text-m; cursor: pointer; }
+    &--over { border-color: var(--ui-gold-deep); box-shadow: 0 0 14px alpha(--ui-gold, 90%); }
+    button.ui-cal__more { margin-top: $space-s; padding: $space-2xs $space-xl; border-radius: $pill; border: $border; background: alpha(--ui-surface, 75%); color: var(--ui-purple-deep); font-size: $text-m; cursor: pointer; }
     &-grid { columns: 260px; column-gap: $space-xl; }
   }   /* masonry: area cards fill the columns top to bottom */
   &__group-card {
@@ -125,27 +125,27 @@
     margin-bottom: $space-xl;
     padding: $space-s $space-m;
     border-radius: $radius-xl;
-    background: fade(var(--winx-border), 25%);
+    background: fade(var(--ui-border), 25%);
     .ui-task-card:last-child { border-bottom: none; }
   }
   &__head {
     margin-bottom: $space-xs;
     font-family: $font-deco;
-    color: var(--winx-purple-deep);
+    color: var(--ui-purple-deep);
   }
   &__task {
     position: relative;
     padding: $space-xs;
-    border-bottom: $border-width-s dashed fade(var(--winx-gold-deep), 30%);
+    border-bottom: $border-width-s dashed fade(var(--ui-gold-deep), 30%);
     font-size: $text-l;
     line-height: 1.3;
-    color: var(--winx-text);
+    color: var(--ui-text);
 
     &:last-child { border-bottom: none; }
     &[draggable="true"] { cursor: grab; }
-    &[draggable="true"]:hover { background: fade(var(--winx-surface), 35%); border-radius: 8px; }
+    &[draggable="true"]:hover { background: fade(var(--ui-surface), 35%); border-radius: 8px; }
     &--ghost   { opacity: 0.5; }
-    &--done    { opacity: 0.55; text-decoration: line-through; text-decoration-color: var(--winx-gold-deep); }
+    &--done    { opacity: 0.55; text-decoration: line-through; text-decoration-color: var(--ui-gold-deep); }
     .ui-task__content {
       position: relative;
       // room for the checkbox (~16px wide, then a gap)
@@ -168,8 +168,8 @@
     margin: $space-2xs 0 $space-xs;
     padding: $space-2xs $space-xl;
     border-radius: $pill;
-    background: fade(var(--winx-border), 40%);
-    color: color-mix(in srgb, var(--winx-pink-deep) 65%, var(--winx-purple-deep));
+    background: fade(var(--ui-border), 40%);
+    color: color-mix(in srgb, var(--ui-pink-deep) 65%, var(--ui-purple-deep));
     font-weight: 600;
   }
   /* Projects: a stage's name over its tasks inside a project card */
@@ -182,7 +182,7 @@
   /* Ahead: a date over its tasks inside a month card */
   &__date {
     margin: $space-m 0 $space-2xs;
-    color: color-mix(in srgb, var(--winx-pink-deep) 65%, var(--winx-purple-deep));
+    color: color-mix(in srgb, var(--ui-pink-deep) 65%, var(--ui-purple-deep));
     font-size: 0.9em;
     font-weight: 600;
     opacity: 0.8;
@@ -204,7 +204,7 @@
       &__zone { font-size: $text-m; }
     }
   }
-  &__weekday { font-family: $font-deco; font-size: $text-m; color: var(--winx-lavender); }
+  &__weekday { font-family: $font-deco; font-size: $text-m; color: var(--ui-lavender); }
   &__cell {
     min-height: 92px;
     padding: $space-xs;
@@ -213,7 +213,7 @@
     &--outside { opacity: 0.5; }
   }
   &__cell &__task { padding: 1px $space-2xs; border: none; font-size: $text-s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  &__num { font-size: $text-m; font-weight: 600; color: var(--winx-purple-deep); }
+  &__num { font-size: $text-m; font-weight: 600; color: var(--ui-purple-deep); }
   /* the phone's month: small cells with a dot per task, the picked day's card under the grid */
   &__phone-month {
     display: grid;
@@ -222,7 +222,7 @@
       &__month { gap: $space-2xs; }
       &__cell {
         min-height: 48px; padding: $space-2xs; text-align: center;
-        &--picked { border-color: var(--winx-gold-deep); box-shadow: 0 0 8px alpha(--winx-gold, 80%); }
+        &--picked { border-color: var(--ui-gold-deep); box-shadow: 0 0 8px alpha(--ui-gold, 80%); }
       }
     }
   }
@@ -235,14 +235,14 @@
     margin-top: $space-2xs;
   }
   &__dot {
-    width: 6px; height: 6px; border-radius: $round; background: var(--winx-pink-deep);
-    &--done { background: var(--winx-gold-deep); }
+    width: 6px; height: 6px; border-radius: $round; background: var(--ui-pink-deep);
+    &--done { background: var(--ui-gold-deep); }
   }
-  &__dots-more { font-size: $text-2xs; color: var(--winx-purple-deep); }
+  &__dots-more { font-size: $text-2xs; color: var(--ui-purple-deep); }
   /* a tick waits 2 s before it's written: struck through, a gold shimmer runs over it */
   &__task--ticking {
     text-decoration: line-through;
-    background-image: linear-gradient(100deg, transparent 30%, alpha(--winx-gold, 55%) 50%, transparent 70%);
+    background-image: linear-gradient(100deg, transparent 30%, alpha(--ui-gold, 55%) 50%, transparent 70%);
     background-size: 250% 100%;
     animation: ui-tick-shimmer 1s ease-in-out 2;
   }
@@ -250,14 +250,14 @@
   &__routine {
     margin: $space-xs 0;
     border-radius: $radius-xl;
-    border: $border-width-s dashed alpha(--winx-purple-deep, 35%);
-    background: alpha(--winx-surface, 40%);
+    border: $border-width-s dashed alpha(--ui-purple-deep, 35%);
+    background: alpha(--ui-surface, 40%);
     &--open { padding: 0 $space-2xs $space-xs; }
     &-time {
       margin: $space-xs 0 1px $space-s;
       cursor: pointer;
       font-size: $text-s;
-      color: var(--winx-purple-deep);
+      color: var(--ui-purple-deep);
       opacity: 0.7;
     }
     &-pill {
@@ -267,22 +267,22 @@
       span { white-space: nowrap; }
       padding: $space-xs $space-l;
       font-size: $text-m;
-      color: var(--winx-purple-deep);
+      color: var(--ui-purple-deep);
       cursor: pointer;
     }
   }
   &__marks {
     padding: $space-2xs $space-xs;
     font-size: $text-s;
-    color: var(--winx-purple-deep);
+    color: var(--ui-purple-deep);
     opacity: 0.7;
 
     span { cursor: help; }
   }
 
   /* the bottom panel: No date | Regulars | Pool tabs */
-  &__late { color: var(--winx-overdue); font-weight: 600; }
-  &__after { margin-right: $space-2xs; color: var(--winx-purple-deep); opacity: 0.6; }   /* ↳ a task after the one above */
+  &__late { color: var(--ui-overdue); font-weight: 600; }
+  &__after { margin-right: $space-2xs; color: var(--ui-purple-deep); opacity: 0.6; }   /* ↳ a task after the one above */
   &__zone--plan { font-family: $font-deco; font-size: $text-2xl; text-align: center; }
 }
 @keyframes ui-tick-shimmer { from { background-position: 100% 0; } to { background-position: -50% 0; } }

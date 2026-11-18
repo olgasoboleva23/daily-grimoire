@@ -6,7 +6,7 @@
 .ui-project {
   &__back { margin-bottom: $space-xl; }
   &__header { margin-bottom: $space-xl; }
-  &__description { margin-bottom: $space-m; color: var(--winx-text); }
+  &__description { margin-bottom: $space-m; color: var(--ui-text); }
   &__body {
     display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: $space-xl;
     align-items: start;
@@ -16,18 +16,18 @@
   &__stage-num {
     @include center;
     width: $btn-l; height: $btn-l; flex-shrink: 0; border-radius: $round;
-    background: alpha(--winx-purple, 30%); font-family: $font-deco; font-size: $text-xl;
-    color: var(--winx-purple-deep);
+    background: alpha(--ui-purple, 30%); font-family: $font-deco; font-size: $text-xl;
+    color: var(--ui-purple-deep);
   }
   &__stage-name {
     font-family: $font-deco; font-size: $text-2xl; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--winx-purple-deep);
+    color: var(--ui-purple-deep);
   }
-  &__stage-count { font-size: $text-l; color: alpha(--winx-purple-deep, 70%); }
+  &__stage-count { font-size: $text-l; color: alpha(--ui-purple-deep, 70%); }
   &__stage-done {
     @include center;
-    width: $btn-s; height: $btn-s; border: $border; border-radius: $round; background: alpha(--winx-surface, 85%);
-    color: var(--winx-purple-deep);
+    width: $btn-s; height: $btn-s; border: $border; border-radius: $round; background: alpha(--ui-surface, 85%);
+    color: var(--ui-purple-deep);
   }
   &__stage-head { margin-bottom: $space-s; }
   &__stage--folded &__stage-head { margin-bottom: 0; }
@@ -35,8 +35,8 @@
   /* a task row: a bar in its area's colour, a dashed line under it */
   &__task {
     position: relative; padding: $space-xs $space-m;
-    border-left: $border-width-xl solid var(--area, alpha(--winx-purple, 50%));
-    border-bottom: $border-width-s dashed alpha(--winx-purple, 35%);
+    border-left: $border-width-xl solid var(--area, alpha(--ui-purple, 50%));
+    border-bottom: $border-width-s dashed alpha(--ui-purple, 35%);
   }
   // the date field 📅 → Pick a date… opens: there for showPicker(), never seen
   &__date { position: absolute; right: 0; bottom: 0; width: 0; height: 0; opacity: 0; }

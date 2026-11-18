@@ -3,51 +3,51 @@
 /* ===== A medication course (block ui-meds): inside its card. The chips are buttons, as are the
    grid's ticks: the block in front (& &__chip) outweighs Obsidian's button styles ===== */
 .ui-meds {
-  color: var(--winx-text);
+  color: var(--ui-text);
 
   &__notes { white-space: pre-wrap; }
 
-  &__sum { text-align: center; font-size: $text-m; letter-spacing: 0.04em; color: alpha(--winx-purple-deep, 70%); margin-bottom: $space-m; }
+  &__sum { text-align: center; font-size: $text-m; letter-spacing: 0.04em; color: alpha(--ui-purple-deep, 70%); margin-bottom: $space-m; }
   &__bar {
     height: $space-l; margin: 0 $space-m $space-2xl; border-radius: $pill; overflow: hidden;
-    background: alpha(--winx-purple, 35%);
-    &-fill { display: block; height: 100%; background: linear-gradient(90deg, var(--winx-gold), var(--winx-pink-deep)); box-shadow: 0 0 6px var(--winx-pink-deep); }
+    background: alpha(--ui-purple, 35%);
+    &-fill { display: block; height: 100%; background: linear-gradient(90deg, var(--ui-gold), var(--ui-pink-deep)); box-shadow: 0 0 6px var(--ui-pink-deep); }
   }
 
   /* today: a dashed zone per anchor, as a day's morning / evening in the calendar */
   &__today { margin-bottom: $space-xl; }
   &__zone {
-    padding: $space-m $space-l; border: $border-width-s dashed var(--winx-border); border-radius: $radius-m;
-    background: alpha(--winx-surface, 60%);
-    &-label { font-size: $text-l; color: alpha(--winx-purple-deep, 70%); margin-bottom: $space-s; }
-    &-label b { color: var(--winx-purple-deep); }
+    padding: $space-m $space-l; border: $border-width-s dashed var(--ui-border); border-radius: $radius-m;
+    background: alpha(--ui-surface, 60%);
+    &-label { font-size: $text-l; color: alpha(--ui-purple-deep, 70%); margin-bottom: $space-s; }
+    &-label b { color: var(--ui-purple-deep); }
   }
   & &__chip {
     @include row;
     gap: $space-m; min-height: $btn-touch; padding: $space-xs $space-2xl $space-xs $space-s;
-    border: $border; border-radius: $pill; background: alpha(--winx-surface, 75%); color: var(--winx-text);
+    border: $border; border-radius: $pill; background: alpha(--ui-surface, 75%); color: var(--ui-text);
     font-size: $text-xl; cursor: pointer; box-shadow: none; transition: box-shadow $fast ease;
-    &[data-mark="✅"] { border-color: var(--winx-gold-deep); background: var(--winx-surface-done); box-shadow: 0 0 8px alpha(--winx-gold, 60%); text-decoration: line-through; color: alpha(--winx-text, 60%); }
-    &[data-mark="❌"] { border-color: var(--winx-pink-deep); background: var(--winx-surface-skipped); }
+    &[data-mark="✅"] { border-color: var(--ui-gold-deep); background: var(--ui-surface-done); box-shadow: 0 0 8px alpha(--ui-gold, 60%); text-decoration: line-through; color: alpha(--ui-text, 60%); }
+    &[data-mark="❌"] { border-color: var(--ui-pink-deep); background: var(--ui-surface-skipped); }
   }
 
   /* the grid: a UiTable; the table in front outweighs its own cell rules */
-  &__grid { overflow-x: auto; padding: $space-xs $space-s; border-radius: $radius-m; background: alpha(--winx-surface, 40%); }
+  &__grid { overflow-x: auto; padding: $space-xs $space-s; border-radius: $radius-m; background: alpha(--ui-surface, 40%); }
   .ui-table .ui-meds {
     &__date { white-space: nowrap; }
-    &__note { font-size: $text-m; color: alpha(--winx-purple-deep, 65%); }
+    &__note { font-size: $text-m; color: alpha(--ui-purple-deep, 65%); }
   }
-  &__row--past &__date, &__row--future &__date { color: alpha(--winx-text, 60%); }
+  &__row--past &__date, &__row--future &__date { color: alpha(--ui-text, 60%); }
   &__row--today {
-    background: linear-gradient(90deg, fade(var(--winx-blue), 60%), fade(var(--winx-purple-light), 60%));
-    .ui-meds__date { font-weight: 600; color: var(--winx-purple-deep); }
+    background: linear-gradient(90deg, fade(var(--ui-blue), 60%), fade(var(--ui-purple-light), 60%));
+    .ui-meds__date { font-weight: 600; color: var(--ui-purple-deep); }
   }
   &__tick { margin: 0 auto; }
   &__note-input { width: 100%; min-width: 6em; }
   &__legend {
-    margin-top: $space-l; font-size: $text-m; color: alpha(--winx-purple-deep, 70%);
+    margin-top: $space-l; font-size: $text-m; color: alpha(--ui-purple-deep, 70%);
     span { @include row; gap: $space-s; }
-    b { color: var(--winx-purple-deep); font-family: $font-deco; font-size: $text-s; letter-spacing: 0.06em; }
+    b { color: var(--ui-purple-deep); font-family: $font-deco; font-size: $text-s; letter-spacing: 0.06em; }
   }
 
   #{context.$mobile} & {

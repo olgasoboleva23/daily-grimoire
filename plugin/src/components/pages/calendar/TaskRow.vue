@@ -61,7 +61,7 @@ function onTick(e) {
       { 'ui-cal__task--ticking': ticking, 'ui-cal__task--done': done },
     ]"
     :style="{
-      '--area': task.color ?? undefined, '--winx-swipe-progress': swipe.progress,
+      '--area': task.color ?? undefined, '--ui-swipe-progress': swipe.progress,
     }"
     :data-area="task.area"
     :data-goal="task.goal || null"

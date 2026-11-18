@@ -30,7 +30,7 @@ button {
   cursor: var(--cursor);
 }
 button:disabled, input:disabled { cursor: default; opacity: 0.4; }
-:focus-visible { outline: $border-width-l solid var(--winx-purple); outline-offset: $space-2xs; }
+:focus-visible { outline: $border-width-l solid var(--ui-purple); outline-offset: $space-2xs; }
 input { min-width: 0; }
 input[type="date"] {
   position: relative;

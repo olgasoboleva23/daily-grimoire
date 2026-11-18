@@ -28,8 +28,8 @@ function weightChart(days, vals) {
     type: "line",
     data: { labels: days.map(dm), datasets: [{
       label: "⚖️ Weight", data: vals, spanGaps: true, tension: 0.3,
-      borderColor: chartColor("--winx-pink-deep"),
-      backgroundColor: chartColor("--winx-pink-deep", 0.3),
+      borderColor: chartColor("--ui-pink-deep"),
+      backgroundColor: chartColor("--ui-pink-deep", 0.3),
     }] },
     options: {
       plugins: { legend: { display: false } },
@@ -50,12 +50,12 @@ function logChart(days, entries, period) {
     data: { labels: days.map(dm), datasets: [
       {
         label: "level", data: entries.map(e => e?.level ?? null),
-        backgroundColor: chartColor("--winx-pink-deep"), borderRadius: 4, order: 1,
+        backgroundColor: chartColor("--ui-pink-deep"), borderRadius: 4, order: 1,
       },
       {
         label: "period",
         data: period.map(p => p ? 3 : null),
-        backgroundColor: chartColor("--winx-purple", 0.18),
+        backgroundColor: chartColor("--ui-purple", 0.18),
         barPercentage: 1, categoryPercentage: 1, grouped: false, order: 2,
       },
     ] },

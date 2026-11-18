@@ -13,9 +13,9 @@ const MONTHS = ["January", "February", "March", "April", "May", "June", "July", 
   "September", "October", "November", "December"];
 const MONTHS_SHORT = ["jan", "feb", "mar", "apr", "may", "jun",
   "jul", "aug", "sep", "oct", "nov", "dec"];
-// palette cycled across categories, in winx token order
-const PALETTE = ["--winx-pink", "--winx-gold", "--winx-purple", "--winx-lavender", "--winx-blue",
-  "--winx-pink-deep", "--winx-gold-deep", "--winx-purple-light"];
+// palette cycled across categories, in ui token order
+const PALETTE = ["--ui-pink", "--ui-gold", "--ui-purple", "--ui-lavender", "--ui-blue",
+  "--ui-pink-deep", "--ui-gold-deep", "--ui-purple-light"];
 
 // a month's rows by its note's path, with the modification time they were read at: a load reads
 // only the notes that changed since (both Finance widgets share it)
@@ -106,7 +106,7 @@ function category(name, value, max, color, budget) {
       ? `${money(value)} / ${money(budget)} · ${Math.round(value / budget * 100)}%`
       : money(value),
     width: Math.max((budget ? Math.min(value / budget, 1) : value / (max || 1)) * 100, 1.5),
-    fill: over ? "var(--winx-pink-deep)" : `var(${color})`,
+    fill: over ? "var(--ui-pink-deep)" : `var(${color})`,
   };
 }
 
