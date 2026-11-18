@@ -9,7 +9,7 @@ test("UiNav: labels open on :focus-visible, not on any focus, and not when shut"
     { loadPaths: [new URL("../src/styles", import.meta.url).pathname] }).css;
 
   assert.doesNotMatch(css, /:focus-within/);
-  assert.match(css, /\.winx-rail:not\(\.winx-rail--phone, \.winx-rail--shut\):has\(:focus-visible\) \.winx-rail__label/);
+  assert.match(css, /\.ui-rail:not\(\.ui-rail--phone, \.ui-rail--shut\):has\(:focus-visible\) \.ui-rail__label/);
 });
 
 test("UiNav: the selected phone icon gets the gold glow", async () => {

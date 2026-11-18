@@ -53,28 +53,28 @@ function mount(over = {}) {
   }).mount(el);
   return { el, view };
 }
-const cards = el => [...el.querySelectorAll(".winx-projects__card")];
+const cards = el => [...el.querySelectorAll(".ui-projects__card")];
 const names = el => cards(el).map(c => c.querySelector(".callout-title-inner").textContent);
 
 test("the list: a card per project in file order with its status pill, description, 3/8 and the next task", () => {
   const { el } = mount();
   assert.deepEqual(names(el), ["Garden", "Shed", "Poem", "Kite"]);
   const garden = cards(el)[0];
-  assert.equal(garden.querySelector(".winx-status").className, "winx-status winx-status--active");
-  assert.equal(garden.querySelector(".winx-status").textContent, "Active");
-  assert.equal(garden.querySelector(".winx-projects__description").textContent, "beds by the wall");
-  const bar = garden.querySelector("progress.winx-progress__bar");
+  assert.equal(garden.querySelector(".ui-status").className, "ui-status ui-status--active");
+  assert.equal(garden.querySelector(".ui-status").textContent, "Active");
+  assert.equal(garden.querySelector(".ui-projects__description").textContent, "beds by the wall");
+  const bar = garden.querySelector("progress.ui-progress__bar");
   assert.equal([bar.value, bar.max].join("/"), "3/8");
-  assert.equal(garden.querySelector(".winx-progress__count").textContent, "3/8");
-  assert.ok(garden.querySelector(".winx-projects__next .winx-check"));
-  assert.equal(garden.querySelector(".winx-projects__next-text").textContent, "step 4");
-  assert.equal(el.querySelector(".winx-tabs").textContent, "All · 4Idea · 1Active · 1Paused · 1Done · 1");
+  assert.equal(garden.querySelector(".ui-progress__count").textContent, "3/8");
+  assert.ok(garden.querySelector(".ui-projects__next .ui-check"));
+  assert.equal(garden.querySelector(".ui-projects__next-text").textContent, "step 4");
+  assert.equal(el.querySelector(".ui-tabs").textContent, "All · 4Idea · 1Active · 1Paused · 1Done · 1");
 });
 
 test("Filter Paused shows only paused projects; All shows every status, Idea and Done too", async () => {
   const { el, view } = mount({ filter: "paused" });
   assert.deepEqual(names(el), ["Shed"]);
-  [...el.querySelectorAll(".winx-tabs__tab")].find(b => b.dataset.tab === "all").click();
+  [...el.querySelectorAll(".ui-tabs__tab")].find(b => b.dataset.tab === "all").click();
   await vue.nextTick();
   assert.equal(view.state.filter, "all");
   assert.deepEqual(names(el), ["Garden", "Shed", "Poem", "Kite"]);
@@ -82,14 +82,14 @@ test("Filter Paused shows only paused projects; All shows every status, Idea and
 
 test("A project with no tasks has no progress bar", () => {
   const shed = cards(mount().el)[1];
-  assert.equal(shed.querySelector(".winx-progress"), null);
-  assert.equal(shed.querySelector(".winx-projects__next"), null);
+  assert.equal(shed.querySelector(".ui-progress"), null);
+  assert.equal(shed.querySelector(".ui-projects__next"), null);
 });
 
 test("No cover: the placeholder picture; a cover: its resource path", () => {
   const [garden, shed] = cards(mount().el);
-  assert.equal(garden.querySelector(".winx-widget__cover").getAttribute("src"), PLACEHOLDER);
-  assert.equal(shed.querySelector(".winx-widget__cover").getAttribute("src"), "app://x/Media/shed.webp");
+  assert.equal(garden.querySelector(".ui-widget__cover").getAttribute("src"), PLACEHOLDER);
+  assert.equal(shed.querySelector(".ui-widget__cover").getAttribute("src"), "app://x/Media/shed.webp");
   assert.match(PLACEHOLDER, /^data:image\/svg\+xml,/);
 });
 
@@ -106,8 +106,8 @@ test("a project card opens through projects.open (the router's step later)", asy
   cards(el)[0].click();
   await vue.nextTick();
   assert.deepEqual(opened, ["p1"]);
-  assert.ok(el.querySelector(".winx-project"));
-  el.querySelector(".winx-project__back").click();
+  assert.ok(el.querySelector(".ui-project"));
+  el.querySelector(".ui-project__back").click();
   await vue.nextTick();
   assert.deepEqual(opened, ["p1", null]);
   assert.deepEqual(names(el), ["Garden", "Shed", "Poem", "Kite"]);
@@ -115,49 +115,49 @@ test("a project card opens through projects.open (the router's step later)", asy
 
 test("An open key in the store shows its page; one that isn't shows the list", () => {
   const page = mount({ open: "p1" }).el;
-  assert.ok(page.querySelector(".winx-project"));
-  assert.equal(page.querySelector(".winx-projects"), null);
+  assert.ok(page.querySelector(".ui-project"));
+  assert.equal(page.querySelector(".ui-projects"), null);
   const list = mount({ open: "p9" }).el;
-  assert.equal(list.querySelector(".winx-project"), null);
+  assert.equal(list.querySelector(".ui-project"), null);
   assert.deepEqual(names(list), ["Garden", "Shed", "Poem", "Kite"]);
 });
 
 test("No projects: UiEmpty 'No projects yet'", () => {
   taskStore.putProjects({});
   const { el } = mount();
-  assert.equal(el.querySelector(".winx-empty").textContent, "✦ No projects yet");
+  assert.equal(el.querySelector(".ui-empty").textContent, "✦ No projects yet");
 });
 
 test("A filter that matches nothing shows UiEmpty 'No <status> projects'", () => {
   const { el } = mount({ filter: "paused" });
-  assert.equal(el.querySelector(".winx-empty"), null);
+  assert.equal(el.querySelector(".ui-empty"), null);
   taskStore.putProjects({ p3: { name: "Poem", status: "idea", stages: [] } });
   const none = mount({ filter: "paused" }).el;
-  assert.equal(none.querySelector(".winx-empty").textContent, "✦ No paused projects");
+  assert.equal(none.querySelector(".ui-empty").textContent, "✦ No paused projects");
   assert.deepEqual(names(none), []);
 });
 
 // the project's page
 const saved = () => JSON.parse(files[PROJECTS]).p1;
 const until = async ok => { for (let i = 0; i < 50 && !ok(); i++) await new Promise(r => setTimeout(r, 2)); };
-const stages = el => [...el.querySelectorAll(".winx-project__stage")];
+const stages = el => [...el.querySelectorAll(".ui-project__stage")];
 const texts = (el, sel) => [...el.querySelectorAll(sel)].map(e => e.textContent.trim());
 const button = (el, label) => [...el.querySelectorAll("button")].find(b => b.textContent.trim() === label);
 
 test("the header: the name, status, description, 3/8; ← Projects clears state.open", async () => {
   const { el, view } = mount({ open: "p1" });
-  const header = el.querySelector(".winx-project__header");
+  const header = el.querySelector(".ui-project__header");
   assert.equal(header.querySelector(".callout-title-inner").textContent, "Garden");
-  assert.equal(header.querySelector(".winx-status").textContent, "Active");
-  assert.equal(header.querySelector(".winx-project__description").textContent, "beds by the wall");
-  assert.equal(header.querySelector(".winx-progress__count").textContent, "3/8");
+  assert.equal(header.querySelector(".ui-status").textContent, "Active");
+  assert.equal(header.querySelector(".ui-project__description").textContent, "beds by the wall");
+  assert.equal(header.querySelector(".ui-progress__count").textContent, "3/8");
   button(el, "← Projects").click();
   assert.equal(view.state.open, null);
 });
 
 test("the status pill: a menu of the four statuses, a pick saves it", async () => {
   const { el } = mount({ open: "p1" });
-  el.querySelector(".winx-project__status").click();
+  el.querySelector(".ui-project__status").click();
   assert.deepEqual(Menu.last.items.map(i => i.title), ["Idea", "Active", "Paused", "Done"]);
   assert.deepEqual(Menu.last.items.map(i => i.checked), [false, true, false, false]);
   Menu.last.items[2].click();
@@ -167,34 +167,34 @@ test("the status pill: a menu of the four statuses, a pick saves it", async () =
 
 test("stages numbered 01, 02 with done/total; a complete stage starts folded and shows ✓", async () => {
   const { el } = mount({ open: "p1" });
-  assert.deepEqual(texts(el, ".winx-project__stage-num"), ["01", "02"]);
-  assert.deepEqual(texts(el, ".winx-project__stage-name"), ["A", "B"]);
-  assert.deepEqual(texts(el, ".winx-project__stage-count"), ["3/3", "0/5"]);
+  assert.deepEqual(texts(el, ".ui-project__stage-num"), ["01", "02"]);
+  assert.deepEqual(texts(el, ".ui-project__stage-name"), ["A", "B"]);
+  assert.deepEqual(texts(el, ".ui-project__stage-count"), ["3/3", "0/5"]);
   const [a, b] = stages(el);
-  assert.ok(a.querySelector(".winx-project__stage-done"));
-  assert.equal(b.querySelector(".winx-project__stage-done"), null);
-  assert.equal(a.querySelectorAll(".winx-project__task").length, 0);
-  assert.equal(b.querySelectorAll(".winx-project__task").length, 5);
-  a.querySelector(".winx-project__fold").click();
+  assert.ok(a.querySelector(".ui-project__stage-done"));
+  assert.equal(b.querySelector(".ui-project__stage-done"), null);
+  assert.equal(a.querySelectorAll(".ui-project__task").length, 0);
+  assert.equal(b.querySelectorAll(".ui-project__task").length, 5);
+  a.querySelector(".ui-project__fold").click();
   await vue.nextTick();
-  assert.equal(a.querySelectorAll(".winx-project__task").length, 3);
+  assert.equal(a.querySelectorAll(".ui-project__task").length, 3);
 });
 
 test("a task row: checkbox (✅ static when done), TaskText, ✏️ and 📅 on open ones", async () => {
   const { el } = mount({ open: "p1" });
   const [a, b] = stages(el);
-  a.querySelector(".winx-project__fold").click();
+  a.querySelector(".ui-project__fold").click();
   await vue.nextTick();
-  const done = a.querySelector(".winx-project__task"), open = b.querySelector(".winx-project__task");
-  assert.equal(done.querySelector(".winx-check").tagName, "SPAN");
-  assert.equal(done.querySelector(".winx-check").dataset.mark, "✅");
+  const done = a.querySelector(".ui-project__task"), open = b.querySelector(".ui-project__task");
+  assert.equal(done.querySelector(".ui-check").tagName, "SPAN");
+  assert.equal(done.querySelector(".ui-check").dataset.mark, "✅");
   assert.match(done.textContent, /step 1/);
   assert.equal(done.querySelector("button"), null);
-  assert.equal(open.querySelector(".winx-check").dataset.mark, "☐");
+  assert.equal(open.querySelector(".ui-check").dataset.mark, "☐");
   assert.match(open.textContent, /step 4/);
-  assert.deepEqual([...open.querySelectorAll(".winx-btn")].map(x => x.textContent), ["✏️", "📅"]);
-  assert.equal(open.querySelector("input.winx-project__date").type, "date");
-  open.querySelectorAll(".winx-btn")[1].click();
+  assert.deepEqual([...open.querySelectorAll(".ui-btn")].map(x => x.textContent), ["✏️", "📅"]);
+  assert.equal(open.querySelector("input.ui-project__date").type, "date");
+  open.querySelectorAll(".ui-btn")[1].click();
   assert.deepEqual(Menu.last.items.map(i => i.title), ["Today", "Tomorrow", "Pick a date…"]);
 });
 
@@ -213,11 +213,11 @@ test("+ task calls addToStage with the project key, the stage's index and name",
 
 test("+ stage submits its name to addStage", async () => {
   const { el } = mount({ open: "p1" });
-  const input = el.querySelector(".winx-project .winx-add-form__input");
+  const input = el.querySelector(".ui-project .ui-add-form__input");
   input.value = "Harvest";
   input.dispatchEvent(new Event("input"));
   await vue.nextTick();
-  el.querySelector(".winx-project .winx-add-form__submit").click();
+  el.querySelector(".ui-project .ui-add-form__submit").click();
   await until(() => saved().stages.length === 3);
   assert.deepEqual(saved().stages[2], { name: "Harvest", tasks: [] });
 });
@@ -228,9 +228,9 @@ test("Result and Notes show their text; Edit opens a Form with one lines row and
   Form.ask = async (...args) => { asked = args; return { notes: "water at dusk" }; };
   try {
     const { el } = mount({ open: "p1" });
-    assert.equal(el.querySelector(".winx-project__result .winx-project__text").textContent, "a full basket");
-    const notes = el.querySelector(".winx-project__notes");
-    assert.equal(notes.querySelector(".winx-project__text").textContent, "water at dawn");
+    assert.equal(el.querySelector(".ui-project__result .ui-project__text").textContent, "a full basket");
+    const notes = el.querySelector(".ui-project__notes");
+    assert.equal(notes.querySelector(".ui-project__text").textContent, "water at dawn");
     button(notes, "Edit").click();
     await until(() => saved().notes === "water at dusk");
     assert.deepEqual(asked.slice(1), [
@@ -246,7 +246,7 @@ test("Edit when the project is removed while the Form is open writes nothing and
   Form.ask = async () => { taskStore.putProjects({}); files[PROJECTS] = "{}"; return { notes: "late" }; };
   try {
     const { el } = mount({ open: "p1" });
-    button(el.querySelector(".winx-project__notes"), "Edit").click();
+    button(el.querySelector(".ui-project__notes"), "Edit").click();
     await new Promise(r => setTimeout(r, 30));
     assert.equal(files[PROJECTS], "{}");
   } finally { Form.ask = ask; }

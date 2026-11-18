@@ -13,18 +13,18 @@ const plan = useDropZone(view, () => props.day);
 </script>
 
 <template>
-  <div class="winx-cal__zones">
+  <div class="ui-cal__zones">
     <div
       v-if="past"
-      :class="['winx-cal__zone winx-cal__zone--done winx-grow winx-center',
-               { 'winx-cal__zone--over': done.over }]"
+      :class="['ui-cal__zone ui-cal__zone--done ui-grow ui-center',
+               { 'ui-cal__zone--over': done.over }]"
       @dragover="done.enter"
       @dragleave="done.leave"
       @drop="done.drop"
     >✓</div>
     <div
-      :class="['winx-cal__zone winx-cal__zone--plan winx-grow winx-center',
-               { 'winx-cal__zone--over': plan.over }]"
+      :class="['ui-cal__zone ui-cal__zone--plan ui-grow ui-center',
+               { 'ui-cal__zone--over': plan.over }]"
       @dragover="plan.enter"
       @dragleave="plan.leave"
       @drop="plan.drop"

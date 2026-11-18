@@ -54,8 +54,8 @@ export function useNotify(plugin, open) {
   const summary = () => {
     const d = todayYmd();
 
-    if (app.loadLocalStorage("winx-notify-summary") === d) return;
-    app.saveLocalStorage("winx-notify-summary", d);
+    if (app.loadLocalStorage("ui-notify-summary") === d) return;
+    app.saveLocalStorage("ui-notify-summary", d);
     const { due, overdue } = dayCounts(taskStore.tasks.map(T), d);
 
     notify(

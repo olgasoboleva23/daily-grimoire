@@ -9,7 +9,7 @@ const title = computed(() => props.entries.map(e => view.info(e.t).label).join("
 </script>
 
 <template>
-  <div v-if="entries.length" class="winx-cal__marks winx-flex winx-gap-m">
+  <div v-if="entries.length" class="ui-cal__marks ui-flex ui-gap-m">
     <span v-tip="title">✓{{ entries.length }}</span>
   </div>
 </template>

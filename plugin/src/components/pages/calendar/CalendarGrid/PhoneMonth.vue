@@ -13,28 +13,28 @@ defineEmits(["pick"]);
 </script>
 
 <template>
-  <div class="winx-cal__phone-month" data-part="grid">
-    <div class="winx-cal__month">
-      <div v-for="w in weekdays" :key="w" class="winx-cal__weekday winx-text-center">{{ w }}</div>
+  <div class="ui-cal__phone-month" data-part="grid">
+    <div class="ui-cal__month">
+      <div v-for="w in weekdays" :key="w" class="ui-cal__weekday ui-text-center">{{ w }}</div>
       <div
         v-for="c in cells"
         :key="c.d"
-        :class="['winx-cal__cell', {
-          'winx-cal__cell--today': c.today,
-          'winx-cal__cell--picked': c.picked,
-          'winx-cal__cell--outside': c.outside,
+        :class="['ui-cal__cell', {
+          'ui-cal__cell--today': c.today,
+          'ui-cal__cell--picked': c.picked,
+          'ui-cal__cell--outside': c.outside,
         }]"
         :data-day="c.d"
         @click="$emit('pick', $event, c.d)"
       >
-        <div class="winx-cal__num">{{ c.num }}</div>
-        <div class="winx-cal__dots">
+        <div class="ui-cal__num">{{ c.num }}</div>
+        <div class="ui-cal__dots">
           <i
             v-for="dot in c.dots"
             :key="dot.i"
-            :class="['winx-cal__dot', `winx-cal__dot--${dot.kind}`]"
+            :class="['ui-cal__dot', `ui-cal__dot--${dot.kind}`]"
           />
-          <span v-if="c.more" class="winx-cal__dots-more">{{ c.more }}</span>
+          <span v-if="c.more" class="ui-cal__dots-more">{{ c.more }}</span>
         </div>
         <DayZones :day="c.d" />
       </div>

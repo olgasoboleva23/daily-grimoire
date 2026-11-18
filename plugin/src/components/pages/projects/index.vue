@@ -16,7 +16,7 @@ const open = computed(() => {
 </script>
 
 <template>
-  <div class="winx-view__page markdown-preview-view markdown-rendered dashboard">
+  <div class="ui-view__page markdown-preview-view markdown-rendered dashboard">
     <ProjectPage v-if="open" />
     <ProjectList v-else />
   </div>

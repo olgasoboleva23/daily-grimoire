@@ -19,10 +19,10 @@ const newTask = () => app.commands.executeCommandById("daily-grimoire:new-task")
 </script>
 
 <template>
-  <div class="winx-cal__top winx-row winx-gap-s" data-part="header">
+  <div class="ui-cal__top ui-row ui-gap-s" data-part="header">
     <div class="mb-input-type-date"><input type="date" :value="base" @change="onDate"></div>
     <button
-      class="winx-cal__mute"
+      class="ui-cal__mute"
       title="sounds on/off"
       aria-label="sounds on/off"
       @click="mute"

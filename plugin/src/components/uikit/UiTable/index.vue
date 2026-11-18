@@ -1,4 +1,4 @@
-<!-- A table (block winx-table): `columns` [{ key, label, align?: "center", class?, tip? }] and
+<!-- A table (block ui-table): `columns` [{ key, label, align?: "center", class?, tip? }] and
      `rows`; a column's tip is its header's tooltip (v-tip); bordered: a line between the columns;
      a cell shows row[col.key], or the `cell` slot ({ row, col, i }); `row-key` and `row-class`
      name a row. The look (index.scss): the rows parted by gold dashes, the header in Cinzel; a
@@ -14,11 +14,11 @@ defineProps({
   bordered: { type: Boolean, default: false },   // a line between the columns
 });
 const cls = (part, col) =>
-  [`winx-table__${part}`, { [`winx-table__${part}--center`]: col.align === "center" }, col.class];
+  [`ui-table__${part}`, { [`ui-table__${part}--center`]: col.align === "center" }, col.class];
 </script>
 
 <template>
-  <table :class="['winx-table', { 'winx-table--bordered': bordered }]">
+  <table :class="['ui-table', { 'ui-table--bordered': bordered }]">
     <thead>
       <tr>
         <th
@@ -33,7 +33,7 @@ const cls = (part, col) =>
       <tr
         v-for="(row, i) in rows"
         :key="rowKey(row, i)"
-        :class="['winx-table__row', rowClass(row)]"
+        :class="['ui-table__row', rowClass(row)]"
       >
         <td
           v-for="col in columns"

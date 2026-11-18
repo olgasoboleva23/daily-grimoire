@@ -4,8 +4,8 @@ defineProps({ title: { type: String, required: true } });
 </script>
 
 <template>
-  <div class="winx-cal__group-card">
-    <div class="winx-cal__group">{{ title }}</div>
+  <div class="ui-cal__group-card">
+    <div class="ui-cal__group">{{ title }}</div>
     <slot />
   </div>
 </template>

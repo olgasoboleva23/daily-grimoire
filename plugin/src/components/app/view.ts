@@ -82,14 +82,14 @@ export class UiView extends ItemView {
 
   async onOpen() {
     this.closed = false;
-    this.contentEl.addClass("winx-host");
+    this.contentEl.addClass("ui-host");
     // Native device classes reset Obsidian’s inherited header/navbar spacing.
     this.contentEl.toggleAttribute("data-mobile", Platform.isMobile);
     this.contentEl.toggleAttribute("data-phone", Platform.isPhone);
     // Obsidian cannot see the shadow scroller when recognizing pull-down gestures.
     this.contentEl.dataset.ignoreSwipe = "true";
   }
-  onResize() { this.app.workspace.trigger("winx:page"); }
+  onResize() { this.app.workspace.trigger("ui:page"); }
   async onClose() {
     this.closed = true;
     this.mounted?.unmount();

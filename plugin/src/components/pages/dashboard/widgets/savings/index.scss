@@ -1,7 +1,7 @@
 @use "mixins" as *;
-/* ── Savings (src/widgets/savings/savings.js): a jar (block winx-jar) per goal ── */
-.winx-savings {   display: grid; gap: $space-4xl; }
-.winx-jar {
+/* ── Savings (src/widgets/savings/savings.js): a jar (block ui-jar) per goal ── */
+.ui-savings {   display: grid; gap: $space-4xl; }
+.ui-jar {
   display: grid; gap: $space-m; color: var(--winx-purple-deep);
   /* the goal's picture: grey above the saved share, so the colour rises as the jar fills */
   &__pic {

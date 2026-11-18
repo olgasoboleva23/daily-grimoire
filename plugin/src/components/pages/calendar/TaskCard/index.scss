@@ -2,7 +2,7 @@
 /* ── Task cards (calendar backlog) ── */
 
 @use "mixins" as *;
-.winx-task-card {
+.ui-task-card {
   position: relative;
   padding: $space-m;
   border-bottom: $border-width-s dashed fade(var(--winx-gold-deep), 35%);
@@ -19,10 +19,10 @@
 
 $fade: 18px;   // the buttons' background fades in over this much of the text
 /* round buttons on a task: ⏭ ✏️ 🗑 */
-.winx-cal .winx-task__btns {
+.ui-cal .ui-task__btns {
   display: flex;
   gap: $space-xs;
-  button.winx-task__btns-del--armed {
+  button.ui-task__btns-del--armed {
     width: auto;
     padding: 0 $space-m;
     border-color: var(--winx-danger);
@@ -32,8 +32,8 @@ $fade: 18px;   // the buttons' background fades in over this much of the text
   }
 }
 #{context.$desktop} {
-    .winx-cal {
-      .winx-task__btns {
+    .ui-cal {
+      .ui-task__btns {
         position: absolute;
         right: $space-xs;
         top: 50%;
@@ -45,27 +45,27 @@ $fade: 18px;   // the buttons' background fades in over this much of the text
         pointer-events: none;
         transition: opacity $fast ease;
       }
-      .winx-task__mobile { display: none; }
+      .ui-task__mobile { display: none; }
     }
-    :is(.winx-task-card, .winx-cal__task, .winx-missed__row):hover .winx-task__btns {
+    :is(.ui-task-card, .ui-cal__task, .ui-missed__row):hover .ui-task__btns {
       opacity: 1;
       pointer-events: auto;
     }
 }
 #{context.$mobile} {
-  :is(.winx-cal__task, .winx-missed__row, .winx-task-card) { touch-action: pan-y; }
-  .winx-cal {
+  :is(.ui-cal__task, .ui-missed__row, .ui-task-card) { touch-action: pan-y; }
+  .ui-cal {
     // Without swipe support (e.g. Tasks disabled), keep the actions in the normal flow.
-    .winx-task__actions { display: flex; flex-wrap: wrap; gap: $space-s; }
+    .ui-task__actions { display: flex; flex-wrap: wrap; gap: $space-s; }
 
     [data-swipeable] {
       overflow: hidden;
       min-height: $btn-touch + 2 * $space-s;
 
-      .winx-task__content {
+      .ui-task__content {
         transition: translate $fast ease, opacity $fast ease, visibility $fast;
       }
-      .winx-task__actions {
+      .ui-task__actions {
         position: absolute;
         inset: 0;
         display: flex;
@@ -77,8 +77,8 @@ $fade: 18px;   // the buttons' background fades in over this much of the text
         visibility: hidden;
         transition: translate $fast ease, visibility $fast;
 
-        .winx-task__btns { display: contents; }
-        button.winx-btn {
+        .ui-task__btns { display: contents; }
+        button.ui-btn {
           flex: 1 1 0;
           min-width: 0;
           width: auto;
@@ -94,29 +94,29 @@ $fade: 18px;   // the buttons' background fades in over this much of the text
           font-size: $text-2xl;
           transition: background $fast ease, box-shadow $fast ease;
 
-          &.winx-task__primary {
+          &.ui-task__primary {
             order: -1;
             background: color-mix(in srgb, var(--winx-gold) calc(var(--winx-swipe-progress, 0) * 100%), var(--winx-pink-deep));
           }
-          &.winx-task__btns-edit { background: var(--winx-blue-deep); }
-          &:is(.winx-task__btns-skip, .winx-task__btns-today) {
+          &.ui-task__btns-edit { background: var(--winx-blue-deep); }
+          &:is(.ui-task__btns-skip, .ui-task__btns-today) {
             background: var(--winx-gold);
             color: var(--winx-on-gold);
           }
-          &.winx-task__btns-del { background: var(--winx-danger); }
+          &.ui-task__btns-del { background: var(--winx-danger); }
         }
       }
       &[data-swipe] {
-        .winx-task__content { translate: -100% 0; opacity: 0; visibility: hidden; }
-        .winx-task__actions { translate: 0; visibility: visible; }
+        .ui-task__content { translate: -100% 0; opacity: 0; visibility: hidden; }
+        .ui-task__actions { translate: 0; visibility: visible; }
       }
-      &[data-swipe="ready"] .winx-task__actions button.winx-task__primary {
+      &[data-swipe="ready"] .ui-task__actions button.ui-task__primary {
         color: var(--winx-on-gold);
         box-shadow: inset 0 0 0 $border-width-l var(--winx-gold-deep), inset 0 0 16px var(--winx-highlight);
         font-size: $text-3xl;
       }
       @media (prefers-reduced-motion: reduce) {
-        .winx-task__content, .winx-task__actions, .winx-task__actions button.winx-btn { transition: none; }
+        .ui-task__content, .ui-task__actions, .ui-task__actions button.ui-btn { transition: none; }
       }
     }
   }

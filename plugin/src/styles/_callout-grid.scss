@@ -127,7 +127,7 @@
      * properties set per nth-child — one place to
      * edit instead of 6 separate selector blocks.
      */
-  :is(.callout[data-callout="col"], .winx-dash__column) {
+  :is(.callout[data-callout="col"], .ui-dash__column) {
     position: relative;
 
     /* Fallback values (star hidden off-screen if unset) */
@@ -167,7 +167,7 @@
       --star-after-delay: 1.8s;
     }
 
-    &.winx-dash__column, > .callout-content {
+    &.ui-dash__column, > .callout-content {
       /* Shared star styles */
       &::before,
       &::after {
@@ -179,7 +179,7 @@
         translate: -16px -16px;          /* wider canvas for sparkles, star stays put */
         background: var(--winx-star-sparkle-svg) 0 0 / contain no-repeat;
         pointer-events: none;
-        animation: winx-twinkle 3s ease-in-out infinite;
+        animation: ui-twinkle 3s ease-in-out infinite;
         filter: drop-shadow(0 0 3px alpha(--winx-gold, 60%));
       }
 

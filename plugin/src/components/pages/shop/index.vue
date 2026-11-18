@@ -11,21 +11,21 @@ const buy = async i => { if (await logBuy(i.name, i.cost)) retry(); };
 </script>
 
 <template>
-  <div class="winx-shop__balance winx-center winx-gap-l">
-    <span class="winx-shop__balance-icon">✨</span>
+  <div class="ui-shop__balance ui-center ui-gap-l">
+    <span class="ui-shop__balance-icon">✨</span>
     <span>Gold</span>
-    <span class="winx-shop__balance-amount">{{ state.data.balance }}</span>
+    <span class="ui-shop__balance-amount">{{ state.data.balance }}</span>
   </div>
-  <div class="winx-shop__items winx-col winx-gap-xl">
+  <div class="ui-shop__items ui-col ui-gap-xl">
     <button
       v-for="i in state.data.items"
       :key="i.name"
-      class="winx-shop__item"
+      class="ui-shop__item"
       :disabled="!i.affordable"
       @click="buy(i)"
     >
-      <span class="winx-shop__item-name">{{ i.name }}</span>
-      <span class="winx-shop__item-cost">{{ i.cost }} ✨</span>
+      <span class="ui-shop__item-name">{{ i.name }}</span>
+      <span class="ui-shop__item-cost">{{ i.cost }} ✨</span>
     </button>
   </div>
 </template>

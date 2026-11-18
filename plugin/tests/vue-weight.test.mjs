@@ -26,8 +26,8 @@ const data = {
 test("Weight: the last value and the change; typing a weight and Save logs it in Weight.md, the field clears", async () => {
   const { files } = vault({ [WEIGHT]: "- 2026-11-04 59.7\n" });
   const w = mount(WeightCard, { props: { state: { data } } });
-  assert.equal(w.find(".winx-weight__now").text(), "59.7 kg");
-  assert.equal(w.find(".winx-weight__delta").text(), "-0.5 vs week ago");
+  assert.equal(w.find(".ui-weight__now").text(), "59.7 kg");
+  assert.equal(w.find(".ui-weight__delta").text(), "-0.5 vs week ago");
   await w.find("input").setValue("60.2");
   await w.find("form").trigger("submit");
   await nextTick(); await nextTick();
@@ -39,24 +39,24 @@ test("Weight: the journal's pill shows it, a select under it picks another; a le
   const { files, local } = vault({ [SKIN]: "---\nreasons: []\n---\n", [GUT]: "---\nreasons: []\n---\n" });
   const w = mount(WeightCard, { props: { state: { data } } });
 
-  assert.equal(w.find("select.winx-weight__journal").exists(), false);   // weight shown: no select
-  await w.findAll(".winx-weight__modes button")[1].trigger("click");
-  const pill = w.find("select.winx-weight__journal");
+  assert.equal(w.find("select.ui-weight__journal").exists(), false);   // weight shown: no select
+  await w.findAll(".ui-weight__modes button")[1].trigger("click");
+  const pill = w.find("select.ui-weight__journal");
 
   assert.deepEqual(pill.findAll("option").map(o => o.text()), ["Skin", "Gut"]);
   await pill.setValue(GUT); await nextTick();
-  assert.equal(local["winx-journal"], GUT);   // this device remembers it
-  const [levels, reasons] = w.findAll(".winx-weight__log-row");
+  assert.equal(local["ui-journal"], GUT);   // this device remembers it
+  const [levels, reasons] = w.findAll(".ui-weight__log-row");
 
   assert.deepEqual(reasons.findAll("button").map(b => b.text()), ["🥛 milk"]);
   await levels.findAll("button")[2].trigger("click"); await nextTick(); await nextTick();
   assert.equal(files[GUT], "---\nreasons: []\n---\n- 2026-11-05 2\n");
   await reasons.findAll("button")[0].trigger("click"); await nextTick(); await nextTick();
   assert.equal(files[GUT], "---\nreasons: []\n---\n- 2026-11-05 2 🥛 milk\n");
-  assert.equal(w.find(".winx-weight__log > .winx-btn--pill").exists(), false);   // no Save today
+  assert.equal(w.find(".ui-weight__log > .ui-btn--pill").exists(), false);   // no Save today
   // a reason with no level yet: nothing written
-  await w.find("select.winx-weight__journal").setValue(SKIN); await nextTick();
-  await w.findAll(".winx-weight__log-row")[1].findAll("button")[0].trigger("click"); await nextTick();
+  await w.find("select.ui-weight__journal").setValue(SKIN); await nextTick();
+  await w.findAll(".ui-weight__log-row")[1].findAll("button")[0].trigger("click"); await nextTick();
   assert.equal(files[SKIN], "---\nreasons: []\n---\n");
 });
 
@@ -68,10 +68,10 @@ test("Weight: ＋ after the journal's pill makes a new journal in its window and
   Form.ask = async () => ({ title: "Живот", reasons: [{ reason: "🥛 молоко" }], lag: 0 });
   const w = mount(WeightCard, { props: { state: { data } } });
 
-  await w.find(".winx-weight__new").trigger("click"); await new Promise(r => setTimeout(r)); await nextTick();
+  await w.find(".ui-weight__new").trigger("click"); await new Promise(r => setTimeout(r)); await nextTick();
   Form.ask = ask;
   assert.match(files[`${JOURNALS}/Живот.md`], /^---\ntype: journal\nlag: 0\nreasons:\n  - "🥛 молоко"\n---\n/);
-  assert.equal(local["winx-journal"], `${JOURNALS}/Живот.md`);   // picked: shown once the card loads it
+  assert.equal(local["ui-journal"], `${JOURNALS}/Живот.md`);   // picked: shown once the card loads it
 });
 
 test("Weight: 🗑 by a journal's list asks first, then puts the journal in the trash; closed: nothing", async () => {
@@ -80,15 +80,15 @@ test("Weight: 🗑 by a journal's list asks first, then puts the journal in the 
   const { files } = vault({ [SKIN]: "- 2026-11-05 1\n", [GUT]: "" });
   const w = mount(WeightCard, { props: { state: { data } } });
 
-  await w.findAll(".winx-weight__modes button")[1].trigger("click");
+  await w.findAll(".ui-weight__modes button")[1].trigger("click");
   let asked;
 
   Form.ask = async (app, title) => { asked = title; return null; };
-  await w.find(".winx-weight__delete").trigger("click"); await new Promise(r => setTimeout(r));
+  await w.find(".ui-weight__delete").trigger("click"); await new Promise(r => setTimeout(r));
   assert.equal(files[SKIN], "- 2026-11-05 1\n");
   assert.match(asked, /Skin/);
   Form.ask = async () => ({});
-  await w.find(".winx-weight__delete").trigger("click"); await new Promise(r => setTimeout(r));
+  await w.find(".ui-weight__delete").trigger("click"); await new Promise(r => setTimeout(r));
   Form.ask = ask;
   assert.equal(SKIN in files, false);
 });
@@ -101,9 +101,9 @@ test("Weight: the log's picks follow the data: a new day starts empty", async ()
 
   vault({ [SKIN]: "" });
   const w = mount(WeightCard, { props: { state } });
-  await w.findAll(".winx-weight__modes button")[1].trigger("click"); await nextTick();
-  assert.equal(w.find("select.winx-weight__journal").exists(), false);   // one journal: no select
-  const on = () => w.findAll(".winx-weight__log-row")[0].findAll("button").findIndex(b => b.classes().includes("winx-btn--on"));
+  await w.findAll(".ui-weight__modes button")[1].trigger("click"); await nextTick();
+  assert.equal(w.find("select.ui-weight__journal").exists(), false);   // one journal: no select
+  const on = () => w.findAll(".ui-weight__log-row")[0].findAll("button").findIndex(b => b.classes().includes("ui-btn--on"));
 
   assert.equal(on(), 1);
   state.data = { ...data, logs: [log({ ...entry, level: 3 })] }; await nextTick();

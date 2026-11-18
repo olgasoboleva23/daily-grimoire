@@ -1,7 +1,7 @@
 @use "mixins" as *;
-/* ===== A table (block winx-table): the block in front outweighs Obsidian's table styles
+/* ===== A table (block ui-table): the block in front outweighs Obsidian's table styles
    (.markdown-rendered td: borders, the alternate columns' fill, the cells' size) ===== */
-.winx-table {
+.ui-table {
   width: 100%; border: none; border-collapse: collapse; font-variant-numeric: tabular-nums;
   /* the rows parted by gold dashes, the header in Cinzel */
   & &__head, & &__cell {

@@ -48,54 +48,54 @@ async function page(recs = { c2: C2, c1: C1 }) {
 
 test("MedsPage: a tab per course in one row, the running one first and shown", async () => {
   const { w } = await page();
-  const tabs = w.findAll(".winx-tabs__tab");
+  const tabs = w.findAll(".ui-tabs__tab");
 
-  assert.ok(w.find(".winx-tabs").classes("winx-tabs--scroll"));
+  assert.ok(w.find(".ui-tabs").classes("ui-tabs--scroll"));
   assert.deepEqual(tabs.map(t => t.text()), ["7 ноя", "1 окт"]);
-  assert.equal(tabs[0].attributes("data-tip"), "winx-tooltip");
-  assert.ok(tabs[0].classes("winx-tabs__tab--on"));
-  assert.equal(w.find(".winx-meds__sum").text().replace(/\s+/g, " "),
+  assert.equal(tabs[0].attributes("data-tip"), "ui-tooltip");
+  assert.ok(tabs[0].classes("ui-tabs__tab--on"));
+  assert.equal(w.find(".ui-meds__sum").text().replace(/\s+/g, " "),
     "день 2 из 3 · принято 3 из 6");
   await tabs[1].trigger("click");
-  assert.equal(w.find(".winx-meds__sum").text().replace(/\s+/g, " "),
+  assert.equal(w.find(".ui-meds__sum").text().replace(/\s+/g, " "),
     "день 3 из 2 · принято 1 из 2");
 });
 
 test("MedsCourse: Приём, Заметки when there are notes, the counts, chips, grid and legend", async () => {
   const { w } = await page();
 
-  assert.deepEqual(w.findAll(".winx-meds__intake").map(e => e.text()),
+  assert.deepEqual(w.findAll(".ui-meds__intake").map(e => e.text()),
     ["☀️ утро, перед едой: Магний 2 таблетки", "🌙 на ночь, перед едой: Магний 2 таблетки",
       "в любое время, после еды: Аевит 1 таблетка"]);
   assert.ok(w.findAll(".callout-title-inner").map(e => e.text()).includes("Заметки"));
-  assert.equal(w.find(".winx-meds__notes").element.textContent, C1.notes);
-  assert.deepEqual(w.findAll(".winx-meds__chip").map(c => [c.text(), c.attributes("data-mark")]),
+  assert.equal(w.find(".ui-meds__notes").element.textContent, C1.notes);
+  assert.deepEqual(w.findAll(".ui-meds__chip").map(c => [c.text(), c.attributes("data-mark")]),
     [["Магний", "✅"], ["Магний", "☐"], ["Аевит", "☐"]]);
-  assert.equal(w.findAll(".winx-table__row").length, 3);
-  assert.deepEqual(w.findAll(".winx-meds__legend")[0].findAll("span")
+  assert.equal(w.findAll(".ui-table__row").length, 3);
+  assert.deepEqual(w.findAll(".ui-meds__legend")[0].findAll("span")
     .map(e => e.text().replace(/\s+/g, " ")), ["АЕ Аевит", "МА Магний", "☀️ утро", "🌙 на ночь"]);
-  assert.equal(w.findAll(".winx-meds__row--today").length, 1);
-  assert.equal(w.findAll(".winx-meds__tick").length, 8);   // Аевит's last day is blank
-  assert.equal(w.find(".winx-meds__row--past .winx-meds__tick").classes("winx-check--on"), true);
-  await w.findAll(".winx-tabs__tab")[1].trigger("click");
+  assert.equal(w.findAll(".ui-meds__row--today").length, 1);
+  assert.equal(w.findAll(".ui-meds__tick").length, 8);   // Аевит's last day is blank
+  assert.equal(w.find(".ui-meds__row--past .ui-meds__tick").classes("ui-check--on"), true);
+  await w.findAll(".ui-tabs__tab")[1].trigger("click");
   assert.ok(!w.findAll(".callout-title-inner").map(e => e.text()).includes("Заметки"));
 });
 
 test("MedsCourse: a tick or a chip goes round at once and writes its key; a note as typed", async () => {
   const { w, files } = await page();
-  const todayTicks = w.find(".winx-meds__row--today").findAll(".winx-meds__tick");
+  const todayTicks = w.find(".ui-meds__row--today").findAll(".ui-meds__tick");
 
   await todayTicks[0].trigger("click"); await tick();
   assert.equal(todayTicks[0].attributes("data-mark"), "✅");
   assert.equal(read(files).c1.marks["2026-11-08"]["АЕ"], "✅");
-  assert.equal(w.findAll(".winx-meds__chip")[2].attributes("data-mark"), "✅");   // the chip follows
+  assert.equal(w.findAll(".ui-meds__chip")[2].attributes("data-mark"), "✅");   // the chip follows
   // a chip: ✅ → ❌, the grid's cell follows
-  await w.findAll(".winx-meds__chip")[0].trigger("click");
-  assert.equal(w.findAll(".winx-meds__chip")[0].attributes("data-mark"), "❌");
+  await w.findAll(".ui-meds__chip")[0].trigger("click");
+  assert.equal(w.findAll(".ui-meds__chip")[0].attributes("data-mark"), "❌");
   await tick();
   assert.equal(read(files).c1.marks["2026-11-08"]["МГ☀️"], "❌");
   assert.equal(todayTicks[1].attributes("data-mark"), "❌");
-  const input = w.find(".winx-meds__row--future .winx-meds__note-input");
+  const input = w.find(".ui-meds__row--future .ui-meds__note-input");
 
   input.element.value = "забыла | поездка";
   await input.trigger("change"); await tick();
@@ -114,11 +114,11 @@ test("MedsCourse: a write that fails puts the mark and the note back, and says s
 
   console.error = () => {};
   failOnce();
-  await w.find(".winx-meds__row--future .winx-meds__tick").trigger("click"); await tick(); await tick();
-  assert.equal(w.find(".winx-meds__row--future .winx-meds__tick").attributes("data-mark"), "☐");
+  await w.find(".ui-meds__row--future .ui-meds__tick").trigger("click"); await tick(); await tick();
+  assert.equal(w.find(".ui-meds__row--future .ui-meds__tick").attributes("data-mark"), "☐");
   assert.match(Notice.last, /^✦ Not saved/);
   failOnce();
-  const input = w.find(".winx-meds__row--future .winx-meds__note-input");
+  const input = w.find(".ui-meds__row--future .ui-meds__note-input");
 
   input.element.value = "забыла";
   await input.trigger("change"); await tick(); await tick();
@@ -130,8 +130,8 @@ test("MedsCourse: a course deleted meanwhile: the mark goes back, said", async (
   const { w, files } = await page();
 
   files[COURSES] = JSON.stringify({ c2: C2 });
-  await w.find(".winx-meds__row--future .winx-meds__tick").trigger("click"); await tick(); await tick();
-  assert.equal(w.find(".winx-meds__row--future .winx-meds__tick").attributes("data-mark"), "☐");
+  await w.find(".ui-meds__row--future .ui-meds__tick").trigger("click"); await tick(); await tick();
+  assert.equal(w.find(".ui-meds__row--future .ui-meds__tick").attributes("data-mark"), "☐");
   assert.equal(Notice.last, "✦ that course is gone");
 });
 
@@ -142,10 +142,10 @@ test("MedsCourse: ✎ in the Курс card edits the course shown", async () => 
 
   Form.ask = async (app, t) => { title = t; return null; };
   try {
-    await w.findAll(".winx-tabs__tab")[1].trigger("click");
-    const card = w.findAll(".winx-widget").find(c => c.find(".winx-meds__sum").exists());
+    await w.findAll(".ui-tabs__tab")[1].trigger("click");
+    const card = w.findAll(".ui-widget").find(c => c.find(".ui-meds__sum").exists());
 
-    await card.find(".winx-widget__title .winx-widget__add").trigger("click"); await tick();
+    await card.find(".ui-widget__title .ui-widget__add").trigger("click"); await tick();
     assert.equal(title, "✦ Edit medication course");
   } finally { Form.ask = ask; }
 });
@@ -153,5 +153,5 @@ test("MedsCourse: ✎ in the Курс card edits the course shown", async () => 
 test("MedsPage: no courses yet says how to make one", async () => {
   const { w } = await page({});
 
-  assert.match(w.find(".winx-empty").text(), /New medication course/);
+  assert.match(w.find(".ui-empty").text(), /New medication course/);
 });

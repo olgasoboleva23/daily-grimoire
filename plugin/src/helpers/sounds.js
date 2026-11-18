@@ -80,7 +80,7 @@ export class AudioEngine {
 }
 
 
-export const isMuted = () => app.loadLocalStorage("winx-mute") === "1";
+export const isMuted = () => app.loadLocalStorage("ui-mute") === "1";
 
 // a mark's sound (UiCheckbox, a course's chips): a gem for ✅, the slowed gem back to ☐, a
 // chime for ❌
@@ -93,7 +93,7 @@ const MARK_SOUNDS = {
 export const playMark = mark =>
   void MARK_SOUNDS[mark]?.().play(mark === "☐" ? { rate: 0.6, gain: 0.2 } : { gain: 0.25 });
 
-export const toggleMute = () => app.saveLocalStorage("winx-mute", isMuted() ? null : "1");
+export const toggleMute = () => app.saveLocalStorage("ui-mute", isMuted() ? null : "1");
 
 // ticking a task anywhere
 // installed by the plugin on load; its registerDomEvent removes the listener on unload

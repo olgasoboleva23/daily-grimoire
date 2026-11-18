@@ -19,13 +19,13 @@ const chips = computed(() => {
 </script>
 
 <template>
-  <div class="winx-cal__dropbar" data-part="header">
-    <div class="winx-cal__dropbar-in">
+  <div class="ui-cal__dropbar" data-part="header">
+    <div class="ui-cal__dropbar-in">
       <div
         v-for="c in chips"
         :key="c.d"
-        :class="['winx-cal__chip', 'winx-text-center',
-                 { 'winx-cal__chip--today': c.today, 'winx-cal__chip--over': c.zone.over }]"
+        :class="['ui-cal__chip', 'ui-text-center',
+                 { 'ui-cal__chip--today': c.today, 'ui-cal__chip--over': c.zone.over }]"
         @dragover="c.zone.enter"
         @dragleave="c.zone.leave"
         @drop="c.zone.drop"

@@ -7,7 +7,7 @@ import { useFileChanges } from "#/composables/use.js";
 
 export function useTheme(plugin) {
   const { app } = plugin, body = document.body;
-  const classes = THEMES.map(t => `winx-theme-${t.value}`);
+  const classes = THEMES.map(t => `ui-theme-${t.value}`);
   const images = THEMES.filter(t => t.value !== "winx")
     .map(t => `${THEME_IMAGES}/${t.value}.avif`);
   const clear = () => {
@@ -18,14 +18,14 @@ export function useTheme(plugin) {
   const apply = () => {
     clear();
     if (config.theme !== "winx") {
-      body.classList.add(`winx-theme-${config.theme}`);
+      body.classList.add(`ui-theme-${config.theme}`);
       const file = app.vault.getFileByPath(`${THEME_IMAGES}/${config.theme}.avif`);
 
       body.style.setProperty("--winx-theme-image",
         file ? `url(${JSON.stringify(app.vault.getResourcePath(file))})` : "none");
     }
 
-    app.workspace.trigger("winx:theme");
+    app.workspace.trigger("ui:theme");
   };
 
   // The store reads config before its version changes; apply before widgets rebuild charts.

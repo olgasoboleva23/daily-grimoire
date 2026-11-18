@@ -1,4 +1,4 @@
-<!-- a chart by the Charts plugin (window.renderChart), block winx-chart: drawn again when its
+<!-- a chart by the Charts plugin (window.renderChart), block ui-chart: drawn again when its
      config changes, destroyed with it; never wider than its place (index.scss) -->
 <script setup>
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
@@ -25,5 +25,5 @@ onBeforeUnmount(() => { runs = -1; chart?.destroy(); });
 </script>
 
 <template>
-  <div ref="box" class="winx-chart" />
+  <div ref="box" class="ui-chart" />
 </template>

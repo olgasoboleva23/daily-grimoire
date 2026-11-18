@@ -1,10 +1,10 @@
 @use "mixins" as *;
-/* ===== A text field (block winx-input); the tag in front outweighs Obsidian's input styles ===== */
-input.winx-input {
+/* ===== A text field (block ui-input); the tag in front outweighs Obsidian's input styles ===== */
+input.ui-input {
   color: var(--winx-text);
   box-shadow: none;
   /* the field: a finger's height on the pink paper */
-  &.winx-input--field {
+  &.ui-input--field {
     min-height: $tap;
     padding: 0 $space-xl;
     border: $border;
@@ -14,7 +14,7 @@ input.winx-input {
     &::placeholder { color: var(--winx-purple); }
   }
   /* inline: bare, in a table's row, a gold line under it while typing */
-  &.winx-input--inline {
+  &.ui-input--inline {
     padding: 0;
     border: none;
     border-radius: 0;

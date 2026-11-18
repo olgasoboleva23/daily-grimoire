@@ -9,30 +9,30 @@ defineProps({ state: { type: Object, required: true } });
 
 <template>
   <UiMissing v-if="state.data.missing" :path="state.data.path" />
-  <div v-else class="winx-goals winx-col winx-gap-l">
+  <div v-else class="ui-goals ui-col ui-gap-l">
     <div
       v-for="g in state.data.goals"
       :key="g.name"
       v-tip="g.plan"
-      class="winx-goal"
+      class="ui-goal"
     >
-      <div class="winx-goal__head winx-flex winx-between winx-gap-m">
-        <span class="winx-goal__name">{{ g.name }}</span>
-        <span class="winx-goal__count">{{ g.count }} this week</span>
+      <div class="ui-goal__head ui-flex ui-between ui-gap-m">
+        <span class="ui-goal__name">{{ g.name }}</span>
+        <span class="ui-goal__count">{{ g.count }} this week</span>
       </div>
-      <div class="winx-goal__dots winx-flex winx-gap-s">
+      <div class="ui-goal__dots ui-flex ui-gap-s">
         <span
           v-for="d in g.dots"
           :key="d.day"
           v-tip="d.day"
           :class="[
-            'winx-goal__dot',
-            `winx-goal__dot--${d.status}`,
-            { 'winx-goal__dot--sel': d.sel },
+            'ui-goal__dot',
+            `ui-goal__dot--${d.status}`,
+            { 'ui-goal__dot--sel': d.sel },
           ]"
         />
       </div>
-      <div v-if="g.min" class="winx-goal__min">{{ g.min }}</div>
+      <div v-if="g.min" class="ui-goal__min">{{ g.min }}</div>
     </div>
   </div>
 </template>

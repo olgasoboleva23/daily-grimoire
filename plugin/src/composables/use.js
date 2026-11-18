@@ -16,7 +16,7 @@ export function useRedraw(c, isShown, draw) {
 
   c.registerEvent(c.app.workspace.on("active-leaf-change", catchUp));
   c.registerEvent(c.app.workspace.on("layout-change", catchUp));   // a sidebar or split shown
-  c.registerEvent(c.app.workspace.on("winx:page", catchUp));   // a kept page shown again
+  c.registerEvent(c.app.workspace.on("ui:page", catchUp));   // a kept page shown again
   return { redraw, catchUp };
 }
 
@@ -93,7 +93,7 @@ export function useWhenIndexed(c, fn) {
 
 // fn() when the dashboard tab's date changes, for a block `el` drawn in a dated tab
 export const useTabDate = (c, el, fn) =>
-  c.registerEvent(c.app.workspace.on("winx:date", () => el.closest("[data-date]") && fn()));
+  c.registerEvent(c.app.workspace.on("ui:date", () => el.closest("[data-date]") && fn()));
 
 // delayed calls by key, owned by `c`: later(key, fn, ms) (the same key again: the old one is
 // dropped), cancel(key); all dropped when c unloads (a tab closed, the plugin off)

@@ -1,8 +1,8 @@
 @use "context";
 @use "mixins" as *;
-/* ===== A medication course (block winx-meds): inside its card. The chips are buttons, as are the
+/* ===== A medication course (block ui-meds): inside its card. The chips are buttons, as are the
    grid's ticks: the block in front (& &__chip) outweighs Obsidian's button styles ===== */
-.winx-meds {
+.ui-meds {
   color: var(--winx-text);
 
   &__notes { white-space: pre-wrap; }
@@ -33,14 +33,14 @@
 
   /* the grid: a UiTable; the table in front outweighs its own cell rules */
   &__grid { overflow-x: auto; padding: $space-xs $space-s; border-radius: $radius-m; background: alpha(--winx-surface, 40%); }
-  .winx-table .winx-meds {
+  .ui-table .ui-meds {
     &__date { white-space: nowrap; }
     &__note { font-size: $text-m; color: alpha(--winx-purple-deep, 65%); }
   }
   &__row--past &__date, &__row--future &__date { color: alpha(--winx-text, 60%); }
   &__row--today {
     background: linear-gradient(90deg, fade(var(--winx-blue), 60%), fade(var(--winx-purple-light), 60%));
-    .winx-meds__date { font-weight: 600; color: var(--winx-purple-deep); }
+    .ui-meds__date { font-weight: 600; color: var(--winx-purple-deep); }
   }
   &__tick { margin: 0 auto; }
   &__note-input { width: 100%; min-width: 6em; }

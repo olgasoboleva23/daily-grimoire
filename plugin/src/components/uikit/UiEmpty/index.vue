@@ -15,7 +15,7 @@ defineProps({
   <component
     :is="onBackground ? UiCard : 'div'"
     :meta="onBackground ? ['hero'] : undefined"
-    class="winx-empty winx-text-center"
-    :class="mod && `winx-empty--${mod}`"
+    class="ui-empty ui-text-center"
+    :class="mod && `ui-empty--${mod}`"
   >{{ icon }} {{ text }}<slot /></component>
 </template>

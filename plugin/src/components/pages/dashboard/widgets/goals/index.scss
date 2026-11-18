@@ -1,6 +1,6 @@
 @use "mixins" as *;
-/* ── Goals (src/widgets/goals/goals.js): a block winx-goal per goal ── */
-.winx-goal {
+/* ── Goals (src/widgets/goals/goals.js): a block ui-goal per goal ── */
+.ui-goal {
   &__head {
     color: var(--winx-text);
   }

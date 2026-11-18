@@ -1,4 +1,4 @@
-<!-- A box with a mark (block winx-check): ☐ empty, ✅ purple with a tick (as Obsidian draws a done
+<!-- A box with a mark (block ui-check): ☐ empty, ✅ purple with a tick (as Obsidian draws a done
      task), ❌ pink with a cross. A button that emits "tick" and plays the mark's sound
      (helpers/sounds.js: a gem for ✅, the slowed gem back to ☐, a chime for ❌); `static`: a plain
      box, for a legend or inside another button; `size` s: a small one -->
@@ -22,13 +22,13 @@ const tick = () => {
 <template>
   <span
     v-if="static"
-    :class="['winx-check', `winx-check--${KIND[mark]}`, `winx-check--${size}`]"
+    :class="['ui-check', `ui-check--${KIND[mark]}`, `ui-check--${size}`]"
     :data-mark="mark"
   />
   <button
     v-else
     type="button"
-    :class="['winx-check', 'winx-check--btn', `winx-check--${KIND[mark]}`, `winx-check--${size}`]"
+    :class="['ui-check', 'ui-check--btn', `ui-check--${KIND[mark]}`, `ui-check--${size}`]"
     :data-mark="mark"
     @click="tick"
   />

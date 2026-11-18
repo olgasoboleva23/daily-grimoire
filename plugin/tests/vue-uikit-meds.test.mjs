@@ -12,8 +12,8 @@ before(async () => {
 test("UiTabs: scroll keeps the tabs in one row", () => {
   const tabs = [{ key: "a", text: "A" }];
 
-  assert.ok(mount(UiTabs, { props: { tabs, scroll: true } }).classes("winx-tabs--scroll"));
-  assert.ok(!mount(UiTabs, { props: { tabs } }).classes("winx-tabs--scroll"));
+  assert.ok(mount(UiTabs, { props: { tabs, scroll: true } }).classes("ui-tabs--scroll"));
+  assert.ok(!mount(UiTabs, { props: { tabs } }).classes("ui-tabs--scroll"));
 });
 
 test("medication form: time checkboxes can be combined, cleared, saved and reopened", async () => {

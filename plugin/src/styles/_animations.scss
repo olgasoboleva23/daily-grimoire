@@ -1,13 +1,13 @@
 /* ============================================
  * WINX THEME — Animations
  *
- * • @keyframes winx-twinkle (col star sparkles)
+ * • @keyframes ui-twinkle (col star sparkles)
  * • Date input golden styling (.mb-input-type-date)
  * ============================================ */
 
 @use "mixins" as *;
 
-@keyframes winx-twinkle {
+@keyframes ui-twinkle {
   0%,
   100% {
     opacity: 0.5;
@@ -19,8 +19,8 @@
   }
 }
 
-/* Progress bar shimmer — used by .winx-level__progress-fill (widgets/_level.scss) */
-@keyframes winx-shimmer {
+/* Progress bar shimmer — used by .ui-level__progress-fill (widgets/_level.scss) */
+@keyframes ui-shimmer {
   0% {
     background-position: 200% 0;
   }
@@ -29,7 +29,7 @@
   }
 }
 
-/* Icon glow pulse — used by .winx-level__icon (widgets/_level.scss) */
+/* Icon glow pulse — used by .ui-level__icon (widgets/_level.scss) */
 @keyframes pulse-glow {
   0%,
   100% {
@@ -46,9 +46,9 @@
 
 /* ── Accessibility — stop decorative motion ── */
 @media (prefers-reduced-motion: reduce) {
-  :is(.dashboard, .kanban-board, .winx-pomodoro) :is(*, *::before, *::after),
-  .winx-level__icon,
-  .winx-level__progress-fill {
+  :is(.dashboard, .kanban-board, .ui-pomodoro) :is(*, *::before, *::after),
+  .ui-level__icon,
+  .ui-level__progress-fill {
     animation: none !important;
   }
 }

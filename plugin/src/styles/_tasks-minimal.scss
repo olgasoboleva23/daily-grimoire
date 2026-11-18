@@ -14,7 +14,7 @@
   }
 
   /* difficulty: stars only, without the word (a note's #⭐ tag, the calendar's data-difficulty) */
-  :is(.task-list-item .tag[data-tag-name^="#⭐"], .winx-cal .tag[data-difficulty]) {
+  :is(.task-list-item .tag[data-tag-name^="#⭐"], .ui-cal .tag[data-difficulty]) {
     font-size: 0;
     padding: 0;
     background: none;

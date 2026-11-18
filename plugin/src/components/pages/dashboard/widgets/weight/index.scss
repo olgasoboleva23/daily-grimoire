@@ -1,6 +1,6 @@
 @use "mixins" as *;
 /* ── Weight (src/widgets/body/weight.js) ── */
-.winx-weight {
+.ui-weight {
   /* one column that never grows to the chart's canvas: a canvas once drawn wider (a redraw before
      the layout settled) would keep the whole widget that wide */
   display: grid; grid-template-columns: minmax(0, 1fr); gap: $space-m;

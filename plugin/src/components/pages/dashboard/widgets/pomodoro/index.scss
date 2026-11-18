@@ -1,6 +1,6 @@
 @use "mixins" as *;
 /* ============================================
- * WINX THEME — Pomodoro Widget (block winx-pomodoro)
+ * WINX THEME — Pomodoro Widget (block ui-pomodoro)
  *
  * Wing decoration references var(--winx-wing-svg)
  * from _assets.scss — inline data URI removed.
@@ -15,7 +15,7 @@
   initial-value: 0;
 }
 
-.winx-pomodoro {
+.ui-pomodoro {
   overflow-x: visible !important;
   padding-top: $space-l;
 
@@ -27,7 +27,7 @@
   }
   &--mini {
     padding-top: 0;
-    .winx-pomodoro {
+    .ui-pomodoro {
       &__mini { display: flex; }
       &__body { display: none; }
     }
@@ -65,7 +65,7 @@
     margin-right: $space-xs;
   }
 
-  /* the buttons: the doubled block in front (.winx-pomodoro.winx-pomodoro …) outweighs Obsidian's button styles,
+  /* the buttons: the doubled block in front (.ui-pomodoro.ui-pomodoro …) outweighs Obsidian's button styles,
      .is-tablet / .is-phone button:not(.clickable-icon) included */
   &#{&} &__mini-play {
     width: 44px;

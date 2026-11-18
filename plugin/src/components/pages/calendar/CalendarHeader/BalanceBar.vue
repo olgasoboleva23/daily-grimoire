@@ -32,28 +32,28 @@ const pickArea = a => { state.area = a === state.area ? null : a; };
 </script>
 
 <template>
-  <div class="winx-cal__balance" data-part="header">
+  <div class="ui-cal__balance" data-part="header">
     <div
-      class="winx-cal__balance-bar winx-grow winx-flex winx-gap-2xs"
-      :class="{ 'winx-cal__balance-bar--picked': !!state.area }"
+      class="ui-cal__balance-bar ui-grow ui-flex ui-gap-2xs"
+      :class="{ 'ui-cal__balance-bar--picked': !!state.area }"
     >
       <div
         v-for="p in balance.pieces"
         :key="p.area"
         v-tip="p.title"
-        :class="['winx-cal__area', { 'winx-cal__area--on': p.on }]"
+        :class="['ui-cal__area', { 'ui-cal__area--on': p.on }]"
         :data-area="p.area"
         :style="p.style"
         @click="pickArea(p.area)"
       >
-        <span class="winx-cal__area-label">{{ p.icon }} {{ p.count }}</span>
-        <b class="winx-cal__area-track"><i class="winx-cal__area-fill" :style="p.fill" /></b>
+        <span class="ui-cal__area-label">{{ p.icon }} {{ p.count }}</span>
+        <b class="ui-cal__area-track"><i class="ui-cal__area-fill" :style="p.fill" /></b>
       </div>
     </div>
     <div
       v-if="balance.none.length"
       v-tip="'nothing this week'"
-      class="winx-cal__balance-none winx-flex winx-gap-2xs"
+      class="ui-cal__balance-none ui-flex ui-gap-2xs"
     >
       <span v-for="x in balance.none" :key="x.title" v-tip="x.title">{{ x.icon }}</span>
     </div>

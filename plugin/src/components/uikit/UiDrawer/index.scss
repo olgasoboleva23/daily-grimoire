@@ -1,4 +1,4 @@
-/* A drawer (UiDrawer), block winx-drawer: over the whole tab, a dim backdrop and the panel; left
+/* A drawer (UiDrawer), block ui-drawer: over the whole tab, a dim backdrop and the panel; left
    slides in from the left edge (the page stays put), --bottom is the phone's sheet of round icons,
    four to a row */
 @use "mixins" as *;
@@ -6,7 +6,7 @@
 $panel-w: 230px;   // the left drawer's width: an icon, a name and its ↗
 $sheet-radius: 22px;   // the phone sheet's top corners, as the nav pill's
 
-.winx-drawer {
+.ui-drawer {
   position: absolute;
   inset: 0;
   z-index: $z-drawer;
@@ -25,7 +25,7 @@ $sheet-radius: 22px;   // the phone sheet's top corners, as the nav pill's
     background: var(--winx-sheet);
     border-right: $border-width-m solid var(--winx-gold);
     box-shadow: 6px 0 24px alpha(--winx-purple-deep, 18%);
-    animation: winx-drawer-left $medium ease-out;
+    animation: ui-drawer-left $medium ease-out;
   }
 
   &--bottom &__panel {
@@ -51,13 +51,13 @@ $sheet-radius: 22px;   // the phone sheet's top corners, as the nav pill's
     border-top: $border-width-m solid var(--winx-gold);
     border-radius: $sheet-radius $sheet-radius 0 0;
     box-shadow: 0 -8px 24px alpha(--winx-purple-deep, 18%);
-    animation-name: winx-drawer-bottom;
+    animation-name: ui-drawer-bottom;
   }
 }
 
-@keyframes winx-drawer-left { from { translate: -100% 0; } }
-@keyframes winx-drawer-bottom { from { translate: 0 100%; } }
+@keyframes ui-drawer-left { from { translate: -100% 0; } }
+@keyframes ui-drawer-bottom { from { translate: 0 100%; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .winx-drawer__panel { animation: none; }
+  .ui-drawer__panel { animation: none; }
 }

@@ -1,7 +1,7 @@
-/* Tabs (UiTabs), block winx-tabs: words in Cinzel, the picked one underlined in gold */
+/* Tabs (UiTabs), block ui-tabs: words in Cinzel, the picked one underlined in gold */
 @use "mixins" as *;
 
-.winx-tabs {
+.ui-tabs {
   display: flex;
   flex-wrap: wrap;
   gap: $space-xs $space-2xl;
@@ -10,7 +10,7 @@
   & button#{&}__tab--on { opacity: 1; border-bottom: $border-width-l solid var(--winx-gold-deep); border-radius: 0; }
   // straight on the photo: light words with a shadow, the picked one fully lit
   &--on-background {
-    button.winx-tabs__tab {
+    button.ui-tabs__tab {
       color: alpha(--winx-on-background, 95%); opacity: 0.75; text-shadow: 0 1px 3px black(50%);
       &--on { opacity: 1; }
     }
@@ -18,7 +18,7 @@
   // one row, sideways scroll
   &--scroll {
     flex-wrap: nowrap; overflow-x: auto;
-    button.winx-tabs__tab { white-space: nowrap; flex: none; }
+    button.ui-tabs__tab { white-space: nowrap; flex: none; }
   }
   // in an Obsidian window (a Form's tabs): the theme's text colour, so it reads on a dark one too
   .modal & button#{&}__tab { color: var(--text-normal); }

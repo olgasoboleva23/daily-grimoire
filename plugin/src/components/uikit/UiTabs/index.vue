@@ -1,4 +1,4 @@
-<!-- Tabs (block winx-tabs): a word per tab ({ key, text, title? }), the picked one underlined in
+<!-- Tabs (block ui-tabs): a word per tab ({ key, text, title? }), the picked one underlined in
      gold; v-model is the picked tab's key; onBackground: light text on the page background;
      scroll: one row, scrolls sideways when the tabs do not fit (the courses); a tab's `title`:
      its tip -->
@@ -16,14 +16,14 @@ defineEmits(["update:modelValue"]);
 
 <template>
   <div
-    class="winx-tabs"
-    :class="{ 'winx-tabs--on-background': onBackground, 'winx-tabs--scroll': scroll }"
+    class="ui-tabs"
+    :class="{ 'ui-tabs--on-background': onBackground, 'ui-tabs--scroll': scroll }"
   >
     <button
       v-for="t in tabs"
       :key="t.key"
       v-tip="{ text: t.title }"
-      :class="['winx-tabs__tab', { 'winx-tabs__tab--on': t.key === modelValue }]"
+      :class="['ui-tabs__tab', { 'ui-tabs__tab--on': t.key === modelValue }]"
       :data-tab="t.key"
       @click="$emit('update:modelValue', t.key)"
     >{{ t.text }}</button>

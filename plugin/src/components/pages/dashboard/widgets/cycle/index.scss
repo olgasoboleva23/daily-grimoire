@@ -1,13 +1,13 @@
 @use "mixins" as *;
 /* ── Cycle (src/widgets/body/cycle.js) ── */
-.winx-cycle {
+.ui-cycle {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: $space-s;
   transition: gap $medium ease;
   /* folded: hovering the head parts it from the buttons a little, a hint that it opens */
-  &--folded:has(.winx-cycle__head:hover) { gap: $space-2xl; }
+  &--folded:has(.ui-cycle__head:hover) { gap: $space-2xl; }
 
 
   &__day {
@@ -58,7 +58,7 @@
   &__avg-line { position: absolute; left: 0; right: 0; height: 0; border-top: $border-width-l solid var(--winx-pink-deep); z-index: $z-over; }
   /* the period lengths: pink columns, a purple line */
   &__chart--per {
-    .winx-cycle {
+    .ui-cycle {
       &__col { background: alpha(--winx-pink-deep, 55%); }
       &__avg-line { border-color: var(--winx-purple-deep); }
     }

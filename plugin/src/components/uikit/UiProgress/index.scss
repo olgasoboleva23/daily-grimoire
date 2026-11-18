@@ -1,10 +1,10 @@
-/* A progress bar (UiProgress), block winx-progress: a pill bar, the done part from gold to pink,
+/* A progress bar (UiProgress), block ui-progress: a pill bar, the done part from gold to pink,
    as a medication course's, and the count after it */
 @use "mixins" as *;
 
 $fill: linear-gradient(90deg, var(--winx-gold), var(--winx-pink-deep));   // progress done
 
-.winx-progress {
+.ui-progress {
   &__bar {
     flex: 1; height: $space-l; border: none; border-radius: $pill; overflow: hidden;
     appearance: none; background: alpha(--winx-purple, 35%);

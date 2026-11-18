@@ -60,7 +60,7 @@ function build() {
 </script>
 
 <template>
-  <div ref="root" class="winx-view__page markdown-preview-view markdown-rendered dashboard">
+  <div ref="root" class="ui-view__page markdown-preview-view markdown-rendered dashboard">
     <CalendarTab />
   </div>
 </template>

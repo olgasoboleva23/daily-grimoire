@@ -33,7 +33,7 @@ const shadowStyles = {
 };
 
 const extras = {
-  name: "winx-extras",   // styles and manifest go with every JS build
+  name: "ui-extras",   // styles and manifest go with every JS build
   setup(build) {
     build.onEnd(result => {
       if (result.errors.length) return;

@@ -42,11 +42,11 @@ export class Search<T> extends SuggestModal<T> {
       ({ ...c, header: !c.isNew && (i === 0 || groupOf(c) !== groupOf(all[i - 1])) }));
 
     return Search.pick(app, placeholder, rows, (c, el) => {
-      if (c.header) el.createDiv({ cls: "winx-search__group", text: label(groupOf(c)) });
-      const row = el.createDiv({ cls: "winx-search__row winx-row winx-between winx-gap-l" });
+      if (c.header) el.createDiv({ cls: "ui-search__group", text: label(groupOf(c)) });
+      const row = el.createDiv({ cls: "ui-search__row ui-row ui-between ui-gap-l" });
 
       row.createSpan({ text: c.isNew ? `+ new: ${c.name}` : c.name });
-      row.createSpan({ cls: "winx-search__note winx-nowrap", text: c.isNew ? "" : note(c) });
+      row.createSpan({ cls: "ui-search__note ui-nowrap", text: c.isNew ? "" : note(c) });
     });
   }
 

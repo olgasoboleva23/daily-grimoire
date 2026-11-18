@@ -88,15 +88,15 @@ test("a card's block without a box of its own (display: contents) counts as show
   host.unload();
 });
 
-test("a card: its placeholder until the first data, then the view inside it; winx-drawn once drawn", async () => {
+test("a card: its placeholder until the first data, then the view inside it; ui-drawn once drawn", async () => {
   const s = slow(), el = document.body.appendChild(document.createElement("div"));
   let drawn = 0;
-  el.addEventListener("winx-drawn", () => drawn++);
+  el.addEventListener("ui-drawn", () => drawn++);
   const { host } = mount({ load: s.load, card: { title: "Weight" } }, el);
   await settle();
-  assert.ok(el.querySelector(".winx-widget .winx-widget__body .winx-widget__skeleton"));
+  assert.ok(el.querySelector(".ui-widget .ui-widget__body .ui-widget__skeleton"));
   s.loads[0].ok({ n: 4 }); await settle();
-  assert.equal(el.querySelector(".winx-widget__body").textContent, "4");
+  assert.equal(el.querySelector(".ui-widget__body").textContent, "4");
   assert.equal(el.querySelector(".callout-title-inner").textContent, "Weight");
   assert.equal(drawn, 1);
   host.unload();
@@ -229,16 +229,16 @@ test("a Markdown block passes its own arguments, source and dated context to its
 test("a theme change redraws visible widgets and catches up a kept hidden widget when shown", async () => {
   const s = slow(), { host, el } = mount({ load: s.load });
   s.loads[0].ok({ n: 1 }); await settle();
-  bus.fire("winx:theme");
+  bus.fire("ui:theme");
   assert.equal(s.loads.length, 2);
   s.loads[1].ok({ n: 2 }); await settle();
   el.dataset.hidden = "1";
-  bus.fire("winx:theme");
+  bus.fire("ui:theme");
   assert.equal(s.loads.length, 2);
   delete el.dataset.hidden;
-  bus.fire("winx:page");
+  bus.fire("ui:page");
   assert.equal(s.loads.length, 3);
   host.unload();
-  bus.fire("winx:theme");
+  bus.fire("ui:theme");
   assert.equal(s.loads.length, 3);
 });

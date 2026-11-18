@@ -53,7 +53,7 @@ export const blocks = {
   levelToday: { view: LevelToday, load: loadLevelToday, watches: [TASK_FILES, CYCLE] },
   lifeAreas: { view: LifeAreas, load: loadLifeAreas, watches: [TASK_FILES] },
   shop: {
-    view: ShopWidget, load: loadShop, bodyClass: "winx-shop",
+    view: ShopWidget, load: loadShop, bodyClass: "ui-shop",
     watches: [TASK_FILES, `${SHOP}.md`, `${PURCHASES}.md`],
   },
   supplies: { view: SuppliesWidget, load: loadSupplies, watches: [MARKET_NOTE, MARKET_RECORDS] },

@@ -10,13 +10,13 @@ defineEmits(["fold"]);
 <template>
   <div
     v-tip:bottom="open ? 'fold' : 'show the cycles'"
-    class="winx-cycle__head"
+    class="ui-cycle__head"
     @click="$emit('fold')"
   >
     <div
       v-tip="head.title"
-      :class="['winx-cycle__day', { 'winx-cycle__day--period': head.period }]"
-    >day {{ head.day }}<span class="winx-cycle__phase"> · {{ head.phase }}</span></div>
-    <div class="winx-cycle__next">next ~{{ head.next }}, {{ head.when }}</div>
+      :class="['ui-cycle__day', { 'ui-cycle__day--period': head.period }]"
+    >day {{ head.day }}<span class="ui-cycle__phase"> · {{ head.phase }}</span></div>
+    <div class="ui-cycle__next">next ~{{ head.next }}, {{ head.when }}</div>
   </div>
 </template>

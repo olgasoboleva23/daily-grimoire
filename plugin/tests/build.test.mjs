@@ -24,7 +24,7 @@ test("build makes a plugin the phone can load", () => {
 
 test("a Sass error fails the build", () => {
   // a copy of the plugin with a broken stylesheet, sharing node_modules
-  const tmp = mkdtempSync(join(tmpdir(), "winx-build-"));
+  const tmp = mkdtempSync(join(tmpdir(), "ui-build-"));
   const here = fileURLToPath(new URL("..", import.meta.url));
   for (const f of ["src", "esbuild.config.mjs", "manifest.json", "package.json"]) cpSync(join(here, f), join(tmp, f), { recursive: true });
   symlinkSync(join(here, "node_modules"), join(tmp, "node_modules"));

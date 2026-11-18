@@ -51,12 +51,12 @@ const toToday = r => act(r, sounds.today, t => view.actions.toToday(t));
 </script>
 
 <template>
-  <div v-if="rows.length" class="winx-missed" data-part="missed">
-    <div class="winx-missed__head">Missed?</div>
+  <div v-if="rows.length" class="ui-missed" data-part="missed">
+    <div class="ui-missed__head">Missed?</div>
     <div
       v-for="r in rows"
       :key="r.task.key"
-      class="winx-missed__row winx-row winx-gap-s"
+      class="ui-missed__row ui-row ui-gap-s"
       :style="{
         '--area': r.task.color ?? undefined,
         '--winx-swipe-progress': r.sw.swipe.progress,
@@ -72,23 +72,23 @@ const toToday = r => act(r, sounds.today, t => view.actions.toToday(t));
       @touchend="r.sw.end"
       @touchcancel="r.sw.cancel"
     >
-      <span class="winx-missed__text winx-grow winx-task__content">
+      <span class="ui-missed__text ui-grow ui-task__content">
         {{ r.repeats }}<TaskText :task="r.task" />
       </span>
-      <em class="winx-missed__date winx-task__content">{{ r.shortDay }}</em>
-      <div class="winx-task__actions">
-        <div class="winx-task__btns">
+      <em class="ui-missed__date ui-task__content">{{ r.shortDay }}</em>
+      <div class="ui-task__actions">
+        <div class="ui-task__btns">
           <TaskButtons :task="r.task" @gone="gone.add(r.task.key)" />
         </div>
         <UiButton
           v-if="r.done"
-          class="winx-task__primary"
+          class="ui-task__primary"
           :title="`done on ${r.day}`"
           tip="pink"
           @click="r.sw.run"
         >✓</UiButton>
         <UiButton
-          class="winx-task__btns-today"
+          class="ui-task__btns-today"
           title="move to today"
           tip="pink"
           @click="toToday(r)"

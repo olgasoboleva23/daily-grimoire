@@ -16,15 +16,15 @@ const INPUT = {
 </script>
 
 <template>
-  <div class="winx-weight__head">
+  <div class="ui-weight__head">
     <template v-if="weight.last">
-      <span class="winx-weight__now">{{ weight.last.kg }} kg</span>
+      <span class="ui-weight__now">{{ weight.last.kg }} kg</span>
       <span
         v-if="weight.change !== null"
-        class="winx-weight__delta"
+        class="ui-weight__delta"
       >{{ weight.change }} vs week ago</span>
     </template>
-    <span v-else class="winx-weight__delta">no entries yet</span>
+    <span v-else class="ui-weight__delta">no entries yet</span>
   </div>
   <UiAddForm
     v-model="kg"
@@ -33,5 +33,5 @@ const INPUT = {
     @submit="$emit('save')"
   />
   <UiChart v-if="weight.chart" :config="weight.chart" />
-  <UiNoteLink :path="WEIGHT" class="winx-weight__list">✦ list</UiNoteLink>
+  <UiNoteLink :path="WEIGHT" class="ui-weight__list">✦ list</UiNoteLink>
 </template>

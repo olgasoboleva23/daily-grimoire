@@ -25,7 +25,7 @@ test("the tab's shadow drawer traps Tab, closes on Escape and restores the actua
   const other = root.querySelector("button");
   other.focus(); other.click();
   await nextTick(); await nextTick();
-  const panel = root.querySelector(".winx-drawer__panel");
+  const panel = root.querySelector(".ui-drawer__panel");
   assert.equal(root.activeElement, panel);
   const buttons = panel.querySelectorAll("button");
   panel.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab", shiftKey: true, bubbles: true, cancelable: true }));
@@ -72,7 +72,7 @@ test("shadow tooltips use the native body popup, update and clean up on leave, c
   try {
     vTip.mounted(button, binding("First"));
     hover(); await wait();
-    const tip = document.body.querySelector(".tooltip.winx-tooltip--pink");
+    const tip = document.body.querySelector(".tooltip.ui-tooltip--pink");
     assert.equal(tip.textContent, "First");
     assert.equal(tip.dataset.placement, "bottom");
     button.dispatchEvent(new PointerEvent("pointerleave"));

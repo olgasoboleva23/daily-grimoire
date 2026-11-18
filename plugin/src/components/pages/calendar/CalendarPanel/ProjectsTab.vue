@@ -27,7 +27,7 @@ const projects = computed(() => (void taskStore.version.value, openProjects()).m
   <UiEmpty v-if="!projects.length" :text="EMPTY_PROJECTS" />
   <GroupCard v-for="p in projects" :key="p.key" :title="p.title">
     <template v-for="(s, i) in p.stages" :key="`${i} ${s.name}`">
-      <div class="winx-cal__stage">{{ s.name }}</div>
+      <div class="ui-cal__stage">{{ s.name }}</div>
       <TaskCard
         v-for="c in s.cards"
         :key="c.task.key"

@@ -2,7 +2,7 @@
 
 // Obsidian's element rules cannot enter the tab. Keep the small baseline our UI kit relies on.
 *, *::before, *::after { box-sizing: border-box; }
-.winx-view { font-size: var(--font-ui-medium); line-height: var(--line-height-tight); }
+.ui-view { font-size: var(--font-ui-medium); line-height: var(--line-height-tight); }
 .markdown-preview-view {
   position: relative;
   width: 100%;

@@ -4,13 +4,13 @@ defineProps({ rows: { type: Array, required: true } });
 </script>
 
 <template>
-  <div class="winx-cycle__rows">
-    <div v-for="r in rows" :key="r.start" class="winx-cycle__row">
+  <div class="ui-cycle__rows">
+    <div v-for="r in rows" :key="r.start" class="ui-cycle__row">
       <div
-        class="winx-cycle__when winx-flex winx-between winx-gap-s"
+        class="ui-cycle__when ui-flex ui-between ui-gap-s"
       ><span>{{ r.when }}</span><span>{{ r.length }}</span></div>
-      <div class="winx-cycle__pills winx-flex winx-gap-2xs">
-        <i v-for="(p, i) in r.pills" :key="i" :class="`winx-cycle__pill winx-cycle__pill--${p}`" />
+      <div class="ui-cycle__pills ui-flex ui-gap-2xs">
+        <i v-for="(p, i) in r.pills" :key="i" :class="`ui-cycle__pill ui-cycle__pill--${p}`" />
       </div>
     </div>
   </div>

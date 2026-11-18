@@ -1,9 +1,9 @@
 @use "context";
-/* A project's page (ProjectPage), block winx-project: ← Projects, the header card over a grid of
+/* A project's page (ProjectPage), block ui-project: ← Projects, the header card over a grid of
    the stages (two thirds) and Result / Notes (a third); one column on the phone */
 @use "mixins" as *;
 
-.winx-project {
+.ui-project {
   &__back { margin-bottom: $space-xl; }
   &__header { margin-bottom: $space-xl; }
   &__description { margin-bottom: $space-m; color: var(--winx-text); }

@@ -10,17 +10,17 @@ defineProps({ state: { type: Object, required: true } });
 </script>
 
 <template>
-  <div class="winx-supplies">
+  <div class="ui-supplies">
     <UiEmpty v-if="state.data.empty" text="Nothing bought twice yet" />
     <template v-for="g in state.data.groups" :key="g.label">
       <UiGroupHeader :label="g.label" />
       <div
         v-for="r in g.rows"
         :key="r.id ?? r.name"
-        :class="['winx-supplies__row winx-row winx-gap-l', { 'winx-supplies__row--due': r.due }]"
+        :class="['ui-supplies__row ui-row ui-gap-l', { 'ui-supplies__row--due': r.due }]"
       >
-        <span class="winx-supplies__name winx-grow">{{ r.name }}</span>
-        <span class="winx-supplies__info">{{ r.info }}</span>
+        <span class="ui-supplies__name ui-grow">{{ r.name }}</span>
+        <span class="ui-supplies__info">{{ r.info }}</span>
         <UiButton
           v-if="!r.listed"
           kind="pill"

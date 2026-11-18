@@ -23,14 +23,14 @@ const draws = (vue, html) => assert.equal(vue.element.outerHTML.replace(/<!--[^]
 
 test("UiButton: kinds, on, title, extra classes", () => {
   draws(mount(ui.UiButton, { props: { title: "delete task" }, slots: { default: "🗑" } }),
-    '<button class="winx-btn winx-btn--round" aria-label="delete task" data-tip="winx-tooltip">🗑</button>');
+    '<button class="ui-btn ui-btn--round" aria-label="delete task" data-tip="ui-tooltip">🗑</button>');
   // on a blue place (Missed, today): the pink tooltip
   draws(mount(ui.UiButton, { props: { title: "move to today", tip: "pink" }, slots: { default: "☀️" } }),
-    '<button class="winx-btn winx-btn--round" aria-label="move to today" data-tip="winx-tooltip winx-tooltip--pink">☀️</button>');
-  draws(mount(ui.UiButton, { props: { kind: "pill" }, attrs: { class: "winx-weight__list" }, slots: { default: "✦ list" } }),
-    '<button class="winx-btn winx-btn--pill winx-weight__list">✦ list</button>');
-  draws(mount(ui.UiButton, { props: { kind: "toggle", on: true }, slots: { default: "✓ done" } }), '<button class="winx-btn winx-btn--toggle winx-btn--on">✓ done</button>');
-  draws(mount(ui.UiButton, { props: { kind: "toggle" }, slots: { default: "✓ done" } }), '<button class="winx-btn winx-btn--toggle">✓ done</button>');
+    '<button class="ui-btn ui-btn--round" aria-label="move to today" data-tip="ui-tooltip ui-tooltip--pink">☀️</button>');
+  draws(mount(ui.UiButton, { props: { kind: "pill" }, attrs: { class: "ui-weight__list" }, slots: { default: "✦ list" } }),
+    '<button class="ui-btn ui-btn--pill ui-weight__list">✦ list</button>');
+  draws(mount(ui.UiButton, { props: { kind: "toggle", on: true }, slots: { default: "✓ done" } }), '<button class="ui-btn ui-btn--toggle ui-btn--on">✓ done</button>');
+  draws(mount(ui.UiButton, { props: { kind: "toggle" }, slots: { default: "✓ done" } }), '<button class="ui-btn ui-btn--toggle">✓ done</button>');
 });
 
 test("UiNoteLink: a short link to a Winx page's note switches the page in place", async () => {
@@ -50,30 +50,30 @@ test("UiNoteLink: a short link to a Winx page's note switches the page in place"
 });
 
 test("UiNoteLink, UiEmpty, UiMissing, UiFailed, UiGroupHeader, UiAddForm, UiCard", () => {
-  draws(mount(ui.UiNoteLink, { props: { path: "x/Cycle.md" }, slots: { default: "dates" } }), '<button class="winx-btn winx-btn--pill">dates</button>');
-  draws(mount(ui.UiEmpty, { props: { text: "All bought" } }), '<div class="winx-empty winx-text-center">✦ All bought</div>');
-  draws(mount(ui.UiEmpty), '<div class="winx-empty winx-text-center">✦ Nothing here yet</div>');
-  draws(mount(ui.UiMissing, { props: { path: "x/Goals.md" } }), '<div class="winx-empty winx-text-center">✦ Create x/Goals.md</div>');
+  draws(mount(ui.UiNoteLink, { props: { path: "x/Cycle.md" }, slots: { default: "dates" } }), '<button class="ui-btn ui-btn--pill">dates</button>');
+  draws(mount(ui.UiEmpty, { props: { text: "All bought" } }), '<div class="ui-empty ui-text-center">✦ All bought</div>');
+  draws(mount(ui.UiEmpty), '<div class="ui-empty ui-text-center">✦ Nothing here yet</div>');
+  draws(mount(ui.UiMissing, { props: { path: "x/Goals.md" } }), '<div class="ui-empty ui-text-center">✦ Create x/Goals.md</div>');
   draws(mount(ui.UiFailed, { props: { text: "Goals.md is broken" } }),
-    '<div class="winx-empty winx-text-center winx-empty--error">⚠ couldn\'t draw: Goals.md is broken<button class="winx-btn winx-btn--chip winx-empty__retry">retry</button></div>');
+    '<div class="ui-empty ui-text-center ui-empty--error">⚠ couldn\'t draw: Goals.md is broken<button class="ui-btn ui-btn--chip ui-empty__retry">retry</button></div>');
   draws(mount(ui.UiGroupHeader, { props: { label: "🌿 Harvest", count: 3 } }),
-    '<div class="winx-group-header"><span>🌿 Harvest</span><span class="winx-group-header__count">3</span></div>');
-  draws(mount(ui.UiGroupHeader, { props: { label: "🌿 Harvest" } }), '<div class="winx-group-header"><span>🌿 Harvest</span></div>');
+    '<div class="ui-group-header"><span>🌿 Harvest</span><span class="ui-group-header__count">3</span></div>');
+  draws(mount(ui.UiGroupHeader, { props: { label: "🌿 Harvest" } }), '<div class="ui-group-header"><span>🌿 Harvest</span></div>');
   const input = { name: "kg", type: "number", placeholder: "today, kg" };
   draws(mount(ui.UiAddForm, { props: { input, submit: "Save" } }),
-    '<form class="winx-add-form winx-flex winx-gap-s"><input class="winx-input winx-input--field winx-add-form__input" type="number" placeholder="today, kg" name="kg"><button class="winx-add-form__submit" type="submit">Save</button></form>');
+    '<form class="ui-add-form ui-flex ui-gap-s"><input class="ui-input ui-input--field ui-add-form__input" type="number" placeholder="today, kg" name="kg"><button class="ui-add-form__submit" type="submit">Save</button></form>');
   draws(mount(ui.UiCard, { props: { title: "Weight", meta: ["scroll"] }, slots: { default: "<b>40 kg</b>" } }),
-    '<div class="callout winx-widget" data-callout="card" data-callout-metadata="scroll" data-callout-fold=""><div class="callout-title winx-widget__title" dir="auto"><div class="callout-icon"></div><div class="callout-title-inner">Weight</div></div><div class="callout-content winx-widget__body"><b>40 kg</b></div></div>');
+    '<div class="callout ui-widget" data-callout="card" data-callout-metadata="scroll" data-callout-fold=""><div class="callout-title ui-widget__title" dir="auto"><div class="callout-icon"></div><div class="callout-title-inner">Weight</div></div><div class="callout-content ui-widget__body"><b>40 kg</b></div></div>');
 });
 
 test("UiButton: a mirrored nav chevron (next) gets its modifier", () => {
   const next = mount(ui.UiButton, { props: { kind: "nav", mirrored: true, title: "next" }, slots: { default: "›" } });
-  assert.equal(next.find("button").classes().join(" "), "winx-btn winx-btn--nav winx-btn--mirrored");
+  assert.equal(next.find("button").classes().join(" "), "ui-btn ui-btn--nav ui-btn--mirrored");
 });
 
-test("UiCard puts a widget's own class on its body (the shop's winx-shop)", () => {
-  const card = mount(ui.UiCard, { props: { title: "Shop", bodyClass: "winx-shop" } });
-  assert.equal(card.find(".winx-widget__body").classes().join(" "), "callout-content winx-widget__body winx-shop");
+test("UiCard puts a widget's own class on its body (the shop's ui-shop)", () => {
+  const card = mount(ui.UiCard, { props: { title: "Shop", bodyClass: "ui-shop" } });
+  assert.equal(card.find(".ui-widget__body").classes().join(" "), "callout-content ui-widget__body ui-shop");
 });
 
 test("UiFailed's retry and UiAddForm's submit reach the parent", async () => {
@@ -95,10 +95,10 @@ test("UiTable: the columns' heads and classes, a row per item named by row-class
   });
 
   draws(mount(ui.UiTable, { props: { columns: [{ key: "a", label: "A" }], rows: [], bordered: true } }),
-    '<table class="winx-table winx-table--bordered"><thead><tr><th class="winx-table__head">A</th></tr></thead><tbody></tbody></table>');
-  draws(w, '<table class="winx-table"><thead><tr><th class="winx-table__head x-name" aria-label="the medicine" data-tip="winx-tooltip">Код</th><th class="winx-table__head winx-table__head--center">N</th></tr></thead>'
-    + '<tbody><tr class="winx-table__row x-past"><td class="winx-table__cell x-name">АЕ</td><td class="winx-table__cell winx-table__cell--center"><b>10</b></td></tr>'
-    + '<tr class="winx-table__row x-today"><td class="winx-table__cell x-name">МА</td><td class="winx-table__cell winx-table__cell--center"><b>20</b></td></tr></tbody></table>');
+    '<table class="ui-table ui-table--bordered"><thead><tr><th class="ui-table__head">A</th></tr></thead><tbody></tbody></table>');
+  draws(w, '<table class="ui-table"><thead><tr><th class="ui-table__head x-name" aria-label="the medicine" data-tip="ui-tooltip">Код</th><th class="ui-table__head ui-table__head--center">N</th></tr></thead>'
+    + '<tbody><tr class="ui-table__row x-past"><td class="ui-table__cell x-name">АЕ</td><td class="ui-table__cell ui-table__cell--center"><b>10</b></td></tr>'
+    + '<tr class="ui-table__row x-today"><td class="ui-table__cell x-name">МА</td><td class="ui-table__cell ui-table__cell--center"><b>20</b></td></tr></tbody></table>');
 });
 
 test("Search.pickGrouped: a header over each group's first row, the name and its note; a new one has neither", async () => {
@@ -111,24 +111,24 @@ test("Search.pickGrouped: a header over each group's first row, the name and its
       { name: "a", g: 1 }, { name: "b", g: 1 }, { name: "c", g: 2 }, { name: "d", isNew: true },
     ], { groupOf: c => c.g, label: g => `#${g}`, note: c => c.name.toUpperCase() });
   } finally { Search.pick = pick; }
-  const row = "winx-search__row winx-row winx-between winx-gap-l";
+  const row = "ui-search__row ui-row ui-between ui-gap-l";
   assert.deepEqual(drawn, ["#1", row, "a", "A", row, "b", "B", "#2", row, "c", "C", row, "+ new: d", ""]);
 });
 
 test("UiCard: a cover picture above the title; none without one", () => {
   const card = mount(ui.UiCard, { props: { title: "Trip", cover: "app://x/trip.webp" } });
-  const img = card.find("img.winx-widget__cover");
+  const img = card.find("img.ui-widget__cover");
   assert.equal(img.attributes("src"), "app://x/trip.webp");
   assert.equal(img.attributes("alt"), "");
-  assert.equal(card.find(".winx-widget").element.firstElementChild, img.element);
+  assert.equal(card.find(".ui-widget").element.firstElementChild, img.element);
   assert.equal(mount(ui.UiCard, { props: { title: "Trip" } }).find("img").exists(), false);
 });
 
 test("UiCard: wings by default, :wings=false draws it without (the --wingless modifier)", () => {
   const wingless = mount(ui.UiCard, { props: { title: "Trip", wings: false } });
 
-  assert.equal(wingless.classes().includes("winx-widget--wingless"), true);
-  assert.equal(mount(ui.UiCard, { props: { title: "Trip" } }).classes().includes("winx-widget--wingless"), false);
+  assert.equal(wingless.classes().includes("ui-widget--wingless"), true);
+  assert.equal(mount(ui.UiCard, { props: { title: "Trip" } }).classes().includes("ui-widget--wingless"), false);
 });
 
 test("UiTabs: on the page background (a page without a card) the light look", async () => {
@@ -136,15 +136,15 @@ test("UiTabs: on the page background (a page without a card) the light look", as
   const tabs = [{ key: "all", text: "All" }];
   const plain = mount(UiTabs, { props: { tabs } }), onBackground = mount(UiTabs, { props: { tabs, onBackground: true } });
 
-  assert.equal(plain.classes().includes("winx-tabs--on-background"), false);
-  assert.equal(onBackground.classes().includes("winx-tabs--on-background"), true);
+  assert.equal(plain.classes().includes("ui-tabs--on-background"), false);
+  assert.equal(onBackground.classes().includes("ui-tabs--on-background"), true);
 });
 
 test("UiAddForm: on the page background (no card under it) the --on-background look", () => {
   const onBackground = mount(ui.UiAddForm, { props: { onBackground: true } });
 
-  assert.equal(onBackground.classes().includes("winx-add-form--on-background"), true);
-  assert.equal(mount(ui.UiAddForm).classes().includes("winx-add-form--on-background"), false);
+  assert.equal(onBackground.classes().includes("ui-add-form--on-background"), true);
+  assert.equal(mount(ui.UiAddForm).classes().includes("ui-add-form--on-background"), false);
 });
 
 const navItems = [
@@ -156,10 +156,10 @@ const loadNav = async () => (await import("../src/components/uikit/UiNav/index.v
 
 test("UiNav: three items, the current one on, a click says which", async () => {
   const nav = mount(await loadNav(), { props: { items: navItems, current: "calendar" } });
-  const items = nav.findAll(".winx-rail .winx-btn--rail");
+  const items = nav.findAll(".ui-rail .ui-btn--rail");
 
   assert.equal(items.length, 3);
-  assert.deepEqual(items.map(b => b.classes().includes("winx-btn--on")), [false, true, false]);
+  assert.deepEqual(items.map(b => b.classes().includes("ui-btn--on")), [false, true, false]);
   await items[1].trigger("click");
   const [[key, event]] = nav.emitted("go");
   assert.equal(key, "calendar");
@@ -168,11 +168,11 @@ test("UiNav: three items, the current one on, a click says which", async () => {
 
 test("UiNav: hover opens it; a click shuts it until the pointer leaves", async () => {
   const nav = mount(await loadNav(), { props: { items: navItems, current: "calendar" } });
-  const is = m => nav.classes().includes(`winx-rail--${m}`);
+  const is = m => nav.classes().includes(`ui-rail--${m}`);
 
   await nav.trigger("pointerenter");
   assert.equal(is("open"), true);
-  await nav.find(".winx-btn--rail").trigger("click");
+  await nav.find(".ui-btn--rail").trigger("click");
   assert.deepEqual([is("shut"), is("open")], [true, false]);
   await nav.trigger("pointerleave");
   await nav.trigger("pointerenter");
@@ -183,20 +183,20 @@ test("UiNav: on the phone the bottom bar, no hover states", async () => {
   const nav = mount(await loadNav(), { props: { items: navItems, phone: true } });
 
   await nav.trigger("pointerenter");
-  assert.deepEqual(nav.classes(), ["winx-rail", "winx-rail--phone"]);
+  assert.deepEqual(nav.classes(), ["ui-rail", "ui-rail--phone"]);
 });
 
 test("UiDrawer: closed draws nothing; open, Esc and the backdrop close it", async () => {
   const UiDrawer = (await import("../src/components/uikit/UiDrawer/index.vue")).default;
   const closed = mount(UiDrawer, { props: { open: false }, slots: { default: "rows" } });
-  assert.equal(closed.find(".winx-drawer").exists(), false);
+  assert.equal(closed.find(".ui-drawer").exists(), false);
 
   const drawer = mount(UiDrawer,
     { props: { open: true, side: "bottom" }, slots: { default: "rows" } });
-  assert.equal(drawer.find(".winx-drawer.winx-drawer--bottom .winx-drawer__panel").text(), "rows");
-  await drawer.find(".winx-drawer__backdrop").trigger("click");
-  await drawer.find(".winx-drawer__panel").trigger("keydown", { key: "Escape" });
-  await drawer.find(".winx-drawer__panel").trigger("keydown", { key: "Enter" });
+  assert.equal(drawer.find(".ui-drawer.ui-drawer--bottom .ui-drawer__panel").text(), "rows");
+  await drawer.find(".ui-drawer__backdrop").trigger("click");
+  await drawer.find(".ui-drawer__panel").trigger("keydown", { key: "Escape" });
+  await drawer.find(".ui-drawer__panel").trigger("keydown", { key: "Enter" });
   assert.equal(drawer.emitted("close").length, 2);
   drawer.unmount();
 });
@@ -209,7 +209,7 @@ test("UiDrawer: a labelled dialog; open, it takes the focus, closed, gives it ba
 
   await drawer.setProps({ open: true });
   await nextTick();
-  const panel = drawer.find(".winx-drawer__panel");
+  const panel = drawer.find(".ui-drawer__panel");
   assert.deepEqual(["role", "aria-modal", "tabindex", "aria-label"].map(a => panel.attributes(a)),
     ["dialog", "true", "-1", "Other"]);
   assert.equal(document.activeElement, panel.element);
@@ -231,7 +231,7 @@ test("UiDrawer: desktop Tab stays in the panel, so Escape still closes it", asyn
   });
   await drawer.setProps({ open: true });
   await nextTick();
-  const panel = drawer.find(".winx-drawer__panel").element;
+  const panel = drawer.find(".ui-drawer__panel").element;
   const buttons = drawer.findAll("button"), first = buttons[3].element, last = buttons[4].element;
   const tab = shiftKey => {
     const event = new KeyboardEvent("keydown", { key: "Tab", shiftKey, bubbles: true, cancelable: true });
@@ -264,7 +264,7 @@ test("UiDrawer: the phone sheet leaves the bottom navigation reachable", async (
     slots: { default: "<button>Settings</button>" } });
   await drawer.setProps({ open: true });
   await nextTick();
-  const panel = drawer.find(".winx-drawer__panel");
+  const panel = drawer.find(".ui-drawer__panel");
   const event = new KeyboardEvent("keydown", { key: "Tab", shiftKey: true, bubbles: true, cancelable: true });
 
   panel.element.dispatchEvent(event);
@@ -281,7 +281,7 @@ test("UiDrawer: the phone sheet leaves the bottom navigation reachable", async (
 test("UiNav: the current item is the page; the one whose drawer is open, expanded", async () => {
   const nav = mount(await loadNav(),
     { props: { items: navItems, current: "calendar", expanded: "other" } });
-  const items = nav.findAll(".winx-btn--rail");
+  const items = nav.findAll(".ui-btn--rail");
 
   assert.deepEqual(items.map(b => b.attributes("aria-current")), [undefined, "page", undefined]);
   assert.deepEqual(items.map(b => b.attributes("aria-expanded")), [undefined, undefined, "true"]);

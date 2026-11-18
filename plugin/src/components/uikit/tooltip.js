@@ -1,5 +1,5 @@
 // v-tip="text": Obsidian's tooltip on hover (setTooltip: drawn on the body, so nothing clips
-// it), in the Winx look (styles/_tooltip.scss: .tooltip.winx-tooltip): blue over the pink paper;
+// it), in the Winx look (styles/_tooltip.scss: .tooltip.ui-tooltip): blue over the pink paper;
 // v-tip.pink for a blue place (Missed, today); v-tip:bottom puts it below. The value may be
 // { text, pink, placement } when a component decides (UiButton). Nothing for an empty text;
 // it comes after 100 ms (Obsidian's own is slower at first).
@@ -13,7 +13,7 @@ const tip = (el, { value, arg, modifiers }) => {
 
   if (!text && !shadows.has(el)) return;
 
-  const classes = ["winx-tooltip", ...(pink ? ["winx-tooltip--pink"] : [])];
+  const classes = ["ui-tooltip", ...(pink ? ["ui-tooltip--pink"] : [])];
 
   const options = { classes, placement };
 
@@ -43,7 +43,7 @@ const tip = (el, { value, arg, modifiers }) => {
     state.timer = win.setTimeout(() => {
       if (!state.text || !el.isConnected) return;
       displayTooltip(el, state.text, { ...state.options, classes: [...state.options.classes] });
-      state.shown = el.ownerDocument.querySelector(".tooltip.winx-tooltip");
+      state.shown = el.ownerDocument.querySelector(".tooltip.ui-tooltip");
     }, 100);
   };
 

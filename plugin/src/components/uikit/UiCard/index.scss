@@ -1,7 +1,7 @@
-/* The widget's card, block winx-widget (src/uikit/card.js): a pink gradient, fairy wings, a glow on hover, a thin
+/* The widget's card, block ui-widget (src/uikit/card.js): a pink gradient, fairy wings, a glow on hover, a thin
    scrollbar. The card is a callout, and cards written in Markdown ("> [!card] Quests", the Kanban) are the same
    callout without our classes, so the look is on .callout[data-callout="card"]; what only a widget has is on
-   winx-widget__*. */
+   ui-widget__*. */
 
 @use "mixins" as *;
 
@@ -54,7 +54,7 @@
       transform: scale(-1, -1);
     }
     /* no wings (UiCard :wings="false", the projects' cards): the title without their room */
-    &.winx-widget--wingless {
+    &.ui-widget--wingless {
       &::before,
       &::after { display: none; }
       > .callout-title { padding-inline: 0 !important; }
@@ -70,7 +70,7 @@
       font-size: $text-2xl !important;
       padding-inline: $deco + $space-m !important; /* room for the wings */
       /* a widget's button next to the title (the market's +, UiButton add): on the title's line */
-      .winx-btn.winx-widget__add {
+      .ui-btn.ui-widget__add {
         align-self: center;
         margin: (-$space-xs) 0 (-$space-xs) $space-s;   /* centred on the title's line without making it taller */
       }
@@ -119,14 +119,14 @@
 
 /* a ```winx block that draws its own card: the block's wrapper steps out of the layout, so the card sits in the
    column like a "> [!card]" callout does */
-.block-language-winx:has(> .winx-widget) {
+.block-language-winx:has(> .ui-widget) {
   display: contents;
 }
 
 /* a card widget until its first draw */
 $cover-h: 150px; /* a cover's height: a picture's frame, not a spacing value */
 
-.winx-widget {
+.ui-widget {
   &__cover {
     display: block;
     width: 100%;
@@ -140,14 +140,14 @@ $cover-h: 150px; /* a cover's height: a picture's frame, not a spacing value */
     border-radius: $radius-l;
     background: linear-gradient(90deg, alpha(--winx-highlight, 25%) 25%, alpha(--winx-highlight, 60%) 50%, alpha(--winx-highlight, 25%) 75%);
     background-size: 200% 100%;
-    animation: winx-shimmer 1.6s linear infinite;
+    animation: ui-shimmer 1.6s linear infinite;
   }
 }
 
 /* Obsidian 1.13 sets --corner-shape: superellipse(1.33) on .mod-macos, and app.css
    applies it to every <button>/<input> — which turns our round controls into
    squircles. Pin the shape back for anything inside a winx widget. */
-:is(.dashboard, .kanban-board, .winx-pomodoro, .winx-shop) :is(button, input) {
+:is(.dashboard, .kanban-board, .ui-pomodoro, .ui-shop) :is(button, input) {
   corner-shape: round;
 }
 

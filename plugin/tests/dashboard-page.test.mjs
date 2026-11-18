@@ -29,12 +29,12 @@ function page() {
 test("dashboard date: today saves null; the new date is in the DOM before widgets reload", async () => {
   const { state, wrapper } = page();
   assert.equal(wrapper.attributes("data-date"), "2026-11-10");
-  assert.ok(wrapper.find(".winx-dash__date input").exists());
+  assert.ok(wrapper.find(".ui-dash__date input").exists());
   wrapper.findComponent(DashboardDate).vm.$emit("go", todayYmd());
   await vue.nextTick();
   assert.equal(state.date, null);
   assert.equal(wrapper.attributes("data-date"), todayYmd());
-  assert.deepEqual(triggered, ["winx:date"]);
+  assert.deepEqual(triggered, ["ui:date"]);
   wrapper.unmount();
 });
 

@@ -30,7 +30,7 @@ const folded = computed(() => !open.value && d.value.info);
 </script>
 
 <template>
-  <div :class="['winx-cycle', { 'winx-cycle--folded': folded }]">
+  <div :class="['ui-cycle', { 'ui-cycle--folded': folded }]">
     <UiMissing v-if="!d.page" :path="CYCLE" />
     <UiEmpty v-else-if="!d.info" text="No data yet" />
     <CycleHead
@@ -40,14 +40,14 @@ const folded = computed(() => !open.value && d.value.info);
       @fold="fold"
     />
     <template v-if="!folded && d.rows.length">
-      <div class="winx-cycle__tabs winx-flex winx-gap-s">
+      <div class="ui-cycle__tabs ui-flex ui-gap-s">
         <UiButton kind="toggle" :on="tab === 'days'" @click="tab = 'days'">days</UiButton>
         <UiButton kind="toggle" :on="tab === 'stats'" @click="tab = 'stats'">stats</UiButton>
       </div>
       <CycleStats v-if="tab === 'stats'" :charts="d.charts" />
       <CycleRows v-else :rows="d.rows" />
     </template>
-    <div class="winx-cycle__btns winx-flex winx-gap-m winx-wrap">
+    <div class="ui-cycle__btns ui-flex ui-gap-m ui-wrap">
       <UiButton
         kind="pill"
         @click="markCycle(d.mark.kind, d.day)"

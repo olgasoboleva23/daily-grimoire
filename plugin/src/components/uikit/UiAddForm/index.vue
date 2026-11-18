@@ -1,4 +1,4 @@
-<!-- one field (UiInput) and a submit button, a finger's height (block winx-add-form):
+<!-- one field (UiInput) and a submit button, a finger's height (block ui-add-form):
      v-model is the field's text, @submit the parent's save; input: the field's attributes
      ({ name, type, placeholder, … }); onBackground: a whiter field, a darker placeholder
      directly on the page background (a project's "+ stage") -->
@@ -17,11 +17,11 @@ const value = defineModel({ type: [String, Number], default: "" });
 
 <template>
   <form
-    class="winx-add-form winx-flex winx-gap-s"
-    :class="{ 'winx-add-form--on-background': onBackground }"
+    class="ui-add-form ui-flex ui-gap-s"
+    :class="{ 'ui-add-form--on-background': onBackground }"
     @submit.prevent="$emit('submit', value)"
   >
-    <UiInput v-model="value" class="winx-add-form__input" v-bind="input" />
-    <button class="winx-add-form__submit" type="submit">{{ submit }}</button>
+    <UiInput v-model="value" class="ui-add-form__input" v-bind="input" />
+    <button class="ui-add-form__submit" type="submit">{{ submit }}</button>
   </form>
 </template>

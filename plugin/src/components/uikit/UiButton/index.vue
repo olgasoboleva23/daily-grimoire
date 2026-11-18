@@ -1,5 +1,5 @@
-<!-- A button (block winx-btn): its look is its kind (round, nav, pill, chip, toggle, text, add,
-     rail; one block of styles each in index.scss next to it); on: winx-btn--on; jump: it grows on
+<!-- A button (block ui-btn): its look is its kind (round, nav, pill, chip, toggle, text, add,
+     rail; one block of styles each in index.scss next to it); on: ui-btn--on; jump: it grows on
      hover (an add one); mirrored: the nav
      chevron for "next"; title: its tooltip (v-tip; tip: pink on a blue place) and aria-label.
      A place's own classes: class="…" on it (Vue adds them after these). Its text is the slot; a
@@ -21,9 +21,9 @@ defineProps({
   <button
     v-tip="{ text: title, pink: tip === 'pink' }"
     :class="[
-      'winx-btn',
-      `winx-btn--${kind}`,
-      { 'winx-btn--on': on, 'winx-btn--mirrored': mirrored, 'winx-btn--jump': jump },
+      'ui-btn',
+      `ui-btn--${kind}`,
+      { 'ui-btn--on': on, 'ui-btn--mirrored': mirrored, 'ui-btn--jump': jump },
     ]"
     :aria-label="title"
   >

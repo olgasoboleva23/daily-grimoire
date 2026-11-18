@@ -1,5 +1,5 @@
 /* ─────────────────────────────
-   CELESTIAL MARKET (block winx-market) — compact shopping list
+   CELESTIAL MARKET (block ui-market) — compact shopping list
    Category header with a count, slim rows split by a dotted gold line,
    a round "bought" button per item. Clicking it strikes the row out,
    flashes the sparkle star and slides the row away before it is saved.
@@ -7,7 +7,7 @@
 
 @use "mixins" as *;
 
-.winx-market {
+.ui-market {
   display: grid;
   gap: $space-l;
 
@@ -33,7 +33,7 @@
 
   /* bought: strike, sparkle burst over the button, slide away */
   &__item--bought {
-    animation: winx-bought 0.65s ease-in forwards;
+    animation: ui-bought 0.65s ease-in forwards;
     pointer-events: none;
 
 
@@ -46,9 +46,9 @@
       height: $deco;
       translate: 0 -50%;
       background: var(--winx-star-sparkle-svg) center / contain no-repeat;
-      animation: winx-bought-flash 0.65s ease-out forwards;
+      animation: ui-bought-flash 0.65s ease-out forwards;
     }
-    .winx-market__text { text-decoration: line-through; text-decoration-color: var(--winx-gold-deep); }
+    .ui-market__text { text-decoration: line-through; text-decoration-color: var(--winx-gold-deep); }
   }
 
   &__soon { margin: $space-s 0 $space-2xs; font-size: $text-m; color: var(--winx-pink-deep); }
@@ -72,20 +72,20 @@
   }
 }
 
-@keyframes winx-bought {
+@keyframes ui-bought {
   0%   { opacity: 1; translate: 0 0; }
   45%  { opacity: 1; translate: 0 0; }
   100% { opacity: 0; translate: 40px 0; }
 }
 
-@keyframes winx-bought-flash {
+@keyframes ui-bought-flash {
   0%   { opacity: 0; scale: 0.4; }
   30%  { opacity: 1; scale: 1.1; }
   100% { opacity: 0; scale: 1.4; }
 }
 
-/* Category pill (src/uikit/groupHeader.js, block winx-group-header): the market widget and the Supplies page */
-.winx-group-header {
+/* Category pill (src/uikit/groupHeader.js, block ui-group-header): the market widget and the Supplies page */
+.ui-group-header {
   @include row;
   gap: $space-m;
   width: fit-content;

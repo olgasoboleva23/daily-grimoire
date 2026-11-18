@@ -1,4 +1,4 @@
-<!-- A drawer (block winx-drawer) over the tab's page: side left slides in from the left edge,
+<!-- A drawer (block ui-drawer) over the tab's page: side left slides in from the left edge,
      bottom (--bottom) is the phone's sheet; the slot is its content, label its aria-label. Closed,
      it draws nothing; a click on the backdrop or Esc inside it says close (the parent sets open).
      Open, its panel takes focus; desktop Tab stays inside. The phone sheet leaves the bottom
@@ -46,11 +46,11 @@ function tab(event) {
 </script>
 
 <template>
-  <div v-if="open" :class="['winx-drawer', `winx-drawer--${side}`]" @keydown.esc="emit('close')">
-    <div class="winx-drawer__backdrop" @click="emit('close')" />
+  <div v-if="open" :class="['ui-drawer', `ui-drawer--${side}`]" @keydown.esc="emit('close')">
+    <div class="ui-drawer__backdrop" @click="emit('close')" />
     <div
       ref="panel"
-      class="winx-drawer__panel"
+      class="ui-drawer__panel"
       role="dialog"
       :aria-modal="side === 'left' ? 'true' : null"
       tabindex="-1"

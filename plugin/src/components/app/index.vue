@@ -17,17 +17,17 @@ const theme = computed(() => (taskStore.version.value, config.theme));
 const page = computed(() => pages[ui.state.page]);
 watch(() => ui.state.page, async () => {
   await nextTick();
-  ui.app.workspace.trigger("winx:page");
+  ui.app.workspace.trigger("ui:page");
 });
 </script>
 
 <template>
   <div
-    :class="['winx-view dashboard', { 'winx-view--phone': phone }]"
+    :class="['ui-view dashboard', { 'ui-view--phone': phone }]"
     :data-page="ui.state.page"
     :data-theme="theme"
   >
-    <div class="winx-view__pages">
+    <div class="ui-view__pages">
       <KeepAlive :include="['CalendarPage', 'DashboardPage']">
         <component
           :is="views[ui.state.page]"
@@ -39,7 +39,7 @@ watch(() => ui.state.page, async () => {
       <div
         v-if="page.widget"
         :key="ui.state.page"
-        class="winx-view__page markdown-preview-view markdown-rendered dashboard"
+        class="ui-view__page markdown-preview-view markdown-rendered dashboard"
       >
         <h2>{{ page.title }}</h2>
         <Widget
@@ -50,6 +50,6 @@ watch(() => ui.state.page, async () => {
         />
       </div>
     </div>
-    <div class="winx-view__nav winx-menu"><PageNavigation /></div>
+    <div class="ui-view__nav ui-menu"><PageNavigation /></div>
   </div>
 </template>

@@ -105,8 +105,8 @@ defineProps({ state: { type: Object, required: true } });
 </script>
 
 <template>
-  <div class="winx-weight">
-    <span class="winx-weight__now">{{ state.data.weight.last.kg }} kg</span>
+  <div class="ui-weight">
+    <span class="ui-weight__now">{{ state.data.weight.last.kg }} kg</span>
     <UiNoteLink path="00 System/Data/Weight.md">✦ list</UiNoteLink>
   </div>
 </template>
@@ -130,13 +130,13 @@ defineProps({ state: { type: Object, required: true } });
 - A hint on hover is the `v-tip` directive (`uikit/tooltip.js`), not a component: it asks Obsidian for its tooltip
   (`setTooltip`), which is drawn on the body, so a card's edge or a table's scroll never clips it, and it goes
   on any element (a `th`, a `div`, a button) without a wrapper in the DOM. `v-tip="text"`, `v-tip:bottom`,
-  `v-tip.pink` on a blue place (Missed, today); the look is `styles/_tooltip.scss` (`.tooltip.winx-tooltip`).
+  `v-tip.pink` on a blue place (Missed, today); the look is `styles/_tooltip.scss` (`.tooltip.ui-tooltip`).
   No `title` attributes: a button's `title` prop becomes its tooltip and `aria-label`.
 - The data comes ready from `load` (labels, sums, dates); the template has values, `v-for` with a `:key` and
   `v-if`. A click is `@click` calling an action; what a card only shows (a mode, a fold, a picked level) is the
   component's own state.
-- Class names are BEM: `winx-block__element--modifier` (`winx-weight__now`, `winx-cal__day--today`, `winx-btn--on`), one block per `index.scss` next to its component (shared ones in `plugin/src/styles/`); states the code sets are modifiers; layout utilities (`winx-row`, `winx-gap-*`…) are in `plugin/src/styles/_utilities.scss`.
-- Two style builds from the same partials: `main.scss` → `styles.css` (notes, modals, tooltips, fonts: Obsidian's own page) and `shadow.scss` → compiled to text and inlined into `main.js`, adopted by the Winx tab's shadow root (`_context.scss` switches `:root` / `body.is-mobile` to `.winx-view` / `:host([data-mobile])`).
+- Class names are BEM: `ui-block__element--modifier` (`ui-weight__now`, `ui-cal__day--today`, `ui-btn--on`), one block per `index.scss` next to its component (shared ones in `plugin/src/styles/`); states the code sets are modifiers; layout utilities (`ui-row`, `ui-gap-*`…) are in `plugin/src/styles/_utilities.scss`.
+- Two style builds from the same partials: `main.scss` → `styles.css` (notes, modals, tooltips, fonts: Obsidian's own page) and `shadow.scss` → compiled to text and inlined into `main.js`, adopted by the Winx tab's shadow root (`_context.scss` switches `:root` / `body.is-mobile` to `.ui-view` / `:host([data-mobile])`).
 - A note shows a widget with a `winx` block (see [Dashboard](dashboard.md)).
 
 ## The calendar

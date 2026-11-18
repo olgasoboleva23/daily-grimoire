@@ -53,10 +53,10 @@ test("QuestsCard: a row per task, a tick toggles the line through Tasks; an empt
   seed();
   const data = await loadQuests({ dv: dv("2026-11-09") });
   const w = mount(QuestsCard, { props: { state: { data } } });
-  assert.equal(w.findAll(".winx-quests__row").length, 3);
-  assert.equal(w.findAll(".winx-quests__row--done").length, 1);
-  await w.find(".winx-quests__row .winx-check").trigger("click"); await tick(); await tick();
+  assert.equal(w.findAll(".ui-quests__row").length, 3);
+  assert.equal(w.findAll(".ui-quests__row--done").length, 1);
+  await w.find(".ui-quests__row .ui-check").trigger("click"); await tick(); await tick();
   assert.equal(files[MASTER].split("\n")[1], "- [x] t2 [due:: 2026-11-09]");
   const empty = mount(QuestsCard, { props: { state: { data: { day: "x", open: [], done: [] } } } });
-  assert.ok(empty.find(".winx-empty").exists());
+  assert.ok(empty.find(".ui-empty").exists());
 });

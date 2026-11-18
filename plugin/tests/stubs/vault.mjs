@@ -5,7 +5,7 @@
 import { setApp } from "#/helpers/app.js";
 
 export function vault(files = {}, { folders = [], props = {}, dataview = null } = {}) {
-  const dirs = new Set(folders), local = { "winx-mute": "1" }, io = { failing: 0 };
+  const dirs = new Set(folders), local = { "ui-mute": "1" }, io = { failing: 0 };
   const byPath = p => p in files ? { path: p } : null;
   const app = {
     vault: {

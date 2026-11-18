@@ -2,7 +2,7 @@
 
 @use "mixins" as *;
 
-.winx-level {
+.ui-level {
   &__icon {
     flex: 0 0 auto;
     width: $deco;
@@ -34,7 +34,7 @@
       var(--winx-pink-deep)
     ));
     background-size: 200% 100%;
-    animation: winx-shimmer 3s linear infinite;
+    animation: ui-shimmer 3s linear infinite;
     border-radius: $radius-s;
     position: relative;
   }

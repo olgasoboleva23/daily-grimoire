@@ -33,28 +33,28 @@ test("the food page: the week, a row a day: what was eaten with its marks, the m
   const w = mount(FoodPage, { props: { state: { data: data() } }, global: {
     provide: { ui: { go: (...args) => went.push(args) } },
   } });
-  const rows = w.findAll(".winx-table__row");
+  const rows = w.findAll(".ui-table__row");
 
   assert.equal(rows.length, 7);
-  assert.match(w.find(".winx-food__week").text(), /2 ноя – 8 ноя/);
+  assert.match(w.find(".ui-food__week").text(), /2 ноя – 8 ноя/);
   const mon = rows[0];
 
-  assert.deepEqual(mon.findAll(".winx-food__item-name").map(i => i.text()), ["каша с 4 ч 🍫", "кофе с бзм 🥛↓"]);
-  assert.deepEqual(mon.findAll(".winx-food__count").map(c => c.text()), ["1", "", "1"]);
-  assert.equal(mon.find(".winx-food__level").text(), "2");   // Высыпания on the 3rd
-  assert.ok(w.findAll(".winx-table__head").map(h => h.text()).includes("Высыпания +1д"));   // the next day's, said in its head
-  assert.equal(mon.find(".winx-food__course").text(), "💊");
-  await mon.find(".winx-food__course").trigger("click");
-  await mon.find(".winx-food__course").trigger("click", { mod: true });
+  assert.deepEqual(mon.findAll(".ui-food__item-name").map(i => i.text()), ["каша с 4 ч 🍫", "кофе с бзм 🥛↓"]);
+  assert.deepEqual(mon.findAll(".ui-food__count").map(c => c.text()), ["1", "", "1"]);
+  assert.equal(mon.find(".ui-food__level").text(), "2");   // Высыпания on the 3rd
+  assert.ok(w.findAll(".ui-table__head").map(h => h.text()).includes("Высыпания +1д"));   // the next day's, said in its head
+  assert.equal(mon.find(".ui-food__course").text(), "💊");
+  await mon.find(".ui-food__course").trigger("click");
+  await mon.find(".ui-food__course").trigger("click", { mod: true });
   assert.deepEqual(went.map(([page, params, e]) => [page, params, !!e.mod]),
     [["meds", {}, false], ["meds", {}, true]]);
-  assert.equal(mon.find(".winx-food__med").text(), "МА");
-  assert.equal(mon.find(".winx-food__med").attributes("aria-label"), "мастодинон: не принято");
-  assert.ok(mon.find(".winx-food__med").classes().includes("winx-food__med--not"));   // no ✅ that day
-  assert.ok(!rows[1].find(".winx-food__med").classes().includes("winx-food__med--not"));
-  assert.equal(rows[2].find(".winx-food__course").exists(), false);   // the course is over
-  assert.equal(mon.find(".winx-food__note input").element.value, "сыпь");
-  assert.ok(rows[2].classes().includes("winx-food__row--today"));
+  assert.equal(mon.find(".ui-food__med").text(), "МА");
+  assert.equal(mon.find(".ui-food__med").attributes("aria-label"), "мастодинон: не принято");
+  assert.ok(mon.find(".ui-food__med").classes().includes("ui-food__med--not"));   // no ✅ that day
+  assert.ok(!rows[1].find(".ui-food__med").classes().includes("ui-food__med--not"));
+  assert.equal(rows[2].find(".ui-food__course").exists(), false);   // the course is over
+  assert.equal(mon.find(".ui-food__note input").element.value, "сыпь");
+  assert.ok(rows[2].classes().includes("ui-food__row--today"));
 });
 
 test("the food page: ‹ › step a week; × takes an eaten one off; a note typed is written", async () => {
@@ -62,12 +62,12 @@ test("the food page: ‹ › step a week; × takes an eaten one off; a note type
   const day = date => JSON.parse(files[FOOD_LOG])[date];
   const w = mount(FoodPage, { props: { state: { data: data() } } });
 
-  await w.find(".winx-food__prev").trigger("click");
-  assert.match(w.find(".winx-food__week").text(), /26 окт – 1 ноя/);
-  await w.find(".winx-food__next").trigger("click");
-  await w.findAll(".winx-table__row")[0].findAll(".winx-food__off")[1].trigger("click"); await tick();
+  await w.find(".ui-food__prev").trigger("click");
+  assert.match(w.find(".ui-food__week").text(), /26 окт – 1 ноя/);
+  await w.find(".ui-food__next").trigger("click");
+  await w.findAll(".ui-table__row")[0].findAll(".ui-food__off")[1].trigger("click"); await tick();
   assert.deepEqual(day("2026-11-02"), { eaten: ["f1"], note: "сыпь" });
-  const input = w.findAll(".winx-table__row")[1].find(".winx-food__note input");
+  const input = w.findAll(".ui-table__row")[1].find(".ui-food__note input");
 
   input.element.value = "ок";
   await input.trigger("change"); await tick();
@@ -92,11 +92,11 @@ test("loadFood: the foods and marks, the log, the journals, the medication cours
 
 test("the food page: a training task adds a 🏋 column, ✓ on the days it was done", () => {
   const w = mount(FoodPage, { props: { state: { data: { ...data(), task: { id: "t5", name: "gym", days: new Set(["2026-11-02"]) } } } } });
-  const rows = w.findAll(".winx-table__row");
+  const rows = w.findAll(".ui-table__row");
 
-  assert.ok(w.findAll(".winx-table__head").map(h => h.text()).includes("🏋"));
-  assert.equal(rows[0].find(".winx-food__trained").text(), "✓");
-  assert.equal(rows[1].find(".winx-food__trained").text(), "");
+  assert.ok(w.findAll(".ui-table__head").map(h => h.text()).includes("🏋"));
+  assert.equal(rows[0].find(".ui-food__trained").text(), "✓");
+  assert.equal(rows[1].find(".ui-food__trained").text(), "");
 });
 
 test("loadFood: no files yet: the default marks, nothing eaten, no task", async () => {

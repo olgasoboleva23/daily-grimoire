@@ -1,7 +1,7 @@
 @use "mixins" as *;
 /* the ✦ pill of a Winx tab (src/uikit/busy.js): sticks to the top with zero height (like the drop bar; the Kanban
    arrow's look), shown by the tab's --busy */
-.winx-busy {
+.ui-busy {
   position: sticky; top: $space-m; z-index: $z-busy; height: 0; display: flex; justify-content: center;
   &__pill {
     display: none;
@@ -15,5 +15,5 @@
     color: var(--winx-on-accent);
     font-size: $text-3xl;
   }
-  &__star { animation: winx-spin 0.9s linear infinite; }
+  &__star { animation: ui-spin 0.9s linear infinite; }
 }

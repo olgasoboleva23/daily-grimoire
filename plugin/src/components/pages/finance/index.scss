@@ -1,8 +1,8 @@
-/* Finance widget (02 Areas/Finance.md), block winx-fin: month summary, categories, 6-month trend, latest
+/* Finance widget (02 Areas/Finance.md), block ui-fin: month summary, categories, 6-month trend, latest
    operations. Only --winx-* tokens, so re-theming carries through. */
 
 @use "mixins" as *;
-.winx-fin {
+.ui-fin {
   color: var(--winx-text);
   font-size: $text-xl;
   &__title { font-weight: 600; letter-spacing: .02em; color: var(--winx-text); }
@@ -44,7 +44,7 @@
   }
 }
 
-button.winx-fin__nav-btn {
+button.ui-fin__nav-btn {
   all: unset; cursor: pointer; padding: $space-2xs $space-m; border-radius: 8px; line-height: 1.5;
   background: alpha(--winx-purple, 18%); color: var(--winx-text);
   &:hover { background: alpha(--winx-pink, 32%); }

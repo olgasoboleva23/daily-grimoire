@@ -10,6 +10,6 @@ defineEmits(["retry"]);
 
 <template>
   <UiEmpty :text="`couldn't draw: ${text}`" mod="error" icon="⚠">
-    <UiButton kind="chip" class="winx-empty__retry" @click="$emit('retry')">retry</UiButton>
+    <UiButton kind="chip" class="ui-empty__retry" @click="$emit('retry')">retry</UiButton>
   </UiEmpty>
 </template>

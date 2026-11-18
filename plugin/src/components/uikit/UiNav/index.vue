@@ -1,4 +1,4 @@
-<!-- The Winx tab's nav (block winx-rail): a UiButton kind rail per item ({ key, icon, text }),
+<!-- The Winx tab's nav (block ui-rail): a UiButton kind rail per item ({ key, icon, text }),
      the current one on; a click says which (go(key, event)). Desktop: a short pill at the left edge
      over the page, opened by hover or focus (labels shown), shut by a click until the pointer
      leaves; phone: the bottom bar, an icon above a small label -->
@@ -29,8 +29,8 @@ function go(key, event) {
 <template>
   <nav
     :class="[
-      'winx-rail',
-      { 'winx-rail--phone': phone, 'winx-rail--open': hover && !shut, 'winx-rail--shut': shut },
+      'ui-rail',
+      { 'ui-rail--phone': phone, 'ui-rail--open': hover && !shut, 'ui-rail--shut': shut },
     ]"
     @pointerenter="enter"
     @pointerleave="leave"
@@ -39,15 +39,15 @@ function go(key, event) {
       v-for="i in items"
       :key="i.key"
       kind="rail"
-      class="winx-rail__item"
+      class="ui-rail__item"
       :on="i.key === current"
       :aria-current="i.key === current ? 'page' : null"
       :aria-expanded="i.key === expanded ? 'true' : null"
       :title="i.text"
       @click="go(i.key, $event)"
     >
-      <span class="winx-rail__icon">{{ i.icon }}</span>
-      <span class="winx-rail__label">{{ i.text }}</span>
+      <span class="ui-rail__icon">{{ i.icon }}</span>
+      <span class="ui-rail__label">{{ i.text }}</span>
     </UiButton>
   </nav>
 </template>

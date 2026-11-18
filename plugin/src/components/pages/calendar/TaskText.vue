@@ -23,7 +23,7 @@ const text = computed(() =>
   {{ text }}
   <img
     v-if="task.sticker"
-    class="winx-cal__sticker"
+    class="ui-cal__sticker"
     :src="task.sticker"
     alt=""
   >

@@ -22,11 +22,11 @@ const tick = () => new Promise(r => setTimeout(r));
 test("Savings: a jar's picture, sums, bar and stamps; ✓ done puts that jar's deposit in its note", async () => {
   const { files } = vault({ "S/Bike.md": "- 2026-10-16 5000\n" }, { props: { "S/Bike.md": { per_payday: 5000 } } });
   const w = mount(SavingsJars, { props: { state: { data: { jars: [jar], empty: "" } } } });
-  assert.equal(w.find(".winx-jar__name").text(), "✦ New bike");
-  assert.equal(w.findAll(".winx-jar__img").length, 2);
-  assert.equal(w.findAll(".winx-jar__stamp--on").length, 2);
-  assert.equal(w.find(".winx-jar__due-sum").text(), "put in 5 000 ₽");
-  await w.find(".winx-jar__due button").trigger("click"); await tick();
+  assert.equal(w.find(".ui-jar__name").text(), "✦ New bike");
+  assert.equal(w.findAll(".ui-jar__img").length, 2);
+  assert.equal(w.findAll(".ui-jar__stamp--on").length, 2);
+  assert.equal(w.find(".ui-jar__due-sum").text(), "put in 5 000 ₽");
+  await w.find(".ui-jar__due button").trigger("click"); await tick();
   assert.equal(files["S/Bike.md"], "- 2026-10-16 5000\n- 2026-10-30 5000\n");
   const none = mount(SavingsJars, { props: { state: { data: { jars: [], empty: "A goal: a note in S" } } } });
   assert.equal(none.text(), "✦ A goal: a note in S");

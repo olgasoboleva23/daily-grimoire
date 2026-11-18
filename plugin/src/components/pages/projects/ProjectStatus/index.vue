@@ -5,6 +5,6 @@ defineProps({ status: { type: String, required: true } });
 </script>
 
 <template>
-  <span :class="['winx-status', `winx-status--${status}`]">{{
+  <span :class="['ui-status', `ui-status--${status}`]">{{
     `${status[0].toUpperCase()}${status.slice(1)}` }}</span>
 </template>

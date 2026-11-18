@@ -101,16 +101,16 @@
   --winx-sky: linear-gradient(135deg, var(--winx-sky-start), var(--winx-sky-end), var(--winx-purple-light));
   --winx-dusk: linear-gradient(135deg, var(--winx-dusk-dark), var(--winx-dusk-rose));
 
-  button.winx-btn:is(.winx-btn--add, .winx-btn--rail) {
+  button.ui-btn:is(.ui-btn--add, .ui-btn--rail) {
     &::after {
       inset: 0;
       background: #b3e3ff;
       mask: var(--winx-barrier-lightning) center / 100% 100% no-repeat;
       filter: drop-shadow(0 0 3px #4299ff);
     }
-    &:hover::after { animation: winx-barrier-lightning 2.8s linear infinite; }
+    &:hover::after { animation: ui-barrier-lightning 2.8s linear infinite; }
   }
-  .winx-xp__icon {
+  .ui-xp__icon {
     display: inline-block;
     width: $text-2xl;
     height: $text-2xl;
@@ -175,7 +175,7 @@
   --winx-sky: linear-gradient(135deg, var(--winx-sky-start), var(--winx-sky-end), var(--winx-purple-light));
   --winx-dusk: linear-gradient(135deg, var(--winx-dusk-dark), var(--winx-dusk-rose));
 
-  button.winx-btn:is(.winx-btn--add, .winx-btn--rail) {
+  button.ui-btn:is(.ui-btn--add, .ui-btn--rail) {
     &::after {
       inset: 0;
       mask: none;
@@ -185,7 +185,7 @@
       transition: opacity $slow ease;
     }
   }
-  .winx-xp__icon {
+  .ui-xp__icon {
     display: inline-block;
     width: $text-2xl;
     height: $text-2xl;
@@ -195,14 +195,14 @@
     mask: var(--winx-xp-flame) center / contain no-repeat;
   }
 
-  .winx-btn.winx-btn--pill {
+  .ui-btn.ui-btn--pill {
     background: var(--winx-pink-deep) !important;
     color: var(--winx-on-accent) !important;
   }
 
 }
 
-@keyframes winx-barrier-lightning {
+@keyframes ui-barrier-lightning {
   0%, 16%, 30%, 100% { opacity: 0; }
   4%, 22% { opacity: 1; }
   10%, 26% { opacity: 0.3; }

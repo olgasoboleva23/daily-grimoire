@@ -3,7 +3,7 @@
 
 @use "mixins" as *;
 $wing: 40px;   // the corner wings' size
-.winx-missed {
+.ui-missed {
   position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -31,15 +31,15 @@ $wing: 40px;   // the corner wings' size
     cursor: grab;
   }
   &__date { font-size: $text-s; font-style: normal; color: fade(var(--winx-purple-deep), 65%); }
-  &__row > .winx-task__actions { display: flex; gap: $space-s; }
+  &__row > .ui-task__actions { display: flex; gap: $space-s; }
   /* desktop: the buttons float over the end of the text on hover (opacity only, so the row height stays) */
   #{context.$desktop} & {
-    &__row .winx-task__btns { right: 104px; }
+    &__row .ui-task__btns { right: 104px; }
   }
   /* the phone: the task's text on its own line, the buttons and the date under it */
   #{context.$mobile} & {
     &__row { flex-wrap: wrap; }
-    &__row .winx-task__btns { display: contents; }
+    &__row .ui-task__btns { display: contents; }
     &__text { flex-basis: 100%; }
   }
 }

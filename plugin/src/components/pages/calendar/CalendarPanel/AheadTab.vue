@@ -38,7 +38,7 @@ const months = computed(() => {
   <UiEmpty v-if="!months.length" />
   <GroupCard v-for="g in months" :key="g.key" :title="g.title">
     <template v-for="c in g.cards" :key="c.task.key">
-      <div v-if="c.date" class="winx-cal__date">{{ c.date }}</div>
+      <div v-if="c.date" class="ui-cal__date">{{ c.date }}</div>
       <TaskCard :task="c.task" :meta="c.meta" />
     </template>
   </GroupCard>

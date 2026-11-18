@@ -28,8 +28,8 @@ test("Shop: the balance, an affordable reward bought with a click (a purchase li
   const w = inBody(ShopWidget, { balance: 25, items: [
     { name: "Coffee", cost: 20, affordable: true }, { name: "Trip", cost: 500, affordable: false },
   ] }, () => retried++);
-  assert.equal(w.find(".winx-shop__balance-amount").text(), "25");
-  const [coffee, trip] = w.findAll(".winx-shop__item");
+  assert.equal(w.find(".ui-shop__balance-amount").text(), "25");
+  const [coffee, trip] = w.findAll(".ui-shop__item");
   assert.equal(trip.attributes("disabled"), "");
   await coffee.trigger("click"); await tick(); await tick();
   assert.equal(files[`${PURCHASES}.md`], "# Purchases\n\n- 2026-11-01 | Tea | 5\n- 2026-11-05 | Coffee | 20\n");
@@ -48,9 +48,9 @@ test("Supplies: the rows by category, running low puts one back on the list; a l
     { name: "tea", tag: "#food", due: true, listed: false, info: "9 of ~7 days ⏳" },
     { name: "milk", tag: "#food", due: false, listed: true, info: "on the shopping list ✦" },
   ] }] });
-  assert.equal(w.find(".winx-group-header").text(), "🌿 Harvest");
-  const [tea, milk] = w.findAll(".winx-supplies__row");
-  assert.ok(tea.classes().includes("winx-supplies__row--due"));
+  assert.equal(w.find(".ui-group-header").text(), "🌿 Harvest");
+  const [tea, milk] = w.findAll(".ui-supplies__row");
+  assert.ok(tea.classes().includes("ui-supplies__row--due"));
   assert.equal(milk.find("button").exists(), false);
   await tea.find("button").trigger("click"); await tick();
   assert.equal(files[`${MARKET}.md`], "- [ ] m1\n- [ ] m2\n");

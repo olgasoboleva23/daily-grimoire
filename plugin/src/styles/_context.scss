@@ -1,11 +1,11 @@
 // The same component rules serve native widgets and the isolated application tab.
 $shadow: false !default;
-$root: if(sass($shadow): ".winx-view"; else: ":root");
+$root: if(sass($shadow): ".ui-view"; else: ":root");
 $mobile: if(sass($shadow): ":host([data-mobile])"; else: "body.is-mobile");
 $desktop: if(sass($shadow): ":host(:not([data-mobile]))"; else: "body:not(.is-mobile)");
 $phone: if(sass($shadow): ":host([data-phone])"; else: ".is-phone");
 
 @function theme($name) {
-  @if $shadow { @return '.winx-view[data-theme="#{$name}"]'; }
-  @return 'body.winx-theme-#{$name} :is(.workspace-leaf-content[data-type="winx"], .block-language-winx, .winx-tooltip, .winx-syncing)';
+  @if $shadow { @return '.ui-view[data-theme="#{$name}"]'; }
+  @return 'body.ui-theme-#{$name} :is(.workspace-leaf-content[data-type="winx"], .block-language-winx, .ui-tooltip, .ui-syncing)';
 }

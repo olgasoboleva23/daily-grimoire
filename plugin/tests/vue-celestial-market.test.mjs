@@ -27,10 +27,10 @@ test("Celestial Market: items by group, what runs low, how many are left", () =>
 test("✓ sparkles the row at once and writes it as bought after the sparkle, once", async () => {
   const { files } = vault({ [`${MARKET}.md`]: NOTE });
   const w = mount(View, { props: { state: { data } } });
-  const tea = w.findAll(".winx-market__item")[0];
+  const tea = w.findAll(".ui-market__item")[0];
   await tea.find("button").trigger("click");
   await tea.find("button").trigger("click");
-  assert.ok(tea.classes().includes("winx-market__item--bought"));
+  assert.ok(tea.classes().includes("ui-market__item--bought"));
   assert.equal(files[`${MARKET}.md`], NOTE);
   await new Promise(r => setTimeout(r, 700));
   assert.equal(files[`${MARKET}.md`], NOTE.replace("- [ ] m1", "- [x] m1 [completion:: 2026-11-05]"));
@@ -46,17 +46,17 @@ test("a bought item back on the list can be bought again; a line that changed me
   const state = reactive({ data });
   const { files } = vault({ [`${MARKET}.md`]: NOTE });
   const w = mount(View, { props: { state } });
-  await w.findAll(".winx-market__item")[0].find("button").trigger("click");
+  await w.findAll(".ui-market__item")[0].find("button").trigger("click");
   await new Promise(r => setTimeout(r, 700));
   // written: the list comes back without it, then with it again (unticked in the note)
   state.data = { ...data, groups: [{ label: "🌿 Harvest", rows: [{ line: 5, id: "m2", name: "rice" }] }] }; await nextTick();
   state.data = data; await nextTick();
-  const tea = () => w.findAll(".winx-market__item")[0];
-  assert.ok(!tea().classes().includes("winx-market__item--bought"));
+  const tea = () => w.findAll(".ui-market__item")[0];
+  assert.ok(!tea().classes().includes("ui-market__item--bought"));
   files[`${MARKET}.md`] = NOTE.replace("m1", "m3");   // the line changed meanwhile: nothing written
   await tea().find("button").trigger("click");
   await new Promise(r => setTimeout(r, 700)); await nextTick();
   assert.match(files[`${MARKET}.md`], /- \[ \] m3/);
   assert.match(String(Notice.last), /changed meanwhile/);
-  assert.ok(!tea().classes().includes("winx-market__item--bought"));   // free again
+  assert.ok(!tea().classes().includes("ui-market__item--bought"));   // free again
 });

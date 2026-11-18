@@ -16,10 +16,10 @@ const today = computed(() => props.day === view.ctx.today);
 
 <template>
   <div
-    :class="['winx-cal__day',
-             { 'winx-cal__day--today': today, 'winx-cal__day--source': view.drag.day === day }]"
+    :class="['ui-cal__day',
+             { 'ui-cal__day--today': today, 'ui-cal__day--source': view.drag.day === day }]"
   >
-    <div class="winx-cal__head winx-text-center">{{ head }}</div>
+    <div class="ui-cal__head ui-text-center">{{ head }}</div>
     <DayFill :day="day" />
     <DayZones :day="day" />
   </div>

@@ -9,8 +9,8 @@ import MonthGrid from "./MonthGrid.vue";
 import PhoneMonth from "./PhoneMonth.vue";
 import { dateFor } from "#/store/calendar.js";
 
-const EMPTY = [".winx-cal__num", ".winx-cal__marks", ".winx-cal__marks *", ".winx-cal__dots",
-  ".winx-cal__dots *"].join(", ");
+const EMPTY = [".ui-cal__num", ".ui-cal__marks", ".ui-cal__marks *", ".ui-cal__dots",
+  ".ui-cal__dots *"].join(", ");
 const sameMonth = (a, b) => a.slice(0, 7) === b.slice(0, 7);
 const view = inject("calendar");
 const ctx = computed(() => view.ctx);

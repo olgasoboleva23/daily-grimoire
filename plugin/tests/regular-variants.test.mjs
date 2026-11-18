@@ -38,8 +38,8 @@ function draw(active = "Core", recs = records, paused = false) {
 
 test("Regulars shows one task, its variants, the upcoming name and common history", async () => {
   const { w, update } = draw();
-  assert.equal(w.findAll(".winx-task-card").length, 1);
-  assert.match(w.find(".winx-task-card__text").text(), /Training/);
+  assert.equal(w.findAll(".ui-task-card").length, 1);
+  assert.match(w.find(".ui-task-card__text").text(), /Training/);
   assert.match(w.text(), /Core ↔ Arms/);
   assert.match(w.text(), /next: Core · 13.11/);
   assert.match(w.text(), /done 1×/);

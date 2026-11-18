@@ -50,31 +50,31 @@ const model = computed({
     </div>
     <div
       v-if="lines"
-      class="winx-form__list winx-form__list--lines"
+      class="ui-form__list ui-form__list--lines"
       :style="{ '--winx-form-cols': cols }"
     >
-      <div v-if="groups.length" class="winx-form__line winx-form__line--head">
+      <div v-if="groups.length" class="ui-form__line ui-form__line--head">
         <div
           v-for="(s, i) in row.list"
           :key="i"
-          :class="['winx-form__cell', { 'winx-form__cell--narrow': narrow(s) }]"
+          :class="['ui-form__cell', { 'ui-form__cell--narrow': narrow(s) }]"
           :title="s.check"
         >{{ s.name }}</div>
-        <div v-if="!row.fixed" class="winx-form__cell winx-form__cell--narrow" />
+        <div v-if="!row.fixed" class="ui-form__cell ui-form__cell--narrow" />
       </div>
-      <div v-for="(g, n) in groups" :key="n" class="winx-form__line">
+      <div v-for="(g, n) in groups" :key="n" class="ui-form__line">
         <div
           v-for="(s, i) in row.list"
           :key="i"
-          :class="['winx-form__cell', { 'winx-form__cell--narrow': narrow(s) }]"
+          :class="['ui-form__cell', { 'ui-form__cell--narrow': narrow(s) }]"
         ><FormRow :row="s" :values="g" bare /></div>
-        <div v-if="!row.fixed" class="winx-form__cell winx-form__cell--narrow">
+        <div v-if="!row.fixed" class="ui-form__cell ui-form__cell--narrow">
           <button title="Remove" @click="groups.splice(n, 1)">×</button>
         </div>
       </div>
     </div>
-    <div v-else class="winx-form__list">
-      <div v-for="(g, n) in groups" :key="n" class="winx-form__group">
+    <div v-else class="ui-form__list">
+      <div v-for="(g, n) in groups" :key="n" class="ui-form__group">
         <FormRow
           v-for="(s, i) in row.list"
           :key="i"
@@ -84,19 +84,19 @@ const model = computed({
         <button v-if="!row.fixed" title="Remove" @click="groups.splice(n, 1)">×</button>
       </div>
     </div>
-    <div v-if="!row.fixed" class="winx-form__more">
+    <div v-if="!row.fixed" class="ui-form__more">
       <button title="One more" @click="groups.push({})">+</button>
     </div>
   </template>
   <div v-else-if="!bare" class="setting-item" :class="{ 'mod-toggle': 'check' in row }">
     <!-- a long name wraps (the field stays in the window), but many buttons never squeeze it -->
-    <div class="setting-item-info winx-form__info">
+    <div class="setting-item-info ui-form__info">
       <div class="setting-item-name">{{ row.name }}</div>
       <div v-if="'check' in row" class="setting-item-description">{{ row.check }}</div>
     </div>
     <div
-      class="setting-item-control winx-form__control"
-      :class="{ 'winx-form__control--check': 'check' in row }"
+      class="setting-item-control ui-form__control"
+      :class="{ 'ui-form__control--check': 'check' in row }"
     >
       <FormRow :row="row" :values="values" bare />
     </div>
@@ -109,15 +109,15 @@ const model = computed({
       :title="c.label"
       @click="values[row.key] = c.value"
     >
-      <img v-if="c.img" class="winx-form__img" :src="resourcePath(c.img)">
+      <img v-if="c.img" class="ui-form__img" :src="resourcePath(c.img)">
       <template v-else>{{ c.label }}</template>
     </button>
   </template>
-  <span v-else-if="'label' in row" class="winx-form__label">{{ values[row.key] ?? "" }}</span>
+  <span v-else-if="'label' in row" class="ui-form__label">{{ values[row.key] ?? "" }}</span>
   <input
     v-else-if="'file' in row"
     type="file"
-    class="winx-form__upload"
+    class="ui-form__upload"
     :accept="row.file"
     :aria-label="row.name"
     @change="values[row.key] = $event.target.files?.[0] ?? null"
@@ -132,7 +132,7 @@ const model = computed({
   <textarea
     v-else-if="row.lines"
     v-model="model"
-    class="winx-form__textarea"
+    class="ui-form__textarea"
     :placeholder="row.text"
     rows="4"
   />
@@ -142,7 +142,7 @@ const model = computed({
     ref="field"
     v-model.trim="model"
     :type="row.number ? 'number' : row.color ? 'color' : 'text'"
-    :class="{ 'winx-form__input': !row.color }"
+    :class="{ 'ui-form__input': !row.color }"
     :placeholder="row.text"
     :readonly="row.readonly?.(values) ?? false"
   >

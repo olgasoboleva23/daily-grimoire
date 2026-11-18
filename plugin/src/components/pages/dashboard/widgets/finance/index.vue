@@ -14,10 +14,10 @@ defineProps({ state: { type: Object, required: true } });
 </script>
 
 <template>
-  <div class="winx-fin__month">
+  <div class="ui-fin__month">
     <div v-if="!state.data.empty">{{ state.data.month }}: spent
-      <b class="winx-fin__month-sum">{{ state.data.spent }}</b> · income
-      <b class="winx-fin__month-sum">{{ state.data.income }}</b></div>
+      <b class="ui-fin__month-sum">{{ state.data.spent }}</b> · income
+      <b class="ui-fin__month-sum">{{ state.data.income }}</b></div>
     <UiButton kind="text" @click="open">💰 open finance</UiButton>
   </div>
 </template>

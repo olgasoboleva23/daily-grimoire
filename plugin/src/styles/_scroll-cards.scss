@@ -19,11 +19,11 @@
 @property --winx-less { syntax: "<number>"; inherits: true; initial-value: 0; }
 
 /* --winx-more: content below (bottom arrow); --winx-less: content above (top arrow) */
-@keyframes winx-more   { 0% { --winx-more: 1; --winx-less: 0; } 12% { --winx-less: 1; } 88% { --winx-more: 1; } 100% { --winx-more: 0; --winx-less: 1; } }
+@keyframes ui-more   { 0% { --winx-more: 1; --winx-less: 0; } 12% { --winx-less: 1; } 88% { --winx-more: 1; } 100% { --winx-more: 0; --winx-less: 1; } }
 /* Bounce inward only: a bounce past the card edge would itself count as
    overflow and switch the arrow on in cards that have nothing to scroll. */
-@keyframes winx-bounce-up   { 0%, 100% { translate: 0 0; } 50% { translate: 0 -5px; } }
-@keyframes winx-bounce-down { 0%, 100% { translate: 0 0; } 50% { translate: 0 5px; } }
+@keyframes ui-bounce-up   { 0%, 100% { translate: 0 0; } 50% { translate: 0 -5px; } }
+@keyframes ui-bounce-down { 0%, 100% { translate: 0 0; } 50% { translate: 0 5px; } }
 
 :is(
   .dashboard .callout[data-callout="card"][data-callout-metadata~="scroll"],
@@ -47,13 +47,13 @@
     }
   }
 
-  &::after  { bottom: $space-xs; margin: (-$pill-h) auto 0; opacity: var(--winx-more); animation: winx-bounce-up 1.4s ease-in-out infinite; }
-  &::before { top: $space-xs; margin: 0 auto (-$pill-h); opacity: var(--winx-less); rotate: 180deg; animation: winx-bounce-down 1.4s ease-in-out infinite; }
+  &::after  { bottom: $space-xs; margin: (-$pill-h) auto 0; opacity: var(--winx-more); animation: ui-bounce-up 1.4s ease-in-out infinite; }
+  &::before { top: $space-xs; margin: 0 auto (-$pill-h); opacity: var(--winx-less); rotate: 180deg; animation: ui-bounce-down 1.4s ease-in-out infinite; }
 
   /* declared 0 is the fallback while nothing scrolls; the active scroll
      animation overrides it. Keeps a short card from inheriting a scrolling parent's value. */
   --winx-more: 0;
   --winx-less: 0;
-  animation: winx-more linear both;
+  animation: ui-more linear both;
   animation-timeline: scroll(self);
 }

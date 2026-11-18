@@ -38,7 +38,7 @@ test("theme follows loaded/synced settings, late images, reset and plugin unload
   applyConfig();
   useTaskStore(plugin); useTheme(plugin); await settle();
   assert.equal(config.theme, "gothic");
-  assert.ok(document.body.classList.contains("winx-theme-gothic"));
+  assert.ok(document.body.classList.contains("ui-theme-gothic"));
   assert.equal(document.body.style.getPropertyValue("--winx-theme-image"), "none");
   const image = `${THEME_IMAGES}/gothic.avif`;
   files[image] = "image"; fire("create", { path: image });
@@ -50,13 +50,13 @@ test("theme follows loaded/synced settings, late images, reset and plugin unload
     assert.equal(json.levelCost.base, 100);
     files[CONFIG] = JSON.stringify(json); fire("modify", { path: CONFIG }); await settle();
     assert.equal(config.theme, value);
-    assert.equal(document.body.classList.contains(`winx-theme-${value}`), value !== "winx");
+    assert.equal(document.body.classList.contains(`ui-theme-${value}`), value !== "winx");
   }
   files[CONFIG] = '{"theme":"missing"}'; fire("modify", { path: CONFIG }); await settle();
   assert.equal(config.theme, "winx");
   assert.equal(document.body.style.getPropertyValue("--winx-theme-image"), "");
   files[CONFIG] = '{"theme":"winx-dark"}'; fire("modify", { path: CONFIG }); await settle();
-  assert.ok(draws.includes("winx:theme"));
+  assert.ok(draws.includes("ui:theme"));
   plugin.unload();
   assert.equal(document.body.className, "");
   assert.equal(document.body.style.getPropertyValue("--winx-theme-image"), "");
@@ -74,7 +74,7 @@ test("each theme defines the palette in Winx only and ships its AVIF and heading
   const fonts = readFileSync(`${styles}_fonts.scss`, "utf8");
   const expected = { "winx-dark": "Cinzel", gothic: "Pirata One", da2: "Cinzel Decorative" };
   for (const [name, font] of Object.entries(expected)) {
-    const rule = themes.nodes.find(r => r.selector?.startsWith(`body.winx-theme-${name} `));
+    const rule = themes.nodes.find(r => r.selector?.startsWith(`body.ui-theme-${name} `));
     assert.ok(rule.selector.includes('.workspace-leaf-content[data-type=winx]'));
     assert.ok(rule.selector.includes('.block-language-winx'));
     const declarations = new Map(rule.nodes.map(d => [d.prop, d.value]));

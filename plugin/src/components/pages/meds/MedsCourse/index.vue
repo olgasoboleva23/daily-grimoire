@@ -1,4 +1,4 @@
-<!-- A medication course (block winx-meds), a record of courses.json, in three cards: Приём (the
+<!-- A medication course (block ui-meds), a record of courses.json, in three cards: Приём (the
      doses by time of day and meal), Заметки (the course's notes as Markdown, when it has some),
      Курс: the counts and the course's progress, today's doses by anchor as chips, the course's
      grid (a mark per day and medicine, a note per day typed into the last column), the legend
@@ -31,12 +31,12 @@ const times = computed(() =>
   [...new Set(props.course.columns.map(c => c.time).filter(Boolean))].map(t => TIMES[t]));
 // the grid's columns: the date, a medicine (its code and time) each, the day's note
 const columns = computed(() => [
-  { key: "label", label: "Дата", class: "winx-meds__date" },
+  { key: "label", label: "Дата", class: "ui-meds__date" },
   ...props.course.columns.map((c, col) => ({
     key: `m${col}`, label: c.code + c.time, align: "center", col,
     tip: `${c.name}, ${TIMES[c.time]}`,
   })),
-  { key: "note", label: "Заметки", class: "winx-meds__note" },
+  { key: "note", label: "Заметки", class: "ui-meds__note" },
 ]);
 const today = () => props.course.rows.find(r => r.when === "today");
 
@@ -78,79 +78,79 @@ const note = (r, el) => {
 </script>
 
 <template>
-  <div class="winx-meds">
+  <div class="ui-meds">
     <UiCard title="Приём">
-      <div v-for="line in intake" :key="line" class="winx-meds__intake">{{ line }}</div>
+      <div v-for="line in intake" :key="line" class="ui-meds__intake">{{ line }}</div>
     </UiCard>
     <UiCard v-if="notes" title="Заметки">
-      <div class="winx-meds__notes">{{ notes }}</div>
+      <div class="ui-meds__notes">{{ notes }}</div>
     </UiCard>
     <UiCard title="Курс">
       <template #button>
         <UiButton
           kind="add"
           title="edit course"
-          class="winx-widget__add"
+          class="ui-widget__add"
           @click="editCourse(id)"
         >✎</UiButton>
       </template>
-      <div class="winx-meds__sum">
+      <div class="ui-meds__sum">
         день {{ course.day }} из {{ course.days }}
         · принято {{ course.taken }} из {{ course.due }}
       </div>
-      <div class="winx-meds__bar">
+      <div class="ui-meds__bar">
         <span
-          class="winx-meds__bar-fill"
+          class="ui-meds__bar-fill"
           :style="{ width: `${Math.min(100, 100 * course.day / (course.days || 1))}%` }"
         />
       </div>
-      <div v-if="course.today" class="winx-meds__today winx-col winx-gap-m">
-        <div v-for="g in course.today" :key="g.label" class="winx-meds__zone">
-          <div class="winx-meds__zone-label">
+      <div v-if="course.today" class="ui-meds__today ui-col ui-gap-m">
+        <div v-for="g in course.today" :key="g.label" class="ui-meds__zone">
+          <div class="ui-meds__zone-label">
             <b v-if="g === course.today[0]">Сегодня</b> {{ g.label }}
           </div>
-          <div class="winx-flex winx-wrap winx-gap-m">
+          <div class="ui-flex ui-wrap ui-gap-m">
             <button
               v-for="i in g.items"
               :key="i.col"
-              class="winx-meds__chip"
+              class="ui-meds__chip"
               :data-mark="i.mark"
               @click="toggle(today(), i.col); playMark(i.mark)"
             ><UiCheckbox :mark="i.mark" static />{{ i.name }}</button>
           </div>
         </div>
       </div>
-      <div class="winx-meds__grid">
+      <div class="ui-meds__grid">
         <UiTable
           :columns="columns"
           :rows="course.rows"
           :row-key="r => r.date"
-          :row-class="r => `winx-meds__row--${r.when}`"
+          :row-class="r => `ui-meds__row--${r.when}`"
         >
           <template #cell="{ row, col }">
             <template v-if="col.key === 'label'">{{ row.label }}</template>
             <UiInput
               v-else-if="col.key === 'note'"
               kind="inline"
-              class="winx-meds__note-input"
+              class="ui-meds__note-input"
               :model-value="row.note"
               placeholder="…"
               @change="note(row, $event.target)"
             />
             <UiCheckbox
               v-else-if="row.marks[col.col]"
-              class="winx-meds__tick"
+              class="ui-meds__tick"
               :mark="row.marks[col.col]"
               @tick="toggle(row, col.col)"
             />
           </template>
         </UiTable>
       </div>
-      <div class="winx-meds__legend winx-center winx-wrap winx-gap-xl">
+      <div class="ui-meds__legend ui-center ui-wrap ui-gap-xl">
         <span v-for="[code, name] in codes" :key="code"><b>{{ code }}</b> {{ name }}</span>
         <span v-for="t in times" :key="t">{{ t }}</span>
       </div>
-      <div class="winx-meds__legend winx-center winx-wrap winx-gap-xl">
+      <div class="ui-meds__legend ui-center ui-wrap ui-gap-xl">
         <span><UiCheckbox mark="☐" size="s" static /> не отмечено</span>
         <span><UiCheckbox mark="✅" size="s" static /> принято</span>
         <span><UiCheckbox mark="❌" size="s" static /> пропущено намеренно</span>

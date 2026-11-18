@@ -115,7 +115,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div :class="['winx-pomodoro', { 'winx-pomodoro--mini': mini }]">
+  <div :class="['ui-pomodoro', { 'ui-pomodoro--mini': mini }]">
     <PomodoroMini :shown="shown" @toggle="toggle" @play="play" />
     <PomodoroRing
       :shown="shown"

@@ -22,8 +22,8 @@ const pick = r => {
 </script>
 
 <template>
-  <div class="winx-weight__log">
-    <div class="winx-weight__log-row winx-flex winx-wrap winx-gap-s">
+  <div class="ui-weight__log">
+    <div class="ui-weight__log-row ui-flex ui-wrap ui-gap-s">
       <UiButton
         v-for="n in [0, 1, 2, 3]"
         :key="n"
@@ -32,7 +32,7 @@ const pick = r => {
         @click="set(n)"
       >{{ n }}</UiButton>
     </div>
-    <div class="winx-weight__log-row winx-flex winx-wrap winx-gap-s">
+    <div class="ui-weight__log-row ui-flex ui-wrap ui-gap-s">
       <UiButton
         v-for="r in log.reasons"
         :key="r"
@@ -43,11 +43,11 @@ const pick = r => {
     </div>
   </div>
   <UiChart :config="log.chart" />
-  <div class="winx-row winx-gap-s">
-    <UiNoteLink :path="log.path" class="winx-weight__list">✦ list</UiNoteLink>
+  <div class="ui-row ui-gap-s">
+    <UiNoteLink :path="log.path" class="ui-weight__list">✦ list</UiNoteLink>
     <UiButton
       title="delete the journal"
-      class="winx-weight__delete"
+      class="ui-weight__delete"
       @click="$emit('delete')"
     >🗑</UiButton>
   </div>

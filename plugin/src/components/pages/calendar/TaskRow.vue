@@ -55,10 +55,10 @@ function onTick(e) {
     v-if="!gone"
     v-tip="compact ? task.label : null"
     :class="[
-      'winx-cal__task',
-      `winx-cal__task--${kind}`,
-      onto.mark && `winx-cal__task--drop-${onto.mark}`,
-      { 'winx-cal__task--ticking': ticking, 'winx-cal__task--done': done },
+      'ui-cal__task',
+      `ui-cal__task--${kind}`,
+      onto.mark && `ui-cal__task--drop-${onto.mark}`,
+      { 'ui-cal__task--ticking': ticking, 'ui-cal__task--done': done },
     ]"
     :style="{
       '--area': task.color ?? undefined, '--winx-swipe-progress': swipe.progress,
@@ -78,8 +78,8 @@ function onTick(e) {
     @touchend="touch.end"
     @touchcancel="touch.cancel"
   >
-    <div class="winx-task__content">
-      <span v-if="after" class="winx-cal__after">↳</span>
+    <div class="ui-task__content">
+      <span v-if="after" class="ui-cal__after">↳</span>
       <template v-if="box">
         <input
           v-if="kind === 'done'"
@@ -100,10 +100,10 @@ function onTick(e) {
         >
       </template>{{ repeat }}<TaskText :task="task" />
     </div>
-    <div v-if="live && !done" class="winx-task__btns winx-task__actions">
+    <div v-if="live && !done" class="ui-task__btns ui-task__actions">
       <UiButton
         v-if="box"
-        class="winx-task__primary winx-task__mobile"
+        class="ui-task__primary ui-task__mobile"
         title="complete task"
         :disabled="ticking"
         @click="touch.run"

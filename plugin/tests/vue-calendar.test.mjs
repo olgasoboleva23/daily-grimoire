@@ -64,7 +64,7 @@ function mount(over = {}, tasksApi = {}, source = { tasks: TASKS(), poolLines: [
   createApp(Tab).provide("calendar", view).mount(el);
   return { el, st, ticked, placed, moved, unplanned, tab, view };
 }
-const box = (el, text) => [...el.querySelectorAll(".winx-cal__task--open")].find(r => r.textContent.includes(text))
+const box = (el, text) => [...el.querySelectorAll(".ui-cal__task--open")].find(r => r.textContent.includes(text))
   .querySelector("input");
 
 test("CalendarPage: cached while hidden, refreshed on return; subscriptions end on close", async () => {
@@ -97,12 +97,12 @@ test("a tick is written 2 s later; unticked in time, nothing", async () => {
     const walk = box(el, "walk");
     walk.checked = true; walk.dispatchEvent(new Event("change"));
     await vue.nextTick();
-    assert.ok(walk.closest(".winx-cal__task").classList.contains("winx-cal__task--ticking"));
+    assert.ok(walk.closest(".ui-cal__task").classList.contains("ui-cal__task--ticking"));
     mock.timers.tick(1999);
     assert.equal(ticked.length, 0);
     mock.timers.tick(1);
     assert.deepEqual(ticked.map(t => data.T(t).text), ["walk"]);
-    const stretch = el.querySelector(".winx-cal__routine-list .winx-cal__task--open input");
+    const stretch = el.querySelector(".ui-cal__routine-list .ui-cal__task--open input");
     stretch.checked = true; stretch.dispatchEvent(new Event("change"));
     mock.timers.tick(1500);
     stretch.checked = false; stretch.dispatchEvent(new Event("change"));
@@ -126,7 +126,7 @@ test("a tick waiting its 2 s outlives the row, not the tab: closed meanwhile, no
 
 test("the unfolded days are the day's: a click on a new day starts from none", async () => {
   const { el, st } = mount({ unfolded: ["2026-11-03"], unfoldedDay: "2026-11-03" });   // yesterday's
-  el.querySelector(".winx-cal__routine-pill span").click();
+  el.querySelector(".ui-cal__routine-pill span").click();
   await vue.nextTick();
   assert.deepEqual(st.unfolded, [TODAY]);
   assert.equal(st.unfoldedDay, TODAY);
@@ -134,34 +134,34 @@ test("the unfolded days are the day's: a click on a new day starts from none", a
 
 test("a day's 🔁 box folds and unfolds by its edge (into the state), not by a task in it", async () => {
   const { el, st } = mount();
-  const routine = el.querySelector(".winx-cal__routine");
-  routine.querySelector(".winx-cal__routine-pill span").click();
+  const routine = el.querySelector(".ui-cal__routine");
+  routine.querySelector(".ui-cal__routine-pill span").click();
   await vue.nextTick();
   assert.deepEqual(st.unfolded, [TODAY]);
-  assert.ok(routine.classList.contains("winx-cal__routine--open"));
-  routine.querySelector(".winx-cal__routine-list .winx-cal__task").click();
+  assert.ok(routine.classList.contains("ui-cal__routine--open"));
+  routine.querySelector(".ui-cal__routine-list .ui-cal__task").click();
   assert.deepEqual(st.unfolded, [TODAY]);   // a task: no fold
-  routine.querySelector(".winx-cal__routine-time").click();
+  routine.querySelector(".ui-cal__routine-time").click();
   await vue.nextTick();
   assert.deepEqual(st.unfolded, []);
 });
 
 test("the panel's tab redraws only the panel: the header's elements stay the same ones", async () => {
   const { el, st } = mount();
-  const top = el.querySelector(".winx-cal__top"), day = el.querySelector(".winx-cal__day");
+  const top = el.querySelector(".ui-cal__top"), day = el.querySelector(".ui-cal__day");
   st.tab = "regulars";
   await vue.nextTick();
-  assert.equal(el.querySelector(".winx-cal__top"), top);
-  assert.equal(el.querySelector(".winx-cal__day"), day);
-  assert.match(el.querySelector(".winx-tabs__tab--on").textContent, /^Regulars/);
-  assert.match(el.querySelector(".winx-cal__backlog-grid").textContent, /stretch/);
+  assert.equal(el.querySelector(".ui-cal__top"), top);
+  assert.equal(el.querySelector(".ui-cal__day"), day);
+  assert.match(el.querySelector(".ui-tabs__tab--on").textContent, /^Regulars/);
+  assert.match(el.querySelector(".ui-cal__backlog-grid").textContent, /stretch/);
 });
 
 test("the area filter: a piece of the balance bar picks its area, again: all", async () => {
   const { el, st } = mount();
-  el.querySelector(".winx-cal__area").click();
+  el.querySelector(".ui-cal__area").click();
   assert.equal(st.area, "body");
-  el.querySelector(".winx-cal__area").click();
+  el.querySelector(".ui-cal__area").click();
   assert.equal(st.area, null);
 });
 
@@ -169,8 +169,8 @@ test("the area filter: a piece of the balance bar picks its area, again: all", a
 // on a zone, touches on a row)
 const fire = (el, type, init = {}) =>
   el.dispatchEvent(Object.assign(new Event(type, { bubbles: true, cancelable: true }), init));
-const row = (el, text) => [...el.querySelectorAll(".winx-cal__task--open")].find(r => r.textContent.includes(text));
-const card = (el, text) => [...el.querySelectorAll(".winx-task-card")].find(r => r.textContent.includes(text));
+const row = (el, text) => [...el.querySelectorAll(".ui-cal__task--open")].find(r => r.textContent.includes(text));
+const card = (el, text) => [...el.querySelectorAll(".ui-task-card")].find(r => r.textContent.includes(text));
 const touch = (el, type, x, y) => fire(el, type, { touches: [{ clientX: x, clientY: y }] });
 const swipe = (el, dx) => {
   touch(el, "touchstart", 100, 100);
@@ -181,28 +181,28 @@ const swipe = (el, dx) => {
 
 test("a row dragged onto a day's 📅 zone is planned there, onto a past day's ✓ zone: done that day, onto the panel: no date", async () => {
   const { el, placed } = mount();
-  const walk = row(el, "walk"), days = [...el.querySelectorAll(".winx-cal__day")];
+  const walk = row(el, "walk"), days = [...el.querySelectorAll(".ui-cal__day")];
   fire(walk, "dragstart");
   await new Promise(r => setTimeout(r));   // the zones show a tick later (drag.js)
-  assert.ok(el.querySelector(".winx-cal").classList.contains("winx-cal--dragging"));
-  assert.ok(days[2].classList.contains("winx-cal__day--source"));   // its own day
-  const plan = days[3].querySelector(".winx-cal__zone--plan");
+  assert.ok(el.querySelector(".ui-cal").classList.contains("ui-cal--dragging"));
+  assert.ok(days[2].classList.contains("ui-cal__day--source"));   // its own day
+  const plan = days[3].querySelector(".ui-cal__zone--plan");
   fire(plan, "dragover");
   await vue.nextTick();
-  assert.ok(plan.classList.contains("winx-cal__zone--over"));
+  assert.ok(plan.classList.contains("ui-cal__zone--over"));
   fire(plan, "drop");
   await vue.nextTick();
   assert.deepEqual(placed, [["walk", "2026-11-05", false]]);
-  assert.ok(!plan.classList.contains("winx-cal__zone--over"));
+  assert.ok(!plan.classList.contains("ui-cal__zone--over"));
   fire(walk, "dragend");
   await vue.nextTick();
-  assert.ok(!el.querySelector(".winx-cal--dragging"));
-  assert.ok(!days[2].classList.contains("winx-cal__day--source"));
+  assert.ok(!el.querySelector(".ui-cal--dragging"));
+  assert.ok(!days[2].classList.contains("ui-cal__day--source"));
   fire(walk, "dragstart");
-  fire(days[1].querySelector(".winx-cal__zone--done"), "drop");
+  fire(days[1].querySelector(".ui-cal__zone--done"), "drop");
   fire(walk, "dragend");
   fire(walk, "dragstart");
-  fire(el.querySelector(".winx-cal__backlog"), "drop");
+  fire(el.querySelector(".ui-cal__backlog"), "drop");
   assert.deepEqual(placed.slice(1), [["walk", "2026-11-03", true], ["walk", null, false]]);
 });
 
@@ -212,18 +212,18 @@ test("dropped onto another open task of its day and group: before or after it, b
   fire(walk, "dragstart");
   fire(write, "dragover", { clientY: 1 });   // the rect is 0×0 here: 1 is below its middle
   await vue.nextTick();
-  assert.ok(write.classList.contains("winx-cal__task--drop-after"));
+  assert.ok(write.classList.contains("ui-cal__task--drop-after"));
   fire(write, "dragover", { clientY: -1 });
   await vue.nextTick();
-  assert.ok(write.classList.contains("winx-cal__task--drop-before"));
+  assert.ok(write.classList.contains("ui-cal__task--drop-before"));
   fire(write, "drop", { clientY: -1 });
   await vue.nextTick();
   assert.deepEqual(moved, [["walk", "write", false]]);
-  assert.ok(!write.classList.contains("winx-cal__task--drop-before"));
+  assert.ok(!write.classList.contains("ui-cal__task--drop-before"));
   fire(walk, "dragstart");
   fire(stretch, "dragover", { clientY: 1 });   // a 🔁 row: not its group
   await vue.nextTick();
-  assert.ok(!stretch.classList.contains("winx-cal__task--drop-after"));
+  assert.ok(!stretch.classList.contains("ui-cal__task--drop-after"));
 });
 
 test("phone: a short left swipe opens actions; a long one arms completion, moving back disarms", async () => {
@@ -335,7 +335,7 @@ test("phone: pool swipes add an open copy today; Missed swipes complete on the t
     swipe(pool, -180);
     assert.deepEqual(added, [["pool chore", TODAY, false]]);
     assert.equal(ticked.length, 0);
-    const missed = el.querySelector(".winx-missed__row");
+    const missed = el.querySelector(".ui-missed__row");
     swipe(missed, -60);
     await vue.nextTick();
     assert.equal(missed.dataset.swipe, "open");
@@ -361,14 +361,14 @@ test("Projects tab: a GroupCard per project with open tasks (a Done one too), a 
     fin: { name: "Fin", status: "done", stages: [{ name: "All", tasks: ["t2"] }] },
   });
   const { el, st } = mount({ tab: "projects" });
-  const panel = el.querySelector(".winx-cal__backlog-grid");
-  assert.deepEqual([...panel.querySelectorAll(".winx-cal__group")].map(g => g.textContent), ["Trip", "Old"]);
-  assert.deepEqual([...panel.querySelectorAll(".winx-cal__stage")].map(g => g.textContent), ["Plan", "Go", "All"]);
+  const panel = el.querySelector(".ui-cal__backlog-grid");
+  assert.deepEqual([...panel.querySelectorAll(".ui-cal__group")].map(g => g.textContent), ["Trip", "Old"]);
+  assert.deepEqual([...panel.querySelectorAll(".ui-cal__stage")].map(g => g.textContent), ["Plan", "Go", "All"]);
   assert.match(panel.textContent, /pick venue/);
   assert.match(panel.textContent, /pack bags/);
   assert.match(panel.textContent, /old chore/);
   assert.doesNotMatch(panel.textContent, /book flights/);
-  assert.match(el.querySelector(".winx-tabs__tab--on").textContent, /^Projects · 3$/);
+  assert.match(el.querySelector(".ui-tabs__tab--on").textContent, /^Projects · 3$/);
   assert.equal(st.tab, "projects");
   taskStore.put(MASTER, ""); taskStore.putRecords({}); taskStore.putProjects({});
 });
@@ -378,12 +378,12 @@ test("Projects tab: no projects at first, then one with an open task shows its s
   const { MASTER } = await import("#/helpers/paths.js");
   taskStore.putProjects({});
   const { el } = mount({ tab: "projects" });
-  assert.equal(el.querySelector(".winx-cal__stage"), null);
+  assert.equal(el.querySelector(".ui-cal__stage"), null);
   taskStore.put(MASTER, "- [ ] t1");
   taskStore.putRecords({ t1: { name: "pick venue" } });
   taskStore.putProjects({ trip: { name: "Trip", status: "active", stages: [{ name: "Plan", tasks: ["t1"] }] } });
   await vue.nextTick();
-  assert.equal(el.querySelector(".winx-cal__stage").textContent, "Plan");
+  assert.equal(el.querySelector(".ui-cal__stage").textContent, "Plan");
   taskStore.put(MASTER, ""); taskStore.putRecords({}); taskStore.putProjects({});
 });
 
@@ -394,6 +394,6 @@ test("Projects tab: two stages with one name both show", async () => {
   taskStore.putRecords({ t1: { name: "one" }, t2: { name: "two" } });
   taskStore.putProjects({ x: { name: "X", status: "active", stages: [{ name: "S", tasks: ["t1"] }, { name: "S", tasks: ["t2"] }] } });
   const { el } = mount({ tab: "projects" });
-  assert.deepEqual([...el.querySelectorAll(".winx-cal__stage")].map(g => g.textContent), ["S", "S"]);
+  assert.deepEqual([...el.querySelectorAll(".ui-cal__stage")].map(g => g.textContent), ["S", "S"]);
   taskStore.put(MASTER, ""); taskStore.putRecords({}); taskStore.putProjects({});
 });

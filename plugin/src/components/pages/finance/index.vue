@@ -21,23 +21,23 @@ const m = computed(() => {
 </script>
 
 <template>
-  <div class="winx-fin winx-col winx-gap-2xl">
+  <div class="ui-fin ui-col ui-gap-2xl">
     <UiEmpty
       v-if="state.data.empty"
       :text="`The ledger is empty: a note per month goes to ${state.data.path}`"
     />
     <template v-else>
-      <div class="winx-fin__head winx-row winx-between winx-gap-m">
-        <div class="winx-fin__title">{{ m.title }}</div>
-        <div class="winx-fin__nav winx-flex winx-gap-xs">
-          <button class="winx-fin__nav-btn" :disabled="!m.prev" @click="picked = m.prev">◀</button>
-          <button class="winx-fin__nav-btn" :disabled="!m.next" @click="picked = m.next">▶</button>
+      <div class="ui-fin__head ui-row ui-between ui-gap-m">
+        <div class="ui-fin__title">{{ m.title }}</div>
+        <div class="ui-fin__nav ui-flex ui-gap-xs">
+          <button class="ui-fin__nav-btn" :disabled="!m.prev" @click="picked = m.prev">◀</button>
+          <button class="ui-fin__nav-btn" :disabled="!m.next" @click="picked = m.next">▶</button>
         </div>
       </div>
       <FinanceTotals :totals="m.totals" />
       <div
         v-if="m.transfers"
-        class="winx-fin__section"
+        class="ui-fin__section"
       >transfers {{ m.transfers }} — not counted as spending</div>
       <FinanceCategories v-if="m.categories.length" :categories="m.categories" />
       <FinanceTrend v-if="m.trend.length" :trend="m.trend" />

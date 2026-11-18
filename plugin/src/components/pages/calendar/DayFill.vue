@@ -10,8 +10,8 @@ import { dayGroup } from "#/models/calendarData.js";
 
 const TIMES = [["morning", "🌅 morning"], ["evening", "🌙 evening"], ["other", "🔁 other"]];
 const EDGE = [
-  ".winx-cal__routine", ".winx-cal__routine-pill", ".winx-cal__routine-pill *",
-  ".winx-cal__routine-time",
+  ".ui-cal__routine", ".ui-cal__routine-pill", ".ui-cal__routine-pill *",
+  ".ui-cal__routine-time",
 ].join(", ");
 const props = defineProps({
   day: { type: String, required: true },
@@ -70,16 +70,16 @@ function fold(e) {
   />
   <div
     v-if="fill.routine"
-    :class="['winx-cal__routine', { 'winx-cal__routine--open': open }]"
+    :class="['ui-cal__routine', { 'ui-cal__routine--open': open }]"
     :data-day="day"
     @click="fold"
   >
-    <div v-show="!open" v-tip="fill.routine.title" class="winx-cal__routine-pill">
+    <div v-show="!open" v-tip="fill.routine.title" class="ui-cal__routine-pill">
       <span>{{ fill.routine.count }}</span>
     </div>
-    <div v-show="open" class="winx-cal__routine-list">
+    <div v-show="open" class="ui-cal__routine-list">
       <template v-for="g in fill.routine.groups" :key="g.name">
-        <div class="winx-cal__routine-time">{{ g.name }}</div>
+        <div class="ui-cal__routine-time">{{ g.name }}</div>
         <TaskRow
           v-for="r in g.rows"
           :key="r.key"

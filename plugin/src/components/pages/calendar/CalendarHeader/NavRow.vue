@@ -50,9 +50,9 @@ const repeats = () => {
 </script>
 
 <template>
-  <div class="winx-nav winx-row winx-gap-l" data-part="header">
+  <div class="ui-nav ui-row ui-gap-l" data-part="header">
     <UiButton kind="nav" title="previous" @click="step(-1)">‹</UiButton>
-    <span class="winx-nav__title winx-text-center">{{ nav.title }}</span>
+    <span class="ui-nav__title ui-text-center">{{ nav.title }}</span>
     <UiButton
       kind="nav"
       title="next"

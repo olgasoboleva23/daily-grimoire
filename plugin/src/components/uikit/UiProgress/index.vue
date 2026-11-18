@@ -8,8 +8,8 @@ defineProps({
 </script>
 
 <template>
-  <div class="winx-progress winx-row winx-gap-m">
-    <progress class="winx-progress__bar" :value="value" :max="max" />
-    <span class="winx-progress__count">{{ value }}/{{ max }}</span>
+  <div class="ui-progress ui-row ui-gap-m">
+    <progress class="ui-progress__bar" :value="value" :max="max" />
+    <span class="ui-progress__count">{{ value }}/{{ max }}</span>
   </div>
 </template>

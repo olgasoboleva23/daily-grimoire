@@ -41,11 +41,11 @@ async function refresh() {
     Object.assign(state, { data, error: null });
     await nextTick();
     if (gone || n !== runs) return;
-    const body = el().querySelector(".winx-widget__body") ?? el();
+    const body = el().querySelector(".ui-widget__body") ?? el();
 
     if (!heights.has(def.view)) heights.set(def.view, new Map());
     heights.get(def.view).set(sourcePath, body.offsetHeight);
-    el().dispatchEvent(new CustomEvent("winx-drawn", { bubbles: true }));
+    el().dispatchEvent(new CustomEvent("ui-drawn", { bubbles: true }));
   } catch (error) {
     if (gone || n !== runs) return;
     console.error(error);
@@ -62,7 +62,7 @@ onMounted(() => {
   const { redraw } = redraws;
 
   catchUp = redraws.catchUp;
-  owner.registerEvent(app.workspace.on("winx:theme", redraw));
+  owner.registerEvent(app.workspace.on("ui:theme", redraw));
   const taskFiles = `${TASKS}/`, others = def.watches?.filter(w => w !== taskFiles);
   const watched = others && (path =>
     others.some(w => w.endsWith("/") ? path.startsWith(w) : path === w));
@@ -89,7 +89,7 @@ defineExpose({ state, refresh });
     <UiFailed v-if="state.error" :text="state.error" @retry="retry" />
     <div
       v-else-if="state.data === null"
-      class="winx-widget__skeleton"
+      class="ui-widget__skeleton"
       :style="kept ? { minHeight: `${kept}px` } : null"
     />
     <component :is="def.view" v-else :state="state" />

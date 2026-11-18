@@ -24,16 +24,16 @@ const data = {
 test("Cycle: folded shows the head and the buttons; a click on the head unfolds it (kept on this device); ended yesterday: written", async () => {
   const { files, local } = vault({ [CYCLE]: "period:: 8\n\n- start:: 2026-11-02\n" }, { dataview });
   const w = mount(CycleWidget, { props: { state: { data } } });
-  assert.ok(w.classes().includes("winx-cycle--folded"));
-  assert.equal(w.find(".winx-cycle__day").text(), "day 3 · period");
-  assert.equal(w.find(".winx-cycle__day").attributes("aria-label"), "MP 1/4\n\nday 1–5 · period");   // the tooltip
-  assert.ok(!w.find(".winx-cycle__rows").exists());
-  await w.find(".winx-cycle__head").trigger("click");
+  assert.ok(w.classes().includes("ui-cycle--folded"));
+  assert.equal(w.find(".ui-cycle__day").text(), "day 3 · period");
+  assert.equal(w.find(".ui-cycle__day").attributes("aria-label"), "MP 1/4\n\nday 1–5 · period");   // the tooltip
+  assert.ok(!w.find(".ui-cycle__rows").exists());
+  await w.find(".ui-cycle__head").trigger("click");
   assert.equal(local["winx-cycle-open"], "1");
-  assert.equal(w.findAll(".winx-cycle__pill--period").length, 3);
-  await w.findAll(".winx-cycle__tabs button")[1].trigger("click");
-  assert.equal(w.find(".winx-cycle__chart-avg").text(), "avg 29 d");
-  await w.find(".winx-cycle__btns button").trigger("click");
+  assert.equal(w.findAll(".ui-cycle__pill--period").length, 3);
+  await w.findAll(".ui-cycle__tabs button")[1].trigger("click");
+  assert.equal(w.find(".ui-cycle__chart-avg").text(), "avg 29 d");
+  await w.find(".ui-cycle__btns button").trigger("click");
   await new Promise(r => setTimeout(r));
   assert.equal(files[CYCLE], "period:: 8\n\n- start:: 2026-11-02\n- end:: 2026-11-03\n");
 });

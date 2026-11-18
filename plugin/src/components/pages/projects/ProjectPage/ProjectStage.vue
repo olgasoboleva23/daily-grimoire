@@ -22,16 +22,16 @@ const folded = ref(complete.value);
 <template>
   <UiCard
     :wings="false"
-    :class="['winx-project__stage', { 'winx-project__stage--folded': folded }]"
+    :class="['ui-project__stage', { 'ui-project__stage--folded': folded }]"
   >
-    <div class="winx-project__stage-head winx-row winx-gap-m">
-      <span class="winx-project__stage-num">{{ String(index + 1).padStart(2, "0") }}</span>
-      <span class="winx-project__stage-name winx-grow">{{ stage.name }}</span>
-      <span class="winx-project__stage-count">{{ done }}/{{ total }}</span>
-      <span v-if="complete" class="winx-project__stage-done">✓</span>
+    <div class="ui-project__stage-head ui-row ui-gap-m">
+      <span class="ui-project__stage-num">{{ String(index + 1).padStart(2, "0") }}</span>
+      <span class="ui-project__stage-name ui-grow">{{ stage.name }}</span>
+      <span class="ui-project__stage-count">{{ done }}/{{ total }}</span>
+      <span v-if="complete" class="ui-project__stage-done">✓</span>
       <UiButton
         kind="text"
-        class="winx-project__fold"
+        class="ui-project__fold"
         :title="folded ? 'Show tasks' : 'Hide tasks'"
         @click="folded = !folded"
       >{{ folded ? "⌄" : "⌃" }}</UiButton>
@@ -40,7 +40,7 @@ const folded = ref(complete.value);
       <ProjectTask v-for="e in stage.entries" :key="e.id" :entry="e" />
       <UiButton
         kind="text"
-        class="winx-project__add"
+        class="ui-project__add"
         @click="addToStage(project, index, stage.name)"
       >+ task</UiButton>
     </template>

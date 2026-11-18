@@ -21,10 +21,10 @@ const date = computed(() => state.date ?? today.value);
 const go = day => { state.date = day === today.value ? null : day; };
 
 useNewDay(owner, day => { today.value = day; });
-watch(date, () => app.workspace.trigger("winx:date"), { flush: "post" });
+watch(date, () => app.workspace.trigger("ui:date"), { flush: "post" });
 useBusy(owner, path => path !== POMODORO && path.startsWith(`${DATA}/`),
-  () => root.value, "winx-dash--busy");
-const drawn = () => root.value.classList.remove("winx-dash--busy");
+  () => root.value, "ui-dash--busy");
+const drawn = () => root.value.classList.remove("ui-dash--busy");
 const columns = computed(() => {
   taskStore.version.value;
   return [
@@ -39,16 +39,16 @@ const columns = computed(() => {
 <template>
   <div
     ref="root"
-    class="winx-view__page markdown-preview-view markdown-rendered dashboard winx-dash"
+    class="ui-view__page markdown-preview-view markdown-rendered dashboard ui-dash"
     :data-date="date"
-    @winx-drawn="drawn"
+    @ui-drawn="drawn"
   >
-    <div class="winx-busy">
-      <div class="winx-busy__pill" title="saving…"><span class="winx-busy__star">✦</span></div>
+    <div class="ui-busy">
+      <div class="ui-busy__pill" title="saving…"><span class="ui-busy__star">✦</span></div>
     </div>
-    <div class="winx-dash__content">
-      <div class="winx-dash__top">
-        <div class="winx-dash__date winx-nav winx-row winx-gap-l">
+    <div class="ui-dash__content">
+      <div class="ui-dash__top">
+        <div class="ui-dash__date ui-nav ui-row ui-gap-l">
           <DashboardDate
             :date="date"
             :today="today"
@@ -58,14 +58,14 @@ const columns = computed(() => {
         </div>
         <Widget :definition="blocks.dailyNote" />
       </div>
-      <div class="winx-dash__columns">
-        <div v-for="(column, i) in columns" :key="i" class="winx-dash__column">
+      <div class="ui-dash__columns">
+        <div v-for="(column, i) in columns" :key="i" class="ui-dash__column">
           <Widget
             v-for="[key, title, meta] in column"
             :key="key"
             :definition="{ ...blocks[key], card: { title, meta: meta ? [meta] : [] } }"
           />
-          <UiCard v-if="i === 2" title="Finance" class="winx-dash__finance">
+          <UiCard v-if="i === 2" title="Finance" class="ui-dash__finance">
             <Widget :definition="blocks.financeMonth" />
             <Widget :definition="blocks.savings" />
           </UiCard>

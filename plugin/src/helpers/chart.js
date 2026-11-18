@@ -4,8 +4,8 @@ export function chartColor(token, alpha = 1) {
   const root = document.querySelector(
     '.workspace-leaf-content[data-type="winx"], .block-language-winx')
     ?? document.body;
-  const palette = root.shadowRoot?.querySelector(".winx-view")
-    ?? root.querySelector(".winx-host")?.shadowRoot?.querySelector(".winx-view") ?? root;
+  const palette = root.shadowRoot?.querySelector(".ui-view")
+    ?? root.querySelector(".ui-host")?.shadowRoot?.querySelector(".ui-view") ?? root;
   const hex = getComputedStyle(palette).getPropertyValue(token).trim();
   const m = hex.match(/^#?([0-9a-f]{6})$/i);
 

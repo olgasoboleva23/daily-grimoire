@@ -1,11 +1,11 @@
 // node compare-anchored.mjs before.json after.json ANCHOR [--no-geometry] — compares the elements below the first
-// element whose path step starts with ANCHOR (e.g. "DIV.winx-stat-card"), by their path from there: the same widget
+// element whose path step starts with ANCHOR (e.g. "DIV.ui-stat-card"), by their path from there: the same widget
 // in a different place (a card moved into a block). Prints differences and a count.
 import { readFileSync } from "node:fs";
 const [fa, fb, anchor] = process.argv.slice(2);
 const SKIP = process.argv.includes("--no-geometry") ? [2, 3, 4, 5] : [];
 const cut = shot => Object.fromEntries(Object.entries(JSON.parse(readFileSync(shot, "utf8")))
-  .map(([k, v]) => { k = k.replace(/\.winx-btn/g, ""); const i = k.indexOf(anchor); return i < 0 ? null : [k.slice(i).replace(/^([^>]*):\d+/, "$1"), v.split("|").map((x, j) => SKIP.includes(j) ? "" : x).join("|")]; })
+  .map(([k, v]) => { k = k.replace(/\.ui-btn/g, ""); const i = k.indexOf(anchor); return i < 0 ? null : [k.slice(i).replace(/^([^>]*):\d+/, "$1"), v.split("|").map((x, j) => SKIP.includes(j) ? "" : x).join("|")]; })
   .filter(Boolean));
 const [a, b] = [cut(fa), cut(fb)];
 const keys = new Set([...Object.keys(a), ...Object.keys(b)]);

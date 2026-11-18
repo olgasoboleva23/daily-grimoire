@@ -35,20 +35,20 @@ const toggleMore = () => { state.backlogOpen = !state.backlogOpen; };
 
 <template>
   <div
-    :class="['winx-cal__backlog winx-board-backlog', { 'winx-cal__backlog--over': zone.over }]"
+    :class="['ui-cal__backlog ui-board-backlog', { 'ui-cal__backlog--over': zone.over }]"
     data-part="panel"
     @dragover="zone.enter"
     @dragleave="zone.leave"
     @drop="zone.drop"
   >
     <PanelTabs />
-    <div class="winx-cal__backlog-grid">
+    <div class="ui-cal__backlog-grid">
       <NoDateTab v-if="state.tab === 'nodate'" />
       <AheadTab v-else-if="state.tab === 'ahead'" />
       <PoolTab v-else-if="state.tab === 'pool'" />
       <ProjectsTab v-else-if="state.tab === 'projects'" />
       <RegularsTab v-else />
     </div>
-    <button v-if="more" class="winx-cal__more" @click="toggleMore">{{ more }}</button>
+    <button v-if="more" class="ui-cal__more" @click="toggleMore">{{ more }}</button>
   </div>
 </template>

@@ -11,21 +11,21 @@ const view = inject("calendar");
 </script>
 
 <template>
-  <div class="winx-cal__month" data-part="grid">
-    <div v-for="w in weekdays" :key="w" class="winx-cal__weekday winx-text-center">{{ w }}</div>
+  <div class="ui-cal__month" data-part="grid">
+    <div v-for="w in weekdays" :key="w" class="ui-cal__weekday ui-text-center">{{ w }}</div>
     <div
       v-for="c in cells"
       :key="c.d"
-      :class="['winx-cal__cell', {
-        'winx-cal__cell--today': c.today,
-        'winx-cal__cell--picked': c.picked,
-        'winx-cal__cell--outside': c.outside,
-        'winx-cal__cell--source': view.drag.day === c.d,
+      :class="['ui-cal__cell', {
+        'ui-cal__cell--today': c.today,
+        'ui-cal__cell--picked': c.picked,
+        'ui-cal__cell--outside': c.outside,
+        'ui-cal__cell--source': view.drag.day === c.d,
       }]"
       :data-day="c.d"
       @click="$emit('pick', $event, c.d)"
     >
-      <div class="winx-cal__num">{{ c.num }}</div>
+      <div class="ui-cal__num">{{ c.num }}</div>
       <DayFill :day="c.d" compact />
       <DayZones :day="c.d" />
     </div>

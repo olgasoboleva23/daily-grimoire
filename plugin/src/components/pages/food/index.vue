@@ -1,4 +1,4 @@
-<!-- The food journal (block winx-food): a week, ‹ › to step it, today back; a row a day: what was
+<!-- The food journal (block ui-food): a week, ‹ › to step it, today back; a row a day: what was
      eaten (✎ a food by its name, × takes it off, ＋ adds one: a fuzzy search, or a new food with its
      marks), the marks counted, each free journal's level after its lag (the reasons in the tip),
      💊 the medication courses on that day, the day's note. ⚙ edits the marks -->
@@ -32,8 +32,8 @@ const rows = computed(() => foodWeek({
   ...d.value, days: days.value, task: d.value.task,
 }).map(r => ({ ...r, label: dayLabel(r.date), when: r.date === d.value.today ? "today" : "" })));
 const columns = computed(() => [
-  { key: "label", label: "День", class: "winx-food__day" },
-  { key: "items", label: "Еда", class: "winx-food__items" },
+  { key: "label", label: "День", class: "ui-food__day" },
+  { key: "items", label: "Еда", class: "ui-food__items" },
   ...d.value.marks.map(m => ({
     key: `mark:${m.tag}`, label: m.icon, align: "center", tip: m.name, tag: m.tag,
   })),
@@ -44,7 +44,7 @@ const columns = computed(() => [
   ...(d.value.task
     ? [{ key: "trained", label: "🏋", align: "center", tip: d.value.task.name }] : []),
   { key: "courses", label: "💊", align: "center", tip: "курс лекарств в этот день" },
-  { key: "note", label: "Заметка", class: "winx-food__note" },
+  { key: "note", label: "Заметка", class: "ui-food__note" },
 ]);
 
 // a write: a failure said (the page draws again from the files when one works)
@@ -54,47 +54,47 @@ const act = async (write) => {
 </script>
 
 <template>
-  <div class="winx-food">
-    <div class="winx-food__head winx-row winx-gap-m">
+  <div class="ui-food">
+    <div class="ui-food__head ui-row ui-gap-m">
       <UiButton
         kind="nav"
         title="previous week"
-        class="winx-food__prev"
+        class="ui-food__prev"
         @click="step(-1)"
       >‹</UiButton>
-      <span class="winx-food__week">{{ short(days[0]) }} – {{ short(days[6]) }}</span>
+      <span class="ui-food__week">{{ short(days[0]) }} – {{ short(days[6]) }}</span>
       <UiButton
         kind="nav"
         mirrored
         title="next week"
-        class="winx-food__next"
+        class="ui-food__next"
         @click="step(1)"
       >‹</UiButton>
       <UiButton kind="chip" title="this week" @click="step(0)">today</UiButton>
-      <span class="winx-grow" />
+      <span class="ui-grow" />
       <UiButton kind="text" title="the training task" @click="act(pickTrainingTask)">
         🏋
       </UiButton>
       <UiButton kind="text" title="the marks" @click="act(editMarks)">⚙</UiButton>
     </div>
-    <div class="winx-food__grid">
+    <div class="ui-food__grid">
       <UiTable
         :columns="columns"
         :rows="rows"
         bordered
         :row-key="r => r.date"
-        :row-class="r => (r.when ? `winx-food__row--${r.when}` : null)"
+        :row-class="r => (r.when ? `ui-food__row--${r.when}` : null)"
       >
         <template #cell="{ row, col }">
           <template v-if="col.key === 'label'">{{ row.label }}</template>
-          <div v-else-if="col.key === 'items'" class="winx-flex winx-wrap winx-gap-xs">
-            <span v-for="(f, n) in row.items" :key="n" class="winx-food__item">
+          <div v-else-if="col.key === 'items'" class="ui-flex ui-wrap ui-gap-xs">
+            <span v-for="(f, n) in row.items" :key="n" class="ui-food__item">
               <span
                 v-tip="'edit the food'"
-                class="winx-food__item-name"
+                class="ui-food__item-name"
                 @click="act(() => editFood(f.id))"
               >{{ f.name }}{{ f.icons ? ` ${f.icons}` : "" }}</span>
-              <span class="winx-food__off" @click="act(() => removeEaten(row.date, n))">×</span>
+              <span class="ui-food__off" @click="act(() => removeEaten(row.date, n))">×</span>
             </span>
             <UiButton
               kind="add"
@@ -102,28 +102,28 @@ const act = async (write) => {
               @click="act(() => addEaten(row.date))"
             >＋</UiButton>
           </div>
-          <span v-else-if="col.tag" class="winx-food__count">{{ row.counts[col.tag] || "" }}</span>
+          <span v-else-if="col.tag" class="ui-food__count">{{ row.counts[col.tag] || "" }}</span>
           <span
             v-else-if="col.key.startsWith('journal:') && row.journals[col.i].level !== null"
             v-tip="row.journals[col.i].reasons.join(', ')"
-            class="winx-food__level"
+            class="ui-food__level"
           >{{ row.journals[col.i].level }}</span>
-          <span v-else-if="col.key === 'trained'" class="winx-food__trained">
+          <span v-else-if="col.key === 'trained'" class="ui-food__trained">
             {{ row.trained ? "✓" : "" }}
           </span>
           <template v-else-if="col.key === 'courses'">
-            <span v-for="c in row.courses" :key="c.id" class="winx-row winx-gap-xs">
+            <span v-for="c in row.courses" :key="c.id" class="ui-row ui-gap-xs">
               <UiButton
                 kind="text"
                 title="open medication"
-                class="winx-food__course"
+                class="ui-food__course"
                 @click="openMeds"
               >💊</UiButton>
               <span
                 v-for="m in c.meds"
                 :key="m.code"
                 v-tip="m.taken ? m.name : `${m.name}: не принято`"
-                :class="['winx-food__med', { 'winx-food__med--not': !m.taken }]"
+                :class="['ui-food__med', { 'ui-food__med--not': !m.taken }]"
               >{{ m.code }}</span>
             </span>
           </template>

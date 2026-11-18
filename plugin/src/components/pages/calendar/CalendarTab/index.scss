@@ -2,20 +2,20 @@
 /* ── Calendar (week / month) ── */
 
 @use "mixins" as *;
-.winx-cal {
+.ui-cal {
   &__top {
     margin-bottom: $space-l;
-    & button.winx-cal__mute { width: auto; padding: 0 $space-s; background: none; border: none; box-shadow: none; font-size: $text-2xl; cursor: pointer; }
+    & button.ui-cal__mute { width: auto; padding: 0 $space-s; background: none; border: none; box-shadow: none; font-size: $text-2xl; cursor: pointer; }
   }
   /* a stripe before each task in its area's colour (--area: set from the settings on the row) */
-  :is(.winx-cal__task, .winx-missed__row, .winx-task-card)[data-area] { border-left: $border-width-xl solid var(--area); }
+  :is(.ui-cal__task, .ui-missed__row, .ui-task-card)[data-area] { border-left: $border-width-xl solid var(--area); }
   /* the week's balance: one thin bar split by area (its share of the week's tasks), the done part brighter;
      the areas with nothing this week as grey icons after it */
   &__balance {
     display: flex; align-items: flex-end; gap: $space-m; margin: (-$space-s) 0 $space-l;
   }
   /* a picked area (a click shows only its tasks): the others fade */
-  &__balance-bar--picked &__area:not(.winx-cal__area--on) { opacity: 0.4; }
+  &__balance-bar--picked &__area:not(.ui-cal__area--on) { opacity: 0.4; }
   /* a piece of the balance bar: its icon and done / all, the bar with the done part brighter */
   &__area {
     min-width: 2.6em; cursor: pointer;
@@ -23,7 +23,7 @@
     &--on &-label { font-weight: 600; }
     /* hover: the piece glows in its area's colour (a click filters by the area) */
     &:hover {
-      .winx-cal__area {
+      .ui-cal__area {
         &-label { text-shadow: 0 0 6px var(--area); }
         &-track { box-shadow: 0 0 10px var(--area), 0 0 4px var(--area); }
       }
@@ -57,7 +57,7 @@
   }
   /* while dragging, today and past days split into ✓ done / ⏳ plan halves */
   &__zones { display: none; position: absolute; inset: 0; z-index: $z-raised; gap: $space-xs; padding: $space-xs; }
-  :is(&__day--source, &__cell--source) :is(&__zone--plan, &__zones:not(:has(.winx-cal__zone--done))) {
+  :is(&__day--source, &__cell--source) :is(&__zone--plan, &__zones:not(:has(.ui-cal__zone--done))) {
     display: none;
   }
   &__task--drop-before { box-shadow: 0 -2px 0 var(--winx-gold-deep); }
@@ -87,14 +87,14 @@
     }
   }
   &--dragging {
-    .winx-cal__zones { display: flex; flex-direction: column; }
+    .ui-cal__zones { display: flex; flex-direction: column; }
     /* the dragged task's own day: no 📅 (it's on it already), ✓ a strip at the bottom, its tasks
        open to a drop (drag.js: before / after one of its group, the line shows where) */
-    :is(.winx-cal__day--source, .winx-cal__cell--source) {
+    :is(.ui-cal__day--source, .ui-cal__cell--source) {
       padding-bottom: $tap + $space-s;
-      .winx-cal__zones { top: auto; height: $tap; }
+      .ui-cal__zones { top: auto; height: $tap; }
     }
-    .winx-cal__dropbar-in { display: grid; }
+    .ui-cal__dropbar-in { display: grid; }
   }
   &__chip {
     padding: $space-l $space-xs;
@@ -117,7 +117,7 @@
     transition: box-shadow $fast ease;
 
     &--over { border-color: var(--winx-gold-deep); box-shadow: 0 0 14px alpha(--winx-gold, 90%); }
-    button.winx-cal__more { margin-top: $space-s; padding: $space-2xs $space-xl; border-radius: $pill; border: $border; background: alpha(--winx-surface, 75%); color: var(--winx-purple-deep); font-size: $text-m; cursor: pointer; }
+    button.ui-cal__more { margin-top: $space-s; padding: $space-2xs $space-xl; border-radius: $pill; border: $border; background: alpha(--winx-surface, 75%); color: var(--winx-purple-deep); font-size: $text-m; cursor: pointer; }
     &-grid { columns: 260px; column-gap: $space-xl; }
   }   /* masonry: area cards fill the columns top to bottom */
   &__group-card {
@@ -126,7 +126,7 @@
     padding: $space-s $space-m;
     border-radius: $radius-xl;
     background: fade(var(--winx-border), 25%);
-    .winx-task-card:last-child { border-bottom: none; }
+    .ui-task-card:last-child { border-bottom: none; }
   }
   &__head {
     margin-bottom: $space-xs;
@@ -146,7 +146,7 @@
     &[draggable="true"]:hover { background: fade(var(--winx-surface), 35%); border-radius: 8px; }
     &--ghost   { opacity: 0.5; }
     &--done    { opacity: 0.55; text-decoration: line-through; text-decoration-color: var(--winx-gold-deep); }
-    .winx-task__content {
+    .ui-task__content {
       position: relative;
       // room for the checkbox (~16px wide, then a gap)
       // stylelint-disable-next-line declaration-property-value-disallowed-list
@@ -161,7 +161,7 @@
     position: relative; transition: transform $fast;
     &:hover { z-index: $z-sticker; transform: scale(3.5); border-radius: $radius-s; box-shadow: 0 2px 10px black(35%); }
   }
-  &__task:has(.winx-cal__sticker:hover) { overflow: visible; }
+  &__task:has(.ui-cal__sticker:hover) { overflow: visible; }
   /* backlog area headings: pills like the Kanban's group headings */
   &__group {
     width: fit-content;
@@ -190,13 +190,13 @@
   /* today's column gets the card's fairy wings in two corners */
   &__day--today {
     @include wings(30px, 3px);
-    > :not(.winx-cal__zones) { position: relative; z-index: $z-over; }
+    > :not(.ui-cal__zones) { position: relative; z-index: $z-over; }
   }
   &__month {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: $space-s;
-    .winx-cal {
+    .ui-cal {
       &__sticker {
         height: 14px;
         &:hover { transform: scale(6); }
@@ -218,7 +218,7 @@
   &__phone-month {
     display: grid;
     gap: $space-l;
-    .winx-cal {
+    .ui-cal {
       &__month { gap: $space-2xs; }
       &__cell {
         min-height: 48px; padding: $space-2xs; text-align: center;
@@ -244,7 +244,7 @@
     text-decoration: line-through;
     background-image: linear-gradient(100deg, transparent 30%, alpha(--winx-gold, 55%) 50%, transparent 70%);
     background-size: 250% 100%;
-    animation: winx-tick-shimmer 1s ease-in-out 2;
+    animation: ui-tick-shimmer 1s ease-in-out 2;
   }
   /* 🔁 repeats off: the day's routine folded into one dashed translucent box; unfolded, its tasks sit inside it */
   &__routine {
@@ -285,5 +285,5 @@
   &__after { margin-right: $space-2xs; color: var(--winx-purple-deep); opacity: 0.6; }   /* ↳ a task after the one above */
   &__zone--plan { font-family: $font-deco; font-size: $text-2xl; text-align: center; }
 }
-@keyframes winx-tick-shimmer { from { background-position: 100% 0; } to { background-position: -50% 0; } }
-@keyframes winx-spin { to { transform: rotate(360deg); } }
+@keyframes ui-tick-shimmer { from { background-position: 100% 0; } to { background-position: -50% 0; } }
+@keyframes ui-spin { to { transform: rotate(360deg); } }

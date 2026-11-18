@@ -19,7 +19,7 @@ import { useVueApp } from "#/composables/vueApp.ts";
 // `values` has the starting ones; the keys in `required` must be set before the button works (it's
 // greyed out; a list: one group at least, each with its own required keys). Form.ask(...) resolves
 // to the values on the button (or Enter), null when closed. Drawn by index.vue (a row:
-// FormRow.vue), its look: index.scss (block winx-form).
+// FormRow.vue), its look: index.scss (block ui-form).
 type Tab = { tab?: string };
 type Choice = { label: string; value: unknown; img?: TFile };
 
@@ -77,7 +77,7 @@ export class Form extends Modal {
 
   onOpen() {
     this.titleEl.setText(this.title);
-    this.contentEl.addClass("winx-form");
+    this.contentEl.addClass("ui-form");
     this.owner.load();
     // edits land in this.values itself (reactive wraps it, no copy): onClose resolves to it
     const values = reactive(this.values);

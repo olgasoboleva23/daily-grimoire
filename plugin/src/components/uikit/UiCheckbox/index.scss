@@ -1,13 +1,13 @@
 @use "mixins" as *;
-/* ===== A box with a mark (block winx-check): as Obsidian draws a task's checkbox, rounded and
+/* ===== A box with a mark (block ui-check): as Obsidian draws a task's checkbox, rounded and
    purple when done; the tag in front outweighs Obsidian's button:not(.clickable-icon) ===== */
-:is(span, button).winx-check {
+:is(span, button).ui-check {
   @include center;
   width: 22px; height: 22px; flex: none; padding: 0;
   border: $border-width-m solid var(--winx-purple); border-radius: $radius-s;
   background: var(--winx-surface); color: var(--winx-on-selected); font-size: $text-xl; line-height: 1; box-shadow: none;
-  &.winx-check--s { width: 16px; height: 16px; font-size: $text-s; border-radius: $space-xs; }
-  &.winx-check--on { background: var(--winx-purple); border-color: var(--winx-purple); &::after { content: "✓"; } }
-  &.winx-check--no { color: var(--winx-on-accent); background: var(--winx-pink-deep); border-color: var(--winx-pink-deep); &::after { content: "✕"; } }
-  &.winx-check--btn { cursor: pointer; transition: background $fast ease, border-color $fast ease; }
+  &.ui-check--s { width: 16px; height: 16px; font-size: $text-s; border-radius: $space-xs; }
+  &.ui-check--on { background: var(--winx-purple); border-color: var(--winx-purple); &::after { content: "✓"; } }
+  &.ui-check--no { color: var(--winx-on-accent); background: var(--winx-pink-deep); border-color: var(--winx-pink-deep); &::after { content: "✕"; } }
+  &.ui-check--btn { cursor: pointer; transition: background $fast ease, border-color $fast ease; }
 }

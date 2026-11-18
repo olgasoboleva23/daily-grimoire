@@ -1,4 +1,4 @@
-<!-- The projects' list (block winx-projects): the title, ✦ New project, a tab per status with
+<!-- The projects' list (block ui-projects): the title, ✦ New project, a tab per status with
      its count, then a card per project in file order: its cover, name, status, description,
      progress (none without tasks) and next task (the first open one of the first stage not
      complete), its box ticks it; a click elsewhere on the card opens the project -->
@@ -49,10 +49,10 @@ const canTick = computed(() => { void projects.version.value; return !!tasksApi(
 </script>
 
 <template>
-  <div class="winx-projects">
-    <div class="winx-projects__header winx-row winx-between winx-wrap winx-gap-m">
-      <div class="winx-row winx-gap-m">
-        <h1 class="winx-projects__title">Projects</h1>
+  <div class="ui-projects">
+    <div class="ui-projects__header ui-row ui-between ui-wrap ui-gap-m">
+      <div class="ui-row ui-gap-m">
+        <h1 class="ui-projects__title">Projects</h1>
         <UiButton kind="chip" @click="askNewProject(app)">✦ New project</UiButton>
       </div>
       <UiTabs v-model="state.filter" :tabs="tabs" on-background />
@@ -63,12 +63,12 @@ const canTick = computed(() => { void projects.version.value; return !!tasksApi(
       on-background
       :text="`No ${label(state.filter).toLowerCase()} projects`"
     />
-    <div class="winx-projects__grid">
+    <div class="ui-projects__grid">
       <UiCard
         v-for="p in shown"
         :key="p.key"
         :wings="false"
-        class="winx-projects__card"
+        class="ui-projects__card"
         :title="p.name"
         :cover="p.cover"
         @click="projects.open(p.key, $event)"
@@ -76,11 +76,11 @@ const canTick = computed(() => { void projects.version.value; return !!tasksApi(
         <template #button>
           <ProjectStatus :status="p.status" />
         </template>
-        <div v-if="p.description" class="winx-projects__description">{{ p.description }}</div>
+        <div v-if="p.description" class="ui-projects__description">{{ p.description }}</div>
         <UiProgress v-if="p.total" :value="p.done" :max="p.total" />
-        <div v-if="p.next" class="winx-projects__next winx-row winx-gap-s" @click.stop>
+        <div v-if="p.next" class="ui-projects__next ui-row ui-gap-s" @click.stop>
           <UiCheckbox :static="!canTick" @tick="tickTask(p.next.t)" />
-          <span class="winx-projects__next-text">{{ p.next.text }}</span>
+          <span class="ui-projects__next-text">{{ p.next.text }}</span>
         </div>
       </UiCard>
     </div>

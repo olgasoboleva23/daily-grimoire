@@ -2,9 +2,9 @@
 /* UiView: the Obsidian tab, scrolling pages and navigation placement. */
 @use "mixins" as *;
 
-.winx-host.view-content { padding: 0; overflow: hidden; }
+.ui-host.view-content { padding: 0; overflow: hidden; }
 
-.winx-view {
+.ui-view {
   // the tab's content: Obsidian's .workspace-leaf-content .view-content is (0,2,0)
   position: relative;
   height: 100%;
@@ -25,12 +25,12 @@
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: minmax(0, 1fr) auto;
 
-    .winx-view {
+    .ui-view {
       &__pages { grid-area: 1 / 1; min-height: 0; }
       &__nav { display: contents; }
     }
 
-    .winx-menu {
+    .ui-menu {
       &__rail {
         grid-area: 2 / 1;
         // Obsidian includes the safe area in this space; paint it behind its floating navbar.
@@ -53,6 +53,6 @@
   // rule's own !important (_callout-grid.scss)
   #{context.$phone} & {
     &.dashboard { padding-bottom: 0 !important; }
-    .winx-view__page { padding-bottom: $space-2xl !important; }
+    .ui-view__page { padding-bottom: $space-2xl !important; }
   }
 }

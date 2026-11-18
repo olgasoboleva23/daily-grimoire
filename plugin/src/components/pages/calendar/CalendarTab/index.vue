@@ -15,7 +15,7 @@ const ctx = computed(() => view.ctx);
   <template v-if="ctx.say">{{ ctx.say }}</template>
   <div
     v-else
-    :class="['winx-cal', `winx-cal--${ctx.view}`, { 'winx-cal--dragging': view.drag.active }]"
+    :class="['ui-cal', `ui-cal--${ctx.view}`, { 'ui-cal--dragging': view.drag.active }]"
   >
     <CalendarHeader />
     <CalendarMissed />

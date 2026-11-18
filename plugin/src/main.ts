@@ -43,9 +43,9 @@ export default class UiPlugin extends Plugin {
     if (Platform.isMobile) {
       // hidden even before the styles load
       const badge = document.body.createDiv({
-        cls: "winx-syncing", attr: { style: "display: none" },
+        cls: "ui-syncing", attr: { style: "display: none" },
       });
-      badge.createSpan({ cls: "winx-syncing__star", text: "✦" });
+      badge.createSpan({ cls: "ui-syncing__star", text: "✦" });
       badge.appendText("syncing");
       this.register(() => badge.remove());
       const syncing = () => (this.app as any).plugins.plugins["remotely-save"]?.isSyncing;

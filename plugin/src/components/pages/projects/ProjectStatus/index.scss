@@ -1,8 +1,8 @@
-/* A project's status pill (ProjectStatus), block winx-status: a dot in the status's
+/* A project's status pill (ProjectStatus), block ui-status: a dot in the status's
    colour, the word */
 @use "mixins" as *;
 
-.winx-status {
+.ui-status {
   @include row;
   gap: $space-xs; margin-left: $space-m; padding: $space-2xs $space-m; border-radius: $pill;
   background: alpha(--winx-purple, 30%); font-size: $text-s; letter-spacing: 0.06em;

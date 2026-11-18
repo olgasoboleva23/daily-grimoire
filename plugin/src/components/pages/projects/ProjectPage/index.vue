@@ -1,4 +1,4 @@
-<!-- A project's page (block winx-project): ← Projects, the header card (cover, name, the status
+<!-- A project's page (block ui-project): ← Projects, the header card (cover, name, the status
      pill: a menu of the statuses, description, progress) over two columns: the stages (+ stage
      adds one) | Result and Notes, each with Edit (a Form). One column on the phone -->
 <script setup>
@@ -73,36 +73,36 @@ async function remove() {
 </script>
 
 <template>
-  <div class="winx-project">
-    <UiButton kind="chip" class="winx-project__back" @click="projects.open(null, $event)">
+  <div class="ui-project">
+    <UiButton kind="chip" class="ui-project__back" @click="projects.open(null, $event)">
       ← Projects
     </UiButton>
     <UiCard
       :wings="false"
-      class="winx-project__header"
+      class="ui-project__header"
       :title="page.p.name"
       :cover="page.cover"
     >
       <template #button>
         <UiButton
           kind="text"
-          class="winx-project__status"
+          class="ui-project__status"
           title="Status"
           @click="statusMenu"
         >
           <ProjectStatus :status="page.p.status" />
         </UiButton>
       </template>
-      <div v-if="page.p.description" class="winx-project__description">{{
+      <div v-if="page.p.description" class="ui-project__description">{{
         page.p.description }}</div>
       <UiProgress v-if="page.total" :value="page.done" :max="page.total" />
-      <div class="winx-row winx-gap-s">
+      <div class="ui-row ui-gap-s">
         <UiButton kind="chip" @click="askEditProject(app, page.key)">Edit project</UiButton>
         <UiButton kind="chip" @click="remove">Delete project</UiButton>
       </div>
     </UiCard>
-    <div class="winx-project__body">
-      <div class="winx-col winx-gap-l">
+    <div class="ui-project__body">
+      <div class="ui-col ui-gap-l">
         <ProjectStage
           v-for="(s, i) in page.stages"
           :key="`${i} ${s.name}`"
@@ -118,17 +118,17 @@ async function remove() {
           @submit="newStage"
         />
       </div>
-      <div class="winx-col winx-gap-l">
+      <div class="ui-col ui-gap-l">
         <UiCard
           v-for="f in SIDE"
           :key="f.key"
           :wings="false"
-          :class="`winx-project__${f.key}`"
+          :class="`ui-project__${f.key}`"
           :title="f.name"
         >
-          <div class="winx-project__text">{{ page.p[f.key] }}</div>
-          <div class="winx-row winx-gap-s">
-            <UiButton kind="chip" class="winx-project__edit" @click="edit(f)">Edit</UiButton>
+          <div class="ui-project__text">{{ page.p[f.key] }}</div>
+          <div class="ui-row ui-gap-s">
+            <UiButton kind="chip" class="ui-project__edit" @click="edit(f)">Edit</UiButton>
           </div>
         </UiCard>
       </div>

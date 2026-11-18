@@ -31,7 +31,7 @@ const { swipe, ...touch } = useSwipe(view, key, t => {
 <template>
   <div
     v-if="!gone"
-    :class="['winx-task-card', { 'winx-task-card--paused': paused }]"
+    :class="['ui-task-card', { 'ui-task-card--paused': paused }]"
     :style="{
       '--area': task.color ?? undefined, '--winx-swipe-progress': swipe.progress,
     }"
@@ -46,14 +46,14 @@ const { swipe, ...touch } = useSwipe(view, key, t => {
     @touchend="touch.end"
     @touchcancel="touch.cancel"
   >
-    <div class="winx-task-card__text winx-task__content">
+    <div class="ui-task-card__text ui-task__content">
       <slot name="text"><TaskText :task="task" /></slot>
     </div>
-    <div class="winx-task-card__meta winx-task__content"><slot name="meta">{{ meta }}</slot></div>
-    <div class="winx-task__btns winx-task__actions">
+    <div class="ui-task-card__meta ui-task__content"><slot name="meta">{{ meta }}</slot></div>
+    <div class="ui-task__btns ui-task__actions">
       <UiButton
         v-if="task.pool || view.ctx.TASKS"
-        :class="['winx-task__primary', { 'winx-task__mobile': !task.pool }]"
+        :class="['ui-task__primary', { 'ui-task__mobile': !task.pool }]"
         :title="task.pool ? 'add to today' : 'complete task'"
         @click="touch.run"
       >{{ task.pool ? '+📅' : '✓' }}</UiButton>

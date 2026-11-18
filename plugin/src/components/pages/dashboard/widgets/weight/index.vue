@@ -18,7 +18,7 @@ const props = defineProps({ state: { type: Object, required: true } });
 
 const w = computed(() => props.state.data.weight), logs = computed(() => props.state.data.logs);
 const mode = ref("weight");   // or "log"
-const picked = ref(app.loadLocalStorage("winx-journal"));
+const picked = ref(app.loadLocalStorage("ui-journal"));
 const log = computed(() => logs.value.find(l => l.path === picked.value) ?? logs.value[0]);
 const logging = computed(() => mode.value === "log" && !!log.value);
 
@@ -33,7 +33,7 @@ const save = async () => {
 // a journal picked: shown, and remembered on this device
 const pick = path => {
   picked.value = path;
-  app.saveLocalStorage("winx-journal", path);
+  app.saveLocalStorage("ui-journal", path);
   mode.value = "log";
 };
 
@@ -61,8 +61,8 @@ const saveLog = () =>
 </script>
 
 <template>
-  <div class="winx-weight">
-    <div v-if="log" class="winx-weight__modes winx-flex winx-gap-s">
+  <div class="ui-weight">
+    <div v-if="log" class="ui-weight__modes ui-flex ui-gap-s">
       <UiButton
         kind="toggle"
         :on="mode === 'weight'"
@@ -76,13 +76,13 @@ const saveLog = () =>
       <UiButton
         kind="add"
         title="new journal"
-        class="winx-weight__new"
+        class="ui-weight__new"
         @click="newJournal"
       >+</UiButton>
     </div>
     <select
       v-if="logging && logs.length > 1"
-      class="winx-weight__journal"
+      class="ui-weight__journal"
       :value="log.path"
       @change="pick($event.target.value)"
     >

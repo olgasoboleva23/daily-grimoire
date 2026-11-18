@@ -1,6 +1,6 @@
 @use "mixins" as *;
-/* ── Supplies (block winx-supplies) ── */
-.winx-supplies {
+/* ── Supplies (block ui-supplies) ── */
+.ui-supplies {
   &__row {
     padding: $space-xs 0;
     color: var(--winx-text);

@@ -1,7 +1,7 @@
 @use "context";
 @use "mixins" as *;
 /* ‹ title › with the chips after it: the calendar's navigation and the dashboard's date row */
-.winx-nav {
+.ui-nav {
   margin-bottom: $space-l;
   &__title {
     font-family: $font-deco; font-size: $text-3xl; color: var(--winx-lavender); min-width: 220px;
@@ -10,7 +10,7 @@
   /* the phone: ‹ the title › on the first line, the chips (today, week / month, ✓ done, 🔁) under it */
   #{context.$mobile} & {
     flex-wrap: wrap; justify-content: center; row-gap: $space-s;
-    button.winx-btn.winx-btn--toggle { margin-left: 0; }
+    button.ui-btn.ui-btn--toggle { margin-left: 0; }
     &__title { flex: 1 0 calc(100% - 2 * (#{$btn-l} + #{$space-l})); min-width: 0; }
   }
 }

@@ -31,7 +31,7 @@ before(async () => {
     Page.setup = () => {
       made.push(key);
       vue.onUnmounted(() => unloaded.push(key));
-      return () => vue.h("div", { class: "winx-view__page" }, key);
+      return () => vue.h("div", { class: "ui-view__page" }, key);
     };
   }
 
@@ -78,9 +78,9 @@ test(keeps, async () => {
   await view.go("calendar");
   assert.deepEqual(made, ["dashboard", "calendar"]);
   assert.deepEqual(unloaded, []);
-  const shown = [...view.contentEl.shadowRoot.querySelectorAll(".winx-view__page")].map(e => e.isShown());
+  const shown = [...view.contentEl.shadowRoot.querySelectorAll(".ui-view__page")].map(e => e.isShown());
   assert.deepEqual(shown, [true]);
-  assert.equal(view.contentEl.shadowRoot.querySelector(".winx-view__page").textContent, "calendar");
+  assert.equal(view.contentEl.shadowRoot.querySelector(".ui-view__page").textContent, "calendar");
   assert.equal(view.getDisplayText(), "Calendar");
 });
 
@@ -255,14 +255,14 @@ test("the drawer: Projects, Finance, Shop, Supplies, Medication, Food, then ⚙ 
     state: { page: "dashboard" }, go: async (...a) => { went.push(a); },
   } } } });
 
-  assert.equal(shell.find(".winx-drawer").exists(), false);
-  await shell.findAll(".winx-btn--rail").at(-1).trigger("click");
-  const rows = shell.findAll(".winx-menu__row .winx-grow");
+  assert.equal(shell.find(".ui-drawer").exists(), false);
+  await shell.findAll(".ui-btn--rail").at(-1).trigger("click");
+  const rows = shell.findAll(".ui-menu__row .ui-grow");
 
   assert.deepEqual(rows.map(r => r.findAll("span").at(-1).text()),
     ["Projects", "Finance", "Shop", "Supplies", "Medication", "Food", "Settings"]);
   assert.match(rows[6].text(), /⚙/);
-  await shell.find(".winx-menu__open-tab").trigger("click");
+  await shell.find(".ui-menu__open-tab").trigger("click");
   await new Promise(r => setTimeout(r));
   assert.equal(w.made.length, 1);
   assert.equal(w.made[0].pinned, false);
@@ -270,7 +270,7 @@ test("the drawer: Projects, Finance, Shop, Supplies, Medication, Food, then ⚙ 
 
   await rows[0].trigger("click");
   assert.deepEqual(went.map(a => a[0]), ["projects"]);
-  assert.equal(shell.find(".winx-drawer").exists(), false);
+  assert.equal(shell.find(".ui-drawer").exists(), false);
 });
 
 
@@ -288,10 +288,10 @@ test("Finance route loads its ledger into the Vue page; closing removes its subs
   await ready;
   await leaf.setViewState({ state: { page: "finance" } });
   await new Promise(r => setTimeout(r));
-  assert.match(view.contentEl.shadowRoot.querySelector(".winx-fin .winx-empty").textContent, /The ledger is empty/);
+  assert.match(view.contentEl.shadowRoot.querySelector(".ui-fin .ui-empty").textContent, /The ledger is empty/);
   const card = view.contentEl.shadowRoot.querySelector('.callout[data-callout="card"]');
   assert.equal(card.dataset.calloutMetadata, "hero");
-  assert.ok(card.querySelector(".callout-content > .winx-fin"));
+  assert.ok(card.querySelector(".callout-content > .ui-fin"));
   assert.equal(view.contentEl.shadowRoot.querySelector("h2").textContent, "Finance");
   assert.ok(listeners.size > 0);
   await view.onClose();
@@ -370,13 +370,13 @@ test("Medication route: empty state, JSON updates and marks, subscriptions relea
   } });
   fire("create");
   await flushPromises();
-  assert.equal(view.contentEl.shadowRoot.querySelectorAll(".winx-meds__chip").length, 2);
-  view.contentEl.shadowRoot.querySelector(".winx-meds__chip").click();
+  assert.equal(view.contentEl.shadowRoot.querySelectorAll(".ui-meds__chip").length, 2);
+  view.contentEl.shadowRoot.querySelector(".ui-meds__chip").click();
   await flushPromises();
   assert.equal(JSON.parse(files[COURSES]).c1.marks["2026-11-13"]["ТЕ☀️"], "✅");
   fire("modify");
   await flushPromises();
-  assert.equal(view.contentEl.shadowRoot.querySelector(".winx-meds__chip").dataset.mark, "✅");
+  assert.equal(view.contentEl.shadowRoot.querySelector(".ui-meds__chip").dataset.mark, "✅");
   assert.ok(listeners.size > 0);
   await view.go("projects");
   assert.equal(listeners.size, 0);

@@ -60,7 +60,7 @@ const pause = c => {
       <!-- one line: the rule, when (late: in red), the history; no spaces between them -->
       <template #meta>{{ c.rule }}<span
         v-if="c.late"
-        class="winx-cal__late"
+        class="ui-cal__late"
       >{{ c.when }}</span><span
         v-else
       >{{ c.when }}</span>{{ c.history }}</template>

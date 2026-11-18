@@ -1,13 +1,13 @@
 @use "mixins" as *;
 /* ============================================
- * WINX THEME — Heatmap / XP Grid (block winx-xp)
+ * WINX THEME — Heatmap / XP Grid (block ui-xp)
  *
  * GitHub-style activity heatmap.
  * Cell intensity driven by --cell-opacity
  * custom property instead of 5 separate rules.
  * ============================================ */
 
-.winx-xp {
+.ui-xp {
   --s: 10px;
   display: grid;
   gap: $space-2xs;

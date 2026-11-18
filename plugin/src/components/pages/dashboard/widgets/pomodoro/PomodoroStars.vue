@@ -7,15 +7,15 @@ defineProps({ filled: { type: Number, required: true }, sets: { type: String, re
 </script>
 
 <template>
-  <div class="winx-pomodoro__stars winx-flex winx-gap-m">
+  <div class="ui-pomodoro__stars ui-flex ui-gap-m">
     <!-- eslint-disable vue/no-v-html -- the icons are our own constant SVGs (pomodoro.js ICON) -->
     <slot />
     <div
       v-for="i in 4"
       :key="i"
-      :class="['winx-pomodoro__star', { 'winx-pomodoro__star--on': i <= filled }]"
+      :class="['ui-pomodoro__star', { 'ui-pomodoro__star--on': i <= filled }]"
       v-html="ICON.star"
     />
-    <span class="winx-pomodoro__multiplier">{{ sets }}</span>
+    <span class="ui-pomodoro__multiplier">{{ sets }}</span>
   </div>
 </template>

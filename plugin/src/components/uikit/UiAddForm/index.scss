@@ -1,7 +1,7 @@
 @use "mixins" as *;
 /* AddForm: a field (UiInput) and a pink submit, a finger's height; the doubled class beats Obsidian's
    own button styles */
-.winx-add-form {
+.ui-add-form {
   &__input { flex: 1; min-width: 0; }   /* the field's look: UiInput --field */
   &#{&} &__submit {
     min-height: $tap;

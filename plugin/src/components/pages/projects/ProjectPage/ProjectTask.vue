@@ -36,19 +36,19 @@ function dateMenu(e) {
 
 <template>
   <div
-    class="winx-project__task winx-row winx-gap-s"
+    class="ui-project__task ui-row ui-gap-s"
     :style="{ '--area': info.color ?? undefined }"
   >
     <UiCheckbox v-if="entry.done" mark="✅" static />
     <UiCheckbox v-else :static="!canTick" @tick="tickTask(entry.t)" />
-    <span class="winx-project__task-text winx-grow"><TaskText :task="info" /></span>
+    <span class="ui-project__task-text ui-grow"><TaskText :task="info" /></span>
     <template v-if="!entry.done">
       <UiButton title="edit" @click="editTaskModal(entry.t)">✏️</UiButton>
       <UiButton title="to the calendar" @click="dateMenu">📅</UiButton>
       <input
         ref="picker"
         type="date"
-        class="winx-project__date"
+        class="ui-project__date"
         tabindex="-1"
         aria-hidden="true"
         @change="e => e.target.value && toCalendar(entry.t, e.target.value)"

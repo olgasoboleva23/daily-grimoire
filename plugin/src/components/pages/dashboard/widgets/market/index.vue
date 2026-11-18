@@ -44,25 +44,25 @@ watch(() => props.state.data.groups, groups => {
 
 <template>
   <UiMissing v-if="state.data.missing" :path="state.data.path" />
-  <div v-else class="winx-market">
-    <div class="winx-market__list">
+  <div v-else class="ui-market">
+    <div class="ui-market__list">
       <UiEmpty v-if="state.data.empty" text="Merchant inventory cleared" />
       <template v-for="g in state.data.groups" :key="g.label">
         <UiGroupHeader :label="g.label" :count="g.rows.length" />
         <div
           v-for="r in g.rows"
           :key="key(r)"
-          class="winx-market__item winx-row winx-gap-l"
-          :class="{ 'winx-market__item--bought': bought.has(key(r)) }"
+          class="ui-market__item ui-row ui-gap-l"
+          :class="{ 'ui-market__item--bought': bought.has(key(r)) }"
         >
-          <span class="winx-market__text winx-grow">{{ r.name }}</span>
+          <span class="ui-market__text ui-grow">{{ r.name }}</span>
           <UiButton
             kind="add"
             jump
             title="bought"
             @click="buy(r)"
           >
-            <svg class="winx-market__tick" viewBox="0 0 40 26" aria-hidden="true">
+            <svg class="ui-market__tick" viewBox="0 0 40 26" aria-hidden="true">
               <path
                 d="M14 13.5l4 4 8-8.5"
                 fill="none"
@@ -78,14 +78,14 @@ watch(() => props.state.data.groups, groups => {
     </div>
     <div
       v-if="state.data.soon"
-      class="winx-market__soon"
+      class="ui-market__soon"
     >⏳ running low soon: {{ state.data.soon }}</div>
-    <div class="winx-market__footer">
+    <div class="ui-market__footer">
       <span>{{ state.data.left }}</span>
-      <UiNoteLink :path="MARKET" kind="text" class="winx-market__link">
+      <UiNoteLink :path="MARKET" kind="text" class="ui-market__link">
         ✦ open market
       </UiNoteLink>
-      <UiButton kind="text" class="winx-market__link" @click="supplies">
+      <UiButton kind="text" class="ui-market__link" @click="supplies">
         ✦ supplies
       </UiButton>
     </div>

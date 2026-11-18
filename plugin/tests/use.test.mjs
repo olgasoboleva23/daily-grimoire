@@ -32,12 +32,12 @@ test("useRedraw: hidden, a redraw waits; shown, the next leaf or layout change d
   assert.equal(draws, 1);
 });
 
-test("useRedraw: a winx:page switch catches up too", () => {
+test("useRedraw: a ui:page switch catches up too", () => {
   const c = component(); let shown = false, draws = 0;
   const { redraw } = useRedraw(c, () => shown, () => draws++);
   redraw();
   shown = true;
-  c.events["winx:page"][0]();
+  c.events["ui:page"][0]();
   assert.equal(draws, 1);
 });
 
@@ -95,8 +95,8 @@ test("useWhenIndexed: now when Dataview's index is ready (or Dataview is off), e
 test("useTabDate: the dashboard's date change reaches a block inside a dated tab only", () => {
   let dated = false; const el = { closest: () => dated ? {} : null }, c = component(); let n = 0;
   useTabDate(c, el, () => n++);
-  c.events["winx:date"][0]();
-  dated = true; c.events["winx:date"][0]();
+  c.events["ui:date"][0]();
+  dated = true; c.events["ui:date"][0]();
   assert.equal(n, 1);
 });
 

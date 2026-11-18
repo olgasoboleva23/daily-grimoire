@@ -27,7 +27,7 @@ const createForm = (rows, values) => {
 };
 const open = (rows, values) => createForm(rows, values).contentEl;
 const classes = els => [...els].map(e => e.className);
-const cols = win => win.querySelector(".winx-form__list--lines").style
+const cols = win => win.querySelector(".ui-form__list--lines").style
   .getPropertyValue("--winx-form-cols");
 // no inline style but a lines list's columns
 const styled = win => [...win.querySelectorAll("[style]")].map(e => e.getAttribute("style"));
@@ -61,25 +61,25 @@ test("Form: a list of text boxes and checkboxes is a line of names, then one lin
       { name: "Apply", key: "apply", check: "move its tasks" },
     ] },
   ]);
-  const [head, group] = win.querySelectorAll(".winx-form__list--lines > .winx-form__line");
-  const narrow = "winx-form__cell winx-form__cell--narrow";
+  const [head, group] = win.querySelectorAll(".ui-form__list--lines > .ui-form__line");
+  const narrow = "ui-form__cell ui-form__cell--narrow";
 
-  assert.ok(win.classList.contains("winx-form"));
-  assert.ok(win.querySelector(".setting-item-info").classList.contains("winx-form__info"));
-  assert.equal(head.className, "winx-form__line winx-form__line--head");
-  assert.deepEqual(classes(head.children), ["winx-form__cell", narrow, narrow, narrow]);
+  assert.ok(win.classList.contains("ui-form"));
+  assert.ok(win.querySelector(".setting-item-info").classList.contains("ui-form__info"));
+  assert.equal(head.className, "ui-form__line ui-form__line--head");
+  assert.deepEqual(classes(head.children), ["ui-form__cell", narrow, narrow, narrow]);
   assert.deepEqual([...head.children].map(c => c.textContent), ["Name", "Colour", "Apply", ""]);
   assert.equal(head.children[2].title, "move its tasks");
-  assert.deepEqual(classes(group.children), ["winx-form__cell", narrow, narrow, narrow]);
-  assert.equal(group.querySelector("input[type=text]").className, "winx-form__input");
-  assert.equal(win.querySelectorAll(".winx-form__line").length, 2);
+  assert.deepEqual(classes(group.children), ["ui-form__cell", narrow, narrow, narrow]);
+  assert.equal(group.querySelector("input[type=text]").className, "ui-form__input");
+  assert.equal(win.querySelectorAll(".ui-form__line").length, 2);
 
-  win.querySelector(".winx-form__more button").click();   // + adds a group's line
+  win.querySelector(".ui-form__more button").click();   // + adds a group's line
   await nextTick();
-  assert.equal(win.querySelectorAll(".winx-form__line").length, 3);
-  win.querySelector(".winx-form__line:last-child button").click();   // × takes it off
+  assert.equal(win.querySelectorAll(".ui-form__line").length, 3);
+  win.querySelector(".ui-form__line:last-child button").click();   // × takes it off
   await nextTick();
-  assert.equal(win.querySelectorAll(".winx-form__line").length, 2);
+  assert.equal(win.querySelectorAll(".ui-form__line").length, 2);
   // one grid: a text box's column shares the width, a colour's, a checkbox's and the ×'s fit them
   assert.equal(cols(win), "minmax(0, 1fr) auto auto auto");
   assert.deepEqual(styled(win), ["--winx-form-cols: minmax(0, 1fr) auto auto auto;"]);
@@ -90,16 +90,16 @@ test("Form: a fixed list has no + or ×, a label row shows its value as text", (
     { name: "Difficulty", key: "label", label: true },
     { name: "XP", key: "xp", text: "XP", number: true },
   ] }]);
-  const lines = win.querySelectorAll(".winx-form__line:not(.winx-form__line--head)");
+  const lines = win.querySelectorAll(".ui-form__line:not(.ui-form__line--head)");
 
   assert.equal(lines.length, 0);   // no values: no groups, none added
   const win2 = open([{ name: "Difficulties", key: "d", fixed: true, list: [
     { name: "Difficulty", key: "label", label: true },
     { name: "XP", key: "xp", text: "XP", number: true },
   ] }], { d: [{ label: "⭐ Easy", xp: 5 }] });
-  const [, line] = win2.querySelectorAll(".winx-form__line");
+  const [, line] = win2.querySelectorAll(".ui-form__line");
 
-  assert.equal(line.querySelector(".winx-form__label").textContent, "⭐ Easy");
+  assert.equal(line.querySelector(".ui-form__label").textContent, "⭐ Easy");
   assert.equal(line.querySelector("input").value, "5");
   assert.equal(win2.querySelectorAll("button").length, 1);   // the window's own button only
   assert.equal(cols(win2), "auto minmax(0, 1fr)");
@@ -112,14 +112,14 @@ test("Form: a list with buttons or long text keeps its groups stacked, rows insi
     { name: "When", key: "when", options: [{ label: "morning", value: "m", img: icon }] },
     { name: "Note", key: "note", text: "a note", lines: true },
   ] }]);
-  const group = win.querySelector(".winx-form__list > .winx-form__group");
+  const group = win.querySelector(".ui-form__list > .ui-form__group");
 
-  assert.equal(win.querySelector(".winx-form__list").className, "winx-form__list");
+  assert.equal(win.querySelector(".ui-form__list").className, "ui-form__list");
   assert.equal(group.querySelectorAll(".setting-item").length, 2);
-  assert.ok(group.querySelector("img.winx-form__img"));
-  assert.equal(group.querySelector("textarea").className, "winx-form__textarea");
+  assert.ok(group.querySelector("img.ui-form__img"));
+  assert.equal(group.querySelector("textarea").className, "ui-form__textarea");
   assert.equal(group.querySelector("textarea").getAttribute("rows"), "4");
-  assert.equal(win.querySelector(".winx-form__line"), null);
+  assert.equal(win.querySelector(".ui-form__line"), null);
   assert.deepEqual(styled(win), []);
 });
 
