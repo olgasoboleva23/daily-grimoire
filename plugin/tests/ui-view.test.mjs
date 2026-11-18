@@ -5,7 +5,7 @@ import { Keymap } from "obsidian";
 import { setApp } from "#/helpers/app.js";
 
 // Vue page lifetimes, Obsidian history and opening a separate tab.
-let UiView, OldUiView, made, unloaded, vue, openUi;
+let UiView, made, unloaded, vue, openUi;
 
 before(async () => {
   GlobalRegistrator.register();
@@ -24,7 +24,7 @@ before(async () => {
     isShown() { return this.style.display !== "none"; },
   });
   ({ UiView } = await import("#/components/app/view.ts"));
-  ({ openUi, OldUiView } = await import("#/components/app/open.ts"));
+  ({ openUi } = await import("#/components/app/open.ts"));
   vue = await import("vue");
   for (const key of ["dashboard", "calendar", "projects"]) {
     const Page = (await import(`../src/components/pages/${key}/index.vue`)).default;
@@ -193,48 +193,6 @@ test("the calendar's state is saved with the layout: unfolded days are, area isn
   view.state.calendar.unfolded = [...view.state.calendar.unfolded, "2026-11-05"];
   await vue.nextTick();
   assert.equal(saves.length, before + 1);
-});
-
-test("a leaf saved as the old type \"winx\" ends on ui-app with its state, no Back step", async () => {
-  const got = [];
-  const leaf = { app: {}, setViewState: async s => got.push(s) };
-  const old = new OldUiView(leaf);
-  const state = { page: "calendar", calendar: { view: "month" } };
-
-  leaf.view = old;
-  assert.equal(old.getViewType(), "winx");
-  await old.setState(state, {});
-  assert.deepEqual(old.getState(), state);   // a layout saved meanwhile keeps it
-  await new Promise(r => setTimeout(r));   // after Obsidian's setViewState is done with it
-  assert.deepEqual(got, [{ type: "ui-app", state, popstate: true }]);
-});
-
-test("an old leaf closed before its move does not come back as a tab", async () => {
-  const got = [];
-  const leaf = { app: {}, setViewState: async s => got.push(s) };
-  const old = new OldUiView(leaf);
-
-  leaf.view = old;
-  await old.setState({}, {});
-  await old.onClose();
-  await new Promise(r => setTimeout(r));
-  assert.deepEqual(got, []);
-});
-
-test("openUi finds a leaf still of the old type and moves it to ui-app first", async () => {
-  const moved = [];
-  const old = { activeTime: 9, view: { getViewType: () => "winx" },
-    getViewState: () => ({ type: "winx", state: { page: "shop" } }) };
-  setApp({ workspace: {
-    getLeavesOfType: t => (t === "winx" ? [old] : []),
-    revealLeaf: async () => {},
-  } });
-  old.setViewState = async s => {
-    moved.push(s);
-    old.view = Object.assign(Object.create(UiView.prototype), { go: () => {} });
-  };
-  assert.equal(await openUi("calendar"), old);
-  assert.deepEqual(moved, [{ type: "ui-app", state: { page: "shop" }, popstate: true }]);
 });
 
 // the workspace openUi sees: its Winx leaves, the leaves it makes, what it reveals
