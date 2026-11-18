@@ -1,0 +1,2 @@
+// The tab's own container sits outside its shadow root, so Obsidian's view padding is cleared here
+.ui-host.view-content { padding: 0; overflow: hidden; }

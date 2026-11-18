@@ -2,8 +2,6 @@
 /* UiView: the Obsidian tab, scrolling pages and navigation placement. */
 @use "mixins" as *;
 
-.ui-host.view-content { padding: 0; overflow: hidden; }
-
 .ui-view {
   // the tab's content: Obsidian's .workspace-leaf-content .view-content is (0,2,0)
   position: relative;
