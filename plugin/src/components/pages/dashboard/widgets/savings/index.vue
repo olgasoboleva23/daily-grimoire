@@ -1,15 +1,15 @@
 <!-- Savings: a jar per goal (its picture greyed above what's saved, the bar, a ✦ stamp per
      deposit), the payday's "put in" with ✓ done until the deposit is in, the next paydays -->
 <script setup>
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
-import WinxEmpty from "#/components/uikit/WinxEmpty/index.vue";
+import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
 import { deposit } from "#/controllers/widgets/savings.js";
 
 defineProps({ state: { type: Object, required: true } });
 </script>
 
 <template>
-  <WinxEmpty v-if="!state.data.jars.length" :text="state.data.empty" />
+  <UiEmpty v-if="!state.data.jars.length" :text="state.data.empty" />
   <div v-else class="winx-savings">
     <div v-for="j in state.data.jars" :key="j.path" class="winx-jar">
       <div class="winx-jar__goal winx-row winx-gap-xl">
@@ -42,7 +42,7 @@ defineProps({ state: { type: Object, required: true } });
       </div>
       <div v-if="j.due" class="winx-jar__due winx-row winx-between winx-gap-m">
         <span>{{ j.due.when }}: <b class="winx-jar__due-sum">put in {{ j.due.sum }}</b></span>
-        <WinxButton kind="pill" @click="deposit(j.path)">✓ done</WinxButton>
+        <UiButton kind="pill" @click="deposit(j.path)">✓ done</UiButton>
       </div>
       <div class="winx-jar__next winx-text-center">next payday: {{ j.next }}</div>
     </div>

@@ -15,7 +15,7 @@ import { useVueApp } from "#/composables/vueApp.ts";
 //                                                   the value: an array of the groups' values.
 //                                                   Rows of text boxes, checkboxes and labels
 //                                                   only: a table, a group a line under the names
-// Any row can have `tab`: the window then shows its tabs (WinxTabs) and one tab's rows at a time.
+// Any row can have `tab`: the window then shows its tabs (UiTabs) and one tab's rows at a time.
 // `values` has the starting ones; the keys in `required` must be set before the button works (it's
 // greyed out; a list: one group at least, each with its own required keys). Form.ask(...) resolves
 // to the values on the button (or Enter), null when closed. Drawn by index.vue (a row:

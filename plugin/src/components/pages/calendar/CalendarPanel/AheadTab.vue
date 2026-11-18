@@ -2,7 +2,7 @@
      each day's first) -->
 <script setup>
 import { computed, inject } from "vue";
-import WinxEmpty from "#/components/uikit/WinxEmpty/index.vue";
+import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
 import GroupCard from "./GroupCard.vue";
 import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";
 import { T } from "#/models/calendarData.js";
@@ -35,7 +35,7 @@ const months = computed(() => {
 </script>
 
 <template>
-  <WinxEmpty v-if="!months.length" />
+  <UiEmpty v-if="!months.length" />
   <GroupCard v-for="g in months" :key="g.key" :title="g.title">
     <template v-for="c in g.cards" :key="c.task.key">
       <div v-if="c.date" class="winx-cal__date">{{ c.date }}</div>

@@ -37,7 +37,7 @@ export async function loadLevelToday({ dv }) {
   };
 }
 
-// { scores: XP by area name, chart: the radar's config for WinxChart }
+// { scores: XP by area name, chart: the radar's config for UiChart }
 export async function loadLifeAreas({ dv }) {
   const { xpMap, areaMap, areas } = config;
   const sel = pageDay(dv), since = ymd(sel.minus({ days: 27 })), until = ymd(sel);

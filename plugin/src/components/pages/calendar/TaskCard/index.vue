@@ -3,7 +3,7 @@
      (drag.js); a long left swipe (swipe.js) ticks it at once, or adds a pool copy to today -->
 <script setup>
 import { computed, inject, ref } from "vue";
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
+import UiButton from "#/components/uikit/UiButton/index.vue";
 import TaskText from "#/components/pages/calendar/TaskText.vue";
 import TaskButtons from "#/components/pages/calendar/TaskButtons.vue";
 import { useDragSource } from "#/composables/drag.js";
@@ -51,12 +51,12 @@ const { swipe, ...touch } = useSwipe(view, key, t => {
     </div>
     <div class="winx-task-card__meta winx-task__content"><slot name="meta">{{ meta }}</slot></div>
     <div class="winx-task__btns winx-task__actions">
-      <WinxButton
+      <UiButton
         v-if="task.pool || view.ctx.TASKS"
         :class="['winx-task__primary', { 'winx-task__mobile': !task.pool }]"
         :title="task.pool ? 'add to today' : 'complete task'"
         @click="touch.run"
-      >{{ task.pool ? '+📅' : '✓' }}</WinxButton>
+      >{{ task.pool ? '+📅' : '✓' }}</UiButton>
       <slot name="extra" />
       <TaskButtons :task="task" :edit-title="editTitle" @gone="gone = true" />
     </div>

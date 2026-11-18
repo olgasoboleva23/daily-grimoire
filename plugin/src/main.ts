@@ -1,6 +1,6 @@
 import { Platform, Plugin } from "obsidian";
-import { WINX_VIEW, WinxView } from "./components/app/view.ts";
-import { openWinx } from "./components/app/open.ts";
+import { UI_VIEW, UiView } from "./components/app/view.ts";
+import { openUi } from "./components/app/open.ts";
 import { registerCommands } from "./commands/commands.ts";
 import { drawBlock } from "./controllers/blocks.js";
 import { useNotify } from "./composables/notify.js";
@@ -14,7 +14,7 @@ import { useTaskStore } from "./store/tasks.js";
 // commands, and the styles (styles.css, built from src/styles/main.scss and the components'
 // index.scss).
 
-export default class WinxPlugin extends Plugin {
+export default class UiPlugin extends Plugin {
   async onload() {
     setApp(this.app);
     useTaskStore(this);   // the tasks, read by the plugin itself (store/tasks.js)
@@ -25,9 +25,9 @@ export default class WinxPlugin extends Plugin {
     this.registerMarkdownCodeBlockProcessor("winx", drawBlock);
     // the Winx tab (its pages: components/app/pages.js); ✨ and the command go to the one used
     // last, or open it, pinned, on the dashboard
-    this.registerView(WINX_VIEW, leaf => new WinxView(leaf));
-    this.addCommand({ id: "open", name: "Open", callback: () => openWinx() });
-    this.addRibbonIcon("sparkles", this.manifest.name, () => openWinx());
+    this.registerView(UI_VIEW, leaf => new UiView(leaf));
+    this.addCommand({ id: "open", name: "Open", callback: () => openUi() });
+    this.addRibbonIcon("sparkles", this.manifest.name, () => openUi());
     this.addCommand({   // after a rebuild: load the new main.js without restarting Obsidian
       id: "reload",
       name: "Reload",
@@ -55,6 +55,6 @@ export default class WinxPlugin extends Plugin {
     }
 
     // desktop: today's reminders; a click opens the calendar in the Winx tab
-    useNotify(this, () => openWinx("calendar"));
+    useNotify(this, () => openUi("calendar"));
   }
 }

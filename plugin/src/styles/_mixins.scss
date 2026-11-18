@@ -101,7 +101,7 @@ $tap: 44px;         // a row or a field on the phone: a finger's size
 // black at some opacity, for shadows and masks
 @function black($opacity) { @return rgba(0, 0, 0, $opacity); }
 
-// sparkles fly out of the middle on hover (WinxButton's add and rail; the picture is
+// sparkles fly out of the middle on hover (UiButton's add and rail; the picture is
 // --winx-sparkles-svg in _assets.scss), none for reduced motion; the hover's own look is the block
 // passed in. The parent is position: relative
 @mixin sparkles($color: var(--winx-highlight)) {

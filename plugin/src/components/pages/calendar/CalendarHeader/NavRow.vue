@@ -3,7 +3,7 @@
 <script setup>
 import { computed, inject } from "vue";
 import { Platform } from "obsidian";
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
+import UiButton from "#/components/uikit/UiButton/index.vue";
 import { T } from "#/models/calendarData.js";
 import { goTo } from "#/store/calendar.js";
 import { addDays, addMonths } from "#/helpers/dates.js";
@@ -51,31 +51,31 @@ const repeats = () => {
 
 <template>
   <div class="winx-nav winx-row winx-gap-l" data-part="header">
-    <WinxButton kind="nav" title="previous" @click="step(-1)">‹</WinxButton>
+    <UiButton kind="nav" title="previous" @click="step(-1)">‹</UiButton>
     <span class="winx-nav__title winx-text-center">{{ nav.title }}</span>
-    <WinxButton
+    <UiButton
       kind="nav"
       title="next"
       mirrored
       @click="step(1)"
-    >›</WinxButton>
-    <WinxButton
+    >›</UiButton>
+    <UiButton
       v-if="nav.toToday"
       kind="chip"
       title="today"
       @click="go(null)"
-    >{{ nav.toToday }}</WinxButton>
-    <WinxButton
+    >{{ nav.toToday }}</UiButton>
+    <UiButton
       kind="chip"
       :title="`switch to the ${nav.other} view`"
       @click="switchView"
-    >{{ nav.v }}</WinxButton>
-    <WinxButton kind="toggle" :on="state.showDone" @click="showDone">✓ done</WinxButton>
-    <WinxButton
+    >{{ nav.v }}</UiButton>
+    <UiButton kind="toggle" :on="state.showDone" @click="showDone">✓ done</UiButton>
+    <UiButton
       kind="toggle"
       :on="allOpen"
       title="unfold / fold every day's 🔁 box"
       @click="repeats"
-    >🔁 repeats</WinxButton>
+    >🔁 repeats</UiButton>
   </div>
 </template>

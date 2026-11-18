@@ -1,9 +1,9 @@
 <!-- the weight: the last value and the change vs a week ago, a field for today (v-model: what's
      typed; @save), the 30-day line, ✦ list -->
 <script setup>
-import WinxAddForm from "#/components/uikit/WinxAddForm/index.vue";
-import WinxChart from "#/components/uikit/WinxChart/index.vue";
-import WinxNoteLink from "#/components/uikit/WinxNoteLink.vue";
+import UiAddForm from "#/components/uikit/UiAddForm/index.vue";
+import UiChart from "#/components/uikit/UiChart/index.vue";
+import UiNoteLink from "#/components/uikit/UiNoteLink.vue";
 import { WEIGHT } from "#/helpers/paths.js";
 
 defineProps({ weight: { type: Object, required: true } });
@@ -26,12 +26,12 @@ const INPUT = {
     </template>
     <span v-else class="winx-weight__delta">no entries yet</span>
   </div>
-  <WinxAddForm
+  <UiAddForm
     v-model="kg"
     :input="INPUT"
     submit="Save"
     @submit="$emit('save')"
   />
-  <WinxChart v-if="weight.chart" :config="weight.chart" />
-  <WinxNoteLink :path="WEIGHT" class="winx-weight__list">✦ list</WinxNoteLink>
+  <UiChart v-if="weight.chart" :config="weight.chart" />
+  <UiNoteLink :path="WEIGHT" class="winx-weight__list">✦ list</UiNoteLink>
 </template>

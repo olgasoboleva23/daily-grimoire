@@ -3,13 +3,13 @@ import { reactive, watch } from "vue";
 import { useVueApp } from "#/composables/vueApp.ts";
 import { isStep, readState, saved, withParams } from "#/store/router.js";
 import { APP_NAME } from "#/helpers/name.js";
-import { pages, WINX_VIEW } from "./pages.js";
-import Winx from "./index.vue";
+import { pages, UI_VIEW } from "./pages.js";
+import UiApp from "./index.vue";
 import styles from "#/styles/shadow.scss";
 
-export { WINX_VIEW } from "./pages.js";
+export { UI_VIEW } from "./pages.js";
 
-export class WinxView extends ItemView {
+export class UiView extends ItemView {
   navigation = true;   // Obsidian records a history step only for a navigation view
   // the saved state, plus the calendar's unsaved area and picked day; a new one per tab
   state;
@@ -27,7 +27,7 @@ export class WinxView extends ItemView {
 
     this.register(watch(json, () => this.app.workspace.requestSaveLayout()));
   }
-  getViewType() { return WINX_VIEW; }
+  getViewType() { return UI_VIEW; }
   getDisplayText() {
     return pages[this.state.page as keyof typeof pages]?.title ?? APP_NAME;
   }
@@ -54,8 +54,8 @@ export class WinxView extends ItemView {
 
       sheet.replaceSync(styles);
       root.adoptedStyleSheets = [sheet];
-      this.mounted = useVueApp(this, root, Winx, {
-        provide: { winx: this },
+      this.mounted = useVueApp(this, root, UiApp, {
+        provide: { ui: this },
         onError: error => {
           console.error(error);
           new Notice(`${this.getDisplayText()}: couldn't draw: ${error.message}`);
@@ -74,9 +74,9 @@ export class WinxView extends ItemView {
     if (Keymap.isModEvent(e)) {
       const leaf = this.app.workspace.getLeaf("tab");
 
-      await leaf.setViewState({ type: WINX_VIEW, state, active: true });
+      await leaf.setViewState({ type: UI_VIEW, state, active: true });
     } else {
-      await this.leaf.setViewState({ type: WINX_VIEW, state });
+      await this.leaf.setViewState({ type: UI_VIEW, state });
     }
   }
 

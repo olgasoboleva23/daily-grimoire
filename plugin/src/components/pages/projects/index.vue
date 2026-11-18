@@ -5,9 +5,9 @@ import ProjectList from "./ProjectList/index.vue";
 import ProjectPage from "./ProjectPage/index.vue";
 
 const props = defineProps({ state: { type: Object, required: true } });
-const winx = inject("winx");
+const ui = inject("ui");
 const view = { state: props.state, version: taskStore.version,
-  open: (key, e) => winx.go("projects", { open: key }, e) };
+  open: (key, e) => ui.go("projects", { open: key }, e) };
 provide("projects", view);
 const open = computed(() => {
   void view.version.value;

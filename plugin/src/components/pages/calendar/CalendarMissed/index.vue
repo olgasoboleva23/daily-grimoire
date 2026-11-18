@@ -3,7 +3,7 @@
      dragged onto a day (drag.js); long-swiped left on the phone (swipe.js): its ✓ -->
 <script setup>
 import { computed, inject, reactive, watch } from "vue";
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
+import UiButton from "#/components/uikit/UiButton/index.vue";
 import TaskText from "#/components/pages/calendar/TaskText.vue";
 import TaskButtons from "#/components/pages/calendar/TaskButtons.vue";
 import { T } from "#/models/calendarData.js";
@@ -80,19 +80,19 @@ const toToday = r => act(r, sounds.today, t => view.actions.toToday(t));
         <div class="winx-task__btns">
           <TaskButtons :task="r.task" @gone="gone.add(r.task.key)" />
         </div>
-        <WinxButton
+        <UiButton
           v-if="r.done"
           class="winx-task__primary"
           :title="`done on ${r.day}`"
           tip="pink"
           @click="r.sw.run"
-        >✓</WinxButton>
-        <WinxButton
+        >✓</UiButton>
+        <UiButton
           class="winx-task__btns-today"
           title="move to today"
           tip="pink"
           @click="toToday(r)"
-        >☀️</WinxButton>
+        >☀️</UiButton>
       </div>
     </div>
   </div>

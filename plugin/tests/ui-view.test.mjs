@@ -5,7 +5,7 @@ import { Keymap } from "obsidian";
 import { setApp } from "#/helpers/app.js";
 
 // Vue page lifetimes, Obsidian history and opening a separate tab.
-let WinxView, made, unloaded, vue, openWinx;
+let UiView, made, unloaded, vue, openUi;
 
 before(async () => {
   GlobalRegistrator.register();
@@ -23,8 +23,8 @@ before(async () => {
     show() { this.style.display = ""; },
     isShown() { return this.style.display !== "none"; },
   });
-  ({ WinxView } = await import("#/components/app/view.ts"));
-  ({ openWinx } = await import("#/components/app/open.ts"));
+  ({ UiView } = await import("#/components/app/view.ts"));
+  ({ openUi } = await import("#/components/app/open.ts"));
   vue = await import("vue");
   for (const key of ["dashboard", "calendar", "projects"]) {
     const Page = (await import(`../src/components/pages/${key}/index.vue`)).default;
@@ -59,7 +59,7 @@ function open() {
     },
     updateHeader() {},
   };
-  const view = new WinxView(leaf);
+  const view = new UiView(leaf);
 
   view.load();
   return { view, leaf, opened, pinned, saves, ready: view.onOpen() };
@@ -195,7 +195,7 @@ test("the calendar's state is saved with the layout: unfolded days are, area isn
   assert.equal(saves.length, before + 1);
 });
 
-// the workspace openWinx sees: its Winx leaves, the leaves it makes, what it reveals
+// the workspace openUi sees: its Winx leaves, the leaves it makes, what it reveals
 function workspace(leaves) {
   const made = [], revealed = [];
   const leaf = () => {
@@ -204,7 +204,7 @@ function workspace(leaves) {
       setPinned(p) { this.pinned = p; },
       async setViewState(s) { this.state = s; this.states.push(s); },
     };
-    l.view = Object.assign(Object.create(WinxView.prototype), { go: (...a) => l.went.push(a) });
+    l.view = Object.assign(Object.create(UiView.prototype), { go: (...a) => l.went.push(a) });
     return l;
   };
   for (const l of leaves) Object.assign(l, leaf(), l);
@@ -216,17 +216,17 @@ function workspace(leaves) {
   return { made, revealed };
 }
 
-test("openWinx: the newest Winx tab, else one new pinned tab", async () => {
+test("openUi: the newest Winx tab, else one new pinned tab", async () => {
   const old = { activeTime: 1 }, recent = { activeTime: 5 };
   let w = workspace([old, recent]);
 
-  assert.equal(await openWinx("calendar"), recent);
+  assert.equal(await openUi("calendar"), recent);
   assert.deepEqual(w.made, []);
   assert.deepEqual(w.revealed, [recent]);
   assert.deepEqual(recent.went, [["calendar", {}]]);
 
   w = workspace([]);
-  const leaf = await openWinx();
+  const leaf = await openUi();
   assert.deepEqual(w.made, [leaf]);
   assert.equal(leaf.pinned, true);
   assert.equal(leaf.state.type, "winx");
@@ -234,14 +234,14 @@ test("openWinx: the newest Winx tab, else one new pinned tab", async () => {
 
   // a page on a fresh tab: built in one call, so there is no dashboard step to go Back to
   w = workspace([]);
-  const fresh = await openWinx("calendar", { view: "month" });
+  const fresh = await openUi("calendar", { view: "month" });
   assert.deepEqual(fresh.states, [{
     type: "winx", active: true, state: { page: "calendar", calendar: { view: "month" } },
   }]);
   assert.deepEqual(fresh.went, []);
 
   w = workspace([recent]);
-  const extra = await openWinx("calendar", {}, true);
+  const extra = await openUi("calendar", {}, true);
   assert.deepEqual(w.made, [extra]);
   assert.equal(extra.pinned, false);
 });
@@ -251,7 +251,7 @@ test("the drawer: Projects, Finance, Shop, Supplies, Medication, Food, then ⚙ 
   const PageNavigation = (await import("#/components/app/PageNavigation/index.vue")).default;
   const w = workspace([]);
   const went = [];
-  const shell = mount(PageNavigation, { global: { provide: { winx: {
+  const shell = mount(PageNavigation, { global: { provide: { ui: {
     state: { page: "dashboard" }, go: async (...a) => { went.push(a); },
   } } } });
 
@@ -311,7 +311,7 @@ test("dashboard links select Vue pages even when their old notes do not exist", 
     [Market, { empty: true, groups: [] }, "supplies", "supplies"],
   ]) {
     const w = mount(Component, { props: { state: { data } }, global: {
-      provide: { winx: { go: (...args) => went.push(args) } },
+      provide: { ui: { go: (...args) => went.push(args) } },
     } });
     const button = w.findAll("button").find(b => b.text().includes(label));
     await button.trigger("click");

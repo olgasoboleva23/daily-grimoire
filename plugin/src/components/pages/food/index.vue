@@ -5,10 +5,10 @@
 <script setup>
 import { computed, inject, ref } from "vue";
 import { Keymap, Notice } from "obsidian";
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
-import WinxInput from "#/components/uikit/WinxInput/index.vue";
-import WinxTable from "#/components/uikit/WinxTable/index.vue";
-import { openWinx } from "#/components/app/open.ts";
+import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiInput from "#/components/uikit/UiInput/index.vue";
+import UiTable from "#/components/uikit/UiTable/index.vue";
+import { openUi } from "#/components/app/open.ts";
 import { vTip } from "#/components/uikit/tooltip.js";
 import { addDays, weekOf } from "#/helpers/dates.js";
 import { dayLabel } from "#/models/course.js";
@@ -17,9 +17,9 @@ import {
   addEaten, editFood, editMarks, pickTrainingTask, removeEaten, setFoodNote,
 } from "#/controllers/food.js";
 
-const winx = inject("winx", null);
-const openMeds = e => winx ? winx.go("meds", {}, e)
-  : openWinx("meds", {}, Keymap.isModEvent(e));
+const ui = inject("ui", null);
+const openMeds = e => ui ? ui.go("meds", {}, e)
+  : openUi("meds", {}, Keymap.isModEvent(e));
 
 const props = defineProps({ state: { type: Object, required: true } });
 const d = computed(() => props.state.data);
@@ -56,29 +56,29 @@ const act = async (write) => {
 <template>
   <div class="winx-food">
     <div class="winx-food__head winx-row winx-gap-m">
-      <WinxButton
+      <UiButton
         kind="nav"
         title="previous week"
         class="winx-food__prev"
         @click="step(-1)"
-      >‹</WinxButton>
+      >‹</UiButton>
       <span class="winx-food__week">{{ short(days[0]) }} – {{ short(days[6]) }}</span>
-      <WinxButton
+      <UiButton
         kind="nav"
         mirrored
         title="next week"
         class="winx-food__next"
         @click="step(1)"
-      >‹</WinxButton>
-      <WinxButton kind="chip" title="this week" @click="step(0)">today</WinxButton>
+      >‹</UiButton>
+      <UiButton kind="chip" title="this week" @click="step(0)">today</UiButton>
       <span class="winx-grow" />
-      <WinxButton kind="text" title="the training task" @click="act(pickTrainingTask)">
+      <UiButton kind="text" title="the training task" @click="act(pickTrainingTask)">
         🏋
-      </WinxButton>
-      <WinxButton kind="text" title="the marks" @click="act(editMarks)">⚙</WinxButton>
+      </UiButton>
+      <UiButton kind="text" title="the marks" @click="act(editMarks)">⚙</UiButton>
     </div>
     <div class="winx-food__grid">
-      <WinxTable
+      <UiTable
         :columns="columns"
         :rows="rows"
         bordered
@@ -96,11 +96,11 @@ const act = async (write) => {
               >{{ f.name }}{{ f.icons ? ` ${f.icons}` : "" }}</span>
               <span class="winx-food__off" @click="act(() => removeEaten(row.date, n))">×</span>
             </span>
-            <WinxButton
+            <UiButton
               kind="add"
               title="add what was eaten"
               @click="act(() => addEaten(row.date))"
-            >＋</WinxButton>
+            >＋</UiButton>
           </div>
           <span v-else-if="col.tag" class="winx-food__count">{{ row.counts[col.tag] || "" }}</span>
           <span
@@ -113,12 +113,12 @@ const act = async (write) => {
           </span>
           <template v-else-if="col.key === 'courses'">
             <span v-for="c in row.courses" :key="c.id" class="winx-row winx-gap-xs">
-              <WinxButton
+              <UiButton
                 kind="text"
                 title="open medication"
                 class="winx-food__course"
                 @click="openMeds"
-              >💊</WinxButton>
+              >💊</UiButton>
               <span
                 v-for="m in c.meds"
                 :key="m.code"
@@ -127,7 +127,7 @@ const act = async (write) => {
               >{{ m.code }}</span>
             </span>
           </template>
-          <WinxInput
+          <UiInput
             v-else-if="col.key === 'note'"
             kind="inline"
             :model-value="row.note"
@@ -135,7 +135,7 @@ const act = async (write) => {
             @change="act(() => setFoodNote(row.date, $event.target.value))"
           />
         </template>
-      </WinxTable>
+      </UiTable>
     </div>
   </div>
 </template>

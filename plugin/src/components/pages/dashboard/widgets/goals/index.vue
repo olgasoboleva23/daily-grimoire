@@ -2,13 +2,13 @@
      ringed), the minimum version and how often it was done -->
 <script setup>
 import { vTip } from "#/components/uikit/tooltip.js";
-import WinxMissing from "#/components/uikit/WinxMissing.vue";
+import UiMissing from "#/components/uikit/UiMissing.vue";
 
 defineProps({ state: { type: Object, required: true } });
 </script>
 
 <template>
-  <WinxMissing v-if="state.data.missing" :path="state.data.path" />
+  <UiMissing v-if="state.data.missing" :path="state.data.path" />
   <div v-else class="winx-goals winx-col winx-gap-l">
     <div
       v-for="g in state.data.goals"

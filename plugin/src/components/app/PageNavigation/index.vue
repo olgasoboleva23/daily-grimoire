@@ -1,19 +1,19 @@
-<!-- PageNavigation (block winx-menu): the nav (WinxNav: the floating pill, the phone's
+<!-- PageNavigation (block winx-menu): the nav (UiNav: the floating pill, the phone's
      bottom bar) with the main pages, ⋯ Other when a page isn't main, and Other's drawer
-     (WinxDrawer: from the left, the phone's bottom sheet) with those pages: desktop rows with a ↗
+     (UiDrawer: from the left, the phone's bottom sheet) with those pages: desktop rows with a ↗
      (a new tab), the phone's round icons with their names; ⚙ Settings last (its window, no page).
      A click goes there (Cmd-click: a new tab) -->
 <script setup>
 import { inject, ref } from "vue";
 import { Platform } from "obsidian";
-import WinxNav from "#/components/uikit/WinxNav/index.vue";
-import WinxDrawer from "#/components/uikit/WinxDrawer/index.vue";
-import { openWinx } from "#/components/app/open.ts";
+import UiNav from "#/components/uikit/UiNav/index.vue";
+import UiDrawer from "#/components/uikit/UiDrawer/index.vue";
+import { openUi } from "#/components/app/open.ts";
 import { pages } from "#/components/app/pages.js";
 import { openSettings } from "#/controllers/settings.js";
 import { APP_NAME } from "#/helpers/name.js";
 
-const winx = inject("winx");
+const ui = inject("ui");
 const phone = Platform.isMobile;
 const other = ref(false);   // Other's drawer open
 
@@ -27,13 +27,13 @@ const items = [
 
 function go(key, event) {
   other.value = key === "other" && !other.value;
-  if (key !== "other") void winx.go(key, {}, event);
+  if (key !== "other") void ui.go(key, {}, event);
 }
 
 // ↗: the page in a new, unpinned Winx tab
 function openTab(key) {
   other.value = false;
-  void openWinx(key, {}, true);
+  void openUi(key, {}, true);
 }
 
 // ⚙ Settings, last in the drawer: its window, not a page
@@ -44,15 +44,15 @@ function settings() {
 </script>
 
 <template>
-  <WinxNav
+  <UiNav
     class="winx-menu__rail"
     :items="items"
-    :current="winx.state.page"
+    :current="ui.state.page"
     :phone="phone"
     :expanded="other ? 'other' : null"
     @go="go"
   />
-  <WinxDrawer
+  <UiDrawer
     class="winx-menu__drawer"
     :open="other"
     :side="phone ? 'bottom' : 'left'"
@@ -68,7 +68,7 @@ function settings() {
         v-if="phone"
         type="button"
         class="winx-menu__tile"
-        :class="{ 'winx-menu__tile--on': p.key === winx.state.page }"
+        :class="{ 'winx-menu__tile--on': p.key === ui.state.page }"
         @click="go(p.key, $event)"
       >
         <span class="winx-menu__tile-icon winx-center">{{ p.icon }}</span>
@@ -77,7 +77,7 @@ function settings() {
       <div
         v-else
         class="winx-menu__row winx-row"
-        :class="{ 'winx-menu__row--on': p.key === winx.state.page }"
+        :class="{ 'winx-menu__row--on': p.key === ui.state.page }"
       >
         <button
           type="button"
@@ -113,5 +113,5 @@ function settings() {
         <span>Settings</span>
       </button>
     </div>
-  </WinxDrawer>
+  </UiDrawer>
 </template>

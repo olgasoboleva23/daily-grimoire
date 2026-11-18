@@ -2,7 +2,7 @@
      ▶ resume: from today -->
 <script setup>
 import { computed, inject } from "vue";
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
+import UiButton from "#/components/uikit/UiButton/index.vue";
 import GroupCard from "./GroupCard.vue";
 import TaskText from "#/components/pages/calendar/TaskText.vue";
 import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";
@@ -65,11 +65,11 @@ const pause = c => {
         v-else
       >{{ c.when }}</span>{{ c.history }}</template>
       <template #extra>
-        <WinxButton
+        <UiButton
           :title="c.button.title"
           :disabled="c.flip"
           @click="pause(c)"
-        >{{ c.button.icon }}</WinxButton>
+        >{{ c.button.icon }}</UiButton>
       </template>
     </TaskCard>
   </GroupCard>

@@ -1,9 +1,9 @@
-<!-- one field (WinxInput) and a submit button, a finger's height (block winx-add-form):
+<!-- one field (UiInput) and a submit button, a finger's height (block winx-add-form):
      v-model is the field's text, @submit the parent's save; input: the field's attributes
      ({ name, type, placeholder, … }); onBackground: a whiter field, a darker placeholder
      directly on the page background (a project's "+ stage") -->
 <script setup>
-import WinxInput from "#/components/uikit/WinxInput/index.vue";
+import UiInput from "#/components/uikit/UiInput/index.vue";
 
 defineProps({
   input: { type: Object, default: () => ({}) },
@@ -21,7 +21,7 @@ const value = defineModel({ type: [String, Number], default: "" });
     :class="{ 'winx-add-form--on-background': onBackground }"
     @submit.prevent="$emit('submit', value)"
   >
-    <WinxInput v-model="value" class="winx-add-form__input" v-bind="input" />
+    <UiInput v-model="value" class="winx-add-form__input" v-bind="input" />
     <button class="winx-add-form__submit" type="submit">{{ submit }}</button>
   </form>
 </template>

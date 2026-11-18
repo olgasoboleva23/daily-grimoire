@@ -9,7 +9,7 @@
 <script setup>
 import { vTip } from "#/components/uikit/tooltip.js";
 import { computed, inject, ref } from "vue";
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
+import UiButton from "#/components/uikit/UiButton/index.vue";
 import TaskText from "./TaskText.vue";
 import TaskButtons from "./TaskButtons.vue";
 import { useDragSource, useReorder } from "#/composables/drag.js";
@@ -101,13 +101,13 @@ function onTick(e) {
       </template>{{ repeat }}<TaskText :task="task" />
     </div>
     <div v-if="live && !done" class="winx-task__btns winx-task__actions">
-      <WinxButton
+      <UiButton
         v-if="box"
         class="winx-task__primary winx-task__mobile"
         title="complete task"
         :disabled="ticking"
         @click="touch.run"
-      >✓</WinxButton>
+      >✓</UiButton>
       <TaskButtons :task="task" @gone="gone = true" />
     </div>
   </div>

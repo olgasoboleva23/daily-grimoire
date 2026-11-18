@@ -97,7 +97,7 @@ test("meta lines", () => {
   const m = data([task("x", "run [completion:: 2026-06-08]"), task("x", "run [completion:: 2026-05-01]"), task("-", "run [cancelled:: 2026-10-01]")]);
   assert.equal(m.backlogMeta(task(" ", "run [created:: 2026-10-16]")), "waiting 12 d  ·  done 2× · last 08.06");
   assert.equal(m.backlogMeta(task(" ", "new thing")), "");
-  assert.equal(m.poolMeta({ text: "run", winxTask: T(task(" ", "run")) }), "done 2× · last 08.06 · 142 d ago");
+  assert.equal(m.poolMeta({ text: "run", uiTask: T(task(" ", "run")) }), "done 2× · last 08.06 · 142 d ago");
   assert.equal(m.poolMeta(task(" ", "walk")), "never done");
   assert.equal(m.regularHistory(task(" ", "run [repeat:: every day]")), "done 2× · last 08.06 · skipped 1×");
   assert.equal(data([]).regularHistory(task(" ", "walk [repeat:: every day]")), "never done");

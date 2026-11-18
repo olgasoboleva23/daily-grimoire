@@ -4,12 +4,12 @@
      complete), its box ticks it; a click elsewhere on the card opens the project -->
 <script setup>
 import { computed, inject } from "vue";
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
-import WinxCard from "#/components/uikit/WinxCard/index.vue";
-import WinxCheckbox from "#/components/uikit/WinxCheckbox/index.vue";
-import WinxProgress from "#/components/uikit/WinxProgress/index.vue";
-import WinxEmpty from "#/components/uikit/WinxEmpty/index.vue";
-import WinxTabs from "#/components/uikit/WinxTabs/index.vue";
+import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiCard from "#/components/uikit/UiCard/index.vue";
+import UiCheckbox from "#/components/uikit/UiCheckbox/index.vue";
+import UiProgress from "#/components/uikit/UiProgress/index.vue";
+import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
+import UiTabs from "#/components/uikit/UiTabs/index.vue";
 import { app } from "#/helpers/app.js";
 import { tasksApi } from "#/helpers/plugins.js";
 import { askNewProject } from "#/controllers/projects.js";
@@ -53,18 +53,18 @@ const canTick = computed(() => { void projects.version.value; return !!tasksApi(
     <div class="winx-projects__header winx-row winx-between winx-wrap winx-gap-m">
       <div class="winx-row winx-gap-m">
         <h1 class="winx-projects__title">Projects</h1>
-        <WinxButton kind="chip" @click="askNewProject(app)">✦ New project</WinxButton>
+        <UiButton kind="chip" @click="askNewProject(app)">✦ New project</UiButton>
       </div>
-      <WinxTabs v-model="state.filter" :tabs="tabs" on-background />
+      <UiTabs v-model="state.filter" :tabs="tabs" on-background />
     </div>
-    <WinxEmpty v-if="!all.length" on-background text="No projects yet" />
-    <WinxEmpty
+    <UiEmpty v-if="!all.length" on-background text="No projects yet" />
+    <UiEmpty
       v-else-if="!shown.length"
       on-background
       :text="`No ${label(state.filter).toLowerCase()} projects`"
     />
     <div class="winx-projects__grid">
-      <WinxCard
+      <UiCard
         v-for="p in shown"
         :key="p.key"
         :wings="false"
@@ -77,12 +77,12 @@ const canTick = computed(() => { void projects.version.value; return !!tasksApi(
           <ProjectStatus :status="p.status" />
         </template>
         <div v-if="p.description" class="winx-projects__description">{{ p.description }}</div>
-        <WinxProgress v-if="p.total" :value="p.done" :max="p.total" />
+        <UiProgress v-if="p.total" :value="p.done" :max="p.total" />
         <div v-if="p.next" class="winx-projects__next winx-row winx-gap-s" @click.stop>
-          <WinxCheckbox :static="!canTick" @tick="tickTask(p.next.t)" />
+          <UiCheckbox :static="!canTick" @tick="tickTask(p.next.t)" />
           <span class="winx-projects__next-text">{{ p.next.text }}</span>
         </div>
-      </WinxCard>
+      </UiCard>
     </div>
   </div>
 </template>

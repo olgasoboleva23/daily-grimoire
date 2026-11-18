@@ -3,7 +3,7 @@
 import { Platform } from "obsidian";
 import { ymd } from "#/helpers/dates.js";
 import { app } from "#/helpers/app.js";
-import { inWinx } from "#/components/app/open.ts";
+import { inUi } from "#/components/app/open.ts";
 import { dailyFolder } from "#/helpers/paths.js";
 import { Note } from "#/models/note.js";
 import { daily } from "#/models/kinds.js";
@@ -18,12 +18,12 @@ export async function openDaily(date) {
   const folder = dailyFolder(app), path = folder ? `${folder}/${date}` : date;
 
   if (app.metadataCache.getFirstLinkpathDest(path, "")) {
-    return app.workspace.openLinkText(path, "", inWinx());
+    return app.workspace.openLinkText(path, "", inUi());
   }
 
   if (folder && !app.vault.getFolderByPath(folder)) await app.vault.createFolder(folder);
   const text = new Note(daily(date, window.moment(date).format("dddd, MMMM D"))).text;
   const file = await app.vault.create(`${path}.md`, text);
 
-  await app.workspace.getLeaf(inWinx() ? "tab" : false).openFile(file);
+  await app.workspace.getLeaf(inUi() ? "tab" : false).openFile(file);
 }

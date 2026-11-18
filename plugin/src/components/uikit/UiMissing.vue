@@ -1,10 +1,10 @@
 <!-- a widget whose note isn't there: "✦ Create 00 System/Data/Goals.md" -->
 <script setup>
-import WinxEmpty from "./WinxEmpty/index.vue";
+import UiEmpty from "./UiEmpty/index.vue";
 
 defineProps({ path: { type: String, required: true } });
 </script>
 
 <template>
-  <WinxEmpty :text="`Create ${path}`" />
+  <UiEmpty :text="`Create ${path}`" />
 </template>

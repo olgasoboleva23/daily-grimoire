@@ -3,7 +3,7 @@
 <script setup>
 import { inject } from "vue";
 import { openNote } from "#/components/app/open.ts";
-import WinxButton from "./WinxButton/index.vue";
+import UiButton from "./UiButton/index.vue";
 
 const props = defineProps({
   path: { type: String, required: true },
@@ -14,5 +14,5 @@ const open = e => openNote(props.path, sourcePath, e);
 </script>
 
 <template>
-  <WinxButton :kind="kind" @click="open"><slot /></WinxButton>
+  <UiButton :kind="kind" @click="open"><slot /></UiButton>
 </template>

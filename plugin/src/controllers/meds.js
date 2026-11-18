@@ -14,7 +14,7 @@ import {
 } from "#/models/course.js";
 import { Form } from "#/components/uikit/Form/index.ts";
 import { Search } from "#/components/uikit/Search/index.ts";
-import { openWinx } from "#/components/app/open.ts";
+import { openUi } from "#/components/app/open.ts";
 
 export const courses = collection(COURSES);
 const by = (json, fn) => Object.fromEntries(Object.entries(json).map(([id, r]) => [id, fn(r)]));
@@ -58,7 +58,7 @@ export async function newCourse(ask = formAsk) {
   if (!v) return null;
   const id = await courses.add(courseOf(v, todayYmd()), "c");
 
-  await openWinx("meds", {}, true);
+  await openUi("meds", {}, true);
   return id;
 }
 

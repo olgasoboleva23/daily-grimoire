@@ -82,7 +82,7 @@ export class AudioEngine {
 
 export const isMuted = () => app.loadLocalStorage("winx-mute") === "1";
 
-// a mark's sound (WinxCheckbox, a course's chips): a gem for ✅, the slowed gem back to ☐, a
+// a mark's sound (UiCheckbox, a course's chips): a gem for ✅, the slowed gem back to ☐, a
 // chime for ❌
 const MARK_SOUNDS = {
   "✅": () => new AudioEngine(`${SOUNDS}/snd_pickup_gem0${1 + Math.floor(Math.random() * 6)}.wav`),

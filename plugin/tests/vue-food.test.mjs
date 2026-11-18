@@ -31,7 +31,7 @@ const data = () => ({
 test("the food page: the week, a row a day: what was eaten with its marks, the marks counted, the journal the next day, the course, the note", async () => {
   const went = [];
   const w = mount(FoodPage, { props: { state: { data: data() } }, global: {
-    provide: { winx: { go: (...args) => went.push(args) } },
+    provide: { ui: { go: (...args) => went.push(args) } },
   } });
   const rows = w.findAll(".winx-table__row");
 

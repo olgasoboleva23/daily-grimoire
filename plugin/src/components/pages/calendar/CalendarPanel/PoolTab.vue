@@ -2,7 +2,7 @@
      to today -->
 <script setup>
 import { computed, inject } from "vue";
-import WinxEmpty from "#/components/uikit/WinxEmpty/index.vue";
+import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
 import GroupCard from "./GroupCard.vue";
 import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";
 import { byArea } from "#/helpers/panelGroups.js";
@@ -19,7 +19,7 @@ const groups = computed(() => {
 </script>
 
 <template>
-  <WinxEmpty v-if="!groups.length" :text="EMPTY_POOL" />
+  <UiEmpty v-if="!groups.length" :text="EMPTY_POOL" />
   <GroupCard v-for="g in groups" :key="g.key" :title="g.title">
     <TaskCard
       v-for="c in g.cards"

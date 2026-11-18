@@ -22,7 +22,7 @@ before(async () => {
 
 function page() {
   const state = vue.reactive({ date: "2026-11-10" });
-  const wrapper = mount(Dashboard, { props: { state }, global: { stubs: { WinxWidget: true } } });
+  const wrapper = mount(Dashboard, { props: { state }, global: { stubs: { UiWidget: true } } });
   return { state, wrapper };
 }
 
@@ -50,7 +50,7 @@ test("the open dashboard changes its market title when the theme changes", async
   const { applyConfig } = await import("#/helpers/config.js");
   const { taskStore } = await import("#/store/tasks.js");
   const { wrapper } = page();
-  const marketTitle = () => wrapper.findAllComponents({ name: "WinxWidget" })
+  const marketTitle = () => wrapper.findAllComponents({ name: "UiWidget" })
     .map(w => w.props("definition").card?.title).filter(Boolean).at(-1);
   try {
     assert.equal(marketTitle(), "Celestial");

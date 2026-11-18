@@ -3,7 +3,7 @@
      its row goes at once -->
 <script setup>
 import { computed, inject, ref } from "vue";
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
+import UiButton from "#/components/uikit/UiButton/index.vue";
 
 const props = defineProps({
   task: { type: Object, required: true },
@@ -55,22 +55,22 @@ async function remove() {
 </script>
 
 <template>
-  <WinxButton
+  <UiButton
     v-if="task.canSkip"
     class="winx-task__btns-skip"
     title="skip this time"
     @click="skip"
-  >⏭</WinxButton>
-  <WinxButton
+  >⏭</UiButton>
+  <UiButton
     v-if="task.canUnplan"
     class="winx-task__mobile winx-task__btns-unplan"
     title="remove date"
     @click="unplan"
-  >↩</WinxButton>
-  <WinxButton class="winx-task__btns-edit" :title="editTitle" @click="edit">✏️</WinxButton>
-  <WinxButton
+  >↩</UiButton>
+  <UiButton class="winx-task__btns-edit" :title="editTitle" @click="edit">✏️</UiButton>
+  <UiButton
     :title="del.title"
     :class="['winx-task__btns-del', { 'winx-task__btns-del--armed': armed }]"
     @click="remove"
-  >{{ del.text }}</WinxButton>
+  >{{ del.text }}</UiButton>
 </template>

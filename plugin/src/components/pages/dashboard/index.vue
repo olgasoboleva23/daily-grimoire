@@ -9,8 +9,8 @@ import { useBusy, useNewDay } from "#/composables/use.js";
 import { todayYmd } from "#/helpers/dates.js";
 import { DATA, POMODORO } from "#/helpers/paths.js";
 import { blocks } from "#/controllers/blocks.js";
-import Widget from "#/components/WinxWidget.vue";
-import WinxCard from "#/components/uikit/WinxCard/index.vue";
+import Widget from "#/components/UiWidget.vue";
+import UiCard from "#/components/uikit/UiCard/index.vue";
 import DashboardDate from "./DashboardDate.vue";
 
 defineOptions({ name: "DashboardPage" });
@@ -65,10 +65,10 @@ const columns = computed(() => {
             :key="key"
             :definition="{ ...blocks[key], card: { title, meta: meta ? [meta] : [] } }"
           />
-          <WinxCard v-if="i === 2" title="Finance" class="winx-dash__finance">
+          <UiCard v-if="i === 2" title="Finance" class="winx-dash__finance">
             <Widget :definition="blocks.financeMonth" />
             <Widget :definition="blocks.savings" />
-          </WinxCard>
+          </UiCard>
         </div>
       </div>
     </div>

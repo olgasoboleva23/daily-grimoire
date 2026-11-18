@@ -4,8 +4,8 @@
 <script setup>
 import { computed, ref } from "vue";
 import { Menu } from "obsidian";
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
-import WinxCheckbox from "#/components/uikit/WinxCheckbox/index.vue";
+import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiCheckbox from "#/components/uikit/UiCheckbox/index.vue";
 import TaskText from "#/components/pages/calendar/TaskText.vue";
 import { app } from "#/helpers/app.js";
 import config from "#/helpers/config.js";
@@ -39,12 +39,12 @@ function dateMenu(e) {
     class="winx-project__task winx-row winx-gap-s"
     :style="{ '--area': info.color ?? undefined }"
   >
-    <WinxCheckbox v-if="entry.done" mark="✅" static />
-    <WinxCheckbox v-else :static="!canTick" @tick="tickTask(entry.t)" />
+    <UiCheckbox v-if="entry.done" mark="✅" static />
+    <UiCheckbox v-else :static="!canTick" @tick="tickTask(entry.t)" />
     <span class="winx-project__task-text winx-grow"><TaskText :task="info" /></span>
     <template v-if="!entry.done">
-      <WinxButton title="edit" @click="editTaskModal(entry.t)">✏️</WinxButton>
-      <WinxButton title="to the calendar" @click="dateMenu">📅</WinxButton>
+      <UiButton title="edit" @click="editTaskModal(entry.t)">✏️</UiButton>
+      <UiButton title="to the calendar" @click="dateMenu">📅</UiButton>
       <input
         ref="picker"
         type="date"

@@ -12,89 +12,89 @@ before(async () => {
   ({ nextTick } = await import("vue"));
   // a component is <Name>.vue, or <Name>/index.vue when it has its own styles
   const load = async n => (await import(`../src/components/uikit/${n}`)).default;
-  ui = Object.fromEntries(await Promise.all(["WinxButton", "WinxNoteLink", "WinxEmpty", "WinxMissing", "WinxFailed",
-    "WinxGroupHeader", "WinxAddForm", "WinxCard", "WinxTable"].map(async n => {
-    const styled = ["WinxButton", "WinxEmpty", "WinxAddForm", "WinxCard", "WinxTable"].includes(n);
+  ui = Object.fromEntries(await Promise.all(["UiButton", "UiNoteLink", "UiEmpty", "UiMissing", "UiFailed",
+    "UiGroupHeader", "UiAddForm", "UiCard", "UiTable"].map(async n => {
+    const styled = ["UiButton", "UiEmpty", "UiAddForm", "UiCard", "UiTable"].includes(n);
 
     return [n, await load(styled ? `${n}/index.vue` : `${n}.vue`)];
   })));
 });
 const draws = (vue, html) => assert.equal(vue.element.outerHTML.replace(/<!--[^]*?-->/g, ""), html);
 
-test("WinxButton: kinds, on, title, extra classes", () => {
-  draws(mount(ui.WinxButton, { props: { title: "delete task" }, slots: { default: "🗑" } }),
+test("UiButton: kinds, on, title, extra classes", () => {
+  draws(mount(ui.UiButton, { props: { title: "delete task" }, slots: { default: "🗑" } }),
     '<button class="winx-btn winx-btn--round" aria-label="delete task" data-tip="winx-tooltip">🗑</button>');
   // on a blue place (Missed, today): the pink tooltip
-  draws(mount(ui.WinxButton, { props: { title: "move to today", tip: "pink" }, slots: { default: "☀️" } }),
+  draws(mount(ui.UiButton, { props: { title: "move to today", tip: "pink" }, slots: { default: "☀️" } }),
     '<button class="winx-btn winx-btn--round" aria-label="move to today" data-tip="winx-tooltip winx-tooltip--pink">☀️</button>');
-  draws(mount(ui.WinxButton, { props: { kind: "pill" }, attrs: { class: "winx-weight__list" }, slots: { default: "✦ list" } }),
+  draws(mount(ui.UiButton, { props: { kind: "pill" }, attrs: { class: "winx-weight__list" }, slots: { default: "✦ list" } }),
     '<button class="winx-btn winx-btn--pill winx-weight__list">✦ list</button>');
-  draws(mount(ui.WinxButton, { props: { kind: "toggle", on: true }, slots: { default: "✓ done" } }), '<button class="winx-btn winx-btn--toggle winx-btn--on">✓ done</button>');
-  draws(mount(ui.WinxButton, { props: { kind: "toggle" }, slots: { default: "✓ done" } }), '<button class="winx-btn winx-btn--toggle">✓ done</button>');
+  draws(mount(ui.UiButton, { props: { kind: "toggle", on: true }, slots: { default: "✓ done" } }), '<button class="winx-btn winx-btn--toggle winx-btn--on">✓ done</button>');
+  draws(mount(ui.UiButton, { props: { kind: "toggle" }, slots: { default: "✓ done" } }), '<button class="winx-btn winx-btn--toggle">✓ done</button>');
 });
 
-test("WinxNoteLink: a short link to a Winx page's note switches the page in place", async () => {
+test("UiNoteLink: a short link to a Winx page's note switches the page in place", async () => {
   const { setApp } = await import("#/helpers/app.js");
   const went = [], opened = [];
   const tab = { go: (...a) => went.push(a) };
-  const { WinxView } = await import("#/components/app/view.ts");
-  const front = Object.assign(Object.create(WinxView.prototype), tab);
+  const { UiView } = await import("#/components/app/view.ts");
+  const front = Object.assign(Object.create(UiView.prototype), tab);
 
   setApp({
     metadataCache: { getFirstLinkpathDest: () => ({ path: "02 Areas/Finance.md" }) },
     workspace: { getActiveViewOfType: () => front, openLinkText: (...a) => opened.push(a) },
   });
-  await mount(ui.WinxNoteLink, { props: { path: "Finance" } }).find("button").trigger("click");
+  await mount(ui.UiNoteLink, { props: { path: "Finance" } }).find("button").trigger("click");
   assert.deepEqual(went.map(a => [a[0], a[1]]), [["finance", {}]]);
   assert.deepEqual(opened, []);
 });
 
-test("WinxNoteLink, WinxEmpty, WinxMissing, WinxFailed, WinxGroupHeader, WinxAddForm, WinxCard", () => {
-  draws(mount(ui.WinxNoteLink, { props: { path: "x/Cycle.md" }, slots: { default: "dates" } }), '<button class="winx-btn winx-btn--pill">dates</button>');
-  draws(mount(ui.WinxEmpty, { props: { text: "All bought" } }), '<div class="winx-empty winx-text-center">✦ All bought</div>');
-  draws(mount(ui.WinxEmpty), '<div class="winx-empty winx-text-center">✦ Nothing here yet</div>');
-  draws(mount(ui.WinxMissing, { props: { path: "x/Goals.md" } }), '<div class="winx-empty winx-text-center">✦ Create x/Goals.md</div>');
-  draws(mount(ui.WinxFailed, { props: { text: "Goals.md is broken" } }),
+test("UiNoteLink, UiEmpty, UiMissing, UiFailed, UiGroupHeader, UiAddForm, UiCard", () => {
+  draws(mount(ui.UiNoteLink, { props: { path: "x/Cycle.md" }, slots: { default: "dates" } }), '<button class="winx-btn winx-btn--pill">dates</button>');
+  draws(mount(ui.UiEmpty, { props: { text: "All bought" } }), '<div class="winx-empty winx-text-center">✦ All bought</div>');
+  draws(mount(ui.UiEmpty), '<div class="winx-empty winx-text-center">✦ Nothing here yet</div>');
+  draws(mount(ui.UiMissing, { props: { path: "x/Goals.md" } }), '<div class="winx-empty winx-text-center">✦ Create x/Goals.md</div>');
+  draws(mount(ui.UiFailed, { props: { text: "Goals.md is broken" } }),
     '<div class="winx-empty winx-text-center winx-empty--error">⚠ couldn\'t draw: Goals.md is broken<button class="winx-btn winx-btn--chip winx-empty__retry">retry</button></div>');
-  draws(mount(ui.WinxGroupHeader, { props: { label: "🌿 Harvest", count: 3 } }),
+  draws(mount(ui.UiGroupHeader, { props: { label: "🌿 Harvest", count: 3 } }),
     '<div class="winx-group-header"><span>🌿 Harvest</span><span class="winx-group-header__count">3</span></div>');
-  draws(mount(ui.WinxGroupHeader, { props: { label: "🌿 Harvest" } }), '<div class="winx-group-header"><span>🌿 Harvest</span></div>');
+  draws(mount(ui.UiGroupHeader, { props: { label: "🌿 Harvest" } }), '<div class="winx-group-header"><span>🌿 Harvest</span></div>');
   const input = { name: "kg", type: "number", placeholder: "today, kg" };
-  draws(mount(ui.WinxAddForm, { props: { input, submit: "Save" } }),
+  draws(mount(ui.UiAddForm, { props: { input, submit: "Save" } }),
     '<form class="winx-add-form winx-flex winx-gap-s"><input class="winx-input winx-input--field winx-add-form__input" type="number" placeholder="today, kg" name="kg"><button class="winx-add-form__submit" type="submit">Save</button></form>');
-  draws(mount(ui.WinxCard, { props: { title: "Weight", meta: ["scroll"] }, slots: { default: "<b>40 kg</b>" } }),
+  draws(mount(ui.UiCard, { props: { title: "Weight", meta: ["scroll"] }, slots: { default: "<b>40 kg</b>" } }),
     '<div class="callout winx-widget" data-callout="card" data-callout-metadata="scroll" data-callout-fold=""><div class="callout-title winx-widget__title" dir="auto"><div class="callout-icon"></div><div class="callout-title-inner">Weight</div></div><div class="callout-content winx-widget__body"><b>40 kg</b></div></div>');
 });
 
-test("WinxButton: a mirrored nav chevron (next) gets its modifier", () => {
-  const next = mount(ui.WinxButton, { props: { kind: "nav", mirrored: true, title: "next" }, slots: { default: "›" } });
+test("UiButton: a mirrored nav chevron (next) gets its modifier", () => {
+  const next = mount(ui.UiButton, { props: { kind: "nav", mirrored: true, title: "next" }, slots: { default: "›" } });
   assert.equal(next.find("button").classes().join(" "), "winx-btn winx-btn--nav winx-btn--mirrored");
 });
 
-test("WinxCard puts a widget's own class on its body (the shop's winx-shop)", () => {
-  const card = mount(ui.WinxCard, { props: { title: "Shop", bodyClass: "winx-shop" } });
+test("UiCard puts a widget's own class on its body (the shop's winx-shop)", () => {
+  const card = mount(ui.UiCard, { props: { title: "Shop", bodyClass: "winx-shop" } });
   assert.equal(card.find(".winx-widget__body").classes().join(" "), "callout-content winx-widget__body winx-shop");
 });
 
-test("WinxFailed's retry and WinxAddForm's submit reach the parent", async () => {
-  const failed = mount(ui.WinxFailed, { props: { text: "x" } });
+test("UiFailed's retry and UiAddForm's submit reach the parent", async () => {
+  const failed = mount(ui.UiFailed, { props: { text: "x" } });
   await failed.find("button").trigger("click");
   assert.equal(failed.emitted("retry").length, 1);
-  const form = mount(ui.WinxAddForm, { props: { input: { name: "kg" } } });
+  const form = mount(ui.UiAddForm, { props: { input: { name: "kg" } } });
   await form.find("input").setValue("60.2");
   await form.find("form").trigger("submit");
   assert.deepEqual(form.emitted("submit")[0], ["60.2"]);
 });
 
-test("WinxTable: the columns' heads and classes, a row per item named by row-class, a cell's text or the cell slot; a column's tip on its head", () => {
+test("UiTable: the columns' heads and classes, a row per item named by row-class, a cell's text or the cell slot; a column's tip on its head", () => {
   const columns = [{ key: "name", label: "Код", class: "x-name", tip: "the medicine" }, { key: "n", label: "N", align: "center" }];
   const rows = [{ name: "АЕ", n: 1, when: "past" }, { name: "МА", n: 2, when: "today" }];
-  const w = mount(ui.WinxTable, {
+  const w = mount(ui.UiTable, {
     props: { columns, rows, rowKey: r => r.name, rowClass: r => `x-${r.when}` },
     slots: { cell: `<template #cell="{ row, col }"><b v-if="col.key === 'n'">{{ row.n * 10 }}</b><template v-else>{{ row[col.key] }}</template></template>` },
   });
 
-  draws(mount(ui.WinxTable, { props: { columns: [{ key: "a", label: "A" }], rows: [], bordered: true } }),
+  draws(mount(ui.UiTable, { props: { columns: [{ key: "a", label: "A" }], rows: [], bordered: true } }),
     '<table class="winx-table winx-table--bordered"><thead><tr><th class="winx-table__head">A</th></tr></thead><tbody></tbody></table>');
   draws(w, '<table class="winx-table"><thead><tr><th class="winx-table__head x-name" aria-label="the medicine" data-tip="winx-tooltip">Код</th><th class="winx-table__head winx-table__head--center">N</th></tr></thead>'
     + '<tbody><tr class="winx-table__row x-past"><td class="winx-table__cell x-name">АЕ</td><td class="winx-table__cell winx-table__cell--center"><b>10</b></td></tr>'
@@ -115,36 +115,36 @@ test("Search.pickGrouped: a header over each group's first row, the name and its
   assert.deepEqual(drawn, ["#1", row, "a", "A", row, "b", "B", "#2", row, "c", "C", row, "+ new: d", ""]);
 });
 
-test("WinxCard: a cover picture above the title; none without one", () => {
-  const card = mount(ui.WinxCard, { props: { title: "Trip", cover: "app://x/trip.webp" } });
+test("UiCard: a cover picture above the title; none without one", () => {
+  const card = mount(ui.UiCard, { props: { title: "Trip", cover: "app://x/trip.webp" } });
   const img = card.find("img.winx-widget__cover");
   assert.equal(img.attributes("src"), "app://x/trip.webp");
   assert.equal(img.attributes("alt"), "");
   assert.equal(card.find(".winx-widget").element.firstElementChild, img.element);
-  assert.equal(mount(ui.WinxCard, { props: { title: "Trip" } }).find("img").exists(), false);
+  assert.equal(mount(ui.UiCard, { props: { title: "Trip" } }).find("img").exists(), false);
 });
 
-test("WinxCard: wings by default, :wings=false draws it without (the --wingless modifier)", () => {
-  const wingless = mount(ui.WinxCard, { props: { title: "Trip", wings: false } });
+test("UiCard: wings by default, :wings=false draws it without (the --wingless modifier)", () => {
+  const wingless = mount(ui.UiCard, { props: { title: "Trip", wings: false } });
 
   assert.equal(wingless.classes().includes("winx-widget--wingless"), true);
-  assert.equal(mount(ui.WinxCard, { props: { title: "Trip" } }).classes().includes("winx-widget--wingless"), false);
+  assert.equal(mount(ui.UiCard, { props: { title: "Trip" } }).classes().includes("winx-widget--wingless"), false);
 });
 
-test("WinxTabs: on the page background (a page without a card) the light look", async () => {
-  const WinxTabs = (await import("../src/components/uikit/WinxTabs/index.vue")).default;
+test("UiTabs: on the page background (a page without a card) the light look", async () => {
+  const UiTabs = (await import("../src/components/uikit/UiTabs/index.vue")).default;
   const tabs = [{ key: "all", text: "All" }];
-  const plain = mount(WinxTabs, { props: { tabs } }), onBackground = mount(WinxTabs, { props: { tabs, onBackground: true } });
+  const plain = mount(UiTabs, { props: { tabs } }), onBackground = mount(UiTabs, { props: { tabs, onBackground: true } });
 
   assert.equal(plain.classes().includes("winx-tabs--on-background"), false);
   assert.equal(onBackground.classes().includes("winx-tabs--on-background"), true);
 });
 
-test("WinxAddForm: on the page background (no card under it) the --on-background look", () => {
-  const onBackground = mount(ui.WinxAddForm, { props: { onBackground: true } });
+test("UiAddForm: on the page background (no card under it) the --on-background look", () => {
+  const onBackground = mount(ui.UiAddForm, { props: { onBackground: true } });
 
   assert.equal(onBackground.classes().includes("winx-add-form--on-background"), true);
-  assert.equal(mount(ui.WinxAddForm).classes().includes("winx-add-form--on-background"), false);
+  assert.equal(mount(ui.UiAddForm).classes().includes("winx-add-form--on-background"), false);
 });
 
 const navItems = [
@@ -152,9 +152,9 @@ const navItems = [
   { key: "calendar", icon: "🗓", text: "Calendar" },
   { key: "other", icon: "⋯", text: "Other" },
 ];
-const loadNav = async () => (await import("../src/components/uikit/WinxNav/index.vue")).default;
+const loadNav = async () => (await import("../src/components/uikit/UiNav/index.vue")).default;
 
-test("WinxNav: three items, the current one on, a click says which", async () => {
+test("UiNav: three items, the current one on, a click says which", async () => {
   const nav = mount(await loadNav(), { props: { items: navItems, current: "calendar" } });
   const items = nav.findAll(".winx-rail .winx-btn--rail");
 
@@ -166,7 +166,7 @@ test("WinxNav: three items, the current one on, a click says which", async () =>
   assert.equal(event instanceof MouseEvent, true);
 });
 
-test("WinxNav: hover opens it; a click shuts it until the pointer leaves", async () => {
+test("UiNav: hover opens it; a click shuts it until the pointer leaves", async () => {
   const nav = mount(await loadNav(), { props: { items: navItems, current: "calendar" } });
   const is = m => nav.classes().includes(`winx-rail--${m}`);
 
@@ -179,19 +179,19 @@ test("WinxNav: hover opens it; a click shuts it until the pointer leaves", async
   assert.deepEqual([is("shut"), is("open")], [false, true]);
 });
 
-test("WinxNav: on the phone the bottom bar, no hover states", async () => {
+test("UiNav: on the phone the bottom bar, no hover states", async () => {
   const nav = mount(await loadNav(), { props: { items: navItems, phone: true } });
 
   await nav.trigger("pointerenter");
   assert.deepEqual(nav.classes(), ["winx-rail", "winx-rail--phone"]);
 });
 
-test("WinxDrawer: closed draws nothing; open, Esc and the backdrop close it", async () => {
-  const WinxDrawer = (await import("../src/components/uikit/WinxDrawer/index.vue")).default;
-  const closed = mount(WinxDrawer, { props: { open: false }, slots: { default: "rows" } });
+test("UiDrawer: closed draws nothing; open, Esc and the backdrop close it", async () => {
+  const UiDrawer = (await import("../src/components/uikit/UiDrawer/index.vue")).default;
+  const closed = mount(UiDrawer, { props: { open: false }, slots: { default: "rows" } });
   assert.equal(closed.find(".winx-drawer").exists(), false);
 
-  const drawer = mount(WinxDrawer,
+  const drawer = mount(UiDrawer,
     { props: { open: true, side: "bottom" }, slots: { default: "rows" } });
   assert.equal(drawer.find(".winx-drawer.winx-drawer--bottom .winx-drawer__panel").text(), "rows");
   await drawer.find(".winx-drawer__backdrop").trigger("click");
@@ -201,11 +201,11 @@ test("WinxDrawer: closed draws nothing; open, Esc and the backdrop close it", as
   drawer.unmount();
 });
 
-test("WinxDrawer: a labelled dialog; open, it takes the focus, closed, gives it back", async () => {
-  const WinxDrawer = (await import("../src/components/uikit/WinxDrawer/index.vue")).default;
+test("UiDrawer: a labelled dialog; open, it takes the focus, closed, gives it back", async () => {
+  const UiDrawer = (await import("../src/components/uikit/UiDrawer/index.vue")).default;
   const other = document.body.appendChild(document.createElement("button"));
   other.focus();
-  const drawer = mount(WinxDrawer, { props: { label: "Other" }, attachTo: document.body });
+  const drawer = mount(UiDrawer, { props: { label: "Other" }, attachTo: document.body });
 
   await drawer.setProps({ open: true });
   await nextTick();
@@ -220,11 +220,11 @@ test("WinxDrawer: a labelled dialog; open, it takes the focus, closed, gives it 
   other.remove();
 });
 
-test("WinxDrawer: desktop Tab stays in the panel, so Escape still closes it", async () => {
-  const WinxDrawer = (await import("../src/components/uikit/WinxDrawer/index.vue")).default;
+test("UiDrawer: desktop Tab stays in the panel, so Escape still closes it", async () => {
+  const UiDrawer = (await import("../src/components/uikit/UiDrawer/index.vue")).default;
   const other = document.body.appendChild(document.createElement("button"));
   other.focus();
-  const drawer = mount(WinxDrawer, {
+  const drawer = mount(UiDrawer, {
     attachTo: document.body,
     slots: { default: '<button disabled>Disabled</button><button hidden>Hidden</button>'
       + '<button tabindex="-1">Not tabbed</button><button>First</button><button>Last</button>' },
@@ -255,12 +255,12 @@ test("WinxDrawer: desktop Tab stays in the panel, so Escape still closes it", as
   other.remove();
 });
 
-test("WinxDrawer: the phone sheet leaves the bottom navigation reachable", async () => {
-  const WinxDrawer = (await import("../src/components/uikit/WinxDrawer/index.vue")).default;
+test("UiDrawer: the phone sheet leaves the bottom navigation reachable", async () => {
+  const UiDrawer = (await import("../src/components/uikit/UiDrawer/index.vue")).default;
   const other = document.body.appendChild(document.createElement("button"));
   const dashboard = document.body.appendChild(document.createElement("button"));
   other.focus();
-  const drawer = mount(WinxDrawer, { props: { side: "bottom" }, attachTo: document.body,
+  const drawer = mount(UiDrawer, { props: { side: "bottom" }, attachTo: document.body,
     slots: { default: "<button>Settings</button>" } });
   await drawer.setProps({ open: true });
   await nextTick();
@@ -278,7 +278,7 @@ test("WinxDrawer: the phone sheet leaves the bottom navigation reachable", async
   dashboard.remove();
 });
 
-test("WinxNav: the current item is the page; the one whose drawer is open, expanded", async () => {
+test("UiNav: the current item is the page; the one whose drawer is open, expanded", async () => {
   const nav = mount(await loadNav(),
     { props: { items: navItems, current: "calendar", expanded: "other" } });
   const items = nav.findAll(".winx-btn--rail");

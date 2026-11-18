@@ -10,12 +10,12 @@
 │   │   ├── main.ts               — loads everything: the ```winx block, the Daily Grimoire tab, ✨,
 │   │   │                           the commands
 │   │   ├── 📁 components         — every .vue (a styled one: a folder with index.vue and its index.scss)
-│   │   │   ├── 📁 uikit          — the shared parts: WinxButton (round, nav, pill, chip, toggle, text),
-│   │   │   │                       WinxCard, WinxChart, WinxTable, WinxInput, WinxCheckbox, WinxNoteLink,
-│   │   │   │                       WinxEmpty / WinxMissing / WinxFailed, tooltip.js (the v-tip directive),
-│   │   │   │                       WinxGroupHeader, WinxAddForm, WinxNav (the pill and the phone's bar), WinxDrawer (the left drawer, the phone's sheet); Obsidian's windows: Form, Search,
+│   │   │   ├── 📁 uikit          — the shared parts: UiButton (round, nav, pill, chip, toggle, text),
+│   │   │   │                       UiCard, UiChart, UiTable, UiInput, UiCheckbox, UiNoteLink,
+│   │   │   │                       UiEmpty / UiMissing / UiFailed, tooltip.js (the v-tip directive),
+│   │   │   │                       UiGroupHeader, UiAddForm, UiNav (the pill and the phone's bar), UiDrawer (the left drawer, the phone's sheet); Obsidian's windows: Form, Search,
 │   │   │   │                       TaskWindow (a task's difficulty, area, time, sticker, variants), TaskSearch
-│   │   │   ├── WinxWidget.vue   — loads widget data, follows changes, shows loading/error/card states
+│   │   │   ├── UiWidget.vue   — loads widget data, follows changes, shows loading/error/card states
 │   │   │   ├── 📁 app           — view.ts (Obsidian tab, saved state, Back/Forward), index.vue (Vue pages
 │   │   │   │                       and KeepAlive), pages.ts (navigation labels), PageNavigation (pill,
 │   │   │   │                       drawer), open.ts (open/reveal a tab, restore old tab types)
@@ -107,12 +107,12 @@ defineProps({ state: { type: Object, required: true } });
 <template>
   <div class="winx-weight">
     <span class="winx-weight__now">{{ state.data.weight.last.kg }} kg</span>
-    <WinxNoteLink path="00 System/Data/Weight.md">✦ list</WinxNoteLink>
+    <UiNoteLink path="00 System/Data/Weight.md">✦ list</UiNoteLink>
   </div>
 </template>
 ```
 
-- `WinxWidget.vue` loads the data now and again when
+- `UiWidget.vue` loads the data now and again when
   a file it names (`watches`) changes: the task files at once, from the plugin's own store, the rest a moment
   after Dataview's index has them (or the block's own note changes; a hidden block when it shows), drops a stale result,
   shows an error with retry, a card's placeholder until the first data, and the card itself (`card:` in the
@@ -121,12 +121,12 @@ defineProps({ state: { type: Object, required: true } });
   `retry` by `inject("retry")`. SPA pages render this component directly, without a Markdown page.
   `VueHost` (`plugin/src/composables/vueHost.ts`) mounts it as a separate Vue app only for a `winx` code block
   in an ordinary note. `useObsidian` releases registered events and timers when its Vue scope ends.
-- The parts in `plugin/src/components/uikit/` are reusable: `WinxButton` with a kind (`round`, `nav`, `pill`, `chip`,
-  `toggle`, `text`) and its tooltip (`title`; `tip="pink"` on a blue place), `WinxCard`, `WinxChart` (a Charts
-  plugin chart, destroyed with it), `WinxTable` (columns with a key, label, align, class and tip; rows; a cell
-  slot; a row's key and class), `WinxInput` (a text field: `field`, or `inline` in a table's row), `WinxCheckbox`
-  (a box with a mark ☐ / ✅ / ❌ and its sound; `static` for a legend), `WinxEmpty` / `WinxMissing` /
-  `WinxFailed`, `WinxNoteLink`, `WinxGroupHeader`, `WinxAddForm`.
+- The parts in `plugin/src/components/uikit/` are reusable: `UiButton` with a kind (`round`, `nav`, `pill`, `chip`,
+  `toggle`, `text`) and its tooltip (`title`; `tip="pink"` on a blue place), `UiCard`, `UiChart` (a Charts
+  plugin chart, destroyed with it), `UiTable` (columns with a key, label, align, class and tip; rows; a cell
+  slot; a row's key and class), `UiInput` (a text field: `field`, or `inline` in a table's row), `UiCheckbox`
+  (a box with a mark ☐ / ✅ / ❌ and its sound; `static` for a legend), `UiEmpty` / `UiMissing` /
+  `UiFailed`, `UiNoteLink`, `UiGroupHeader`, `UiAddForm`.
 - A hint on hover is the `v-tip` directive (`uikit/tooltip.js`), not a component: it asks Obsidian for its tooltip
   (`setTooltip`), which is drawn on the body, so a card's edge or a table's scroll never clips it, and it goes
   on any element (a `th`, a `div`, a button) without a wrapper in the DOM. `v-tip="text"`, `v-tip:bottom`,

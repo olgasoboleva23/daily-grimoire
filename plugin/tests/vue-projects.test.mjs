@@ -48,7 +48,7 @@ function mount(over = {}) {
     open: k => { view.state.open = k; },
   };
   const el = document.body.appendChild(document.createElement("div"));
-  vue.createApp(Projects, { state: view.state }).provide("winx", {
+  vue.createApp(Projects, { state: view.state }).provide("ui", {
     go: (_page, params, e) => view.open(params.open, e),
   }).mount(el);
   return { el, view };
@@ -122,13 +122,13 @@ test("An open key in the store shows its page; one that isn't shows the list", (
   assert.deepEqual(names(list), ["Garden", "Shed", "Poem", "Kite"]);
 });
 
-test("No projects: WinxEmpty 'No projects yet'", () => {
+test("No projects: UiEmpty 'No projects yet'", () => {
   taskStore.putProjects({});
   const { el } = mount();
   assert.equal(el.querySelector(".winx-empty").textContent, "✦ No projects yet");
 });
 
-test("A filter that matches nothing shows WinxEmpty 'No <status> projects'", () => {
+test("A filter that matches nothing shows UiEmpty 'No <status> projects'", () => {
   const { el } = mount({ filter: "paused" });
   assert.equal(el.querySelector(".winx-empty"), null);
   taskStore.putProjects({ p3: { name: "Poem", status: "idea", stages: [] } });

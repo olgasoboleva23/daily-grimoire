@@ -1,8 +1,8 @@
-<!-- The Form window's content (Form/index.ts opens it): the tabs (WinxTabs) and a pane a tab, one
+<!-- The Form window's content (Form/index.ts opens it): the tabs (UiTabs) and a pane a tab, one
      shown at a time, the rows without a tab, then the button (greyed out until `ready`) -->
 <script setup>
 import { provide, ref } from "vue";
-import WinxTabs from "#/components/uikit/WinxTabs/index.vue";
+import UiTabs from "#/components/uikit/UiTabs/index.vue";
 import FormRow from "./FormRow.vue";
 
 const props = defineProps({
@@ -28,7 +28,7 @@ provide("focusFirst", el => {
 
 <template>
   <div v-if="tabs.length">
-    <WinxTabs v-model="picked" :tabs="tabs.map(t => ({ key: t, text: t }))" />
+    <UiTabs v-model="picked" :tabs="tabs.map(t => ({ key: t, text: t }))" />
   </div>
   <div v-for="t in tabs" :key="t" :hidden="t !== picked">
     <template v-for="(r, i) in rows" :key="i">

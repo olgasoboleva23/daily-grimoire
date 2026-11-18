@@ -15,8 +15,8 @@ import { app } from "#/helpers/app.js";
 import { blockDv } from "#/helpers/plugins.js";
 import { taskStore } from "#/store/tasks.js";
 import { TASKS } from "#/helpers/paths.js";
-import WinxCard from "#/components/uikit/WinxCard/index.vue";
-import WinxFailed from "#/components/uikit/WinxFailed.vue";
+import UiCard from "#/components/uikit/UiCard/index.vue";
+import UiFailed from "#/components/uikit/UiFailed.vue";
 
 const props = defineProps({ definition: { type: Object, required: true } });
 const root = ref(null), owner = useObsidian(), state = reactive({ data: null, error: null });
@@ -80,13 +80,13 @@ defineExpose({ state, refresh });
 
 <template>
   <component
-    :is="def.card ? WinxCard : 'div'"
+    :is="def.card ? UiCard : 'div'"
     ref="root"
     v-bind="definition.card"
     :class="def.bodyClass"
   >
     <template v-if="def.cardButton" #button><component :is="def.cardButton" /></template>
-    <WinxFailed v-if="state.error" :text="state.error" @retry="retry" />
+    <UiFailed v-if="state.error" :text="state.error" @retry="retry" />
     <div
       v-else-if="state.data === null"
       class="winx-widget__skeleton"

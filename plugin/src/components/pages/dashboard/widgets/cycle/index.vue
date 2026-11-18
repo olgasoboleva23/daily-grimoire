@@ -4,10 +4,10 @@
 <script setup>
 import { computed, ref } from "vue";
 import { app } from "#/helpers/app.js";
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
-import WinxEmpty from "#/components/uikit/WinxEmpty/index.vue";
-import WinxMissing from "#/components/uikit/WinxMissing.vue";
-import WinxNoteLink from "#/components/uikit/WinxNoteLink.vue";
+import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
+import UiMissing from "#/components/uikit/UiMissing.vue";
+import UiNoteLink from "#/components/uikit/UiNoteLink.vue";
 import { CYCLE } from "#/helpers/paths.js";
 import { markCycle } from "#/controllers/widgets/cycle.js";
 import CycleHead from "./CycleHead.vue";
@@ -31,8 +31,8 @@ const folded = computed(() => !open.value && d.value.info);
 
 <template>
   <div :class="['winx-cycle', { 'winx-cycle--folded': folded }]">
-    <WinxMissing v-if="!d.page" :path="CYCLE" />
-    <WinxEmpty v-else-if="!d.info" text="No data yet" />
+    <UiMissing v-if="!d.page" :path="CYCLE" />
+    <UiEmpty v-else-if="!d.info" text="No data yet" />
     <CycleHead
       v-else
       :head="d.head"
@@ -41,18 +41,18 @@ const folded = computed(() => !open.value && d.value.info);
     />
     <template v-if="!folded && d.rows.length">
       <div class="winx-cycle__tabs winx-flex winx-gap-s">
-        <WinxButton kind="toggle" :on="tab === 'days'" @click="tab = 'days'">days</WinxButton>
-        <WinxButton kind="toggle" :on="tab === 'stats'" @click="tab = 'stats'">stats</WinxButton>
+        <UiButton kind="toggle" :on="tab === 'days'" @click="tab = 'days'">days</UiButton>
+        <UiButton kind="toggle" :on="tab === 'stats'" @click="tab = 'stats'">stats</UiButton>
       </div>
       <CycleStats v-if="tab === 'stats'" :charts="d.charts" />
       <CycleRows v-else :rows="d.rows" />
     </template>
     <div class="winx-cycle__btns winx-flex winx-gap-m winx-wrap">
-      <WinxButton
+      <UiButton
         kind="pill"
         @click="markCycle(d.mark.kind, d.day)"
-      >{{ d.mark.text }}</WinxButton>
-      <WinxNoteLink :path="CYCLE">dates</WinxNoteLink>
+      >{{ d.mark.text }}</UiButton>
+      <UiNoteLink :path="CYCLE">dates</UiNoteLink>
     </div>
   </div>
 </template>

@@ -2,18 +2,18 @@ import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
 
-let mount, WinxTabs;
+let mount, UiTabs;
 before(async () => {
   GlobalRegistrator.register();
   ({ mount } = await import("@vue/test-utils"));
-  WinxTabs = (await import("../src/components/uikit/WinxTabs/index.vue")).default;
+  UiTabs = (await import("../src/components/uikit/UiTabs/index.vue")).default;
 });
 
-test("WinxTabs: scroll keeps the tabs in one row", () => {
+test("UiTabs: scroll keeps the tabs in one row", () => {
   const tabs = [{ key: "a", text: "A" }];
 
-  assert.ok(mount(WinxTabs, { props: { tabs, scroll: true } }).classes("winx-tabs--scroll"));
-  assert.ok(!mount(WinxTabs, { props: { tabs } }).classes("winx-tabs--scroll"));
+  assert.ok(mount(UiTabs, { props: { tabs, scroll: true } }).classes("winx-tabs--scroll"));
+  assert.ok(!mount(UiTabs, { props: { tabs } }).classes("winx-tabs--scroll"));
 });
 
 test("medication form: time checkboxes can be combined, cleared, saved and reopened", async () => {

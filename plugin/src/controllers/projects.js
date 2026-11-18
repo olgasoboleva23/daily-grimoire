@@ -6,7 +6,7 @@ import { PROJECTS } from "#/helpers/paths.js";
 import { readJson } from "#/helpers/files.js";
 import { importCover } from "#/helpers/images.js";
 import { Form } from "#/components/uikit/Form/index.ts";
-import { openWinx } from "#/components/app/open.ts";
+import { openUi } from "#/components/app/open.ts";
 import { projects } from "#/store/tasks.js";
 import { Task } from "#/models/task.js";
 import { editTaskLine, newTask } from "#/controllers/tasks.js";
@@ -23,7 +23,7 @@ const projectFields = [
 
 // A local cover is imported only after submission, then the new project's page is opened.
 export async function askNewProject(
-  app, ask = (...a) => Form.ask(...a), upload = importCover, open = openWinx,
+  app, ask = (...a) => Form.ask(...a), upload = importCover, open = openUi,
 ) {
   const v = await ask(app, "✦ New project", [
     ...projectFields,

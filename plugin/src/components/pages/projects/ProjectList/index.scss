@@ -1,6 +1,6 @@
 @use "context";
 /* The projects' list (ProjectList), block winx-projects: the title and the status tabs over a grid
-   of project cards (WinxCard), two columns on the desktop, one on the phone */
+   of project cards (UiCard), two columns on the desktop, one on the phone */
 @use "mixins" as *;
 
 .winx-projects {

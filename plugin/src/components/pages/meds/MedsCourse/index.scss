@@ -31,7 +31,7 @@
     &[data-mark="❌"] { border-color: var(--winx-pink-deep); background: var(--winx-surface-skipped); }
   }
 
-  /* the grid: a WinxTable; the table in front outweighs its own cell rules */
+  /* the grid: a UiTable; the table in front outweighs its own cell rules */
   &__grid { overflow-x: auto; padding: $space-xs $space-s; border-radius: $radius-m; background: alpha(--winx-surface, 40%); }
   .winx-table .winx-meds {
     &__date { white-space: nowrap; }

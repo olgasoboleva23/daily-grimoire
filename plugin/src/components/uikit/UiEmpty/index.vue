@@ -1,7 +1,7 @@
 <!-- An empty message, with an optional action in the slot.
-     onBackground uses WinxCard to keep it readable directly on the page background. -->
+     onBackground uses UiCard to keep it readable directly on the page background. -->
 <script setup>
-import WinxCard from "#/components/uikit/WinxCard/index.vue";
+import UiCard from "#/components/uikit/UiCard/index.vue";
 
 defineProps({
   onBackground: { type: Boolean, default: false },
@@ -13,7 +13,7 @@ defineProps({
 
 <template>
   <component
-    :is="onBackground ? WinxCard : 'div'"
+    :is="onBackground ? UiCard : 'div'"
     :meta="onBackground ? ['hero'] : undefined"
     class="winx-empty winx-text-center"
     :class="mod && `winx-empty--${mod}`"

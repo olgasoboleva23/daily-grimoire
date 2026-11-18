@@ -3,8 +3,8 @@
      how to make one -->
 <script setup>
 import { computed, ref } from "vue";
-import WinxEmpty from "#/components/uikit/WinxEmpty/index.vue";
-import WinxTabs from "#/components/uikit/WinxTabs/index.vue";
+import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
+import UiTabs from "#/components/uikit/UiTabs/index.vue";
 import { APP_NAME } from "#/helpers/name.js";
 import MedsCourse from "./MedsCourse/index.vue";
 
@@ -19,14 +19,14 @@ const picked = computed({
 </script>
 
 <template>
-  <WinxEmpty
+  <UiEmpty
     v-if="!list.length"
     on-background
     :text="`No courses yet: ${APP_NAME}: New medication course`"
   />
   <div v-else>
     <!-- one row, sideways scroll -->
-    <WinxTabs
+    <UiTabs
       v-model="picked"
       :tabs="list.map(c => ({ key: c.id, text: c.label, title: c.title }))"
       on-background

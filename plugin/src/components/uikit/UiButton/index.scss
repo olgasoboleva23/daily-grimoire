@@ -1,5 +1,5 @@
 @use "context";
-/* Button (WinxButton), block winx-btn: one set of rules per kind (a modifier), each `&.winx-btn--kind`:
+/* Button (UiButton), block winx-btn: one set of rules per kind (a modifier), each `&.winx-btn--kind`:
    button + two classes (0,2,1), so Obsidian's button styles don't win */
 @use "mixins" as *;
 
@@ -109,7 +109,7 @@ button.winx-btn {
     &.winx-btn--jump:hover { transform: scale(1.08); }
   }
 
-  // rail: an item of the Winx tab's nav (WinxNav): a rounded square with its icon, and its Quicksand
+  // rail: an item of the Winx tab's nav (UiNav): a rounded square with its icon, and its Quicksand
   // label when the pill is open; hover: light pink, on: pink with a gold border; on hover sparkles
   // fly out in gold against the near-white pill
   &.winx-btn--rail {

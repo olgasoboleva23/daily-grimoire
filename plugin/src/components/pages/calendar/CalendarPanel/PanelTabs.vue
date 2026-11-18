@@ -1,7 +1,7 @@
 <!-- the panel's tabs, each with its count -->
 <script setup>
 import { computed, inject } from "vue";
-import WinxTabs from "#/components/uikit/WinxTabs/index.vue";
+import UiTabs from "#/components/uikit/UiTabs/index.vue";
 import { openProjects } from "#/helpers/panelGroups.js";
 
 const view = inject("calendar");
@@ -21,5 +21,5 @@ const tabs = computed(() => {
 </script>
 
 <template>
-  <WinxTabs v-model="state.tab" :tabs="tabs" />
+  <UiTabs v-model="state.tab" :tabs="tabs" />
 </template>

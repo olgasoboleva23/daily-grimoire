@@ -77,11 +77,11 @@ export function registerCommands(plugin: Plugin) {
   // every Winx command in one list to pick from (Alt+T in this vault's hotkeys.json)
   plugin.addCommand({
     id: "menu", name: "Menu",
-    callback: () => new WinxMenu(app).open(),
+    callback: () => new UiMenu(app).open(),
   });
 }
 
-class WinxMenu extends FuzzySuggestModal<any> {
+class UiMenu extends FuzzySuggestModal<any> {
   getItems() {
     return (this.app as any).commands.listCommands()
       .filter((c: any) => c.id.startsWith("daily-grimoire:") && c.id !== "daily-grimoire:menu");

@@ -1,9 +1,9 @@
 <!-- a free journal: a level 0–3 and today's reasons (v-model:level, v-model:reasons), each click
      saved (@save), the 30 days' bars, ✦ list (its note), 🗑 (@delete) -->
 <script setup>
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
-import WinxChart from "#/components/uikit/WinxChart/index.vue";
-import WinxNoteLink from "#/components/uikit/WinxNoteLink.vue";
+import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiChart from "#/components/uikit/UiChart/index.vue";
+import UiNoteLink from "#/components/uikit/UiNoteLink.vue";
 
 defineProps({ log: { type: Object, required: true } });
 const emit = defineEmits(["save", "delete"]);
@@ -24,31 +24,31 @@ const pick = r => {
 <template>
   <div class="winx-weight__log">
     <div class="winx-weight__log-row winx-flex winx-wrap winx-gap-s">
-      <WinxButton
+      <UiButton
         v-for="n in [0, 1, 2, 3]"
         :key="n"
         kind="toggle"
         :on="level === n"
         @click="set(n)"
-      >{{ n }}</WinxButton>
+      >{{ n }}</UiButton>
     </div>
     <div class="winx-weight__log-row winx-flex winx-wrap winx-gap-s">
-      <WinxButton
+      <UiButton
         v-for="r in log.reasons"
         :key="r"
         kind="toggle"
         :on="reasons.includes(r)"
         @click="pick(r)"
-      >{{ r }}</WinxButton>
+      >{{ r }}</UiButton>
     </div>
   </div>
-  <WinxChart :config="log.chart" />
+  <UiChart :config="log.chart" />
   <div class="winx-row winx-gap-s">
-    <WinxNoteLink :path="log.path" class="winx-weight__list">✦ list</WinxNoteLink>
-    <WinxButton
+    <UiNoteLink :path="log.path" class="winx-weight__list">✦ list</UiNoteLink>
+    <UiButton
       title="delete the journal"
       class="winx-weight__delete"
       @click="$emit('delete')"
-    >🗑</WinxButton>
+    >🗑</UiButton>
   </div>
 </template>

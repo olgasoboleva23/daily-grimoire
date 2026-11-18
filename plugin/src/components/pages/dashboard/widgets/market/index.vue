@@ -3,19 +3,19 @@
 <script setup>
 import { inject, reactive, watch } from "vue";
 import { Keymap } from "obsidian";
-import { openWinx } from "#/components/app/open.ts";
-import WinxEmpty from "#/components/uikit/WinxEmpty/index.vue";
-import WinxMissing from "#/components/uikit/WinxMissing.vue";
-import WinxGroupHeader from "#/components/uikit/WinxGroupHeader.vue";
-import WinxNoteLink from "#/components/uikit/WinxNoteLink.vue";
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
+import { openUi } from "#/components/app/open.ts";
+import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
+import UiMissing from "#/components/uikit/UiMissing.vue";
+import UiGroupHeader from "#/components/uikit/UiGroupHeader.vue";
+import UiNoteLink from "#/components/uikit/UiNoteLink.vue";
+import UiButton from "#/components/uikit/UiButton/index.vue";
 import { MARKET } from "#/helpers/paths.js";
 import { buyMarketItem } from "#/controllers/widgets/market.js";
 
 const props = defineProps({ state: { type: Object, required: true } });
-const winx = inject("winx", null);
-const supplies = e => winx ? winx.go("supplies", {}, e)
-  : openWinx("supplies", {}, Keymap.isModEvent(e));
+const ui = inject("ui", null);
+const supplies = e => ui ? ui.go("supplies", {}, e)
+  : openUi("supplies", {}, Keymap.isModEvent(e));
 // rows being bought: sparkling from the click until the list no longer has them (written), or the
 // write didn't happen (the line moved meanwhile)
 const bought = reactive(new Set());
@@ -43,12 +43,12 @@ watch(() => props.state.data.groups, groups => {
 </script>
 
 <template>
-  <WinxMissing v-if="state.data.missing" :path="state.data.path" />
+  <UiMissing v-if="state.data.missing" :path="state.data.path" />
   <div v-else class="winx-market">
     <div class="winx-market__list">
-      <WinxEmpty v-if="state.data.empty" text="Merchant inventory cleared" />
+      <UiEmpty v-if="state.data.empty" text="Merchant inventory cleared" />
       <template v-for="g in state.data.groups" :key="g.label">
-        <WinxGroupHeader :label="g.label" :count="g.rows.length" />
+        <UiGroupHeader :label="g.label" :count="g.rows.length" />
         <div
           v-for="r in g.rows"
           :key="key(r)"
@@ -56,7 +56,7 @@ watch(() => props.state.data.groups, groups => {
           :class="{ 'winx-market__item--bought': bought.has(key(r)) }"
         >
           <span class="winx-market__text winx-grow">{{ r.name }}</span>
-          <WinxButton
+          <UiButton
             kind="add"
             jump
             title="bought"
@@ -72,7 +72,7 @@ watch(() => props.state.data.groups, groups => {
                 stroke-linejoin="round"
               />
             </svg>
-          </WinxButton>
+          </UiButton>
         </div>
       </template>
     </div>
@@ -82,12 +82,12 @@ watch(() => props.state.data.groups, groups => {
     >⏳ running low soon: {{ state.data.soon }}</div>
     <div class="winx-market__footer">
       <span>{{ state.data.left }}</span>
-      <WinxNoteLink :path="MARKET" kind="text" class="winx-market__link">
+      <UiNoteLink :path="MARKET" kind="text" class="winx-market__link">
         ✦ open market
-      </WinxNoteLink>
-      <WinxButton kind="text" class="winx-market__link" @click="supplies">
+      </UiNoteLink>
+      <UiButton kind="text" class="winx-market__link" @click="supplies">
         ✦ supplies
-      </WinxButton>
+      </UiButton>
     </div>
   </div>
 </template>

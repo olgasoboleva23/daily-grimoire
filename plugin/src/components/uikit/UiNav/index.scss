@@ -1,7 +1,7 @@
-/* The Winx tab's nav (WinxNav), block winx-rail: desktop, a short near-white pill with a gold border at the tab's left edge,
+/* The Winx tab's nav (UiNav), block winx-rail: desktop, a short near-white pill with a gold border at the tab's left edge,
    over the page (it takes no width); opened, it widens and shows the labels. Phone (--phone): the
    bottom bar (in flow, last in the shell), an icon above a small label. The items' own look is
-   WinxButton's kind rail */
+   UiButton's kind rail */
 @use "mixins" as *;
 
 $label-w: 100px;   // an opened label's room: the longest name, Dashboard, in Quicksand

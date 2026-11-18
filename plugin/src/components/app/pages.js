@@ -1,6 +1,6 @@
 import { FINANCE_PAGE, SHOP, SUPPLIES } from "#/helpers/paths.js";
 
-export const WINX_VIEW = "winx";
+export const UI_VIEW = "winx";
 
 export const pages = {
   dashboard: { title: "Dashboard", icon: "✦", main: true },

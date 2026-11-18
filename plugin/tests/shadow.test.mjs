@@ -9,7 +9,7 @@ before(async () => {
   ({ Component } = await import("obsidian"));
   ({ useVueApp } = await import("#/composables/vueApp.ts"));
   ({ h, ref, nextTick } = await import("vue"));
-  Drawer = (await import("#/components/uikit/WinxDrawer/index.vue")).default;
+  Drawer = (await import("#/components/uikit/UiDrawer/index.vue")).default;
 });
 
 test("the tab's shadow drawer traps Tab, closes on Escape and restores the actual button's focus", async () => {

@@ -1,7 +1,7 @@
 // Only Markdown code blocks need their own Vue app. SPA pages render Widget directly.
 import { MarkdownRenderChild } from "obsidian";
 import { useVueApp } from "./vueApp.ts";
-import Widget from "#/components/WinxWidget.vue";
+import Widget from "#/components/UiWidget.vue";
 
 export class VueHost extends MarkdownRenderChild {
   private mounted: ReturnType<typeof useVueApp> | null = null;

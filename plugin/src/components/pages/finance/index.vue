@@ -4,7 +4,7 @@
      FinanceLatest draw it. -->
 <script setup>
 import { computed, ref } from "vue";
-import WinxEmpty from "#/components/uikit/WinxEmpty/index.vue";
+import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
 import FinanceTotals from "./FinanceTotals.vue";
 import FinanceCategories from "./FinanceCategories.vue";
 import FinanceTrend from "./FinanceTrend.vue";
@@ -22,7 +22,7 @@ const m = computed(() => {
 
 <template>
   <div class="winx-fin winx-col winx-gap-2xl">
-    <WinxEmpty
+    <UiEmpty
       v-if="state.data.empty"
       :text="`The ledger is empty: a note per month goes to ${state.data.path}`"
     />

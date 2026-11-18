@@ -10,14 +10,14 @@ export const THEMES = [
   { value: "da2", label: "Dragon Age 2" },
 ];
 
-const WINX_LABELS = {
+const UI_LABELS = {
   xp: ["VOID", "SPARK", "GLOW", "AURA", "TRANSFORMATION"], market: "Celestial",
 };
 
 export const themeLabels = theme => ({
   gothic: { xp: ["Затишье", "Искра", "Поток", "Разряд", "Буря"], market: "Market" },
   da2: { xp: ["Покой", "Пробуждение", "Пламя", "Сияние", "Справедливость"], market: "Market" },
-}[theme] ?? WINX_LABELS);
+}[theme] ?? UI_LABELS);
 
 const DIFFICULTIES = [
   { label: "⭐ Easy", key: "easy", xp: 5, gold: 2 },

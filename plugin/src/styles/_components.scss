@@ -10,7 +10,7 @@
 @use "animations";
 @use "assets";
 @use "callout-grid";
-@use "../components/uikit/WinxCard";   // the widget's card, where the card snippet was
+@use "../components/uikit/UiCard";   // the widget's card, where the card snippet was
 @use "../components/pages/dashboard/widgets/market";
 @use "../components/pages/dashboard/widgets/xp/XpToday";
 @use "../components/pages/dashboard/widgets/quests";
@@ -30,9 +30,9 @@
 @use "../components/pages/dashboard/widgets/weight";
 @use "../components/pages/dashboard/widgets/savings";
 @use "../components/pages/calendar/TaskCard";
-@use "../components/uikit/WinxButton";
-@use "../components/uikit/WinxEmpty";
-@use "../components/uikit/WinxAddForm";
+@use "../components/uikit/UiButton";
+@use "../components/uikit/UiEmpty";
+@use "../components/uikit/UiAddForm";
 @use "../components/uikit/Search";
 @use "../components/uikit/Form";
 @use "syncing";
@@ -44,18 +44,18 @@
 // was injected by the widget itself, after everything else: last
 @use "../components/pages/finance" as finance-page;
 @use "tooltip";
-@use "../components/uikit/WinxTable";
-@use "../components/uikit/WinxTabs";
-@use "../components/uikit/WinxNav";
-@use "../components/uikit/WinxDrawer";
+@use "../components/uikit/UiTable";
+@use "../components/uikit/UiTabs";
+@use "../components/uikit/UiNav";
+@use "../components/uikit/UiDrawer";
 @use "../components/app";
 @use "../components/app/PageNavigation";
-@use "../components/uikit/WinxInput";
-@use "../components/uikit/WinxCheckbox";
-@use "../components/uikit/WinxChart";
+@use "../components/uikit/UiInput";
+@use "../components/uikit/UiCheckbox";
+@use "../components/uikit/UiChart";
 @use "../components/pages/meds/MedsCourse";
 @use "../components/pages/food";
-@use "../components/uikit/WinxProgress";
+@use "../components/uikit/UiProgress";
 @use "../components/pages/projects/ProjectStatus";
 @use "../components/pages/projects/ProjectList";
 @use "../components/pages/projects/ProjectPage";

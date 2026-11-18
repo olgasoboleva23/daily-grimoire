@@ -2,7 +2,7 @@
      when another day shows. @go(date): another day (null: today) -->
 <script setup>
 import { addDays } from "#/helpers/dates.js";
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
+import UiButton from "#/components/uikit/UiButton/index.vue";
 
 const props = defineProps({
   date: { type: String, required: true },    // the day it shows
@@ -17,17 +17,17 @@ const label = props.phone ? "☀️" : "today";
 
 <template>
   <div class="mb-input-type-date"><input type="date" :value="date" @change="typed"></div>
-  <WinxButton kind="nav" title="previous" @click="step(-1)">‹</WinxButton>
-  <WinxButton
+  <UiButton kind="nav" title="previous" @click="step(-1)">‹</UiButton>
+  <UiButton
     kind="nav"
     title="next"
     mirrored
     @click="step(1)"
-  >›</WinxButton>
-  <WinxButton
+  >›</UiButton>
+  <UiButton
     v-if="date !== today"
     kind="chip"
     title="today"
     @click="emit('go', null)"
-  >{{ label }}</WinxButton>
+  >{{ label }}</UiButton>
 </template>

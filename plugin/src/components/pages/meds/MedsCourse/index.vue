@@ -3,16 +3,16 @@
      Курс: the counts and the course's progress, today's doses by anchor as chips, the course's
      grid (a mark per day and medicine, a note per day typed into the last column), the legend
      (the codes, the times of day, the marks); ✎ edits the course in its window. A mark goes
-     round ☐ → ✅ → ❌ on a click (WinxCheckbox, with its sound): the cell changes at once, the
+     round ☐ → ✅ → ❌ on a click (UiCheckbox, with its sound): the cell changes at once, the
      record is written, and the page is drawn again from it -->
 <script setup>
 import { computed } from "vue";
 import { Notice } from "obsidian";
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
-import WinxCard from "#/components/uikit/WinxCard/index.vue";
-import WinxCheckbox from "#/components/uikit/WinxCheckbox/index.vue";
-import WinxInput from "#/components/uikit/WinxInput/index.vue";
-import WinxTable from "#/components/uikit/WinxTable/index.vue";
+import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiCard from "#/components/uikit/UiCard/index.vue";
+import UiCheckbox from "#/components/uikit/UiCheckbox/index.vue";
+import UiInput from "#/components/uikit/UiInput/index.vue";
+import UiTable from "#/components/uikit/UiTable/index.vue";
 import { TIMES, next } from "#/models/course.js";
 import { editCourse, setDayNote, tickMeds } from "#/controllers/meds.js";
 import { playMark } from "#/helpers/sounds.js";
@@ -79,20 +79,20 @@ const note = (r, el) => {
 
 <template>
   <div class="winx-meds">
-    <WinxCard title="Приём">
+    <UiCard title="Приём">
       <div v-for="line in intake" :key="line" class="winx-meds__intake">{{ line }}</div>
-    </WinxCard>
-    <WinxCard v-if="notes" title="Заметки">
+    </UiCard>
+    <UiCard v-if="notes" title="Заметки">
       <div class="winx-meds__notes">{{ notes }}</div>
-    </WinxCard>
-    <WinxCard title="Курс">
+    </UiCard>
+    <UiCard title="Курс">
       <template #button>
-        <WinxButton
+        <UiButton
           kind="add"
           title="edit course"
           class="winx-widget__add"
           @click="editCourse(id)"
-        >✎</WinxButton>
+        >✎</UiButton>
       </template>
       <div class="winx-meds__sum">
         день {{ course.day }} из {{ course.days }}
@@ -116,12 +116,12 @@ const note = (r, el) => {
               class="winx-meds__chip"
               :data-mark="i.mark"
               @click="toggle(today(), i.col); playMark(i.mark)"
-            ><WinxCheckbox :mark="i.mark" static />{{ i.name }}</button>
+            ><UiCheckbox :mark="i.mark" static />{{ i.name }}</button>
           </div>
         </div>
       </div>
       <div class="winx-meds__grid">
-        <WinxTable
+        <UiTable
           :columns="columns"
           :rows="course.rows"
           :row-key="r => r.date"
@@ -129,7 +129,7 @@ const note = (r, el) => {
         >
           <template #cell="{ row, col }">
             <template v-if="col.key === 'label'">{{ row.label }}</template>
-            <WinxInput
+            <UiInput
               v-else-if="col.key === 'note'"
               kind="inline"
               class="winx-meds__note-input"
@@ -137,24 +137,24 @@ const note = (r, el) => {
               placeholder="…"
               @change="note(row, $event.target)"
             />
-            <WinxCheckbox
+            <UiCheckbox
               v-else-if="row.marks[col.col]"
               class="winx-meds__tick"
               :mark="row.marks[col.col]"
               @tick="toggle(row, col.col)"
             />
           </template>
-        </WinxTable>
+        </UiTable>
       </div>
       <div class="winx-meds__legend winx-center winx-wrap winx-gap-xl">
         <span v-for="[code, name] in codes" :key="code"><b>{{ code }}</b> {{ name }}</span>
         <span v-for="t in times" :key="t">{{ t }}</span>
       </div>
       <div class="winx-meds__legend winx-center winx-wrap winx-gap-xl">
-        <span><WinxCheckbox mark="☐" size="s" static /> не отмечено</span>
-        <span><WinxCheckbox mark="✅" size="s" static /> принято</span>
-        <span><WinxCheckbox mark="❌" size="s" static /> пропущено намеренно</span>
+        <span><UiCheckbox mark="☐" size="s" static /> не отмечено</span>
+        <span><UiCheckbox mark="✅" size="s" static /> принято</span>
+        <span><UiCheckbox mark="❌" size="s" static /> пропущено намеренно</span>
       </div>
-    </WinxCard>
+    </UiCard>
   </div>
 </template>

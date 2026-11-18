@@ -28,7 +28,7 @@
     font-size: $text-xl;
   }
 
-  /* the bought button's tick (a WinxButton add, jump): its own soft glow at rest */
+  /* the bought button's tick (a UiButton add, jump): its own soft glow at rest */
   &__tick { width: 30px; height: 19.5px; filter: drop-shadow(0 0 1.5px var(--winx-highlight)); }
 
   /* bought: strike, sparkle burst over the button, slide away */

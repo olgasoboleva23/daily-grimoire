@@ -59,7 +59,7 @@ test("an error shows with retry, which loads again", async () => {
   const quiet = console.error; console.error = () => {};
   s.loads[0].fail(new Error("Weight.md is broken")); await settle();
   console.error = quiet;
-  assert.equal(el.textContent, "⚠ couldn't draw: Weight.md is brokenretry");   // the host's own WinxFailed
+  assert.equal(el.textContent, "⚠ couldn't draw: Weight.md is brokenretry");   // the host's own UiFailed
   el.querySelector("button").click();
   s.loads[1].ok({ n: 3 }); await settle();
   assert.equal(el.textContent, "3");

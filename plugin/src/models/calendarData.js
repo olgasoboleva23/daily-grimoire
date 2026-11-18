@@ -4,7 +4,7 @@ import { Task, historyOf } from "./task.js";
 import { addDays, diffDays, dm, weekday } from "#/helpers/dates.js";
 import { projectRepeats } from "./repeats.js";
 
-export const T = t => (t.winxTask ??= Task.of(t));   // a Dataview task's Task, made once
+export const T = t => (t.uiTask ??= Task.of(t));   // a Dataview task's Task, made once
 
 const ORDER = { open: 0, ghost: 1, done: 2 };
 
@@ -117,7 +117,7 @@ export class CalendarData {
       .sort((a, b) => T(b).date.localeCompare(T(a).date));
     const pool = poolLines.map(({ id, rec, path }) => {
       const p = { id, pool: true, rec, path };
-      p.winxTask = new Task(`- ${id}`, p, rec);
+      p.uiTask = new Task(`- ${id}`, p, rec);
       return p;
     });
     this.all = [...tasks, ...pool];

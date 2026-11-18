@@ -1,7 +1,7 @@
 <!-- the top row: the date field, sounds on/off, ＋ task -->
 <script setup>
 import { computed, inject, ref } from "vue";
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
+import UiButton from "#/components/uikit/UiButton/index.vue";
 import { goTo } from "#/store/calendar.js";
 import { isMuted, toggleMute } from "#/helpers/sounds.js";
 import { app } from "#/helpers/app.js";
@@ -27,10 +27,10 @@ const newTask = () => app.commands.executeCommandById("daily-grimoire:new-task")
       aria-label="sounds on/off"
       @click="mute"
     >{{ muted ? "🔇" : "🔊" }}</button>
-    <WinxButton
+    <UiButton
       kind="chip"
       :title="`new task (${APP_NAME}: New task)`"
       @click="newTask"
-    >＋ task</WinxButton>
+    >＋ task</UiButton>
   </div>
 </template>

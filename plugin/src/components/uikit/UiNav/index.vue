@@ -1,10 +1,10 @@
-<!-- The Winx tab's nav (block winx-rail): a WinxButton kind rail per item ({ key, icon, text }),
+<!-- The Winx tab's nav (block winx-rail): a UiButton kind rail per item ({ key, icon, text }),
      the current one on; a click says which (go(key, event)). Desktop: a short pill at the left edge
      over the page, opened by hover or focus (labels shown), shut by a click until the pointer
      leaves; phone: the bottom bar, an icon above a small label -->
 <script setup>
 import { ref } from "vue";
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
+import UiButton from "#/components/uikit/UiButton/index.vue";
 
 const props = defineProps({
   items: { type: Array, required: true },
@@ -35,7 +35,7 @@ function go(key, event) {
     @pointerenter="enter"
     @pointerleave="leave"
   >
-    <WinxButton
+    <UiButton
       v-for="i in items"
       :key="i.key"
       kind="rail"
@@ -48,6 +48,6 @@ function go(key, event) {
     >
       <span class="winx-rail__icon">{{ i.icon }}</span>
       <span class="winx-rail__label">{{ i.text }}</span>
-    </WinxButton>
+    </UiButton>
   </nav>
 </template>

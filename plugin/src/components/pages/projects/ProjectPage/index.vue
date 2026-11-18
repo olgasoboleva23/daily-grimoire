@@ -4,10 +4,10 @@
 <script setup>
 import { computed, inject, ref } from "vue";
 import { Menu } from "obsidian";
-import WinxAddForm from "#/components/uikit/WinxAddForm/index.vue";
-import WinxProgress from "#/components/uikit/WinxProgress/index.vue";
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
-import WinxCard from "#/components/uikit/WinxCard/index.vue";
+import UiAddForm from "#/components/uikit/UiAddForm/index.vue";
+import UiProgress from "#/components/uikit/UiProgress/index.vue";
+import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiCard from "#/components/uikit/UiCard/index.vue";
 import { Form } from "#/components/uikit/Form/index.ts";
 import { app } from "#/helpers/app.js";
 import {
@@ -74,33 +74,33 @@ async function remove() {
 
 <template>
   <div class="winx-project">
-    <WinxButton kind="chip" class="winx-project__back" @click="projects.open(null, $event)">
+    <UiButton kind="chip" class="winx-project__back" @click="projects.open(null, $event)">
       ← Projects
-    </WinxButton>
-    <WinxCard
+    </UiButton>
+    <UiCard
       :wings="false"
       class="winx-project__header"
       :title="page.p.name"
       :cover="page.cover"
     >
       <template #button>
-        <WinxButton
+        <UiButton
           kind="text"
           class="winx-project__status"
           title="Status"
           @click="statusMenu"
         >
           <ProjectStatus :status="page.p.status" />
-        </WinxButton>
+        </UiButton>
       </template>
       <div v-if="page.p.description" class="winx-project__description">{{
         page.p.description }}</div>
-      <WinxProgress v-if="page.total" :value="page.done" :max="page.total" />
+      <UiProgress v-if="page.total" :value="page.done" :max="page.total" />
       <div class="winx-row winx-gap-s">
-        <WinxButton kind="chip" @click="askEditProject(app, page.key)">Edit project</WinxButton>
-        <WinxButton kind="chip" @click="remove">Delete project</WinxButton>
+        <UiButton kind="chip" @click="askEditProject(app, page.key)">Edit project</UiButton>
+        <UiButton kind="chip" @click="remove">Delete project</UiButton>
       </div>
-    </WinxCard>
+    </UiCard>
     <div class="winx-project__body">
       <div class="winx-col winx-gap-l">
         <ProjectStage
@@ -110,7 +110,7 @@ async function remove() {
           :index="i"
           :stage="s"
         />
-        <WinxAddForm
+        <UiAddForm
           v-model="stageName"
           :input="{ placeholder: 'New stage' }"
           submit="+ stage"
@@ -119,7 +119,7 @@ async function remove() {
         />
       </div>
       <div class="winx-col winx-gap-l">
-        <WinxCard
+        <UiCard
           v-for="f in SIDE"
           :key="f.key"
           :wings="false"
@@ -128,9 +128,9 @@ async function remove() {
         >
           <div class="winx-project__text">{{ page.p[f.key] }}</div>
           <div class="winx-row winx-gap-s">
-            <WinxButton kind="chip" class="winx-project__edit" @click="edit(f)">Edit</WinxButton>
+            <UiButton kind="chip" class="winx-project__edit" @click="edit(f)">Edit</UiButton>
           </div>
-        </WinxCard>
+        </UiCard>
       </div>
     </div>
   </div>

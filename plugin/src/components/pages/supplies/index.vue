@@ -1,9 +1,9 @@
 <!-- Supplies: by category, each with how long since the last time (or that it's listed) and
      "running low" -->
 <script setup>
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
-import WinxEmpty from "#/components/uikit/WinxEmpty/index.vue";
-import WinxGroupHeader from "#/components/uikit/WinxGroupHeader.vue";
+import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
+import UiGroupHeader from "#/components/uikit/UiGroupHeader.vue";
 import { runsLow } from "#/controllers/widgets/market.js";
 
 defineProps({ state: { type: Object, required: true } });
@@ -11,9 +11,9 @@ defineProps({ state: { type: Object, required: true } });
 
 <template>
   <div class="winx-supplies">
-    <WinxEmpty v-if="state.data.empty" text="Nothing bought twice yet" />
+    <UiEmpty v-if="state.data.empty" text="Nothing bought twice yet" />
     <template v-for="g in state.data.groups" :key="g.label">
-      <WinxGroupHeader :label="g.label" />
+      <UiGroupHeader :label="g.label" />
       <div
         v-for="r in g.rows"
         :key="r.id ?? r.name"
@@ -21,11 +21,11 @@ defineProps({ state: { type: Object, required: true } });
       >
         <span class="winx-supplies__name winx-grow">{{ r.name }}</span>
         <span class="winx-supplies__info">{{ r.info }}</span>
-        <WinxButton
+        <UiButton
           v-if="!r.listed"
           kind="pill"
           @click="runsLow(r.name, r.tag, r.id)"
-        >running low</WinxButton>
+        >running low</UiButton>
       </div>
     </template>
   </div>

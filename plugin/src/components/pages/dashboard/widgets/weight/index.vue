@@ -5,8 +5,8 @@
      and the picks live here; WeightMode and BodyLogMode draw them. -->
 <script setup>
 import { computed, ref, watch } from "vue";
-import WinxButton from "#/components/uikit/WinxButton/index.vue";
-import WinxMissing from "#/components/uikit/WinxMissing.vue";
+import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiMissing from "#/components/uikit/UiMissing.vue";
 import { WEIGHT } from "#/helpers/paths.js";
 import { app } from "#/helpers/app.js";
 import { logWeight } from "#/controllers/widgets/weight.js";
@@ -63,22 +63,22 @@ const saveLog = () =>
 <template>
   <div class="winx-weight">
     <div v-if="log" class="winx-weight__modes winx-flex winx-gap-s">
-      <WinxButton
+      <UiButton
         kind="toggle"
         :on="mode === 'weight'"
         @click="mode = 'weight'"
-      >⚖️ weight</WinxButton>
-      <WinxButton
+      >⚖️ weight</UiButton>
+      <UiButton
         kind="toggle"
         :on="logging"
         @click="mode = 'log'"
-      >{{ log.name }}</WinxButton>
-      <WinxButton
+      >{{ log.name }}</UiButton>
+      <UiButton
         kind="add"
         title="new journal"
         class="winx-weight__new"
         @click="newJournal"
-      >+</WinxButton>
+      >+</UiButton>
     </div>
     <select
       v-if="logging && logs.length > 1"
@@ -96,7 +96,7 @@ const saveLog = () =>
       @save="saveLog"
       @delete="deleteJournal(log.path, log.name)"
     />
-    <WinxMissing v-else-if="w.missing" :path="WEIGHT" />
+    <UiMissing v-else-if="w.missing" :path="WEIGHT" />
     <WeightMode
       v-else
       v-model="kg"
