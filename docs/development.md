@@ -7,53 +7,51 @@
 ```
 ├── 📁 plugin — the Daily Grimoire plugin
 │   ├── 📁 src
-│   │   ├── main.ts               — loads everything: the ```winx block, the Daily Grimoire tab, ✨,
+│   │   ├── main.ts               — loads everything: the Daily Grimoire tab (view type `ui-app`), ✨,
 │   │   │                           the commands
 │   │   ├── 📁 components         — every .vue (a styled one: a folder with index.vue and its index.scss)
 │   │   │   ├── 📁 uikit          — the shared parts: UiButton (round, nav, pill, chip, toggle, text),
 │   │   │   │                       UiCard, UiChart, UiTable, UiInput, UiCheckbox, UiNoteLink,
 │   │   │   │                       UiEmpty / UiMissing / UiFailed, tooltip.js (the v-tip directive),
-│   │   │   │                       UiGroupHeader, UiAddForm, UiNav (the pill and the phone's bar), UiDrawer (the left drawer, the phone's sheet); Obsidian's windows: Form, Search,
+│   │   │   │                       UiGroupHeader, UiAddForm, UiNav (the pill and the phone's bar), UiDrawer (the left drawer, the phone's sheet); Obsidian's windows: Form, Search, SettingsWindow,
 │   │   │   │                       TaskWindow (a task's difficulty, area, time, sticker, variants), TaskSearch
 │   │   │   ├── UiWidget.vue   — loads widget data, follows changes, shows loading/error/card states
-│   │   │   ├── 📁 app           — view.ts (Obsidian tab, saved state, Back/Forward), index.vue (Vue pages
-│   │   │   │                       and KeepAlive), pages.ts (navigation labels), PageNavigation (pill,
-│   │   │   │                       drawer), open.ts (open/reveal a tab, restore old tab types)
+│   │   │   ├── 📁 app           — view.ts (UiView, the Obsidian tab: saved state, Back/Forward), index.vue (Vue pages
+│   │   │   │                       and KeepAlive), pages.js (the pages: titles, widgets, notes; pageOf), PageNavigation (pill,
+│   │   │   │                       drawer), open.ts (open/reveal a tab)
 │   │   │   └── 📁 pages
 │   │   │       ├── 📁 dashboard  — index.vue (date, card layout, busy indicator), DashboardDate.vue,
 │   │   │       │                   widgets/<topic>/ (each widget's markup and styles)
 │   │   │       ├── 📁 calendar   — index.vue (state, model, subscriptions), CalendarTab, CalendarHeader,
 │   │   │       │                   CalendarMissed, CalendarGrid, CalendarPanel, TaskRow, TaskCard…
-│   │   │       └── 📁 projects, finance, shop, supplies, food — Vue pages; meds — course widget
-│   │   ├── 📁 controllers        — per topic, what a widget shows (its load) and what it writes (weight,
-│   │   │                           cycle, savings, shop, market, finance, goals, xp, pomodoro, dailyNote),
-│   │   │                           tasks.js (a task's line with undo, new tasks and pool lines),
-│   │   │                           calendar.js (what the calendar writes), notes.js, mobileConfig.js,
-│   │   │                           blocks.js (the ```winx block: names → { view, load, watches })
+│   │   │       └── 📁 projects, finance, shop, supplies, food, meds — the other pages
+│   │   ├── 📁 controllers        — per topic, what a widget shows (its load) and what it writes
+│   │   │                           (widgets/: weight, cycle, savings, shop, market, finance, goals, xp,
+│   │   │                           quests, pomodoro, dailyNote), tasks.js (a task's line with undo, new
+│   │   │                           tasks and pool lines), calendar.js (what the calendar writes), meds.js,
+│   │   │                           food.js, journals.js, projects.js, settings.js, theme.js, notes.js,
+│   │   │                           mobileConfig.js, blocks.js (the widgets: names → { view, load, watches })
 │   │   ├── 📁 models             — the things and their rules, no Obsidian in them: lineItem (a log's line
 │   │   │                           and its JSON record by id), Task (with its variants in turn), Note, Goal,
 │   │   │                           SavingsJar, the weight / body / cycle logs, CalendarData, repeats (🔁
-│   │   │                           rules), ledger (finance), timer (pomodoro), vitals (HP / MP), xp, market
+│   │   │                           rules), ledger (finance), timer (pomodoro), vitals (HP / MP), xp, course (medication), food, settings, market
 │   │   │                           (MarketItem, the categories, supply stats), kinds (watch / read / game /
 │   │   │                           recipe notes), taskFile (a task note's lines as tasks and pool lines)
-│   │   ├── 📁 migrations         — tasks.js, market.js, meds.js, food.js: the one-off migrations (Daily Grimoire: Migrate tasks /
-│   │   │                           market / medication / food; install the new build on both devices first, then
-│   │   │                           migrate medication, then food, on the desktop)
+│   │   ├── 📁 migrations         — tasks.js: the one-off Daily Grimoire: Migrate tasks
 │   │   ├── 📁 composables        — use.js (useRedraw, useDataviewChanges, useWhenIndexed, useNewDay,
 │   │   │                           useBusy, useLater…), vueApp.ts (useVueApp: a Vue app owned by an Obsidian
-│   │   │                           component; useObsidian: subscriptions owned by a Vue scope), vueHost.ts (legacy
-│   │   │                           Markdown blocks only), drag.js / swipe.js (the
+│   │   │                           component; useObsidian: subscriptions owned by a Vue scope), drag.js / swipe.js (the
 │   │   │                           calendar's), notify.js (desktop reminders)
 │   │   ├── 📁 store              — tasks.js (the tasks of 00 System/Data/Tasks, read by the plugin itself and
 │   │   │                           kept up to date on Obsidian's own file events: no Dataview, no wait for its
 │   │   │                           index), calendar.js (the calendar's state: its saved and data keys), router.js (the Daily Grimoire tab's pages and Back / Forward history)
 │   │   ├── 📁 helpers            — paths (where the data lives), app, dates, files (edit / editLine /
 │   │   │                           appendLine), config, format (money, amount), sounds, chart, plugins
-│   │   │                           (Dataview, Tasks, blockDv), find, parse (a block's lines), panelGroups
-│   │   ├── 📁 styles             — main.scss (every block in cascade order) and the shared look: tokens,
+│   │   │                           (Dataview, Tasks, blockDv), find, name (APP_NAME, from manifest.json), panelGroups
+│   │   ├── 📁 styles             — main.scss (the document sheet, see below) and the shared look: tokens,
 │   │   │                           mixins ($space-*, $text-*, $radius-*, $btn-*, row / center, sparkles: stars flying out on hover, drawn from `--ui-sparkles-svg` in `_assets.scss`), fonts,
 │   │   │                           layout, the cards' grid, nav, busy, syncing, utilities (_utilities.scss);
-│   │   │                           shadow.scss: the Winx tab's own build (see below)
+│   │   │                           shadow.scss: the tab's own sheet (see below)
 │   │   └── 📁 commands           — commands.ts (the Cmd+P commands, the Alt+T menu)
 │   └── 📁 tests                  — npm test; tests/obsidian/ checks styles inside Obsidian
 ├── 📁 00 System
@@ -78,19 +76,19 @@ npm run lint                               # ESLint with Obsidian's rules (eslin
 WINX_VAULT=/path/to/your/vault npm run dev # build into <vault>/.obsidian/plugins/daily-grimoire on every save
 ```
 
-After a rebuild run **Daily Grimoire: Reload** (Cmd+P) (the open notes redraw their widgets). `npm run build` makes `plugin/dist/` (`main.js`, `styles.css`, `manifest.json`); a Sass error fails it.
+After a rebuild run **Daily Grimoire: Reload** (Cmd+P) (the tab loads the new build). `npm run build` makes `plugin/dist/` (`main.js`, `styles.css`, `manifest.json`); a Sass error fails it.
 
-`tests/obsidian/styles-snapshot.js` records the computed styles of every element on a set of pages (run it inside Obsidian); `compare-snapshots.mjs` diffs two such records, to check a style change moved nothing it shouldn't.
+Two style snapshots record the computed styles of every element (run them inside Obsidian, with `obsidian eval`): `tests/obsidian/styles-snapshot.js` for notes and `shadow-snapshot.js` for the tab (its Shadow DOM; the tab must be on screen; desktop only, never call `app.emulateMobile`). `compare-snapshots.mjs --no-classes` diffs two such records, to check a style change moved nothing it shouldn't.
 
 ## A widget
 
 A widget is a `.vue` file for its markup (`components/pages/dashboard/widgets/`; a page on a note of its own: `components/pages/<page>/`) and its controller
 (`controllers/<topic>.js`: what it loads and what it writes), registered by name in
-`plugin/src/controllers/blocks.js`:
+`plugin/src/controllers/blocks.js` (a page names its widget in `components/app/pages.js`; the dashboard lists its cards):
 
 ```js
-// controllers/weight.js
-export async function loadWeight({ dv, app, args }) { … }     // what it shows (dv: Dataview for the block's note)
+// controllers/widgets/weight.js
+export async function loadWeight({ dv, app, sourcePath }) { … }     // what it shows (dv: Dataview for the page's note)
 export async function logWeight(typed) { … }                  // what it writes: the .vue imports it
 // blocks.js
 weight: { view: WeightCard, load: loadWeight, watches: [WEIGHT, BODY_LOG, CYCLE] },
@@ -114,13 +112,12 @@ defineProps({ state: { type: Object, required: true } });
 
 - `UiWidget.vue` loads the data now and again when
   a file it names (`watches`) changes: the task files at once, from the plugin's own store, the rest a moment
-  after Dataview's index has them (or the block's own note changes; a hidden block when it shows), drops a stale result,
-  shows an error with retry, a card's placeholder until the first data, and the card itself (`card:` in the
-  block). `follows: false` loads once (the pomodoro); `cardButton` puts a button by the card's title. The view
+  after Dataview's index has them (or the page's own note changes; a hidden widget when it shows), drops a stale result,
+  shows an error with retry, a card's placeholder until the first data, and the card itself (`card` in the
+  definition). `follows: false` loads once (the pomodoro); `cardButton` puts a button by the card's title. The view
   gets `state` as its prop; a widget that must load again after its own write (the shop's balance) takes
-  `retry` by `inject("retry")`. SPA pages render this component directly, without a Markdown page.
-  `VueHost` (`plugin/src/composables/vueHost.ts`) mounts it as a separate Vue app only for a `winx` code block
-  in an ordinary note. `useObsidian` releases registered events and timers when its Vue scope ends.
+  `retry` by `inject("retry")`. Pages render this component directly inside the tab's single Vue app.
+  `useObsidian` releases registered events and timers when its Vue scope ends.
 - The parts in `plugin/src/components/uikit/` are reusable: `UiButton` with a kind (`round`, `nav`, `pill`, `chip`,
   `toggle`, `text`) and its tooltip (`title`; `tip="pink"` on a blue place), `UiCard`, `UiChart` (a Charts
   plugin chart, destroyed with it), `UiTable` (columns with a key, label, align, class and tip; rows; a cell
@@ -136,8 +133,10 @@ defineProps({ state: { type: Object, required: true } });
   `v-if`. A click is `@click` calling an action; what a card only shows (a mode, a fold, a picked level) is the
   component's own state.
 - Class names are BEM: `ui-block__element--modifier` (`ui-weight__now`, `ui-cal__day--today`, `ui-btn--on`), one block per `index.scss` next to its component (shared ones in `plugin/src/styles/`); states the code sets are modifiers; layout utilities (`ui-row`, `ui-gap-*`…) are in `plugin/src/styles/_utilities.scss`.
-- Two style builds from the same partials: `main.scss` → `styles.css` (notes, modals, tooltips, fonts: Obsidian's own page) and `shadow.scss` → compiled to text and inlined into `main.js`, adopted by the Winx tab's shadow root (`_context.scss` switches `:root` / `body.is-mobile` to `.ui-view` / `:host([data-mobile])`).
-- A note shows a widget with a `winx` block (see [Dashboard](dashboard.md)).
+- Two style builds from the same partials (`_context.scss` switches `:root` / `body.is-mobile` to `.ui-view` / `:host([data-mobile])`):
+  - `main.scss` → `styles.css`, the **document sheet**: only what Obsidian's own windows draw (Form, Search, the tooltip, the syncing badge, tokens and themes for them, the Finance note's `> [!card]` callout cards). There `!important` still fights Obsidian's rules.
+  - `shadow.scss` → compiled to text and inlined into `main.js`, adopted by the tab's Shadow DOM root. It is in cascade layers: `@layer base, components;` with `tokens` and `utilities` as sublayers of `components` (the `layer` mixin in `_context.scss` puts a partial in its layer), so a later layer wins whatever the selector's weight.
+- A page is a component of the tab (see [Dashboard](dashboard.md)); notes are only data.
 
 ## The calendar
 
@@ -161,6 +160,7 @@ and Obsidian command IDs start with `daily-grimoire:`. When moving an existing i
 its config first, move the plugin folder with its `data.json`, and update the enabled-plugin list
 and hotkey command IDs. The visible mobile config copy needs the same changes before syncing.
 
-The saved view type, `winx` Markdown blocks, data paths and CSS names remain unchanged. They are
-independent of the installation ID, so existing notes, page states and data need no conversion.
-`WINX_VAULT` remains the development build destination variable.
+The visible name is read from `manifest.json` by `src/helpers/name.js` (`APP_NAME`). The repo name
+`winx-vault`, the theme ids `winx` / `winx-dark`, the data paths and the `WINX_VAULT` development variable
+(the build destination) stay. The tab's view type is `ui-app` (class `UiView`, `components/app/`);
+CSS classes are `ui-*`, custom properties `--ui-*`, uikit components `Ui*`.

@@ -11,7 +11,7 @@ A gamified personal productivity system built in Obsidian with four visual theme
 The repo is two things at once:
 
 - **an example vault** (open the repo folder in Obsidian) with demo notes, tasks and the dashboard;
-- **the Daily Grimoire plugin** (`plugin/`): every widget, the Daily Grimoire tab with its pages, the task window, the commands and all the styles. Notes only say where a widget goes.
+- **the Daily Grimoire plugin** (`plugin/`): the Daily Grimoire tab with its pages and widgets, the task window, the commands and all the styles. Notes are only data.
 
 **Quick start:** build the plugin (`cd plugin && npm ci && npm run build`, then copy `plugin/dist/*` into `.obsidian/plugins/daily-grimoire/`), open the folder as a vault, turn on community plugins, click ✨ on the left. Details in [Installation](docs/installation.md).
 

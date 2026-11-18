@@ -37,25 +37,22 @@ Regulars shows one **Training · Core ↔ Arms** card, the upcoming variant and 
 
 | Command (Cmd+P) | Creates |
 |---|---|
-| **Daily Grimoire: New project** | a project in `00 System/Data/Projects/projects.json`: name, description, status (Active by default), an optional cover picked from `03 Resources/Media`; then the Projects tab opens on it |
+| **Daily Grimoire: New project** | a project in `00 System/Data/Projects/projects.json`: name, description, status (Active by default), an optional cover picked from `03 Resources/Media`; then the Projects page opens on it |
 | **Daily Grimoire: New task** | a task: a record in `Tasks/tasks.json` and a line in `Tasks/Master.md` |
-| **Daily Grimoire: Settings** | ⚙ the difficulties' XP and gold, the areas, XP Today's thresholds and the level cost, saved in `00 System/Data/config.json` (also in the dashboard's ✦ Menu) |
+| **Daily Grimoire: Settings** | ⚙ the difficulties' XP and gold, the areas, XP Today's thresholds and the level cost, saved in `00 System/Data/config.json` (also the last row of the tab's drawer) |
 | **Daily Grimoire: New watch item** / **New read item** / **New game** | a note in `03 Resources/Collections/Watchlist` / `Readlist` / `Gamelist` |
 | **Daily Grimoire: New recipe** | a note in `03 Resources/Collections/Recipes` |
 | **Daily Grimoire: New work task** | a note in `01 Projects/Work/tasks` (another folder: `"workTasks"` in the plugin's `data.json`), named `<next number>_<title in lower case with underscores>` |
-| **Daily Grimoire: New medication course** | for a course of vitamins or medicines: a record in `00 System/Data/Medication/courses.json` (id, start, the medicines (each: name, dose, when (morning / morning and evening / day / evening / any), meal (before / after / before sleep / any), its days as ranges of the course's days: `1-30, 45-60, 70`, up to 365, empty: 1-90; a day outside them is blank in the grid and off the Food page; an unreadable range keeps the window open and says which), the marks by date and column, the days' notes, an optional notes field). The course shows on the page `00 System/Data/Medication/Medication.md` (a ```` ```winx ```` block): a tab per course, then Приём (today's dose lines, grouped by a time of day and a meal), Курс (the counts and progress, today's doses by time of day as chips, the grid; the ✎ in its title), Заметки (the notes field, drawn as Markdown) and the grid (a day per row up to the last day of the longest range, a note per day); a click on a cell ticks it ☐ → ✅ → ❌ (taken, skipped on purpose, not marked) and writes `courses.json`. **Daily Grimoire: Edit medication course** (or the ✎ on the Курс card) asks which course (a picker; the ✎ already knows it), opens the same window with its values and saves the record: the marks and notes carry over by date and column |
+| **Daily Grimoire: New medication course** | for a course of vitamins or medicines: a record in `00 System/Data/Medication/courses.json` (id, start, the medicines (each: name, dose, when (morning / morning and evening / day / evening / any), meal (before / after / before sleep / any), its days as ranges of the course's days: `1-30, 45-60, 70`, up to 365, empty: 1-90; a day outside them is blank in the grid and off the Food page; an unreadable range keeps the window open and says which; an old `days: N` is no longer read), the marks by date and column, the days' notes, an optional notes field). The course shows on the Medication page of the tab: a tab per course, then Приём (today's dose lines, grouped by a time of day and a meal), Курс (the counts and progress, today's doses by time of day as chips, the grid; the ✎ in its title), Заметки (the notes field, drawn as Markdown) and the grid (a day per row up to the last day of the longest range, a note per day); a click on a cell ticks it ☐ → ✅ → ❌ (taken, skipped on purpose, not marked) and writes `courses.json`. **Daily Grimoire: Edit medication course** (or the ✎ on the Курс card) asks which course (a picker; the ✎ already knows it), opens the same window with its values and saves the record: the marks and notes carry over by date and column |
 | **Daily Grimoire: New journal** | a free journal in `00 System/Data/Journals`: its title, its reasons (a comma list) and the days after a meal its level is looked at on the food page (a rash: 1) |
 | **Daily Grimoire: Buy reward** | a line in `00 System/Data/Purchases.md` |
 | **Daily Grimoire: New market item** | a catalog item (if new) and an open ID line in `00 System/Data/Celestial Market.md` |
-| **Daily Grimoire: Migrate market** | `Market/items.json`, an ID-based log, and the original `Celestial Market (old).md` backup |
-| **Daily Grimoire: Migrate medication** | one-off: the old course notes (a table per course) become records in `courses.json`; checked cell by cell before it writes; the old notes are kept as `<name> (old).md`, `_index.base` goes to the trash; running it again changes nothing |
-| **Daily Grimoire: Migrate food** | one-off, after Migrate medication: `Foods.md` and `Log.md` become `food.json` (the foods and their marks) and `log.json` (the days); it checks that no line read is lost before it writes; the old notes are kept. The 💊 mark on a day reads the courses' marks in `courses.json` |
 
 **Daily Grimoire: Menu** (Alt+T) lists every Daily Grimoire command to pick from. On the desktop Daily Grimoire also sends today's reminders: a goal's task at the goal's time, a task with `HH:MM` in its text 30 minutes before, and a morning summary.
 
 ## 📅 Calendar
 
-A tab of its own: **Daily Grimoire: Open calendar** (Cmd+P) or the ✨ icon on the left (with the dashboard). The tasks of `00 System/Data/Tasks` on a week or a month. Pin the tab, drag it to a sidebar or a window; it keeps its week, tab and unfolded days across restarts (Obsidian saves them with the layout). Until you pick a date it follows today.
+A page of the Daily Grimoire tab: **Calendar** in its pill, or **Daily Grimoire: Open** (Cmd+P) or the ✨ icon on the left, then the page. The tasks of `00 System/Data/Tasks` on a week or a month. Pin the tab, drag it to a sidebar or a window; it keeps its page, week, tab and unfolded days across restarts (Obsidian saves them with the layout). Until you pick a date it follows today.
 
 ![Calendar](images/calendar.webp)
 
@@ -67,11 +64,11 @@ A tab of its own: **Daily Grimoire: Open calendar** (Cmd+P) or the ✨ icon on t
   ![Ahead](images/calendar-ahead.webp)
 - **On a task:** ⭐ change difficulty, ✏️ edit (the task window, then the Tasks dialog), ⏭ skip a 🔁 task this time, 🗑 delete (click twice). On the phone, swipe right = done, swipe left = skip / take the date off.
 - **Stickers:** a task's `sticker` (files in `00 System/Assets/stickers/`); hover to see one big.
-- **Quests** (the dashboard card, or a ```` ```winx ```` block named `quests` in any note): today's tasks by life area. The food page has a 🏋 training column: pick one task once under ⚙, ✓ on the days it was done.
+- **Quests** (the dashboard card): today's tasks by life area. The food page has a 🏋 training column: pick one task once under ⚙, ✓ on the days it was done.
 
 ## Projects
 
-A tab of its own: **Daily Grimoire: Open projects** (Cmd+P). A project is a bigger undertaking cut into stages, each a list of tasks. **Daily Grimoire: New project** (or **✦ New project** in the tab's header) creates one.
+A page of the Daily Grimoire tab (**Projects** in the drawer). A project is a bigger undertaking cut into stages, each a list of tasks. **Daily Grimoire: New project** (or **✦ New project** in the tab's header) creates one.
 
 The file is `00 System/Data/Projects/projects.json`, an object by key (`p1`, `p2`…) in display order: `name`, `status` (idea / active / paused / done), `description`, `result`, `notes`, `cover` (a picture path in the vault, or null) and `stages`, each `{ "name": "Dig the beds", "tasks": ["t41", "t42"] }`, the task ids from `tasks.json`. A project's tasks are ordinary tasks: they live in `Master.md` like the rest and take Tasks' dates and repeats.
 

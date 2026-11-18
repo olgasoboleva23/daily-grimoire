@@ -13,9 +13,9 @@ You need [Node.js](https://nodejs.org) 24 and Obsidian 1.9 or newer.
    mkdir -p ../.obsidian/plugins/daily-grimoire && cp dist/* ../.obsidian/plugins/daily-grimoire/
    ```
 3. **Open the `winx-vault` folder as a vault** in Obsidian, trust its plugins (Settings → Community plugins → Turn on). The other plugins (below) are already in `.obsidian/plugins/`.
-4. Click ✨ on the left: the dashboard and the calendar open as two pinned tabs.
+4. Click ✨ on the left: the Daily Grimoire tab opens, pinned, on the dashboard (the calendar and the other pages are one click away in it).
 
-Without step 2 there is no ✨, and the notes' cards stay empty: the plugin draws them.
+Without step 2 there is no ✨: the plugin draws every page.
 
 ## Into your own vault
 
@@ -25,9 +25,9 @@ Copy the plugin and what it reads:
 |---|---|
 | `plugin/dist/*` (after `npm run build`) | `.obsidian/plugins/daily-grimoire/` — then turn **Daily Grimoire** on in Community plugins |
 | the plugins from the table below | Community plugins (or copy `.obsidian/plugins/<name>/` from here) |
-| `00 System/Data/` (`Tasks/Master.md`, `Tasks/tasks.json`, `Goals.md`, the widgets' notes), `00 System/Assets/` | the same paths: the widgets and the calendar read them there |
+| `00 System/Data/` (`Tasks/Master.md`, `Tasks/tasks.json`, `Goals.md`, the widgets' notes), `00 System/Assets/` | the same paths: the pages read them there |
 
-The paths the widgets read are in `plugin/src/helpers/paths.js` (and constants at the top of the controllers, `plugin/src/controllers/*.js`); the areas, difficulties and levels in `plugin/src/helpers/config.js`.
+The paths the plugin reads are in `plugin/src/helpers/paths.js` (and constants at the top of the controllers, `plugin/src/controllers/*.js`); the areas, difficulties and levels in `plugin/src/helpers/config.js`.
 
 ## Keeping your vault in sync with this repo
 
@@ -66,11 +66,11 @@ A sync tool can bring deleted or renamed notes back: Remotely Save decides delet
 
 | Plugin | Version | Purpose |
 |---|---|---|
-| **Daily Grimoire** | this repo, `plugin/` | Widgets, task window, commands, all styles |
+| **Daily Grimoire** | this repo, `plugin/` | The tab with its pages and widgets, task window, commands, styles |
 | **Dataview** | 0.5.68 | Data for the widgets (its index of pages and lists; the tasks the plugin reads itself) |
 | **Tasks** | 7.23.1 | Task format (set to Dataview), the edit dialog, ticking 🔁 tasks |
 | **Charts** | 3.9.0 | Radar, bar & line charts in widgets |
-| **Meta Bind** | 1.4.8 | `INPUT[slider]` in old daily notes (optional) |
+| **Meta Bind** | 1.4.9 | `INPUT[slider]` in old daily notes (optional) |
 
 ## Upgrading from the old task format
 
