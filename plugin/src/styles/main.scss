@@ -1,5 +1,5 @@
 // The document sheet: what Obsidian's own windows draw. The tab (pages, widgets) has its own sheet,
-// shadow.scss, so only these partials are here: fonts, tokens and themes for the Form / Search
+// shadow.scss, so only these partials are here: fonts, tokens for the Form / Search
 // windows, those windows, the tooltip, the syncing badge, the tabs component, the file explorer's colours.
 // Keep the order: rules of the same weight win by order.
 @use "fonts";

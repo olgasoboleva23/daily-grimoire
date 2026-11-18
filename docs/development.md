@@ -134,7 +134,7 @@ defineProps({ state: { type: Object, required: true } });
   component's own state.
 - Class names are BEM: `ui-block__element--modifier` (`ui-weight__now`, `ui-cal__day--today`, `ui-btn--on`), one block per `index.scss` next to its component (shared ones in `plugin/src/styles/`); states the code sets are modifiers; layout utilities (`ui-row`, `ui-gap-*`…) are in `plugin/src/styles/_utilities.scss`.
 - Two style builds from the same partials (`_context.scss` switches `:root` / `body.is-mobile` to `.ui-view` / `:host([data-mobile])`):
-  - `main.scss` → `styles.css`, the **document sheet**: only what Obsidian's own windows draw (Form, Search, the tooltip, the syncing badge, tokens and themes for them, the file explorer's colours). Cards and pages are not there: the tab draws them (`UiCard` renders the `ui-card` block, styled in the tab's sheet only), no note uses Markdown callouts with our look. Two `!important` are left, both in `_themes.scss`.
+  - `main.scss` → `styles.css`, the **document sheet**: only what Obsidian's own windows draw (Form, Search, the tooltip, the syncing badge, their tokens, the file explorer's colours). Cards and pages are not there: the tab draws them (`UiCard` renders the `ui-card` block, styled in the tab's sheet only), no note uses Markdown callouts with our look. Two `!important` are left, both in `_themes.scss`.
   - `shadow.scss` → compiled to text and inlined into `main.js`, adopted by the tab's Shadow DOM root. It is in cascade layers: `@layer base, components;` with `tokens` and `utilities` as sublayers of `components` (the `layer` mixin in `_context.scss` puts a partial in its layer), so a later layer wins whatever the selector's weight.
 - A page is a component of the tab (see [Dashboard](dashboard.md)); notes are only data.
 
@@ -146,9 +146,9 @@ with the layout; the model (`models/calendarData.js`) is recomputed
 when the date, the view or a filter changes, or when a task file does (`store/tasks.js` reads it again as soon as
 it's saved; the calendar needs no Dataview); the parts (`CalendarHeader`,
 `CalendarMissed`, `CalendarGrid`, `CalendarPanel`) and the tasks (`TaskRow`, `TaskCard`…) are `.vue` files.
-Elements carry the task's key (`data-task`: file, line, status, words), the `:key` Vue keeps them by, and what
-the tab's drag (`data-drag` → `data-drop`) and swipe (`data-swipeable`) listeners
-(`composables/drag.js`, `swipe.js`) find the task by.
+An element's task is its `:key` (the id, `t12`) and the props of its component; the drag
+(`composables/drag.js`: a row and a zone set their own listeners) needs no selector; a swipeable row carries
+`data-swipeable`, which `composables/swipe.js` finds it by.
 
 
 ## Product name and stable identifiers
