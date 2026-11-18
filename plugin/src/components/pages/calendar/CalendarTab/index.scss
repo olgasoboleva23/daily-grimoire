@@ -5,7 +5,6 @@
 .ui-cal {
   &__top {
     margin-bottom: $space-l;
-    & button.ui-cal__mute { width: auto; padding: 0 $space-s; background: none; border: none; box-shadow: none; font-size: $text-2xl; cursor: pointer; }
   }
   /* a stripe before each task in its area's colour (--area: set from the settings on the row) */
   :is(.ui-cal__task, .ui-missed__row, .ui-task-card)[data-area] { border-left: $border-width-xl solid var(--area); }
