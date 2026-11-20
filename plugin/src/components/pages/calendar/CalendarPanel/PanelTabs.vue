@@ -2,12 +2,14 @@
 <script setup>
 import { computed, inject } from "vue";
 import UiTabs from "#/components/uikit/UiTabs/index.vue";
+import { taskStore } from "#/store/tasks.js";
 import { openProjects } from "#/helpers/panelGroups.js";
 
 const view = inject("calendar");
 const state = view.state;
 
 const tabs = computed(() => {
+  void taskStore.version.value;
   const { backlog, regulars, pool, ahead } = view.ctx.model;
 
   return [

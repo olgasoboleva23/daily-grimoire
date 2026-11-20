@@ -370,6 +370,13 @@ test("Projects tab: a GroupCard per project with open tasks (a Done one too), a 
   assert.doesNotMatch(panel.textContent, /book flights/);
   assert.match(el.querySelector(".ui-tabs__tab--on").textContent, /^Projects · 3$/);
   assert.equal(st.tab, "projects");
+  taskStore.putProjects(Object.fromEntries([...taskStore.projects].map(([key, p]) =>
+    [key, { ...p, showInCalendar: key !== "trip" }])));
+  await vue.nextTick();
+  assert.doesNotMatch(panel.textContent, /pick venue/);
+  assert.match(el.querySelector(".ui-tabs__tab--on").textContent, /^Projects · 1$/);
+  const day = mount({ date: "2026-11-10" }, {}, { tasks: taskStore.tasks, poolLines: [] });
+  assert.match(day.el.querySelector(".ui-cal__task--open").textContent, /pick venue/);
   taskStore.put(MASTER, ""); taskStore.putRecords({}); taskStore.putProjects({});
 });
 

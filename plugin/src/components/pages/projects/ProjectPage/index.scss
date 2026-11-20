@@ -6,6 +6,13 @@
 .ui-project {
   &__back { margin-bottom: $space-xl; }
   &__header { margin-bottom: $space-xl; }
+  &__visibility {
+    display: inline-flex; align-items: center; align-self: flex-start; gap: $space-xs;
+    width: fit-content; margin-bottom: $space-m; padding: $space-2xs $space-m;
+    border-radius: $pill; font-size: $text-s;
+    background: alpha(--ui-purple, 22%); color: var(--ui-purple-deep);
+    &--hidden { background: alpha(--ui-text, 8%); color: var(--ui-text); }
+  }
   &__description { margin-bottom: $space-m; color: var(--ui-text); }
   &__body {
     display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: $space-xl;

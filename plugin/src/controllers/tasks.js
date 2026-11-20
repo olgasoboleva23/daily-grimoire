@@ -150,11 +150,15 @@ export const editTaskModal = async (t, ask = taskWindow) => {
     if (!api || !id || !new Task(line ?? "").sameAs(task)) return;
   }
 
-  const pick = await ask(t.pool ? { ...task.picks, name: task.name } : task.picks,
-    false, { variants: t.pool || task.isOpen });
+  const preset = { ...task.picks, pool: !!record?.pool };
+
+  if (t.pool) preset.name = task.name;
+  const pick = await ask(preset, false, { variants: t.pool || task.isOpen });
 
   if (!pick) return;
-  const patch = { ...recOf(pick) };
+  const patch = recOf(pick);
+
+  if ("pool" in pick) patch.pool = pick.pool || undefined;
   let next = line;
 
   if (t.pool) {

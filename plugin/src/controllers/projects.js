@@ -85,7 +85,7 @@ export async function askNewProject(
 export const saveProject = (key, patch) => projects.update(key, p => ({ ...p, ...patch }));
 
 // Only these fields belong to this form: changes to stages/status/notes may happen meanwhile.
-const editable = p => [p.name, p.description ?? "", p.cover ?? null];
+const editable = p => [p.name, p.description ?? "", p.cover ?? null, p.showInCalendar !== false];
 const changedProject = () => new Notice("✦ project changed or was deleted; open it again");
 
 export async function askEditProject(
@@ -94,8 +94,13 @@ export async function askEditProject(
   const before = (await readJson(PROJECTS, {}))[key];
 
   if (!before) return void changedProject();
-  const v = await ask(app, "✦ Edit project", projectFields, {
-    values: { name: before.name, description: before.description ?? "" },
+  const v = await ask(app, "✦ Edit project", [
+    ...projectFields,
+    { name: "Показывать во вкладке Projects календаря", key: "showInCalendar",
+      check: "Запланированные задачи остаются в своих днях" },
+  ], {
+    values: { name: before.name, description: before.description ?? "",
+      showInCalendar: before.showInCalendar !== false },
     required: ["name"], submit: "Save",
   });
 
@@ -105,7 +110,8 @@ export async function askEditProject(
   if (v.cover && !cover) return;
   const saved = await projects.update(key, p => {
     if (JSON.stringify(editable(p)) !== JSON.stringify(editable(before))) return null;
-    return { ...p, name: v.name.trim(), description: v.description ?? "", cover };
+    return { ...p, name: v.name.trim(), description: v.description ?? "", cover,
+      showInCalendar: v.showInCalendar !== false };
   });
 
   if (!saved) changedProject();

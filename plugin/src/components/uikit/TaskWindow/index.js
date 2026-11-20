@@ -43,12 +43,11 @@ export const taskWindow = async (preset = {}, required = false, { variants = tru
         ...variantNames(v.variantsText).map(value => ({ label: value, value })),
       ] },
     ] : []),
-    // the pool: tasks to pick when it's time (the calendar's Pool tab); no dates
-    ...(required
-      ? [{
-        name: "To pool", key: "pool", check: "pick it from the calendar's Pool tab when it's time",
-      }]
-      : []),
+    {
+      name: required ? "To pool" : "Показывать в пуле", key: "pool",
+      check: required ? "pick it from the calendar's Pool tab when it's time"
+        : "Добавить в Calendar → Pool, сохранив запланированные даты",
+    },
   ];
   let values = { difficulty: null, area: null, daytime: null, sticker: null, ...preset,
     variantsText: (preset.variants ?? []).join("\n"), currVariant: preset.currVariant ?? null };

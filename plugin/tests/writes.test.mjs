@@ -93,6 +93,20 @@ test("editing a task: the picks and the new name go to its record, its dates to 
   assert.equal(files[MASTER], "- [ ] t1 [due:: 2026-11-05]\n");
 });
 
+test("pool membership on an existing task preserves its scheduled and completed occurrences", async () => {
+  const log = "- [ ] t1 [due:: 2026-11-20]\n- [x] t1 [completion:: 2026-11-13]\n";
+  const files = vault({ [MASTER]: log }, { t1: { name: "cook soup" } });
+  withTasksApi("- [ ] cook soup [due:: 2026-11-20]");
+  for (const pool of [true, false]) {
+    await editTaskModal(taskStore.tasks[0], async preset => {
+      assert.equal(preset.pool, !pool);
+      return { ...preset, pool };
+    });
+    assert.equal(!!json(files).t1.pool, pool);
+    assert.equal(files[MASTER], log);
+  }
+});
+
 test("renamed to another task's name: the record is renamed, the two ids stay", async () => {
   const files = vault({ [MASTER]: "- [ ] t1\n- [ ] t2\n" }, { t1: { name: "walk" }, t2: { name: "read" } });
   withTasksApi("- [ ] read");

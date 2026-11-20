@@ -30,7 +30,7 @@ export function byArea(items, card, config) {
 // its stages' open tasks (a stage with none is left out), and how many that is, in file order:
 // [{ key, title, stages: [{ name, entries }], open }]
 export function openProjects() {
-  return [...taskStore.projects].map(([key, p]) => {
+  return [...taskStore.projects].filter(([, p]) => p.showInCalendar !== false).map(([key, p]) => {
     const stages = (p.stages ?? [])
       .map(s => ({ name: s.name, entries: stageTasks(s).filter(e => !e.done) }))
       .filter(s => s.entries.length);

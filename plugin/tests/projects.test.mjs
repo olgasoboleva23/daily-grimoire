@@ -123,10 +123,11 @@ test("project editing changes its name/description, preserves fresh stages and k
     assert.equal(options.values.name, "Garden");
     assert.ok(rows.some(r => r.key === "cover" && r.file));
     await addStage("p1", "Plant");
-    return { name: "New garden", description: "By the fence" };
+    assert.equal(options.values.showInCalendar, true);
+    return { name: "New garden", description: "By the fence", showInCalendar: false };
   });
   assert.deepEqual(json(files).p1, {
-    name: "New garden", description: "By the fence", cover: "old.webp", status: "active",
+    name: "New garden", description: "By the fence", showInCalendar: false, cover: "old.webp", status: "active",
     result: "", notes: "", stages: [{ name: "Plant", tasks: [] }],
   });
 });

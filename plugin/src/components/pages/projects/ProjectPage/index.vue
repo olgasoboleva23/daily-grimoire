@@ -96,6 +96,13 @@ async function remove() {
           <ProjectStatus :status="page.p.status" />
         </UiButton>
       </template>
+      <span
+        class="ui-project__visibility"
+        :class="{ 'ui-project__visibility--hidden': page.p.showInCalendar === false }"
+      >
+        <span aria-hidden="true">📅</span>
+        {{ page.p.showInCalendar === false ? "Скрыт из списка" : "В списке календаря" }}
+      </span>
       <div v-if="page.p.description" class="ui-project__description">{{
         page.p.description }}</div>
       <UiProgress v-if="page.total" :value="page.done" :max="page.total" />
