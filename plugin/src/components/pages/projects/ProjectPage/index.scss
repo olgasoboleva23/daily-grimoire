@@ -51,6 +51,15 @@
 
   /* Links: a row each, the title as a link */
   &__link { padding: $space-xs 0; }
+
+  /* the Journal card: its last entry in one line (opens the journal too) */
+  &__journal-last {
+    margin-bottom: $space-m;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+  }
   &__link-a { overflow-wrap: anywhere; color: var(--ui-purple-deep); }
 
   /* Result and Notes: the text as typed, line breaks kept; Edit at the bottom right */

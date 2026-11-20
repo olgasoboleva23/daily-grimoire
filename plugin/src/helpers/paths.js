@@ -14,6 +14,8 @@ export const MASTER_OLD = `${TASKS}/Master (old).md`, POOL_OLD = `${TASKS}/Pool 
 export const TASK_RECORDS = `${TASKS}/tasks.json`;
 
 // the projects (stages of task ids), an object by id, in the order of the file
+export const NOTES = `${DATA}/Projects/notes.json`;
+
 export const PROJECTS = `${DATA}/Projects/projects.json`;
 
 export const GOALS = `${DATA}/Goals`;

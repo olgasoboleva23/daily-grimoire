@@ -1,7 +1,7 @@
 <!-- A project's page (block ui-project): ← Projects, the header card (cover, name, the status
      pill: a menu of the statuses, description, progress) over two columns: the stages (+ stage
-     adds one) | Links (+ link, × removes), Result and Notes, each with Edit (a Form). One
-     column on the phone -->
+     adds one) | the Journal (ProjectJournal), Links (+ link, × removes), Result and Notes,
+     each with Edit (a Form). One column on the phone -->
 <script setup>
 import { computed, inject, ref } from "vue";
 import { Menu } from "obsidian";
@@ -13,12 +13,12 @@ import { Form } from "#/components/uikit/Form/index.ts";
 import { app } from "#/helpers/app.js";
 import {
   addStage, saveProject, askEditProject, askDeleteProject, askAddLink, removeLink,
-  copyProjectPrompt,
 } from "#/controllers/projects.js";
 import { stageTasks, taskStore } from "#/store/tasks.js";
 import { FILTERS } from "#/store/projects.js";
 import { coverUrl } from "../cover.js";
 import ProjectStatus from "../ProjectStatus/index.vue";
+import ProjectJournal from "./ProjectJournal.vue";
 import ProjectStage from "./ProjectStage.vue";
 
 const projects = inject("projects");
@@ -129,6 +129,7 @@ async function remove() {
         />
       </div>
       <div class="ui-col ui-gap-l">
+        <ProjectJournal :project="page.key" />
         <UiCard :wings="false" class="ui-project__links" title="Links">
           <div
             v-for="(l, i) in page.p.links ?? []"
@@ -159,11 +160,6 @@ async function remove() {
           <div class="ui-project__text">{{ page.p[f.key] }}</div>
           <div class="ui-row ui-gap-s">
             <UiButton kind="chip" class="ui-project__edit" @click="edit(f)">Edit</UiButton>
-            <UiButton
-              v-if="f.key === 'result'"
-              kind="chip"
-              @click="copyProjectPrompt(page.p.name)"
-            >Скопировать промпт</UiButton>
           </div>
         </UiCard>
       </div>

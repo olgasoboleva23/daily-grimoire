@@ -34,6 +34,7 @@ export function displayTooltip(el, text, { classes = [], placement } = {}) {
   tip.dataset.placement = placement;
 }
 export class Modal { constructor(app) { this.app = app; } open() {} close() {} }
+export class FuzzySuggestModal extends Modal {}
 export class SuggestModal extends Modal { setPlaceholder() {} }
 // a tab: its leaf's app, its content element; the layout's state saved by Obsidian (setState: nothing here)
 export class ItemView extends Component {

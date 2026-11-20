@@ -1,3 +1,5 @@
+import * as prompts from "#/models/promptDefaults.js";
+
 // Areas, difficulties, XP and gold, levels, market categories: the numbers the widgets share.
 // The defaults are below; 00 System/Data/config.json (the ⚙ Settings window) overrides the
 // difficulties' XP and gold, the areas, XP Today's thresholds and the level cost: applyConfig,
@@ -45,7 +47,7 @@ const LEVEL_COST = { base: 100, step: 25 };
 
 // filled by applyConfig below
 const config = {
-  projectPrompt: "",
+  promptStart: prompts.start, promptFinal: prompts.final,
   theme: "winx", difficulties: [], areas: [], levels: [], levelCost: { base: 0, step: 0 },
   xpMap: {}, areaMap: {}, areaIcons: {}, areaColors: {},
   marketCategories: [
@@ -66,7 +68,8 @@ export function applyConfig(json = {}) {
   const areas = Array.isArray(json.areas) && json.areas.length ? json.areas : AREAS;
   const lv = { ...LEVELS, ...json.levels }, cost = { ...LEVEL_COST, ...json.levelCost };
 
-  config.projectPrompt = typeof json.projectPrompt === "string" ? json.projectPrompt.trim() : "";
+  config.promptStart = json.promptStart?.trim?.() || prompts.start;
+  config.promptFinal = json.promptFinal?.trim?.() || prompts.final;
   config.theme = THEMES.some(t => t.value === json.theme) ? json.theme : "winx";
   config.difficulties = DIFFICULTIES.map(x =>
     ({ ...x, xp: x.key === "none" ? 0 : num(d[x.key]?.xp, x.xp),

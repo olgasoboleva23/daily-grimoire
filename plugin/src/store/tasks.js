@@ -17,13 +17,15 @@ import { parseNote } from "#/models/taskFile.js";
 import { Task } from "#/models/task.js";
 import { collection } from "#/helpers/collection.js";
 import { applyConfig } from "#/helpers/config.js";
-import { CONFIG, MASTER, PROJECTS, TASK_RECORDS } from "#/helpers/paths.js";
+import { CONFIG, MASTER, NOTES, PROJECTS, TASK_RECORDS } from "#/helpers/paths.js";
 
 let items = [];   // Master.md's items
 
 export const records = collection(TASK_RECORDS), projects = collection(PROJECTS);
-const jsonOf = path => [records, projects].find(c => c.path === path);
-const PATHS = [MASTER, TASK_RECORDS, PROJECTS, CONFIG];
+
+export const notes = collection(NOTES);
+const jsonOf = path => [records, projects, notes].find(c => c.path === path);
+const PATHS = [MASTER, TASK_RECORDS, PROJECTS, NOTES, CONFIG];
 // the ids on the stages of projects.json's object (throws on a bad project, before anything is set)
 const idsOf = json => new Set(Object.values(json)
   .flatMap(p => (p.stages ?? []).flatMap(s => s.tasks ?? [])));
@@ -53,6 +55,7 @@ const loadJson = (c, json) => {
 export const taskStore = {
   tasks: [], pool: [], inProject: new Set(), ready: false, version: ref(0),
   get records() { return records.records; },
+  get notes() { return notes.records; },
   get projects() { return projects.records; },
   // the note's items set from its text (a test's, or a write the plugin just made)
   put(path, text) { items = parseNote(path, text); refresh(); },

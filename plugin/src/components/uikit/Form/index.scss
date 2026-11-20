@@ -13,6 +13,9 @@ $indent: 1em;      // a list's groups sit one em in from its name (the window's 
   }
   &__img { height: 24px; }
   &__upload { max-width: 100%; }
+  // a label row's text: its line breaks kept, selectable (to copy a prompt's variable)
+  &__label { white-space: pre-wrap; user-select: text; }
+  &__pick { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   &__textarea { width: 100%; }
   &__list {
     margin-left: $indent;

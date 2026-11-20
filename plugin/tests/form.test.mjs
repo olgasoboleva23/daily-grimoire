@@ -165,3 +165,39 @@ test("Form: the first text box has the focus when the window opens", () => {
   form.onOpen();
   assert.equal(document.activeElement, win.querySelectorAll("input[type=text]")[0]);
 });
+
+test("Form: a select row is a dropdown of its choices, the chosen value in the values", async () => {
+  const form = createForm([{ name: "About", key: "about", select: [
+    { label: "Project", value: "project:p1" }, { label: "Stage 01 · A", value: "stage:st1" },
+  ] }], { about: "project:p1" });
+  const select = form.contentEl.querySelector("select.dropdown");
+
+  assert.deepEqual([...select.options].map(o => o.textContent), ["Project", "Stage 01 · A"]);
+  assert.equal(select.value, "project:p1");
+  select.value = "stage:st1";
+  select.dispatchEvent(new Event("change"));
+  await nextTick();
+  assert.equal(form.values.about, "stage:st1");
+});
+
+test("Form: a pick row shows its value, sets what the picker gives and × clears it", async () => {
+  let answer = "Notes/a.md";
+  const form = createForm([{ name: "Note", key: "link", pick: async () => answer }], { link: "" });
+  const win = form.contentEl;
+  const button = () => win.querySelector(".ui-form__pick");
+
+  assert.equal(button().textContent.trim(), "Choose…");
+  assert.equal(win.querySelector(".ui-form__clear"), null);
+  button().click();
+  await new Promise(r => setTimeout(r));
+  await nextTick();
+  assert.equal(form.values.link, "Notes/a.md");
+  assert.equal(button().textContent.trim(), "Notes/a.md");
+  answer = null;   // the picker closed: the value stays
+  button().click();
+  await new Promise(r => setTimeout(r));
+  assert.equal(form.values.link, "Notes/a.md");
+  win.querySelector(".ui-form__clear").click();
+  await nextTick();
+  assert.equal(form.values.link, "");
+});

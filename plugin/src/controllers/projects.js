@@ -2,53 +2,18 @@
 // so two writes never lose each other. A stage found changed meanwhile (another device) writes
 // nothing.
 import { Notice } from "obsidian";
-import config from "#/helpers/config.js";
-import { CONFIG, PROJECTS } from "#/helpers/paths.js";
-import { editJson, readJson } from "#/helpers/files.js";
+import { nextId } from "#/helpers/ids.js";
+import { PROJECTS } from "#/helpers/paths.js";
+import { readJson } from "#/helpers/files.js";
 import { importCover } from "#/helpers/images.js";
 import { Form } from "#/components/uikit/Form/index.ts";
 import { openUi } from "#/components/app/open.ts";
-import { projects } from "#/store/tasks.js";
+import { notes, projects } from "#/store/tasks.js";
 import { Task } from "#/models/task.js";
 import { editTaskLine, newTask } from "#/controllers/tasks.js";
 
 export const createProject = ({ name, description = "", status = "active", cover = null }) =>
   projects.add({ name, status, description, result: "", notes: "", cover, stages: [] }, "p");
-
-const defaultPrompt = [
-  "Подведи итог нашей работы над проектом «{{project}}» по этому диалогу.",
-  "Что удалось сделать или выяснить? Какие решения я приняла, на чём они основаны",
-  "и что пока остаётся открытым?",
-  "\n\nРазличай то, что я рассматривала, выбрала и уже сделала. Учитывай мои последние уточнения.",
-  "Сохрани конкретные детали, которые пригодятся дальше. Если из разговора чего-то нельзя",
-  "установить, скажи об этом. Напиши компактно, чтобы я могла вставить ответ в Result.",
-].join(" ").replace(" \n", "\n");
-
-export async function editProjectPrompt(app) {
-  const prompt = config.projectPrompt || defaultPrompt;
-  const v = await Form.ask(app, "Промпт для подведения итогов", [
-    { name: "Название проекта — {{project}}", key: "prompt", text: "", lines: true },
-  ], { values: { prompt }, required: ["prompt"], submit: "Сохранить" });
-
-  if (!v?.prompt?.trim()) return;
-  const projectPrompt = v.prompt.trim();
-
-  await editJson(CONFIG, current => ({ ...current, projectPrompt }));
-  config.projectPrompt = projectPrompt;
-}
-
-export async function copyProjectPrompt(name) {
-  const prompt = config.projectPrompt || defaultPrompt;
-  const text = prompt.includes("{{project}}")
-    ? prompt.replaceAll("{{project}}", () => name) : `Проект: ${name}\n\n${prompt}`;
-
-  try {
-    await navigator.clipboard.writeText(text);
-    new Notice("Промпт скопирован");
-  } catch {
-    new Notice("Не удалось скопировать промпт в буфер обмена");
-  }
-}
 
 const STATUSES = ["idea", "active", "paused", "done"];
 const projectFields = [
@@ -130,7 +95,7 @@ export async function askDeleteProject(
   ], {
     values: {
       name: before.name,
-      kept: "Tasks, calendar and history stay."
+      kept: "Journal entries are deleted. Tasks, calendar and history stay."
         + (before.cover ? " The cover goes to the trash." : ""),
     },
     submit: "Delete",
@@ -150,6 +115,14 @@ export async function askDeleteProject(
     return saved;
   }
 
+  await notes.edit(all => {
+    const owned = Object.entries(all)
+      .filter(([, n]) => n.owner?.kind === "project" && n.owner.id === key);
+
+    if (!owned.length) return null;
+    for (const [id] of owned) delete all[id];
+    return all;
+  });
   const file = before.cover && !shared && app.vault.getFileByPath(before.cover);
 
   if (file) await trash(file);
@@ -185,7 +158,21 @@ export async function askDeleteStage(app, key, index, name, ask = (...a) => Form
   ], { values: { name, kept: "Its tasks stay as tasks." }, submit: "Delete" });
 
   if (!yes) return false;
-  return onStage(key, index, name, (st, i) => st.filter((_, j) => j !== i));
+  let stageId;
+  const saved = await onStage(key, index, name, (st, i) => {
+    stageId = st[i].id;
+    return st.filter((_, j) => j !== i);
+  });
+
+  if (saved) await notes.edit(all => {
+    const related = Object.values(all)
+      .filter(n => n.target.kind === "stage" && n.target.id === stageId);
+
+    if (!related.length) return null;
+    for (const n of related) n.target = { kind: "project", id: key };
+    return all;
+  });
+  return saved;
 }
 
 // web links of a project: [{ title, url }], none in the older projects
@@ -213,8 +200,16 @@ export async function askAddLink(app, key, ask = (...a) => Form.ask(...a)) {
 export const removeLink = (key, index, url) => projects.update(key, p =>
   p.links?.[index]?.url === url ? { ...p, links: p.links.filter((_, i) => i !== index) } : null);
 
-export const addStage = (key, name) => projects.update(key, p =>
-  ({ ...p, stages: [...p.stages ?? [], { name, tasks: [] }] }));
+export const addStage = (key, name) => projects.edit(all => {
+  const p = all[key];
+
+  if (!p) return null;
+  const ids = Object.values(all).flatMap(project => (project.stages ?? []).map(s => s.id));
+  const id = nextId("st", ids);
+
+  p.stages = [...p.stages ?? [], { id, name, tasks: [] }];
+  return all;
+});
 
 // a new task (`ask`: the New task flow) on a stage: found by index and name, so a stage that moved
 // meanwhile is not written to. null when cancelled or changed.

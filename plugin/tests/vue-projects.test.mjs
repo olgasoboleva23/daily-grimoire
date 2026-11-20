@@ -237,7 +237,7 @@ test("+ stage submits its name to addStage", async () => {
   await vue.nextTick();
   el.querySelector(".ui-project .ui-add-form__submit").click();
   await until(() => saved().stages.length === 3);
-  assert.deepEqual(saved().stages[2], { name: "Harvest", tasks: [] });
+  assert.deepEqual(saved().stages[2], { id: "st1", name: "Harvest", tasks: [] });
 });
 
 test("Result and Notes show their text; Edit opens a Form with one lines row and saves the field", async () => {

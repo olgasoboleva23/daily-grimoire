@@ -38,7 +38,7 @@ test("addStage appends", async () => {
   await createProject({ name: "Garden" });
   await addStage("p1", "A");
   await addStage("p1", "B");
-  assert.deepEqual(json(files).p1.stages, [{ name: "A", tasks: [] }, { name: "B", tasks: [] }]);
+  assert.deepEqual(json(files).p1.stages, [{ id: "st1", name: "A", tasks: [] }, { id: "st2", name: "B", tasks: [] }]);
 });
 
 test("saveProject and addStage on a missing key write nothing", async () => {
@@ -128,7 +128,7 @@ test("project editing changes its name/description, preserves fresh stages and k
   });
   assert.deepEqual(json(files).p1, {
     name: "New garden", description: "By the fence", showInCalendar: false, cover: "old.webp", status: "active",
-    result: "", notes: "", stages: [{ name: "Plant", tasks: [] }],
+    result: "", notes: "", stages: [{ id: "st1", name: "Plant", tasks: [] }],
   });
 });
 
@@ -218,7 +218,7 @@ test("rename and delete a stage by index and name; tasks and the other stages st
   await addStage("p1", "B");
   await addToStage("p1", 0, "A", async () => "t1");
   assert.equal(await askRenameStage(app, "p1", 0, "A", async () => ({ name: " Dig " })), true);
-  assert.deepEqual(json(files).p1.stages[0], { name: "Dig", tasks: ["t1"] });
+  assert.deepEqual(json(files).p1.stages[0], { id: "st1", name: "Dig", tasks: ["t1"] });
   const before = files[PROJECTS];
   assert.equal(await askRenameStage(app, "p1", 0, "Dig", async () => null), false);
   assert.equal(await askRenameStage(app, "p1", 0, "Dig", async () => ({ name: "  " })), false);
@@ -230,7 +230,7 @@ test("rename and delete a stage by index and name; tasks and the other stages st
   assert.equal(await askDeleteStage(app, "p1", 0, "Old", async () => ({})), false);
   assert.equal(files[PROJECTS], before);
   assert.equal(await askDeleteStage(app, "p1", 0, "Dig", async () => ({})), true);
-  assert.deepEqual(json(files).p1.stages, [{ name: "B", tasks: [] }]);
+  assert.deepEqual(json(files).p1.stages, [{ id: "st2", name: "B", tasks: [] }]);
 });
 
 test("links: added (title defaults to the url), only http(s), removed by index and url", async () => {
@@ -250,4 +250,23 @@ test("links: added (title defaults to the url), only http(s), removed by index a
   assert.equal(await removeLink("p1", 0, "http://b.com"), false);
   assert.equal(await removeLink("p1", 0, "https://a.com/x"), true);
   assert.deepEqual(json(files).p1.links, [{ title: "http://b.com", url: "http://b.com" }]);
+});
+
+test("stage deletion moves its entry to the project; project deletion respects ownership", async () => {
+  const { NOTES } = await import("#/helpers/paths.js");
+  const { files, app } = vault();
+  await createProject({ name: "A" });
+  await createProject({ name: "B" });
+  await addStage("p1", "Work");
+  await addStage("p2", "Work");
+  assert.equal(json(files).p2.stages[0].id, "st2");
+  const owner = { kind: "project", id: "p1" };
+  const target = { kind: "task", id: "t1" };
+  const other = { owner: { kind: "project", id: "p2" }, target };
+  files[NOTES] = JSON.stringify({ n1: { owner, target: { kind: "stage", id: "st1" } },
+    n2: { owner, target }, n3: other, n4: { owner: null, target } });
+  await askDeleteStage(app, "p1", 0, "Work", async () => ({}));
+  assert.deepEqual(JSON.parse(files[NOTES]).n1.target, owner);
+  await askDeleteProject(app, "p1", async () => ({}));
+  assert.deepEqual(JSON.parse(files[NOTES]), { n3: other, n4: { owner: null, target } });
 });

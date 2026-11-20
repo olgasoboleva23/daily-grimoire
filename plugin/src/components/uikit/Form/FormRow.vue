@@ -34,6 +34,13 @@ const lines = list
 const cols = list && row.list.map(s => "text" in s && !s.color ? "minmax(0, 1fr)" : "auto")
   .concat(row.fixed ? [] : "auto").join(" ");
 const narrow = s => "check" in s || !!s.color;
+// a pick row: what its picker gives (null: closed, the value stays)
+const pick = async () => {
+  const v = await row.pick();
+
+  if (v) props.values[row.key] = v;
+};
+
 const choices = computed(() =>
   typeof row.options === "function" ? row.options(props.values) : row.options);
 // a text box: a number is a Number ("" null), a text trimmed (v-model.trim), lines as typed
@@ -115,6 +122,18 @@ const model = computed({
     </button>
   </template>
   <span v-else-if="'label' in row" class="ui-form__label">{{ values[row.key] ?? "" }}</span>
+  <select v-else-if="'select' in row" v-model="values[row.key]" class="dropdown">
+    <option v-for="(c, i) in row.select" :key="i" :value="c.value">{{ c.label }}</option>
+  </select>
+  <template v-else-if="'pick' in row">
+    <button class="ui-form__pick" @click="pick">{{ values[row.key] || "Choose…" }}</button>
+    <button
+      v-if="values[row.key]"
+      class="ui-form__clear"
+      title="Clear"
+      @click="values[row.key] = ''"
+    >×</button>
+  </template>
   <input
     v-else-if="'file' in row"
     type="file"

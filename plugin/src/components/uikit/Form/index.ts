@@ -10,6 +10,9 @@ import { useVueApp } from "#/composables/vueApp.ts";
 //   { name, key, check: description }               a checkbox
 //   { name, key, label: true }                      its value as text, not edited
 //   { name, key, file: accept }                     a local File, saved only by the caller
+//   { name, key, select: [{ label, value }] }       a dropdown (for many choices: a list of tasks)
+//   { name, key, pick: () => Promise<string|null> } a button with the value (Choose… when empty)
+//                                                   that sets what pick gives; × clears it
 //   { name, key, list: rows, required?, fixed? }    groups of those rows, + adds one, × takes it
 //                                                   off (fixed: neither, the groups as given);
 //                                                   the value: an array of the groups' values.
@@ -32,6 +35,8 @@ export type Row = Tab & (
   | { name: string; key: string; check: string }
   | { name: string; key: string; label: true }
   | { name: string; key: string; file: string }
+  | { name: string; key: string; select: { label: string; value: string }[] }
+  | { name: string; key: string; pick: () => Promise<string | null> }
   | { name: string; key: string; list: Row[]; required?: string[]; fixed?: boolean });
 
 export type Values = Record<string, any>;
