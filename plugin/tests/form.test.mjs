@@ -265,3 +265,19 @@ test("Form: a pick's text is drawn again after its picker, the value the same (a
     await nextTick();
     assert.equal(button().textContent.trim(), "brown rice");
   });
+
+test("Form: a pick resolving \"\" clears its value (— no alternative); null (closed) keeps it",
+  async () => {
+    let answer = null;
+    const form = createForm([{ name: "Or", key: "alt", pick: async () => answer }], { alt: "m2" });
+    const click = async () => {
+      form.contentEl.querySelector(".ui-form__pick").click();
+      await new Promise(r => setTimeout(r));
+    };
+
+    await click();
+    assert.equal(form.values.alt, "m2");
+    answer = "";
+    await click();
+    assert.equal(form.values.alt, "");
+  });

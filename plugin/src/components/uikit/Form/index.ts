@@ -15,7 +15,8 @@ import { useVueApp } from "#/composables/vueApp.ts";
 //                                                   a button with the value (show: its text;
 //                                                   Choose… when empty) that sets what pick
 //                                                   gives (it gets the window's values, a list
-//                                                   line's group in a list); × clears it
+//                                                   line's group in a list; "" clears the
+//                                                   value, null keeps it); × clears it
 //   { name, key, list: rows, required?, fixed? }    groups of those rows, + adds one, × takes it
 //                                                   off (fixed: neither, the groups as given);
 //                                                   the value: an array of the groups' values.

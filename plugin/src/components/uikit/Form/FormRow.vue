@@ -38,13 +38,13 @@ const wide = s => ("text" in s && !s.color) || "pick" in s;
 const cols = list && row.list.map(s => wide(s) ? "minmax(0, 1fr)" : "auto")
   .concat(row.fixed ? [] : "auto").join(" ");
 const narrow = s => "check" in s || !!s.color;
-// a pick row: what its picker gives (null: closed, the value stays); its text drawn again after
-// (the same value can show a new name: a product renamed in its own window)
+// a pick row: what its picker gives ("": cleared; null: closed, the value stays); its text drawn
+// again after (the same value can show a new name: a product renamed in its own window)
 const drawn = ref(0);
 const pick = async () => {
   const v = await row.pick(props.values);
 
-  if (v) props.values[row.key] = v;
+  if (v !== null && v !== undefined) props.values[row.key] = v;
   drawn.value++;
 };
 

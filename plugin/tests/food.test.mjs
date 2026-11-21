@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  DEFAULT_MARKS, dayNote, eaten, foodWeek, marksOf, withEaten,
+  DEFAULT_MARKS, dayNote, dishList, eaten, foodChoices, foodWeek, marksOf, withEaten,
   withMarks, withNote, withoutEaten, withTask,
 } from "#/models/food.js";
 import { forFood } from "#/models/course.js";
@@ -102,4 +102,19 @@ test("foodWeek: a medicine with ranges is off the course's gap days (days 3-4 he
 
   assert.deepEqual(rows.map(r => r.courses.flatMap(c => c.meds.map(m => m.code))),
     [["МА", "АЕ"], ["АЕ"], ["МА", "АЕ"], []]);
+});
+
+test("food choices show both products; day counts use only the main ingredient", () => {
+  const date = "2026-11-20";
+  const data = { items, dishes: [{ id: "d1", name: "Meal", ingredients: [
+    { item: "m1", alt: "m2", amount: "100 g" },
+  ] }], marks: DEFAULT_MARKS, log: { [date]: { eaten: ["d1"] } } };
+  const choice = foodChoices({ ...data, today: date }).find(c => c.id === "d1");
+  assert.deepEqual(choice.ingredients, [items.map(p => p.name).join(" / ")]);
+  const [day] = foodWeek({ ...data, days: [date], journals: [], courses: [] });
+  assert.deepEqual(day.counts, { m1: 1, m2: 0, m3: 0 });
+  const [gone] = dishList({ ...data, items: items.slice(0, 1) });
+  assert.equal(gone.missing, true);
+  assert.deepEqual(gone.ingredients[0],
+    { item: "m1", name: items[0].name, alt: "m2", altName: "m2", amount: "100 g" });
 });

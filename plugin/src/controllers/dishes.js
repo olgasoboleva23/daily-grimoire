@@ -1,8 +1,8 @@
 // The recipe book's controller (components/pages/recipes): dishes.json, a dish by id ({ name, type,
-// ingredients: [{ item: a market product's id, amount }], link: its recipe note or "" for an
+// ingredients: [{ item: a market product's id, amount, alt? }], link: its recipe note or "" for an
 // ordered one). Names and marks come from the market, so only ids and amounts are kept here. The
 // writes: a dish added / edited (its form: products picked or made, a note picked or made from
-// the recipe template), removed, its products onto the shopping list.
+// the recipe template), removed, the selected food products added to the shopping list.
 import { shallowReactive } from "vue";
 import { prepareFuzzySearch } from "obsidian";
 import { collection } from "#/helpers/collection.js";
@@ -52,8 +52,14 @@ export async function loadRecipes() {
 function record({ name, type = "", ingredients, link = "" }) {
   if (!name?.trim() || !ingredients?.length || ingredients.some(i => !i.item)) return null;
   if (!validNoteLink(link)) return null;
-  return { name: name.trim(), type: type.trim(), ingredients: ingredients.map(({ item, amount }) =>
-    ({ item, amount: amount?.trim() ?? "" })), link };
+  return { name: name.trim(), type: type.trim(), link,
+    ingredients: ingredients.map(({ item, amount, alt }) => {
+      const line = { item, amount: amount?.trim() ?? "" };
+
+      if (typeof alt === "string" && alt.trim()) line.alt = alt.trim();
+      return line;
+    }),
+  };
 }
 
 export const addDish = values => write(async () => {
@@ -84,15 +90,16 @@ export const removeDish = id => write(() => dishes.edit(all => {
   return all;
 }));
 
-export async function pickProduct(app) {
+export async function pickProduct(app, alternative = false) {
   const items = await products();
+  const clear = alternative ? [{ name: "— no alternative", id: "" }] : [];
   const pick = await Search.pick(app, "Choose a product", query => {
     const q = query.trim();
 
-    if (!q) return items;
+    if (!q) return [...clear, ...items];
     const match = prepareFuzzySearch(q);
 
-    return [...items.filter(i => match(i.name)), { name: q, isNew: true }];
+    return [...clear, ...items.filter(i => match(i.name)), { name: q, isNew: true }];
   }, (i, el) => el.createSpan({ text: i.isNew ? `+ new product: ${i.name}` : i.name }));
 
   return pick?.isNew ? addProduct(pick.name) : pick?.id ?? null;
@@ -126,6 +133,14 @@ export async function askDish(app, dish = null, ask = Form.ask.bind(Form)) {
     return id;
   };
 
+  const pick = async alternative => {
+    const id = await pickProduct(app, alternative);
+
+    return id && !items.has(id) ? named(id) : id;
+  };
+
+  const show = id => items.get(id) ?? id;
+
   // a line's product: chosen, its own edit window (a name, marks); none yet, the picker
   const product = async line => {
     if (line.item) {
@@ -133,16 +148,15 @@ export async function askDish(app, dish = null, ask = Form.ask.bind(Form)) {
       return named(line.item);
     }
 
-    const id = await pickProduct(app);
-
-    return id && !items.has(id) ? named(id) : id;
+    return pick(false);
   };
 
   const types = config.dishTypes.map(t => ({ label: t.name, value: t.key }));
   const values = await ask(app, dish?.id ? "Edit dish" : "New dish", [
     { name: "Name", key: "name", text: "Dish name" },
     { name: "Ingredients", key: "ingredients", required: ["item"], list: [
-      { name: "Product", key: "item", pick: product, show: id => items.get(id) ?? id },
+      { name: "Product", key: "item", pick: product, show },
+      { name: "Or", key: "alt", pick: () => pick(true), show },
       { name: "Amount", key: "amount", text: "500 г" },
     ] },
     { name: "Type", key: "type", options: [{ label: "—", value: "" }, ...types] },
@@ -156,14 +170,13 @@ export async function askDish(app, dish = null, ask = Form.ask.bind(Form)) {
   return await editDish(dish.id, values, types.map(t => t.value)) ? dish.id : null;
 }
 
-export async function dishToList(id) {
-  const dish = (await readJson(DISHES, {}))[id];
-
-  if (!dish) return 0;
+// Add the selected food products once and count only new shopping-list entries.
+export async function productsToList(ids) {
+  if (!ids.length) return 0;
   const items = new Map((await products()).map(p => [p.id, p]));
   let added = 0;
 
-  for (const item of new Set(dish.ingredients.map(i => i.item))) {
+  for (const item of new Set(ids)) {
     const product = items.get(item);
 
     if (product && await addToMarket(product.name, product.type, product.id)) added++;

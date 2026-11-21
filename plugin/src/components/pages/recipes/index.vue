@@ -32,7 +32,7 @@ const course = computed(() =>
 
 const icons = computed(() => new Map(d.value.marks.map(m => [m.tag, m.icon])));
 const rows = computed(() => d.value.dishes.map(x => ({
-  ...x, ingredients: x.ingredients.map(i => i.name).join(", "),
+  ...x, ingredients: x.ingredients.map(i => i.alt ? `${i.name} / ${i.altName}` : i.name).join(", "),
   icons: x.marks.map(t => icons.value.get(t) ?? "").join(""),
 })));
 const found = computed(() => {

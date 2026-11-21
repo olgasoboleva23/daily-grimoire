@@ -1,6 +1,6 @@
 // The food journal (pure; tests/food.test.mjs). The products are the market's items of type
 // food (Market/items.json: { name, type, marks: [tag] }); a dish (dishes.json: { name, type,
-// ingredients: [{ item, amount }], link }) has its products' names and marks, each mark once.
+// ingredients: [{ item, amount, alt? }], link }) counts each main product's marks once per dish.
 // food.json: the marks ({ tag, icon, name }: a tag kept once made, so a mark renamed keeps its
 // products) and the training task's id. log.json: a day by date, { eaten: [product or dish id],
 // note }; a day with nothing eaten and no note isn't kept. The picker's order: recently eaten
@@ -26,12 +26,13 @@ export function dishList({ items, dishes }) {
   return dishes.map(d => {
     const marks = new Set();
     let missing = false;
-    const ingredients = d.ingredients.map(({ item, amount }) => {
+    const ingredients = d.ingredients.map(({ item, amount, alt = "" }) => {
       const product = products.get(item);
+      const alternative = products.get(alt);
 
-      if (!product) missing = true;
+      if (!product || (alt && !alternative)) missing = true;
       for (const tag of product?.marks ?? []) marks.add(tag);
-      return { item, amount, name: product?.name ?? item };
+      return { item, amount, name: product?.name ?? item, alt, altName: alternative?.name ?? alt };
     });
 
     return { ...d, ingredients, marks: [...marks], missing };
@@ -44,7 +45,8 @@ function menu(data) {
 
   return new Map(entries.map(f => [f.id, {
     id: f.id, kind: f.ingredients ? "dish" : "item", name: f.name,
-    ingredients: f.ingredients?.map(i => i.name) ?? [], marks: f.marks,
+    ingredients: f.ingredients?.map(i => i.alt ? `${i.name} / ${i.altName}` : i.name) ?? [],
+    marks: f.marks,
     icons: f.marks.map(tag => icons.get(tag) ?? "").join(""),
   }]));
 }

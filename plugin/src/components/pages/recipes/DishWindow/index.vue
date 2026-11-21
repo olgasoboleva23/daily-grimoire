@@ -1,8 +1,8 @@
 <!-- A dish's window content (block ui-dish; DishWindow/index.ts opens it): its marks, its
-     ingredients with their amounts (a product gone from the catalog: struck out), the buttons
-     (🛒 its products onto the shopping list, asked first; ✏️ the dish form, 📄 the recipe note,
-     🗑), then the note's steps drawn by Obsidian (without its properties). An ordered dish has no
-     note -->
+     ingredients with their amounts («beef / chicken»: an alternative; a product gone: struck
+     out), the buttons (🛒 its products onto the shopping list, asked first; ✏️ the dish form, 📄
+     the recipe note, 🗑), then the note's steps drawn by Obsidian (without its properties). An
+     ordered dish has no note -->
 <script setup>
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { MarkdownRenderer, Notice } from "obsidian";
@@ -83,7 +83,7 @@ const remove = () => act(async () => {
         :key="n"
         :class="['ui-dish__ingredient', { 'ui-dish__ingredient--gone': i.name === i.item }]"
       >
-        <span class="ui-dish__product">{{ i.name }}</span>
+        <span class="ui-dish__product">{{ i.alt ? `${i.name} / ${i.altName}` : i.name }}</span>
         <span v-if="i.amount" class="ui-dish__amount">{{ i.amount }}</span>
       </li>
     </ul>

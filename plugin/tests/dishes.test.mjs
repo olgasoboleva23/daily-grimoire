@@ -1,6 +1,9 @@
+// Recipe storage, ingredient selection and shopping-list writes against an in-memory vault.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { addDish, askDish, dishToList, editDish, loadRecipes, removeDish } from "#/controllers/dishes.js";
+import {
+  addDish, askDish, editDish, loadRecipes, productsToList, removeDish,
+} from "#/controllers/dishes.js";
 import { addEaten, loadFood } from "#/controllers/food.js";
 import { Search } from "#/components/uikit/Search/index.ts";
 import { Form } from "#/components/uikit/Form/index.ts";
@@ -63,10 +66,15 @@ test("concurrent dish adds use distinct ids; invalid links preserve data; logged
   assert.equal(await addDish(dish), "d3");
 });
 
-test("dishToList counts only actual additions, including concurrent clicks", async () => {
+test("only selected food products are added, once even across concurrent clicks", async () => {
   const { files } = fixture();
-  assert.deepEqual((await Promise.all([dishToList("d1"),dishToList("d1")])).sort(), [0,1]);
-  assert.equal(files[MARKET_NOTE].trim(), "- [ ] m1\n- [ ] m2");
+  files[MARKET_NOTE] = "- [x] m1";
+  const selected = ["m2", "m2", "missing", "m3"];
+  const counts = await Promise.all([productsToList(selected), productsToList(selected)]);
+  assert.deepEqual(counts.sort(), [0, 1]);
+  assert.equal(await productsToList(["m2"]), 0);
+  assert.equal(await productsToList([]), 0);
+  assert.equal(files[MARKET_NOTE], "- [x] m1\n- [ ] m2\n");
 });
 
 test("dish form saves the picked products and the note path", async () => {
@@ -170,3 +178,36 @@ test("the dish form: a line's product opens its edit window (not the picker); th
     });
     assert.equal(JSON.parse(files[MARKET_RECORDS]).m1.name, "Green peas");
   });
+
+test("an ingredient saves its alternative and clears it on edit", async () => {
+  const { files } = fixture();
+  const line = { item: "m1", amount: "2", alt: "m2" };
+  const id = await addDish({ ...dish, ingredients: [line, line] });
+  const stored = () => JSON.parse(files[DISHES])[id].ingredients;
+  assert.deepEqual(stored(), [line, line]);
+  await editDish(id, { ...dish, ingredients: ["", "  ", 9].map(alt => ({ ...line, alt })) });
+  assert.deepEqual(stored(), Array(3).fill({ item: "m1", amount: "2" }));
+  const loaded = (await loadRecipes()).dishes.find(d => d.id === id);
+  assert.deepEqual([loaded.ingredients[0].alt, loaded.ingredients[0].altName], ["", ""]);
+});
+
+test("the Or picker can select, clear, cancel or create an alternative", async t => {
+  const { app } = fixture();
+  let choose;
+  t.mock.method(Search, "pick", async (_app, _title, choices) => choose(choices));
+  t.mock.method(Form, "ask", async (_app, _title, _rows, { values }) => values);
+  await askDish(app, dish, async (_app, _title, rows) => {
+    const fields = rows.find(r => r.key === "ingredients").list;
+    assert.deepEqual(fields.map(f => f.name), ["Product", "Or", "Amount"]);
+    const or = fields[1];
+    choose = choices => choices("Beans")[1];
+    assert.equal(or.show(await or.pick({})), "Beans");
+    choose = choices => choices("")[0];
+    assert.equal(await or.pick({ alt: "m2" }), "");
+    choose = () => null;
+    assert.equal(await or.pick({ alt: "m2" }), null);
+    choose = choices => choices("Lentils").at(-1);
+    assert.equal(or.show(await or.pick({})), "Lentils");
+    return null;
+  });
+});
