@@ -4,15 +4,15 @@
 
 You need [Node.js](https://nodejs.org) 24 and Obsidian 1.9 or newer.
 
-1. **Get the repo:** `git clone https://github.com/olgasoboleva23/winx-vault.git`
+1. **Get the repo:** `git clone https://github.com/olgasoboleva23/daily-grimoire.git`
 2. **Build the plugin** into the vault:
    ```sh
-   cd winx-vault/plugin
+   cd daily-grimoire/plugin
    npm ci
    npm run build
    mkdir -p ../.obsidian/plugins/daily-grimoire && cp dist/* ../.obsidian/plugins/daily-grimoire/
    ```
-3. **Open the `winx-vault` folder as a vault** in Obsidian, trust its plugins (Settings → Community plugins → Turn on). The other plugins (below) are already in `.obsidian/plugins/`.
+3. **Open the `daily-grimoire` folder as a vault** in Obsidian, trust its plugins (Settings → Community plugins → Turn on). The other plugins (below) are already in `.obsidian/plugins/`.
 4. Click ✨ on the left: the Daily Grimoire tab opens, pinned, on the dashboard (the calendar and the other pages are one click away in it).
 
 Without step 2 there is no ✨: the plugin draws every page.
@@ -34,7 +34,7 @@ The paths the plugin reads are in `plugin/src/helpers/paths.js` (and constants a
 Pull and rebuild, then run **Daily Grimoire: Reload** (Cmd+P):
 
 ```sh
-cd winx-vault && git pull
+cd daily-grimoire && git pull
 cd plugin && npm ci && npm run build && cp dist/* /path/to/your/vault/.obsidian/plugins/daily-grimoire/
 ```
 
@@ -44,7 +44,7 @@ Or let a GitHub Action do it, if your vault is a git repo: check out this repo n
 - uses: actions/checkout@v4            # your vault
   with: { path: base }
 - uses: actions/checkout@v4            # this repo
-  with: { repository: olgasoboleva23/winx-vault, path: styles }
+  with: { repository: olgasoboleva23/daily-grimoire, path: styles }
 - uses: actions/setup-node@v4
   with: { node-version: 24 }
 - run: cd styles/plugin && npm ci && npm run build

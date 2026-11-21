@@ -160,7 +160,7 @@ and Obsidian command IDs start with `daily-grimoire:`. When moving an existing i
 its config first, move the plugin folder with its `data.json`, and update the enabled-plugin list
 and hotkey command IDs. The visible mobile config copy needs the same changes before syncing.
 
-The visible name is read from `manifest.json` by `src/helpers/name.js` (`APP_NAME`). The repo name
-`winx-vault`, the theme ids `winx` / `winx-dark`, the data paths and the `WINX_VAULT` development variable
+The visible name is read from `manifest.json` by `src/helpers/name.js` (`APP_NAME`). The repository is
+[`daily-grimoire`](https://github.com/olgasoboleva23/daily-grimoire). The theme ids `winx` / `winx-dark`, the data paths and the `WINX_VAULT` development variable
 (the build destination) stay. The tab's view type is `ui-app` (class `UiView`, `components/app/`);
 CSS classes are `ui-*`, custom properties `--ui-*`, uikit components `Ui*`.
