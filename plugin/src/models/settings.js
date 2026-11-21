@@ -1,9 +1,10 @@
 // The ⚙ Settings window's values and config.json (pure; tests/settings.test.mjs): the window shows
 // the config as it is now, its values go back as config.json, a few of them can't be saved, and a
 // renamed area's key (☑ "apply") moves its tasks' records with it.
-import { recipeTag } from "./food.js";
-
-export const recipeTab = ({ tag, name }) => ({ tag: recipeTag(tag), name: name?.trim() ?? "" });
+export const dishType = ({ key, name }) => ({
+  key: typeof key === "string" ? key.trim().replace(/^#/, "").trim().toLowerCase() : "",
+  name: name?.trim() ?? "",
+});
 
 const KEY = /^[a-z0-9-]+$/;
 const AREA = ["key", "icon", "title", "name", "color"];
@@ -17,7 +18,7 @@ export function settingsValues(config) {
 
   return {
     theme: config.theme,
-    recipeTabs: config.recipeTabs.map(t => ({ ...t })),
+    dishTypes: config.dishTypes.map(t => ({ ...t })),
     difficulties: config.difficulties.map(({ key, label, xp, gold }) => ({ key, label, xp, gold })),
     areas: config.areas.map(a => ({ ...pick(a), was: a.key, apply: true })),
     spark, glow, aura, base: config.levelCost.base, step: config.levelCost.step,
@@ -27,7 +28,7 @@ export function settingsValues(config) {
 // the values as config.json
 export const toConfig = v => ({
   theme: v.theme,
-  recipeTabs: v.recipeTabs.map(recipeTab),
+  dishTypes: v.dishTypes.map(dishType),
   difficulties: Object.fromEntries(v.difficulties.map(d =>
     [d.key, { xp: d.key === "none" ? 0 : d.xp, gold: d.gold }])),
   areas: v.areas.map(a => ({ ...pick(a), key: a.key.trim() })),
@@ -53,13 +54,13 @@ export function settingsProblem(v, records, config) {
 
   const seen = new Set();
 
-  for (const row of v.recipeTabs) {
-    const { tag, name } = recipeTab(row);
+  for (const row of v.dishTypes) {
+    const { key, name } = dishType(row);
 
-    if (!tag || !name) return "each recipe tab needs a tag and a name";
-    if (tag === "all" || tag === "other") return `the recipe tag «${tag}» is reserved`;
-    if (seen.has(tag)) return `the recipe tag «${tag}» is there twice`;
-    seen.add(tag);
+    if (!key || !name) return "each dish type needs a key and a name";
+    if (key === "all" || key === "other") return `the dish type key «${key}» is reserved`;
+    if (seen.has(key)) return `the dish type key «${key}» is there twice`;
+    seen.add(key);
   }
 
   if (!(v.spark < v.glow && v.glow < v.aura))

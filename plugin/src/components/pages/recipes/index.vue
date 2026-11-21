@@ -1,6 +1,6 @@
 <!-- The recipe book (block ui-recipes; dishes.json through loadRecipes): a search (a dish's name
-     or an ingredient) and ＋ Dish, the tabs (All, ⚙ Settings' recipe tabs, Other; a dish's
-     course: its recipe note's tags; the counts follow the search; the tab picked: the app tab's
+     or an ingredient) and ＋ Dish, the tabs (All, the dish types from ⚙ Settings, Other;
+     the counts follow the search; the tab picked: the app tab's
      saved ui.state.recipes), then a row a dish by name: 🍲 its name (📄: it has a recipe
      note; a click opens its window), its ingredients, its marks' icons, 🛒 its products onto the
      shopping list (asked first), ✏️ the dish form. A cooked dish and an ordered one look alike -->
@@ -23,7 +23,7 @@ const d = computed(() => props.state.data);
 const query = ref("");
 const saved = inject("ui").state.recipes;
 const courses = computed(() => [
-  { key: "all", text: "All" }, ...config.recipeTabs.map(t => ({ key: t.tag, text: t.name })),
+  { key: "all", text: "All" }, ...config.dishTypes.map(t => ({ key: t.key, text: t.name })),
   { key: "other", text: "Other" },
 ]);
 // the tab shown: the saved one while ⚙ Settings has it, else all
@@ -41,7 +41,7 @@ const found = computed(() => {
   return q ? rows.value.filter(r => `${r.name} ${r.ingredients}`.toLowerCase().includes(q))
     : rows.value;
 });
-const inCourse = (r, c) => c === "all" || (r.course ?? "other") === c;
+const inCourse = (r, c) => c === "all" || (r.type || "other") === c;
 const tabs = computed(() => courses.value.map(({ key, text }) =>
   ({ key, text: `${text} ${found.value.filter(r => inCourse(r, key)).length}` })));
 const shown = computed(() => found.value.filter(r => inCourse(r, course.value)));

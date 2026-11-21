@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  DEFAULT_MARKS, dayNote, eaten, foodWeek, marksOf, recipeCourse, withEaten,
+  DEFAULT_MARKS, dayNote, eaten, foodWeek, marksOf, withEaten,
   withMarks, withNote, withoutEaten, withTask,
 } from "#/models/food.js";
 import { forFood } from "#/models/course.js";
@@ -102,14 +102,4 @@ test("foodWeek: a medicine with ranges is off the course's gap days (days 3-4 he
 
   assert.deepEqual(rows.map(r => r.courses.flatMap(c => c.meds.map(m => m.code))),
     [["МА", "АЕ"], ["АЕ"], ["МА", "АЕ"], []]);
-});
-
-test("recipe tags match the first configured tab regardless of case or a leading hash", () => {
-  const tabs = [{ tag: "drink" }, { tag: "dessert" }];
-  assert.equal(recipeCourse(["dessert", "#DrInK"], tabs), "drink");
-  assert.equal(recipeCourse(["dessert", "#DrInK"], tabs.toReversed()), "dessert");
-  assert.equal(recipeCourse("#DeSsErT", tabs), "dessert");
-  assert.equal(recipeCourse(["drinks", "meal/drink"], tabs), null);
-  assert.equal(recipeCourse(undefined, tabs), null);
-  assert.equal(recipeCourse("drink", []), null);
 });

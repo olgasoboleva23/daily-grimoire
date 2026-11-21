@@ -1,4 +1,4 @@
-import { recipeTab } from "#/models/settings.js";
+import { dishType } from "#/models/settings.js";
 import * as prompts from "#/models/promptDefaults.js";
 
 // Areas, difficulties, XP and gold, levels, market categories: the numbers the widgets share.
@@ -43,9 +43,9 @@ const AREAS = [
   { key: "rest", icon: "🌙", title: "Rest", name: "Serenity", color: "#6aa6e0" },
 ];
 
-const RECIPE_TABS = [
-  { tag: "soup", name: "Soups" }, { tag: "main", name: "Mains" },
-  { tag: "dessert", name: "Desserts" },
+const DISH_TYPES = [
+  { key: "soup", name: "Soups" }, { key: "main", name: "Mains" },
+  { key: "dessert", name: "Desserts" },
 ];
 
 // XP Today's aura: up to `spark` XP a day SPARK, up to `glow` GLOW, up to `aura` AURA, above it
@@ -58,7 +58,7 @@ const config = {
   promptStart: prompts.start, promptFinal: prompts.final,
   theme: "winx", difficulties: [], areas: [], levels: [], levelCost: { base: 0, step: 0 },
   xpMap: {}, areaMap: {}, areaIcons: {}, areaColors: {},
-  recipeTabs: [],
+  dishTypes: [],
   marketCategories: [
     { label: "🌿 Harvest", type: "food" },
     { label: "🌸 Bloom", type: "care" },
@@ -77,9 +77,9 @@ export function applyConfig(json = {}) {
   const areas = Array.isArray(json.areas) && json.areas.length ? json.areas : AREAS;
   const lv = { ...LEVELS, ...json.levels }, cost = { ...LEVEL_COST, ...json.levelCost };
 
-  const tabs = Array.isArray(json.recipeTabs) ? json.recipeTabs : RECIPE_TABS;
+  const tabs = Array.isArray(json.dishTypes) ? json.dishTypes : DISH_TYPES;
 
-  config.recipeTabs.splice(0, config.recipeTabs.length, ...tabs.map(recipeTab));
+  config.dishTypes.splice(0, config.dishTypes.length, ...tabs.map(dishType));
 
   config.promptStart = json.promptStart?.trim?.() || prompts.start;
   config.promptFinal = json.promptFinal?.trim?.() || prompts.final;

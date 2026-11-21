@@ -42,14 +42,14 @@ const files = () => vault({
   "Recipes/Porridge.md": NOTE,
 });
 // the page in the app's tab: its saved state (the tab picked) is the tab's ui.state.recipes;
-// courses: a dish's course by id (the note's tags, read by loadRecipes)
-const TABS = [{ tag: "soup", name: "Soups" }, { tag: "main", name: "Mains" },
-  { tag: "dessert", name: "Desserts" }];
-const page = async (courses = {}, recipes = { course: "all" }, tabs = TABS) => {
-  config.recipeTabs = tabs;
+// types: the displayed type of each dish by id
+const TABS = [{ key: "soup", name: "Soups" }, { key: "main", name: "Mains" },
+  { key: "dessert", name: "Desserts" }];
+const page = async (types = {}, recipes = { course: "all" }, tabs = TABS) => {
+  config.dishTypes = tabs;
   const data = await loadRecipes();
 
-  data.dishes = data.dishes.map(d => ({ ...d, course: courses[d.id] ?? null }));
+  data.dishes = data.dishes.map(d => ({ ...d, type: types[d.id] ?? "" }));
   return mount(RecipesPage, {
     props: { state: { data } }, global: { provide: { ui: { state: { recipes: reactive(recipes) } } } },
   });
@@ -198,7 +198,7 @@ test("the recipes page: a course with no dishes yet says so", async () => {
 test("the recipes page: the tabs are ⚙ Settings' (their names and order); a gone one shows all",
   async () => {
     files();
-    const w = await page({ d1: "main" }, { course: "soup" }, [{ tag: "main", name: "Второе" }]);
+    const w = await page({ d1: "main" }, { course: "soup" }, [{ key: "main", name: "Второе" }]);
 
     assert.deepEqual(w.findAll(".ui-tabs__tab").map(t => t.text()), ["All 2", "Второе 1", "Other 1"]);
     assert.equal(w.find(".ui-tabs__tab--on").text(), "All 2");
@@ -212,9 +212,9 @@ test("⚙ Settings: a Recipes tab, a line a page tab (its tag, its name)", async
 
   Form.ask = async (_app, _title, r) => { rows = r; return null; };
   try { await settingsWindow(config, {}); } finally { Form.ask = ask; }
-  const row = rows.find(r => r.key === "recipeTabs");
+  const row = rows.find(r => r.key === "dishTypes");
 
   assert.equal(row.tab, "Recipes");
-  assert.deepEqual(row.list.map(r => r.key), ["tag", "name"]);
-  assert.deepEqual(row.required, ["tag", "name"]);
+  assert.deepEqual(row.list.map(r => r.key), ["key", "name"]);
+  assert.deepEqual(row.required, ["key", "name"]);
 });

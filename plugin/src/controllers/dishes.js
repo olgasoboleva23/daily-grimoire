@@ -1,4 +1,4 @@
-// The recipe book's controller (components/pages/recipes): dishes.json, a dish by id ({ name,
+// The recipe book's controller (components/pages/recipes): dishes.json, a dish by id ({ name, type,
 // ingredients: [{ item: a market product's id, amount }], link: its recipe note or "" for an
 // ordered one). Names and marks come from the market, so only ids and amounts are kept here. The
 // writes: a dish added / edited (its form: products picked or made, a note picked or made from
@@ -10,8 +10,7 @@ import { nextId } from "#/helpers/ids.js";
 import { readJson, serial } from "#/helpers/files.js";
 import { DISHES, FOOD_DATA, FOOD_LOG, MARKET_RECORDS } from "#/helpers/paths.js";
 import config from "#/helpers/config.js";
-import { app as obsidian } from "#/helpers/app.js";
-import { dishList, marksOf, recipeCourse } from "#/models/food.js";
+import { dishList, marksOf } from "#/models/food.js";
 import { validNoteLink } from "./journal.js";
 import { createNote } from "./notes.js";
 import { KINDS } from "#/models/kinds.js";
@@ -21,7 +20,7 @@ import { Search } from "#/components/uikit/Search/index.ts";
 
 export { addProduct };
 // The open Recipes page computes its tabs from this array; applyConfig updates it in place.
-config.recipeTabs = shallowReactive(config.recipeTabs);
+config.dishTypes = shallowReactive(config.dishTypes);
 
 const dishes = collection(DISHES), write = serial();
 const rows = records => Object.entries(records).map(([id, r]) => ({ ...r, id }));
@@ -42,20 +41,18 @@ export async function readFoodCatalog() {
 export async function loadRecipes() {
   const data = await readFoodCatalog();
 
-  const dishes = dishList(data).map(dish => {
-    const file = dish.link && obsidian.vault.getFileByPath(dish.link);
-    const tags = file && obsidian.metadataCache.getFileCache(file)?.frontmatter?.tags;
-
-    return { ...dish, course: recipeCourse(tags, config.recipeTabs) };
-  });
+  const types = new Set(config.dishTypes.map(t => t.key));
+  const dishes = dishList(data).map(dish => ({
+    ...dish, type: types.has(dish.type) ? dish.type : "",
+  }));
 
   return { items: data.items, marks: data.marks, dishes };
 }
 
-function record({ name, ingredients, link = "" }) {
+function record({ name, type = "", ingredients, link = "" }) {
   if (!name?.trim() || !ingredients?.length || ingredients.some(i => !i.item)) return null;
   if (!validNoteLink(link)) return null;
-  return { name: name.trim(), ingredients: ingredients.map(({ item, amount }) =>
+  return { name: name.trim(), type: type.trim(), ingredients: ingredients.map(({ item, amount }) =>
     ({ item, amount: amount?.trim() ?? "" })), link };
 }
 
@@ -74,7 +71,12 @@ export const addDish = values => write(async () => {
   return id;
 });
 
-export const editDish = (id, values) => write(() => dishes.update(id, () => record(values)));
+export const editDish = (id, values, offeredTypes) => write(() => dishes.update(id, current => {
+  // An unlisted type looks empty in Recipes. Saving other fields keeps its stored key.
+  if (!values.type && current.type && offeredTypes && !offeredTypes.includes(current.type))
+    return record({ ...values, type: current.type });
+  return record(values);
+}));
 
 export const removeDish = id => write(() => dishes.edit(all => {
   if (!all[id]) return null;
@@ -136,19 +138,22 @@ export async function askDish(app, dish = null, ask = Form.ask.bind(Form)) {
     return id && !items.has(id) ? named(id) : id;
   };
 
+  const types = config.dishTypes.map(t => ({ label: t.name, value: t.key }));
   const values = await ask(app, dish?.id ? "Edit dish" : "New dish", [
     { name: "Name", key: "name", text: "Dish name" },
     { name: "Ingredients", key: "ingredients", required: ["item"], list: [
       { name: "Product", key: "item", pick: product, show: id => items.get(id) ?? id },
       { name: "Amount", key: "amount", text: "500 г" },
     ] },
+    { name: "Type", key: "type", options: [{ label: "—", value: "" }, ...types] },
     { name: "Note", key: "link", pick: v => pickRecipeNote(app, v.name), show: noteName },
   ], { values: { name: dish?.name ?? "", ingredients: dish?.ingredients?.map(i => ({ ...i })) ?? [],
-    link: dish?.link ?? "" }, required: ["name", "ingredients"], submit: "Save" });
+    type: dish?.type ?? "", link: dish?.link ?? "" },
+  required: ["name", "ingredients"], submit: "Save" });
 
   if (!values) return null;
   if (!dish?.id) return addDish(values);
-  return await editDish(dish.id, values) ? dish.id : null;
+  return await editDish(dish.id, values, types.map(t => t.value)) ? dish.id : null;
 }
 
 export async function dishToList(id) {

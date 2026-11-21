@@ -1,5 +1,5 @@
 // The food journal (pure; tests/food.test.mjs). The products are the market's items of type
-// food (Market/items.json: { name, type, marks: [tag] }); a dish (dishes.json: { name,
+// food (Market/items.json: { name, type, marks: [tag] }); a dish (dishes.json: { name, type,
 // ingredients: [{ item, amount }], link }) has its products' names and marks, each mark once.
 // food.json: the marks ({ tag, icon, name }: a tag kept once made, so a mark renamed keeps its
 // products) and the training task's id. log.json: a day by date, { eaten: [product or dish id],
@@ -17,16 +17,6 @@ export const DEFAULT_MARKS = [
 ];
 
 export const marksOf = data => data.marks ?? DEFAULT_MARKS;
-
-export const recipeTag = tag => typeof tag === "string" ? tag.trim().replace(/^#/, "")
-  .trim().toLowerCase() : "";
-
-export function recipeCourse(tags, tabs) {
-  const values = Array.isArray(tags) ? tags : [tags];
-  const normalized = values.map(recipeTag);
-
-  return tabs.find(tab => normalized.includes(tab.tag))?.tag ?? null;
-}
 
 const byName = (a, b) => a.name.localeCompare(b.name, "ru");
 

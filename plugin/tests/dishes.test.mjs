@@ -122,39 +122,34 @@ test("the dish form's note picker makes a recipe note named after the dish (or a
     assert.equal(JSON.parse(files[DISHES])[id].link, path);
   });
 
-test("recipes read the current course from their linked note anywhere in the vault", async () => {
-  const link = "Archive/Menu/Stew.md", props = {};
-  const { app, files } = vault({
-    [DISHES]: JSON.stringify({ d1: { ...dish, link }, d2: dish }), [link]: "",
-  }, { props });
-  const courses = async () => (await loadRecipes()).dishes.map(d => d.course);
-  assert.deepEqual(await courses(), [null, null]);
-  props[link] = { tags: "#Main" };
-  assert.deepEqual(await courses(), ["main", null]);
-  props[link].tags = ["dessert", "#Soup"];
-  assert.deepEqual(await courses(), ["soup", null]);
-  app.metadataCache.getFileCache = () => null;
-  assert.deepEqual(await courses(), [null, null]);
-  delete files[link];
-  assert.deepEqual(await courses(), [null, null]);
-});
-
-test("changing recipe tab order reclassifies an existing dish", async () => {
-  const { default: config, applyConfig } = await import("#/helpers/config.js");
-  const { computed } = await import("vue");
-  const labels = computed(() => config.recipeTabs.map(t => t.name));
-  const link = "Kitchen/Peas.md";
-  vault({ [link]: "", [DISHES]: JSON.stringify({ d1: { ...dish, link } }) },
-    { props: { [link]: { tags: ["#Quick", "lunch"] } } });
-  const recipeTabs = [{ tag: "lunch", name: "Lunch" }, { tag: "quick", name: "Quick meals" }];
+test("cooked and ordered dishes keep their own type across edits and settings changes", async () => {
+  const { applyConfig } = await import("#/helpers/config.js");
+  const { files, app } = fixture();
+  files["Steps.md"] = "Mix";
+  const id = await addDish({ ...dish, type: " soup ", link: "Steps.md" });
+  const displayed = async () => (await loadRecipes()).dishes.find(d => d.id === id).type;
+  assert.equal(await displayed(), "soup");
   try {
-    applyConfig({ recipeTabs });
-    assert.deepEqual(labels.value, ["Lunch", "Quick meals"]);
-    assert.equal((await loadRecipes()).dishes[0].course, "lunch");
-    applyConfig({ recipeTabs: recipeTabs.toReversed() });
-    assert.deepEqual(labels.value, ["Quick meals", "Lunch"]);
-    assert.equal((await loadRecipes()).dishes[0].course, "quick");
+    applyConfig({ dishTypes: [] });
+    assert.equal(await displayed(), "");
+    const hidden = (await loadRecipes()).dishes.find(d => d.id === id);
+    await askDish(app, hidden, async (_app, _title, _rows, { values }) =>
+      ({ ...values, name: "Renamed" }));
+    assert.equal(JSON.parse(files[DISHES])[id].type, "soup");
   } finally { applyConfig(); }
+  assert.equal(await displayed(), "soup");
+  const cooked = (await loadRecipes()).dishes.find(d => d.id === id);
+  await askDish(app, cooked, async (_app, _title, rows, { values }) => {
+    const field = rows[rows.findIndex(r => r.key === "ingredients") + 1];
+    assert.equal(field.key, "type");
+    assert.deepEqual(field.options.map(o => o.value), ["", "soup", "main", "dessert"]);
+    assert.equal(values.type, "soup");
+    return { ...values, link: "", type: "main" };
+  });
+  assert.equal(await displayed(), "main");
+  assert.equal(JSON.parse(files[DISHES])[id].link, "");
+  assert.equal(await editDish(id, dish), true);
+  assert.equal(JSON.parse(files[DISHES])[id].type, "");
 });
 
 test("the dish form: a line's product opens its edit window (not the picker); the line shows the new name",
