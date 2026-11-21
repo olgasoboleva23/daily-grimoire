@@ -94,16 +94,16 @@ test("WeightLog: entries by date, the last one, a day set", () => {
 });
 
 test("MarketItem: its name and category from its record; without one, its id", () => {
-  const rec = { name: "green tea", tag: "#food" };
+  const rec = { name: "green tea", type: "food" };
   const i = new MarketItem("- [x] m1 [completion:: 2026-11-09]", null, rec);
-  assert.deepEqual([i.id, i.name, i.tag, i.isDone, i.doneOn], ["m1", "green tea", "#food", true, "2026-11-09"]);
+  assert.deepEqual([i.id, i.name, i.type, i.isDone, i.doneOn], ["m1", "green tea", "food", true, "2026-11-09"]);
   assert.equal(MarketItem.of({ status: " ", text: "m2", rec }).name, "green tea");
   assert.equal(new MarketItem("- [ ] m3").name, "m3");
-  assert.equal(new MarketItem("- [ ] m3").tag, "#other");
-  assert.equal(new MarketItem("- [ ] m1", null, { name: "tea", tag: "#gone" }).category, "#other");
-  assert.equal(new MarketItem("- [ ] m1", null, { name: "tea", tag: "#pet" }).category, "#pet");
-  assert.equal(catLabel("#other"), "✦ Other");
-  assert.equal(catLabel("#gone"), "#gone");
+  assert.equal(new MarketItem("- [ ] m3").type, "other");
+  assert.equal(new MarketItem("- [ ] m1", null, { name: "tea", type: "gone" }).category, "other");
+  assert.equal(new MarketItem("- [ ] m1", null, { name: "tea", type: "pet" }).category, "pet");
+  assert.equal(catLabel("other"), "✦ Other");
+  assert.equal(catLabel("gone"), "gone");
 });
 
 test("MarketItem: a line bought before the Dataview date: its ✅ date read, not in its name", () => {
@@ -120,14 +120,14 @@ test("MarketItem: bought, the way the Tasks plugin marks a line", () => {
 
 test("Market: the history and what is on the list, from the lines", () => {
   const items = [
-    new MarketItem("- [x] m1 [completion:: 2026-10-02]", null, { name: "tea", tag: "#food" }),
-    new MarketItem("- [ ] m2", null, { name: "soap", tag: "#care" }),
-    new MarketItem("- [x] m3 ✅ 2026-10-01", null, { name: "rice", tag: "#food" }),
-    new MarketItem("- [x] m4", null, { name: "no date", tag: "#food" }),
+    new MarketItem("- [x] m1 [completion:: 2026-10-02]", null, { name: "tea", type: "food" }),
+    new MarketItem("- [ ] m2", null, { name: "soap", type: "care" }),
+    new MarketItem("- [x] m3 ✅ 2026-10-01", null, { name: "rice", type: "food" }),
+    new MarketItem("- [x] m4", null, { name: "no date", type: "food" }),
   ];
   assert.deepEqual(historyOf(items), [
-    { id: "m1", name: "tea", tag: "#food", date: "2026-10-02" },
-    { id: "m3", name: "rice", tag: "#food", date: "2026-10-01" },
+    { id: "m1", name: "tea", type: "food", date: "2026-10-02" },
+    { id: "m3", name: "rice", type: "food", date: "2026-10-01" },
   ]);
   assert.deepEqual([...openKeys(items)], ["m2"]);
 });

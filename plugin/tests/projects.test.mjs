@@ -233,6 +233,24 @@ test("rename and delete a stage by index and name; tasks and the other stages st
   assert.deepEqual(json(files).p1.stages, [{ id: "st2", name: "B", tasks: [] }]);
 });
 
+test("deleting stage tasks removes only its exclusive open undated copies", async () => {
+  const kept = ["- [ ] t1 [due:: 2026-11-21]", "- [ ] t1 [start:: 2026-11-21]",
+    "- [x] t1", "- [-] t1", "- [ ] t2", "```", "- [ ] t1", "```", ""].join("\n");
+  const { files, app } = vault({ [MASTER]: "- [ ] t1\n- [ ] t1 [created:: 2026-11-19]\n" + kept,
+    [RECORDS]: '{"t1":{"pool":true}}' });
+  await createProject({ name: "A" });
+  await createProject({ name: "B" });
+  await addStage("p1", "Work");
+  await addStage("p2", "Other");
+  await addToStage("p1", 0, "Work", async () => "t1");
+  await addToStage("p1", 0, "Work", async () => "t2");
+  await addToStage("p2", 0, "Other", async () => "t2");
+  await askDeleteStage(app, "p1", 0, "Work", async () => ({ deleteTasks: true }));
+  assert.equal(files[MASTER], kept);
+  assert.deepEqual(JSON.parse(files[RECORDS]), { t1: { pool: true } });
+  assert.deepEqual(json(files).p2.stages[0].tasks, ["t2"]);
+});
+
 test("links: added (title defaults to the url), only http(s), removed by index and url", async () => {
   const { files, app } = vault();
   await createProject({ name: "Garden" });

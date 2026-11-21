@@ -1,12 +1,14 @@
-// The food journal (pure; tests/food.test.mjs). food.json: the marks ({ tag, icon, name }: a tag
-// kept once made, so a mark renamed keeps its foods), the training task's id and the foods by id
-// ({ name, marks: [tag] }). log.json: a day by date, { eaten: [food id], note }; a day with
-// nothing eaten and no note isn't kept. The week's rows for the food page: what was eaten with
-// its marks' icons, the marks counted, each free journal's level after its lag (a rash shows the
-// next day), the medication courses on that day, the note.
+// The food journal (pure; tests/food.test.mjs). The products are the market's items of type
+// food (Market/items.json: { name, type, marks: [tag] }); a dish (dishes.json: { name,
+// ingredients: [{ item, amount }], link }) has its products' names and marks, each mark once.
+// food.json: the marks ({ tag, icon, name }: a tag kept once made, so a mark renamed keeps its
+// products) and the training task's id. log.json: a day by date, { eaten: [product or dish id],
+// note }; a day with nothing eaten and no note isn't kept. The picker's order: recently eaten
+// first. The week's rows for the food page: what was eaten with its marks' icons, the marks
+// counted, each free journal's level after its lag (a rash shows the next day), the medication
+// courses on that day, the note.
 import { addDays, diffDays } from "#/helpers/dates.js";
 import { inRanges, rangesOf } from "#/models/course.js";
-import { nextId } from "#/helpers/ids.js";
 
 export const DEFAULT_MARKS = [
   { tag: "m1", icon: "🍫", name: "какао" },
@@ -14,16 +16,65 @@ export const DEFAULT_MARKS = [
   { tag: "m3", icon: "🥛↓", name: "безлактозное молоко" },
 ];
 
-export const foodList = data =>
-  Object.entries(data.foods ?? {}).map(([id, f]) => ({ id, name: f.name, marks: f.marks }));
-
 export const marksOf = data => data.marks ?? DEFAULT_MARKS;
 
-export const newFoodId = data => nextId("f", Object.keys(data.foods ?? {}));
+export const recipeTag = tag => typeof tag === "string" ? tag.trim().replace(/^#/, "")
+  .trim().toLowerCase() : "";
 
-// the food set in place (its id's) or added at the end
-export const withFood = (data, { id, name, marks }) =>
-  ({ ...data, foods: { ...data.foods, [id]: { name: name.trim(), marks } } });
+export function recipeCourse(tags, tabs) {
+  const values = Array.isArray(tags) ? tags : [tags];
+  const normalized = values.map(recipeTag);
+
+  return tabs.find(tab => normalized.includes(tab.tag))?.tag ?? null;
+}
+
+const byName = (a, b) => a.name.localeCompare(b.name, "ru");
+
+export function dishList({ items, dishes }) {
+  const products = new Map(items.map(p => [p.id, p]));
+
+  return dishes.map(d => {
+    const marks = new Set();
+    let missing = false;
+    const ingredients = d.ingredients.map(({ item, amount }) => {
+      const product = products.get(item);
+
+      if (!product) missing = true;
+      for (const tag of product?.marks ?? []) marks.add(tag);
+      return { item, amount, name: product?.name ?? item };
+    });
+
+    return { ...d, ingredients, marks: [...marks], missing };
+  }).sort(byName);
+}
+
+function menu(data) {
+  const icons = new Map(data.marks.map(m => [m.tag, m.icon]));
+  const entries = [...data.items, ...dishList(data)];
+
+  return new Map(entries.map(f => [f.id, {
+    id: f.id, kind: f.ingredients ? "dish" : "item", name: f.name,
+    ingredients: f.ingredients?.map(i => i.name) ?? [], marks: f.marks,
+    icons: f.marks.map(tag => icons.get(tag) ?? "").join(""),
+  }]));
+}
+
+export function foodChoices({ items, dishes, marks, log, today }) {
+  const counts = new Map(), last = new Map(), since = addDays(today, -6);
+
+  for (const [day, entry] of Object.entries(log)) {
+    for (const id of new Set(entry.eaten)) {
+      counts.set(id, (counts.get(id) ?? 0) + 1);
+      if (day >= since && day <= today && day > (last.get(id) ?? "")) last.set(id, day);
+    }
+  }
+
+  return [...menu({ items, dishes, marks }).values()].sort((a, b) =>
+    (last.get(b.id) ?? "").localeCompare(last.get(a.id) ?? "")
+      || (counts.get(b.id) ?? 0) - (counts.get(a.id) ?? 0) || byName(a, b))
+    .map(({ id, kind, name, ingredients, icons }) =>
+      ({ id, kind, name, ingredients, icons, recent: last.has(id) }));
+}
 
 export const withMarks = (data, marks) => ({ ...data, marks });
 
@@ -60,14 +111,15 @@ export const withNote = (log, date, text) =>
 // start, days, meds: [{ code, name, days }], taken: Map date → the codes with a ✅ that day }]
 // task: { id, name, days: Set of the dates it was done } or null: each row then says `trained`
 // log: log.json's object
-export function foodWeek({ foods, marks, log, journals, courses, days, task = null }) {
-  const byId = new Map(foods.map(f => [f.id, f]));
-  const icon = new Map(marks.map(m => [m.tag, m.icon]));
+export function foodWeek({ items, dishes, marks, log, journals, courses, days, task = null }) {
+  const byId = menu({ items, dishes, marks });
 
   return days.map(date => {
-    const items = eaten(log, date).map(id => byId.get(id) ?? { id, name: id, marks: [] })
-      .map(f => ({ id: f.id, name: f.name, icons: f.marks.map(m => icon.get(m) ?? "").join("") }));
-    const all = eaten(log, date).flatMap(id => byId.get(id)?.marks ?? []);
+    const foods = eaten(log, date).map(id => byId.get(id) ?? {
+      id, kind: id.startsWith("d") ? "dish" : "item", name: id, marks: [], icons: "",
+    });
+    const all = foods.flatMap(f => f.marks);
+    const items = foods.map(({ id, kind, name, icons }) => ({ id, kind, name, icons }));
 
     return {
       date, items, note: dayNote(log, date), ...(task && { trained: task.days.has(date) }),

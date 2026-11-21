@@ -81,7 +81,7 @@ export const KINDS = {
     form: titleOnly,
     note: v => ({
       props: { type: "recipe", tags: [], source: null, time: null, difficulty: null, rating: null },
-      sections: { Ingredients: "", Steps: "", Notes: "", Variations: "" },
+      sections: { Steps: "", Notes: "", Variations: "" },
     }),
   },
   // a free journal (the weight card's journals): a level 0–3 a day and its reasons; lag: the days

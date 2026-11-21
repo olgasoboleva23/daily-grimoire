@@ -39,6 +39,8 @@ export const SAVINGS = `${DATA}/Savings`;
 export const WEIGHT = `${DATA}/Weight.md`, JOURNALS = `${DATA}/Journals`;
 
 // The food catalog and journal, and medication courses, kept in JSON.
+export const DISHES = `${DATA}/Food/dishes.json`;
+
 export const FOOD_DATA = `${DATA}/Food/food.json`, FOOD_LOG = `${DATA}/Food/log.json`;
 
 export const COURSES = `${DATA}/Medication/courses.json`;

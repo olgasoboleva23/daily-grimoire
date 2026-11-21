@@ -1,7 +1,9 @@
 <!-- Celestial Market: the list by category, a round ✓ per item (the sparkle plays, then it's
-     written as bought), what runs low soon, and links to the market and the supplies -->
+     written as bought), what runs low soon, and links to the market and the supplies. 🗑 takes a
+     line off unbought: shown on a row's hover (the phone: a tap on its name), armed by the first
+     click (✓? for 3 s), the second one removes -->
 <script setup>
-import { inject, reactive, watch } from "vue";
+import { inject, reactive, ref, watch } from "vue";
 import { Keymap } from "obsidian";
 import { openUi } from "#/components/app/open.ts";
 import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
@@ -10,7 +12,7 @@ import UiGroupHeader from "#/components/uikit/UiGroupHeader.vue";
 import UiNoteLink from "#/components/uikit/UiNoteLink.vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import { MARKET } from "#/helpers/paths.js";
-import { editMarketItem, buyMarketItem } from "#/controllers/widgets/market.js";
+import { editMarketItem, buyMarketItem, removeMarketItem } from "#/controllers/widgets/market.js";
 
 const props = defineProps({ state: { type: Object, required: true } });
 const ui = inject("ui", null);
@@ -34,6 +36,20 @@ async function buy(r) {
   }
 }
 
+// 🗑: the row whose name was tapped (the phone has no hover), the row armed
+const open = ref(null), armed = ref(null);
+
+async function remove(r) {
+  if (armed.value !== key(r)) {
+    armed.value = key(r);
+    window.setTimeout(() => { if (armed.value === key(r)) armed.value = null; }, 3000);
+    return;
+  }
+
+  armed.value = null;
+  await removeMarketItem(r);
+}
+
 // a row gone from the list lets go of its mark: back on the list later, it can be bought again
 watch(() => props.state.data.groups, groups => {
   const shown = new Set((groups ?? []).flatMap(g => g.rows.map(key)));
@@ -53,9 +69,20 @@ watch(() => props.state.data.groups, groups => {
           v-for="r in g.rows"
           :key="key(r)"
           class="ui-market__item ui-row ui-gap-l"
-          :class="{ 'ui-market__item--bought': bought.has(key(r)) }"
+          :class="{
+            'ui-market__item--bought': bought.has(key(r)),
+            'ui-market__item--open': open === key(r) || armed === key(r),
+          }"
         >
-          <span class="ui-market__text ui-grow">{{ r.name }}</span>
+          <span
+            class="ui-market__text ui-grow"
+            @click="open = open === key(r) ? null : key(r)"
+          >{{ r.name }}</span>
+          <UiButton
+            :title="armed === key(r) ? 'Click again to take it off the list' : 'off the list'"
+            :class="['ui-market__del', { 'ui-market__del--armed': armed === key(r) }]"
+            @click="remove(r)"
+          >{{ armed === key(r) ? "✓?" : "🗑" }}</UiButton>
           <UiButton v-if="r.id" title="edit item" @click="editMarketItem(r.id)">
             <span class="ui-pencil">✎</span>
           </UiButton>

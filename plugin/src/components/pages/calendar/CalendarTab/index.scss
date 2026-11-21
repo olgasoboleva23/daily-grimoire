@@ -239,8 +239,9 @@
   }
   &__dots-more { font-size: $text-2xs; color: var(--ui-purple-deep); }
   /* a tick waits 2 s before it's written: struck through, a gold shimmer runs over it */
-  &__task--ticking {
-    text-decoration: line-through;
+  &__task--ticking { text-decoration: line-through; }
+  &__task--ticking,
+  & .ui-task-card--added {
     background-image: linear-gradient(100deg, transparent 30%, alpha(--ui-gold, 55%) 50%, transparent 70%);
     background-size: 250% 100%;
     animation: ui-tick-shimmer 1s ease-in-out 2;

@@ -34,8 +34,9 @@ export function makeActions(ctx) {
   };
 
   // "Missed?": done on its own day, or moved to today
-  const doneOnItsDay = t => editTaskLine(t,
-    line => Task.backdateDone(TASKS.executeToggleTaskDoneCommand(line, t.path), T(t).date, today));
+  const doneOnItsDay = t => editTaskLineWithUndo(t,
+    line => Task.backdateDone(TASKS.executeToggleTaskDoneCommand(line, t.path), T(t).date, today),
+    "✓");
   const toToday      = t => editTaskLine(t, line => new Task(line).setDue(today));
   // ⏸ pause: drop its dates; ▶ resume: from today, on the first day its rule allows
   const pauseOrResume = t =>

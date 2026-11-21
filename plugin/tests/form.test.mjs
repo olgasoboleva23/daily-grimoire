@@ -201,3 +201,52 @@ test("Form: a pick row shows its value, sets what the picker gives and × clears
   await nextTick();
   assert.equal(form.values.link, "");
 });
+
+test("Form: a pick row in a list is a line's cell, its value shown through `show`", async () => {
+  const names = { m1: "rice", m2: "beans" };
+  const form = createForm([{
+    name: "Ingredients", key: "ingredients", list: [
+      { name: "Product", key: "item", pick: async () => "m2", show: id => names[id] ?? id },
+      { name: "Amount", key: "amount", text: "500 g" },
+    ],
+  }], { ingredients: [{ item: "m1", amount: "1 cup" }] });
+  const win = form.contentEl;
+  const button = () => win.querySelector(".ui-form__list--lines .ui-form__pick");
+
+  assert.equal(cols(win), "minmax(0, 1fr) minmax(0, 1fr) auto");
+  assert.equal(button().textContent.trim(), "rice");
+  button().click();
+  await new Promise(r => setTimeout(r));
+  await nextTick();
+  assert.equal(form.values.ingredients[0].item, "m2");
+  assert.equal(button().textContent.trim(), "beans");
+});
+
+test("Form: a list line's one × takes the ingredient off (its pick has no Clear of its own)",
+  async () => {
+    const form = createForm([{
+      name: "Ingredients", key: "ingredients", list: [
+        { name: "Product", key: "item", pick: async () => null },
+        { name: "Amount", key: "amount", text: "500 g" },
+      ],
+    }], { ingredients: [{ item: "m1", amount: "1 cup" }, { item: "m2", amount: "" }] });
+    const lines = () =>
+      [...form.contentEl.querySelectorAll(".ui-form__line:not(.ui-form__line--head)")];
+
+    assert.deepEqual(lines().map(l => l.querySelectorAll("button").length), [2, 2]);
+    lines()[0].querySelector("button[title=Remove]").click();
+    await nextTick();
+    assert.deepEqual(form.values.ingredients, [{ item: "m2", amount: "" }]);
+  });
+
+test("Form: a pick row's picker gets the window's values (a new note named after the dish)",
+  async () => {
+    const form = createForm([
+      { name: "Name", key: "name", text: "" },
+      { name: "Note", key: "link", pick: async v => `${v.name}.md` },
+    ], { name: "Stew" });
+
+    form.contentEl.querySelector(".ui-form__pick").click();
+    await new Promise(r => setTimeout(r));
+    assert.equal(form.values.link, "Stew.md");
+  });

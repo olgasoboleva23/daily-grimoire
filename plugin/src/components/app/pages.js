@@ -13,6 +13,7 @@ export const pages = {
   },
   meds: { title: "Medication", icon: "💊", widget: "meds" },
   food: { title: "Food", icon: "🍽", widget: "food", card: true },
+  recipes: { title: "Recipes", icon: "📖", widget: "recipes", card: true },
 };
 
 // Existing links to the old page notes still select their Vue page.

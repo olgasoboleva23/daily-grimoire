@@ -1,7 +1,8 @@
 <!-- "Missed?": open tasks whose day has passed, only while today is on screen; a row's ✓ (done on
      its day, with Tasks) or ☀️ (moved to today) takes it off at once, the write follows. A row is
-     dragged onto a day (drag.js); long-swiped left on the phone (swipe.js): its ✓ -->
+     dragged onto a day (drag.js); a swipe reveals the actions on the phone -->
 <script setup>
+import { vHoldAction } from "#/composables/holdAction.js";
 import { computed, inject, reactive, watch } from "vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import TaskText from "#/components/pages/calendar/TaskText.vue";
@@ -59,12 +60,11 @@ const toToday = r => act(r, sounds.today, t => view.actions.toToday(t));
       class="ui-missed__row ui-row ui-gap-s"
       :style="{
         '--area': r.task.color ?? undefined,
-        '--ui-swipe-progress': r.sw.swipe.progress,
       }"
       :data-area="r.task.area ?? undefined"
       :data-swipe="r.sw.swipe.kind"
       :data-swipeable="r.done || null"
-      draggable="true"
+      :draggable="!r.sw.swipe.kind"
       @dragstart="r.drag.start"
       @dragend="r.drag.end"
       @touchstart.passive="r.sw.start"
@@ -82,12 +82,14 @@ const toToday = r => act(r, sounds.today, t => view.actions.toToday(t));
         </div>
         <UiButton
           v-if="r.done"
+          v-hold-action="r.sw.run"
           class="ui-task__primary"
           :title="`done on ${r.day}`"
           tip="pink"
           @click="r.sw.run"
         >✓</UiButton>
         <UiButton
+          v-hold-action="() => toToday(r)"
           class="ui-task__btns-today"
           title="move to today"
           tip="pink"

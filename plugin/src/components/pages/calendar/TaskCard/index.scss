@@ -13,6 +13,7 @@
   &:last-child { border-bottom: none; }
   &:hover { background: fade(var(--ui-surface), 35%); border-radius: $radius-m; }
   &--paused { opacity: 0.55; }
+  &__date { position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none; }
   &__text { font-size: $text-xl; line-height: 1.35; }
   &__meta { margin-top: $space-2xs; font-size: $text-s; color: fade(var(--ui-purple-deep), 75%); }
 }
@@ -55,8 +56,25 @@ $fade: 18px;   // the buttons' background fades in over this much of the text
 #{context.$mobile} {
   :is(.ui-cal__task, .ui-missed__row, .ui-task-card) { touch-action: pan-y; }
   .ui-cal {
+    .ui-cal__task--open[data-swipeable] .ui-task__content:has(> input.task-list-item-checkbox) {
+      padding-left: 0;
+      > input { display: none; }
+    }
+    .ui-task__actions[data-holding] {
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        background-color: var(--ui-hold-background);
+        background-image: var(--ui-hold-image);
+        transform-origin: left;
+        animation: ui-hold-fill var(--ui-hold-duration) linear both;
+      }
+    }
     // Without swipe support (e.g. Tasks disabled), keep the actions in the normal flow.
-    .ui-task__actions { display: flex; flex-wrap: wrap; gap: $space-s; }
+    .ui-task__actions { position: relative; display: flex; flex-wrap: wrap; gap: $space-s; }
 
     [data-swipeable] {
       overflow: hidden;
@@ -96,7 +114,7 @@ $fade: 18px;   // the buttons' background fades in over this much of the text
 
           &.ui-task__primary {
             order: -1;
-            background: color-mix(in srgb, var(--ui-gold) calc(var(--ui-swipe-progress, 0) * 100%), var(--ui-pink-deep));
+            background: var(--ui-pink-deep);
           }
           &.ui-task__btns-edit { background: var(--ui-blue-deep); }
           &:is(.ui-task__btns-skip, .ui-task__btns-today) {
@@ -110,14 +128,14 @@ $fade: 18px;   // the buttons' background fades in over this much of the text
         .ui-task__content { translate: -100% 0; opacity: 0; visibility: hidden; }
         .ui-task__actions { translate: 0; visibility: visible; }
       }
-      &[data-swipe="ready"] .ui-task__actions button.ui-task__primary {
-        color: var(--ui-on-gold);
-        box-shadow: inset 0 0 0 $border-width-l var(--ui-gold-deep), inset 0 0 16px var(--ui-highlight);
-        font-size: $text-3xl;
-      }
       @media (prefers-reduced-motion: reduce) {
         .ui-task__content, .ui-task__actions, .ui-task__actions button.ui-btn { transition: none; }
       }
     }
   }
+}
+
+@keyframes ui-hold-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }

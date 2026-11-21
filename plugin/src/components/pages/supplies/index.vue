@@ -27,7 +27,7 @@ defineProps({ state: { type: Object, required: true } });
         <UiButton
           v-if="!r.listed"
           kind="pill"
-          @click="runsLow(r.name, r.tag, r.id)"
+          @click="runsLow(r.name, r.type, r.id)"
         >running low</UiButton>
       </div>
     </template>

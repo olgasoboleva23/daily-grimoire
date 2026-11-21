@@ -5,8 +5,9 @@
      written — even if the calendar draws again meanwhile; unticked in time: nothing. The sound
      comes from installSounds (it listens to every .task-list-item-checkbox). The row is dragged
      onto a day or the panel, and an open one is a reorder target in its day (drag.js); on the
-     phone a long left swipe (swipe.js) ticks its checkbox -->
+     phone a left swipe reveals its actions -->
 <script setup>
+import { vHoldAction } from "#/composables/holdAction.js";
 import { vTip } from "#/components/uikit/tooltip.js";
 import { computed, inject, ref } from "vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
@@ -43,6 +44,11 @@ function onTick(e) {
   const t = e.target.checked && view.task(props.task.key);
 
   if (!t) return view.waits.cancel(props.task.key);
+  if (document.body.classList.contains("is-mobile")) {
+    done.value = true;
+    return view.actions.tick(t);
+  }
+
   view.waits.later(props.task.key, () => {
     done.value = true;
     view.actions.tick(t);
@@ -61,13 +67,13 @@ function onTick(e) {
       { 'ui-cal__task--ticking': ticking, 'ui-cal__task--done': done },
     ]"
     :style="{
-      '--area': task.color ?? undefined, '--ui-swipe-progress': swipe.progress,
+      '--area': task.color ?? undefined,
     }"
     :data-area="task.area"
     :data-goal="task.goal || null"
     :data-swipe="swipe.kind"
     :data-swipeable="live && box || null"
-    :draggable="drags ? 'true' : null"
+    :draggable="drags && !swipe.kind ? 'true' : null"
     @dragstart="drag.start"
     @dragend="drag.end"
     @dragover="onto.over"
@@ -103,6 +109,7 @@ function onTick(e) {
     <div v-if="live && !done" class="ui-task__btns ui-task__actions">
       <UiButton
         v-if="box"
+        v-hold-action="touch.run"
         class="ui-task__primary ui-task__mobile"
         title="complete task"
         :disabled="ticking"

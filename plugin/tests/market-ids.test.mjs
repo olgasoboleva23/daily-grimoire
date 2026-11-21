@@ -1,4 +1,6 @@
-import { editMarketItem, addToMarket, loadCelestialMarket, loadSupplies, buyMarketItem } from "#/controllers/widgets/market.js";
+import {
+  editMarketItem, addToMarket, loadCelestialMarket, loadSupplies, buyMarketItem, removeMarketItem,
+} from "#/controllers/widgets/market.js";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { MARKET, MARKET_RECORDS } from "#/helpers/paths.js";
@@ -9,9 +11,9 @@ const note = `${MARKET}.md`;
 
 test("Market ids retain purchases after renaming and separate same-named records", () => {
   const history = [
-    { id: "m1", name: "New name", tag: "#food", date: "2026-10-01" },
-    { id: "m1", name: "New name", tag: "#food", date: "2026-10-11" },
-    { id: "m2", name: "New name", tag: "#food", date: "2026-10-12" },
+    { id: "m1", name: "New name", type: "food", date: "2026-10-01" },
+    { id: "m1", name: "New name", type: "food", date: "2026-10-11" },
+    { id: "m2", name: "New name", type: "food", date: "2026-10-12" },
   ];
   const stats = supplyStats(history, "2026-11-01");
   assert.equal(stats.length, 1);
@@ -23,13 +25,13 @@ test("Market ids retain purchases after renaming and separate same-named records
 test("Market loaders resolve catalog names and Supplies history; additions serialize and deduplicate", async () => {
   globalThis.window = { moment: () => ({ format: () => "2026-11-11" }) };
   const log = "- [x] m1 ✅ 2026-10-01\n- [x] m1 ✅ 2026-10-11\n";
-  const { files } = vault({ [note]: log, [MARKET_RECORDS]: JSON.stringify({ m1: { name: "Renamed", tag: "#food" } }) });
+  const { files } = vault({ [note]: log, [MARKET_RECORDS]: JSON.stringify({ m1: { name: "Renamed", type: "food" } }) });
   let supplies = await loadSupplies();
   assert.equal(supplies.groups[0].rows[0].name, "Renamed");
   assert.equal(supplies.groups[0].rows[0].listed, false);
-  await Promise.all([addToMarket("Old name", "#food", "m1"), addToMarket("Old name", "#food", "m1")]);
+  await Promise.all([addToMarket("Old name", "food", "m1"), addToMarket("Old name", "food", "m1")]);
   assert.equal(files[note].match(/- \[ \] m1/g).length, 1);
-  await Promise.all([addToMarket("Soap", "#home"), addToMarket("Bread", "#food")]);
+  await Promise.all([addToMarket("Soap", "home"), addToMarket("Bread", "food")]);
   const catalog = JSON.parse(files[MARKET_RECORDS]);
   assert.deepEqual(Object.keys(catalog), ["m1", "m2", "m3"]);
   const market = await loadCelestialMarket();
@@ -44,15 +46,15 @@ test("Market loaders resolve catalog names and Supplies history; additions seria
 test("A moved market row never buys another item, corrupt catalogs are not overwritten", async () => {
   const { files } = vault({ [note]: "- [ ] m2\n", [MARKET_RECORDS]: "broken" });
   assert.equal(await buyMarketItem({ line: 0, id: "m1", name: "Tea" }), false);
-  await assert.rejects(() => addToMarket("Tea", "#food"), SyntaxError);
+  await assert.rejects(() => addToMarket("Tea", "food"), SyntaxError);
   assert.equal(files[MARKET_RECORDS], "broken");
   assert.equal(files[note], "- [ ] m2\n");
 });
 
 test("A new vault's first market item starts the catalog", async () => {
   const { files } = vault({});
-  await addToMarket("Tea", "#food");
-  assert.deepEqual(JSON.parse(files[MARKET_RECORDS]), { m1: { name: "Tea", tag: "#food" } }
+  await addToMarket("Tea", "food");
+  assert.deepEqual(JSON.parse(files[MARKET_RECORDS]), { m1: { name: "Tea", type: "food" } }
 );
   assert.equal(files[note], "- [ ] m1\n");
 });
@@ -60,11 +62,40 @@ test("A new vault's first market item starts the catalog", async () => {
 test("editing a catalog item changes both lists and preserves the purchase log", async () => {
   globalThis.window = { moment: () => ({ format: () => "2026-11-11" }) };
   const log = "- [x] m1 ✅ 2026-10-01\n- [x] m1 ✅ 2026-10-11\n- [ ] m1\n";
-  const { files } = vault({ [note]: log, [MARKET_RECORDS]: JSON.stringify({ m1: { name: "Tea", tag: "#other" } }) });
-  await editMarketItem("m1", async () => ({ name: "Green tea", tag: "#food" }));
+  const { files } = vault({ [note]: log, [MARKET_RECORDS]: JSON.stringify({ m1: { name: "Tea", type: "other" } }) });
+  await editMarketItem("m1", async () => ({ name: "Green tea", type: "food" }));
   assert.equal(files[note], log);
-  assert.deepEqual(JSON.parse(files[MARKET_RECORDS]).m1, { name: "Green tea", tag: "#food" });
+  assert.deepEqual(JSON.parse(files[MARKET_RECORDS]).m1, { name: "Green tea", type: "food" });
   for (const load of [loadCelestialMarket, loadSupplies]) {
     assert.equal((await load()).groups[0].rows[0].name, "Green tea");
   }
+});
+
+test("food item form saves selected marks; other categories show only name and category", async () => {
+  const { files } = vault({ [MARKET_RECORDS]: JSON.stringify({ m1: {name:"Milk",type:"food"},
+    m2: {name:"Glue",type:"home"} }) });
+  await editMarketItem("m1", async (_app, _title, rows, {values}) => {
+    assert.ok(rows.some(r => r.key === "m2" && "check" in r));
+    return { ...values, m2:true };
+  });
+  assert.deepEqual(JSON.parse(files[MARKET_RECORDS]).m1.marks, ["m2"]);
+  await editMarketItem("m2", async (_app, _title, rows) => {
+    assert.deepEqual(rows.map(r => r.key), ["name","type"]);
+    return null;
+  });
+});
+
+test("taking off an open row keeps every other byte, its catalog record and purchase history", async () => {
+  const catalog = '{"m1":{"name":"Tea","type":"food"}}';
+  const before = "Shopping  \r\n\r\n- [x] m1 ✅ 2026-10-01\r\n";
+  const { files } = vault({ [note]: before + "- [ ] m1\r\n- [ ] Milk", [MARKET_RECORDS]: catalog });
+  const row = { line: 3, id: "m1", name: "Tea" };
+  assert.equal(await removeMarketItem({ ...row, line: 2 }), false);
+  assert.equal(await removeMarketItem(row), true);
+  assert.equal(files[note], before + "- [ ] Milk");
+  assert.equal(await removeMarketItem(row), false);
+  assert.equal(await removeMarketItem({ line: 3, name: "Milk" }), true);
+  assert.equal(files[note], before);
+  assert.equal(files[MARKET_RECORDS], catalog);
+  assert.equal(await addToMarket("Tea", "food", "m1"), true);
 });

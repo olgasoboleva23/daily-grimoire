@@ -52,7 +52,7 @@ test("TaskCard: a panel card, its meta line, its buttons (a pool item: add to to
   assert.match(card, /^<div class="ui-task-card"[^>]* data-area="body"[^>]* draggable="true"><div class="ui-task-card__text ui-task__content"><span class="tag"/);
   assert.match(card, /<div class="ui-task-card__meta ui-task__content">waiting 3 d<\/div><div class="ui-task__btns ui-task__actions">/);
   const pool = html(TaskCard, { task: info({ pool: true }), meta: "never done" });
-  assert.match(pool, /aria-label="edit: difficulty, area, time, sticker, then text"/);
+  assert.match(pool, /aria-label="edit pool task"/);
   assert.match(pool, /aria-label="add to today"/);
   assert.doesNotMatch(pool, /skip this time/);
 });

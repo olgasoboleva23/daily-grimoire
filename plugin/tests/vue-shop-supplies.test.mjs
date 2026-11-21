@@ -42,11 +42,11 @@ test("Shop: the balance, an affordable reward bought with a click (a purchase li
 
 test("Supplies: the rows by category, running low puts one back on the list; a listed one has no button", async () => {
   const { files } = vault({
-    [`${MARKET}.md`]: "- [ ] m1\n", [MARKET_RECORDS]: JSON.stringify({ m1: { name: "rice", tag: "#food" } }),
+    [`${MARKET}.md`]: "- [ ] m1\n", [MARKET_RECORDS]: JSON.stringify({ m1: { name: "rice", type: "food" } }),
   });
   const w = inBody(SuppliesWidget, { empty: false, groups: [{ label: "🌿 Harvest", rows: [
-    { name: "tea", tag: "#food", due: true, listed: false, info: "9 of ~7 days ⏳" },
-    { name: "milk", tag: "#food", due: false, listed: true, info: "on the shopping list ✦" },
+    { name: "tea", type: "food", due: true, listed: false, info: "9 of ~7 days ⏳" },
+    { name: "milk", type: "food", due: false, listed: true, info: "on the shopping list ✦" },
   ] }] });
   assert.equal(w.find(".ui-group-header").text(), "🌿 Harvest");
   const [tea, milk] = w.findAll(".ui-supplies__row");
@@ -54,5 +54,6 @@ test("Supplies: the rows by category, running low puts one back on the list; a l
   assert.equal(milk.find("button").exists(), false);
   await tea.find("button").trigger("click"); await tick();
   assert.equal(files[`${MARKET}.md`], "- [ ] m1\n- [ ] m2\n");
+  assert.deepEqual(JSON.parse(files[MARKET_RECORDS]).m2, { name: "tea", type: "food" });
   assert.equal(Notice.last, "✦ tea → Celestial Market");
 });

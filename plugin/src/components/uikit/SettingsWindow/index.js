@@ -1,6 +1,6 @@
 // The ⚙ Settings window, in the shared Form window: the difficulties' XP and gold, the areas,
-// XP Today's thresholds and the level cost (models/settings.js has its values). Resolves to the
-// values, null when closed.
+// XP Today's thresholds and the level cost, the Recipes page's tabs (a recipe note's tag each)
+// (models/settings.js has its values). Resolves to the values, null when closed.
 import { THEMES } from "#/helpers/config.js";
 import { app } from "#/helpers/app.js";
 import { Form } from "#/components/uikit/Form/index.ts";
@@ -29,6 +29,10 @@ export const settingsWindow = (config, values) => Form.ask(app, "✦ Settings", 
     "aura", "30"),
   number(X, "Level · the first one costs", "base", "100"),
   number(X, "Level · each next one costs more by", "step", "25"),
+  { tab: "Recipes", name: "Recipe tabs", key: "recipeTabs", required: ["tag", "name"], list: [
+    { name: "Note tag", key: "tag", text: "soup" },
+    { name: "Tab name", key: "name", text: "Soups" },
+  ] },
 ], {
   values,
   required: ["difficulties", "areas", "spark", "glow", "aura", "base", "step"],

@@ -56,7 +56,7 @@ test("a game has a genre and hours instead of a type", () => {
 test("a recipe and a work task: their properties and sections", () => {
   const recipe = make("recipe", { title: "Pumpkin soup" });
   assert.match(recipe, /^---\ntype: recipe\ntags: \[\]\n/);
-  assert.match(recipe, /\n---\n\n## Ingredients\n\n## Steps\n\n## Notes\n\n## Variations\n$/);
+  assert.match(recipe, /\n---\n\n## Steps\n\n## Notes\n\n## Variations\n$/);
   const work = make("work", { title: "Fix login" }, "2026-10-31");
   assert.match(work, /^---\nstatus: active\ncreated: 2026-10-31\nasana:\n---\n\n## Зачем\n/);
   assert.match(work, /\n## Сделать\n- \[ \] \n/);

@@ -8,6 +8,7 @@ import {
   MarketItem, catLabel, catOf, historyOf, marketCats, marketChoices, openKeys,
   supplyStats,
 } from "#/models/market.js";
+import { marksOf } from "#/models/food.js";
 import { Notice } from "obsidian";
 import { collection } from "#/helpers/collection.js";
 import { nextId } from "#/helpers/ids.js";
@@ -17,26 +18,57 @@ import { appendLine, editLine, readJson, serial } from "#/helpers/files.js";
 import { findChoices } from "#/helpers/find.js";
 import { parseNote } from "#/models/taskFile.js";
 import { app } from "#/helpers/app.js";
-import { MARKET_NOTE, MARKET_RECORDS } from "#/helpers/paths.js";
+import { FOOD_DATA, MARKET_NOTE, MARKET_RECORDS } from "#/helpers/paths.js";
 
 const catalog = collection(MARKET_RECORDS);
 const categoryRow = {
-  name: "Category", key: "tag",
-  options: marketCats.map(c => ({ label: c.label, value: c.tag })),
+  name: "Category", key: "type",
+  options: marketCats.map(c => ({ label: c.label, value: c.type })),
 };
+
+const markRows = marks => marks.map(m => ({ name: `${m.icon} ${m.name}`, key: m.tag, check: "" }));
+const selected = (marks, values) => marks.filter(m => values[m.tag]).map(m => m.tag);
+const readMarks = async () => marksOf(await readJson(FOOD_DATA, {}));
+
+export async function addProduct(name, ask = Form.ask.bind(Form)) {
+  const marks = await readMarks();
+  const values = await ask(app, "New product", [
+    { name: "Name", key: "name", text: "Product name" }, ...markRows(marks),
+  ], { values: { name }, required: ["name"], submit: "Add" });
+
+  if (!values?.name?.trim()) return null;
+  return adding(async () => {
+    const { items } = await marketState();
+    let id;
+    await catalog.edit(records => {
+      id = nextId("m", [...Object.keys(records), ...items.map(i => i.id)]);
+      records[id] = { name: values.name.trim(), type: "food", marks: selected(marks, values) };
+      return records;
+    });
+    return id;
+  });
+}
 
 export async function editMarketItem(id, ask = Form.ask.bind(Form)) {
   const item = (await readJson(catalog.path, {}))[id];
 
   if (!item) return void new Notice("Item no longer exists");
+  const marks = item.type === "food" ? await readMarks() : [];
+  const boxes = Object.fromEntries((item.marks ?? []).map(tag => [tag, true]));
   const values = await ask(app, "Edit item", [
-    { name: "Name", key: "name", text: "Item name" }, categoryRow,
-  ], { values: { ...item }, required: ["name", "tag"], submit: "Save" });
+    { name: "Name", key: "name", text: "Item name" }, categoryRow, ...markRows(marks),
+  ], { values: { ...item, ...boxes }, required: ["name", "type"], submit: "Save" });
 
   if (!values) return;
-  const saved = await catalog.update(id, current =>
-    current.name === item.name && current.tag === item.tag
-      ? { ...current, name: values.name, tag: values.tag } : null);
+  const saved = await catalog.update(id, current => {
+    if (current.name !== item.name || current.type !== item.type
+      || JSON.stringify(current.marks) !== JSON.stringify(item.marks)) return null;
+    const next = { ...current, name: values.name.trim(), type: values.type };
+
+    if (values.type === "food" && item.type === "food") next.marks = selected(marks, values);
+    else delete next.marks;
+    return next;
+  });
 
   if (!saved) new Notice("Item changed. Open it again to edit.");
 }
@@ -58,7 +90,7 @@ async function marketState() {
 
 // the categories with their rows, in order, the empty ones left out
 const byCategory = (list, catOfOne, row) => marketCats
-  .map(cat => ({ label: cat.label, rows: list.filter(x => catOfOne(x) === cat.tag).map(row) }))
+  .map(cat => ({ label: cat.label, rows: list.filter(x => catOfOne(x) === cat.type).map(row) }))
   .filter(g => g.rows.length);
 
 export async function loadCelestialMarket() {
@@ -67,7 +99,7 @@ export async function loadCelestialMarket() {
   if (mkt.missing) return { missing: true, path: MARKET_NOTE };
   const items = mkt.items.filter(i => i.isOpen);
   // a row: its line (to find it again) and its name (shown, and to check it's the same item)
-  const row = i => ({ line: i.src.line, id: i.id, name: i.name });
+  const row = i => ({ line: i.src.line, id: i.id, name: i.name, type: i.type });
   const n = items.length;
 
   return {
@@ -90,74 +122,89 @@ export async function loadSupplies() {
       : s.avg ? `${s.since} of ~${s.avg} days${s.due ? " ⏳" : ""}`
       : `bought ${s.buys} times`;
 
-    return { id: s.id, name: s.name, tag: s.tag, due: s.due, listed, info };
+    return { id: s.id, name: s.name, type: s.type, due: s.due, listed, info };
   };
 
-  return { empty: !stats.length, groups: byCategory(stats, s => catOf(s.tag), row) };
+  return { empty: !stats.length, groups: byCategory(stats, s => catOf(s.type), row) };
 }
 
 export async function addMarketItem() {
   const { history, open, records } = await marketState();
   const choices = marketChoices(history, open, records);
   const pick = await Search.pickGrouped(app, "Find or add an item…", q => findChoices(choices, q), {
-    groupOf: c => c.tag,
+    groupOf: c => c.type,
     label: catLabel,
     note: c => c.onList ? "on the list" : c.buys ? `×${c.buys} · ${dm(c.last)}` : "not bought yet",
   });
 
   if (!pick) return;
   if (pick.onList) return void new Notice(`✦ ${pick.name} is on the list already`);
-  const tag = pick.isNew ? (await Form.ask(app, `✦ ${pick.name}`, [
+  const type = pick.isNew ? (await Form.ask(app, `✦ ${pick.name}`, [
     categoryRow,
-  ], { required: ["tag"], submit: "Add" }))?.tag : pick.tag;
+  ], { required: ["type"], submit: "Add" }))?.type : pick.type;
 
-  if (tag) await addToMarket(pick.name, tag, pick.id);
+  if (type) await addToMarket(pick.name, type, pick.id);
 }
 
 // Serialize additions so two clicks cannot allocate the same ID or append two open copies.
 const adding = serial();
 
-export const addToMarket = (name, tag, id = null) => adding(() => addItem(name, tag, id));
+export const addToMarket = (name, type, id = null) => adding(() => addItem(name, type, id));
 
 // the first item of a new vault starts the catalog (its folder too)
-async function addItem(name, tag, id) {
+async function addItem(name, type, id) {
   const state = await marketState();
 
-  await catalog.edit(records => {
-    if (id && !records[id]) throw new Error(`Market record ${id} is missing`);
+  if (!id) await catalog.edit(records => {
     id ??= Object.keys(records)
       .find(k => records[k].name.trim().toLowerCase() === name.trim().toLowerCase());
     if (!id) {
       id = nextId("m", [...Object.keys(records), ...state.items.map(i => i.id)]);
-      records[id] = { name, tag };
+      records[id] = { name, type };
     }
 
     return records;
   });
+  else if (!state.records?.[id]) throw new Error(`Market record ${id} is missing`);
   const file = app.vault.getFileByPath(MARKET_NOTE);
 
-  if (!file) return appendLine(MARKET_NOTE, `- [ ] ${id}`);
+  if (!file) {
+    await appendLine(MARKET_NOTE, `- [ ] ${id}`);
+    return true;
+  }
+
+  let added = false;
   await app.vault.process(file, text => {
     const listed = parseNote(MARKET_NOTE, text).map(MarketItem.of)
       .some(i => i.isOpen && i.id === id);
 
+    added = !listed;
     return listed ? text : `${text.trimEnd()}\n- [ ] ${id}\n`;
   });
+  return added;
 }
 
-// a row as bought, if its line is still that item
-export function buyMarketItem({ line, id, name }) {
+// Change the displayed row only while that line is still the same open item.
+function editOpenItem({ line, id, name }, change) {
   const same = l => {
     const item = new MarketItem(l);
 
     return item.isOpen && (id ? item.id === id : item.name === name);
   };
 
-  return editLine(MARKET_NOTE, line, same, l => new MarketItem(l).bought(todayYmd()));
+  return editLine(MARKET_NOTE, line, same, change);
 }
 
-// runsLow(name, tag, id = null): back on the Celestial Market's list
-export async function runsLow(name, tag, id = null) {
-  await addToMarket(name, tag, id);
+export const buyMarketItem = row =>
+  editOpenItem(row, l => new MarketItem(l).bought(todayYmd()));
+
+export function removeMarketItem(row) {
+  // The last line has no newline of its own. Keep the previous line's terminator.
+  return editOpenItem(row, (_, lines) => row.line === lines.length - 1 ? "" : null);
+}
+
+// runsLow(name, type, id = null): back on the Celestial Market's list
+export async function runsLow(name, type, id = null) {
+  await addToMarket(name, type, id);
   new Notice(`✦ ${name} → Celestial Market`);
 }

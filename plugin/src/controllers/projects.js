@@ -3,12 +3,13 @@
 // nothing.
 import { Notice } from "obsidian";
 import { nextId } from "#/helpers/ids.js";
-import { PROJECTS } from "#/helpers/paths.js";
-import { readJson } from "#/helpers/files.js";
+import { MASTER, PROJECTS } from "#/helpers/paths.js";
+import { edit, readJson } from "#/helpers/files.js";
 import { importCover } from "#/helpers/images.js";
 import { Form } from "#/components/uikit/Form/index.ts";
 import { openUi } from "#/components/app/open.ts";
 import { notes, projects } from "#/store/tasks.js";
+import { parseNote } from "#/models/taskFile.js";
 import { Task } from "#/models/task.js";
 import { editTaskLine, newTask } from "#/controllers/tasks.js";
 
@@ -150,18 +151,33 @@ export async function askRenameStage(app, key, index, name, ask = (...a) => Form
   return onStage(key, index, name, (st, i) => st.map((s, j) => j === i ? { ...s, name: next } : s));
 }
 
-// the stage's tasks stay tasks: only the stage leaves the project
 export async function askDeleteStage(app, key, index, name, ask = (...a) => Form.ask(...a)) {
+  const before = (await readJson(PROJECTS, {}))[key]?.stages?.[index];
+
+  if (!before || before.name !== name) return false;
   const yes = await ask(app, "Delete stage?", [
     { name: "Stage", key: "name", label: true },
-    { name: "Kept", key: "kept", label: true },
-  ], { values: { name, kept: "Its tasks stay as tasks." }, submit: "Delete" });
+    { name: "Также удалить задачи этапа", key: "deleteTasks",
+      check: "Только открытые копии без даты. Задачи других этапов сохранятся." },
+  ], { values: { name, deleteTasks: false }, submit: "Delete" });
 
   if (!yes) return false;
-  let stageId;
-  const saved = await onStage(key, index, name, (st, i) => {
-    stageId = st[i].id;
-    return st.filter((_, j) => j !== i);
+  const stageId = before.id;
+  const exclusive = new Set(yes.deleteTasks ? before.tasks : []);
+  const saved = await projects.edit(all => {
+    const stages = all[key]?.stages;
+    const stage = stages?.[index];
+
+    if (stage?.id !== stageId || stage?.name !== name
+      || (yes.deleteTasks && JSON.stringify(stage.tasks) !== JSON.stringify(before.tasks))) {
+      changedProject();
+      return null;
+    }
+
+    stages.splice(index, 1);
+    if (exclusive.size) for (const p of Object.values(all))
+      for (const other of p.stages ?? []) for (const id of other.tasks) exclusive.delete(id);
+    return all;
   });
 
   if (saved) await notes.edit(all => {
@@ -172,6 +188,25 @@ export async function askDeleteStage(app, key, index, name, ask = (...a) => Form
     for (const n of related) n.target = { kind: "project", id: key };
     return all;
   });
+  if (saved && exclusive.size) {
+    try {
+      await edit(MASTER, text => {
+        const remove = new Set();
+
+        for (const item of parseNote(MASTER, text)) {
+          const t = Task.of(item);
+
+          if (t.isOpen && exclusive.has(t.id) && !t.date && !t.fields.start) remove.add(item.line);
+        }
+
+        return text.split("\n").filter((_, i) => !remove.has(i)).join("\n");
+      });
+    } catch (error) {
+      new Notice("Этап удалён, но удалить открытые задачи без даты не удалось.");
+      throw error;
+    }
+  }
+
   return saved;
 }
 

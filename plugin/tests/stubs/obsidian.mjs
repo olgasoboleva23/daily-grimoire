@@ -14,6 +14,8 @@ export class Component {
   registerDomEvent(el, type, fn) { el.addEventListener?.(type, fn); this._cleanups.push(() => el.removeEventListener?.(type, fn)); }
   registerInterval(id) { this._cleanups.push(() => clearInterval(id)); return id; }
 }
+// a note drawn: its Markdown as the element's text
+export const MarkdownRenderer = { render: async (app, md, el) => { el.textContent = md; } };
 export class MarkdownRenderChild extends Component { constructor(el) { super(); this.containerEl = el; } }
 export const debounce = fn => Object.assign(fn, { cancel() {} });
 export class Notice { constructor(text) { Notice.last = text; } }

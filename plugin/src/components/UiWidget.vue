@@ -69,7 +69,9 @@ onMounted(() => {
     others.some(w => w.endsWith("/") ? path.startsWith(w) : path === w));
 
   if (def.watches?.includes(taskFiles)) owner.register(watch(taskStore.version, redraw));
-  useDataviewChanges(owner, redraw, { watched, note: def.note, delay: 1000 });
+  const linked = def.watchesNote && (path => def.watchesNote(state.data, path));
+
+  useDataviewChanges(owner, redraw, { watched, linked, note: def.note, delay: 1000 });
   const plain = others?.filter(w => !w.endsWith("/") && !w.endsWith(".md"));
 
   if (plain?.length) useFileChanges(owner, redraw, plain);

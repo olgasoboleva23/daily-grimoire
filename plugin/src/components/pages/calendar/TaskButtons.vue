@@ -2,6 +2,7 @@
      (click twice: the first arms it for 3 s); @gone when the task leaves (skipped, deleted) so
      its row goes at once -->
 <script setup>
+import { vHoldAction } from "#/composables/holdAction.js";
 import { computed, inject, ref } from "vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 
@@ -39,8 +40,8 @@ const unplan = () => {
   view.actions.unplan(t);
 };
 
-async function remove() {
-  if (!armed.value) {
+async function remove(confirmed = false) {
+  if (!confirmed && !armed.value) {
     armed.value = true;
     window.setTimeout(() => { armed.value = false; disarmed.value = true; }, 3000);
     return;
@@ -57,12 +58,14 @@ async function remove() {
 <template>
   <UiButton
     v-if="task.canSkip"
+    v-hold-action="skip"
     class="ui-task__btns-skip"
     title="skip this time"
     @click="skip"
   >⏭</UiButton>
   <UiButton
     v-if="task.canUnplan"
+    v-hold-action="unplan"
     class="ui-task__mobile ui-task__btns-unplan"
     title="remove date"
     @click="unplan"
@@ -71,8 +74,9 @@ async function remove() {
     <span class="ui-pencil">✏️</span>
   </UiButton>
   <UiButton
+    v-hold-action="() => remove(true)"
     :title="del.title"
     :class="['ui-task__btns-del', { 'ui-task__btns-del--armed': armed }]"
-    @click="remove"
+    @click="remove()"
   >{{ del.text }}</UiButton>
 </template>

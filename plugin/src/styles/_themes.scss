@@ -212,3 +212,85 @@
   4%, 22% { opacity: 1; }
   10%, 26% { opacity: 0.3; }
 }
+
+// Night streets and radio signals in the Kiselevka Dark palette.
+#{context.theme("heavenly-delusion")} {
+  --ui-pink-light: #192935;
+  --ui-pink: #111c24;
+  --ui-pink-deep: #48bdc4;
+  --ui-purple-light: #1e3140;
+  --ui-purple: #92bcd4;
+  --ui-purple-deep: #92bcd4;
+  --ui-blue: #16a8d9;
+  --ui-blue-deep: #30b6bf;
+  --ui-gold: #c8a431;
+  --ui-gold-bright: #c2b3a1;
+  --ui-gold-deep: #c8a431;
+  --ui-lavender: #92bcd4;
+  --ui-sheet: #0f1921;
+  --ui-text: #ffffffd0;
+  --ui-border: #477498;
+  --ui-surface: #192935;
+  --ui-surface-warm: #1e3140;
+  --ui-surface-done: #172530;
+  --ui-surface-skipped: #24303c;
+  --ui-crest-text: #0f1921;
+  --ui-on-gold: #0f1921;
+  --ui-on-selected: #0f1921;
+  --ui-on-accent: #0f1921;
+  --ui-on-background: #ffffff;
+  --ui-highlight: #48bdc4;
+  --ui-heading: #92bcd4;
+  --ui-danger: #d4606e;
+  --ui-overdue: #d4606e;
+  --ui-savings-text: #c8a431;
+  --ui-sky-start: #192935;
+  --ui-sky-end: #111c24;
+  --ui-dusk-dark: #0f1921;
+  --ui-dusk-rose: #192935;
+  --ui-chart-text: #92bcd4;
+  --ui-chart-grid: #6e8d9f;
+  --ui-wing-svg: none;
+  --ui-corner-svg: var(--ui-sign-corner);
+  --ui-corner-size: 32px;
+  --ui-corner-inset: #{-$border-width-s};
+  --ui-scroll-hint-svg: var(--ui-scroll-arrow-svg);
+  --ui-star-sparkle-svg: none;
+  --ui-signal-red: #cc5266;
+  --ui-star-icon: var(--ui-flashlight-icon);
+  --ui-signal-icon: radial-gradient(circle, var(--ui-signal-red) 0 19%, var(--ui-sheet) 10% 29%,
+    var(--ui-blue-deep) 30% 33%, var(--ui-surface) 34% 56%, var(--ui-pink-deep) 57% 61%,
+    var(--ui-sheet) 62% 67%, transparent 68%);
+  --ui-level-glow: var(--ui-blue-deep);
+  --ui-xp-color: var(--ui-blue);
+  --ui-progress-fill: linear-gradient(90deg, var(--ui-blue), var(--ui-pink-deep));
+  --ui-font-deco: ui-monospace, monospace;
+  --ui-bg-blend: normal;
+  --ui-bg-image: var(--ui-theme-image, none);
+  --ui-twilight: linear-gradient(135deg, var(--ui-sky-start), var(--ui-sky-end));
+  --ui-sky: linear-gradient(135deg, var(--ui-sky-start), var(--ui-sky-end), var(--ui-purple-light));
+  --ui-dusk: linear-gradient(135deg, var(--ui-dusk-dark), var(--ui-dusk-rose));
+
+  @if context.$shadow {
+    .ui-level__icon { border-radius: 0; animation: none; }
+    .ui-level__vital--hp .ui-level__vital-fill {
+      background: var(--ui-signal-red);
+      box-shadow: none;
+    }
+    .ui-xp__icon {
+      display: inline-block;
+      width: $text-2xl;
+      height: $text-2xl;
+      vertical-align: middle;
+      font-size: 0;
+      background: var(--ui-signal-icon);
+    }
+    button.ui-btn:is(.ui-btn--add, .ui-btn--rail)::after {
+      background: none;
+      mask: none;
+      inset: 0;
+      border-radius: inherit;
+      box-shadow: inset 0 0 6px var(--ui-pink-deep);
+    }
+  }
+}

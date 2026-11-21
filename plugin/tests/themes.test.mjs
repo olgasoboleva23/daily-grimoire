@@ -72,14 +72,18 @@ test("each theme defines the palette in Winx only and ships its AVIF and heading
   defaults.walkDecls(d => required.add(d.prop));
   const themes = postcss.parse(sass.compile(`${styles}_themes.scss`).css);
   const fonts = readFileSync(`${styles}_fonts.scss`, "utf8");
-  const expected = { "winx-dark": "Cinzel", gothic: "Pirata One", da2: "Cinzel Decorative" };
+  const expected = { "winx-dark": "Cinzel", gothic: "Pirata One", da2: "Cinzel Decorative",
+    "heavenly-delusion": "ui-monospace, monospace" };
   for (const [name, font] of Object.entries(expected)) {
     const rule = themes.nodes.find(r => r.selector?.startsWith(`body.ui-theme-${name} `));
     assert.ok(rule.selector.includes('.workspace-leaf-content[data-type=ui-app]'));
     const declarations = new Map(rule.nodes.map(d => [d.prop, d.value]));
     for (const token of required) assert.ok(declarations.has(token), `${name}: ${token}`);
-    assert.equal(declarations.get("--ui-font-deco"), `"${font}"`);
+    if (font === "ui-monospace, monospace") assert.equal(declarations.get("--ui-font-deco"), font);
+    else {
+      assert.equal(declarations.get("--ui-font-deco"), `"${font}"`);
     assert.ok(fonts.includes(`font-family: ${font};`) || fonts.includes(`font-family: "${font}";`));
+    }
     assert.ok(existsSync(new URL(`../../00 System/Assets/themes/${name}.avif`, import.meta.url)));
   }
 });
@@ -101,6 +105,7 @@ test("theme XP names follow the same custom thresholds and survive settings roun
     winx: ["VOID", "SPARK", "GLOW", "AURA", "TRANSFORMATION"],
     "winx-dark": ["VOID", "SPARK", "GLOW", "AURA", "TRANSFORMATION"],
     gothic: ["Затишье", "Искра", "Поток", "Разряд", "Буря"],
+    "heavenly-delusion": ["Тишина", "Эхо", "Сигнал", "Контакт", "Горизонт"],
     da2: ["Покой", "Пробуждение", "Пламя", "Сияние", "Справедливость"],
   };
   try {

@@ -142,3 +142,19 @@ test("openNote in an app tab: a short link to an app page's note switches the pa
 test("openNote outside an app tab: an app page's note opens as a note", () => {
   assert.deepEqual(clickIn("Finance").opened, [["Finance", false]]);
 });
+
+test("Recipes follows the currently linked notes on indexing, rename and deletion", async () => {
+  const { blocks } = await import("#/controllers/blocks.js");
+  const c = component(), dish = { link: "Menu/A.md" };
+  let draws = 0;
+  const linked = path => blocks.recipes.watchesNote({ dishes: [dish] }, path);
+  useDataviewChanges(c, () => draws++, { linked });
+  c.events.changed[0]({ path: "Daily.md" });
+  c.events.changed[0]({ path: dish.link });
+  dish.link = "Elsewhere/B.md";
+  c.events.changed[0]({ path: "Menu/A.md" });
+  c.events.changed[0]({ path: dish.link });
+  c.events.rename[0]({ path: "Moved.md" }, dish.link);
+  c.events.delete[0]({ path: dish.link });
+  assert.equal(draws, 4);
+});

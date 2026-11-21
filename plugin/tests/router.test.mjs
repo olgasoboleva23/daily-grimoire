@@ -41,3 +41,9 @@ test("isStep: a page or an open project is a step; a calendar week is not", () =
   assert.equal(isStep(a, withParams(a, "calendar")), false);
   assert.equal(isStep(a, withParams(a, "projects", { open: "p1" })), true);
 });
+
+test("readState: the Recipes page's tab is a tag (⚙ Settings has the list), else all", () => {
+  assert.equal(readState({ recipes: { course: "breakfast" } }).recipes.course, "breakfast");
+  assert.equal(readState({ recipes: { course: 5 } }).recipes.course, "all");
+  assert.equal(readState(null).recipes.course, "all");
+});

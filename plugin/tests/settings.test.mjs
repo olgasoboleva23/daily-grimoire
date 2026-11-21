@@ -77,3 +77,26 @@ test("a key changed with ☑ moves its tasks' records; without ☑ they stay", (
   assert.deepEqual(areaMoves({ ...v, areas }, records), { t1: { area: "home" }, t3: { area: "home" } });
   assert.deepEqual(areaMoves({ ...v, areas: areas.map(a => ({ ...a, apply: false })) }, records), {});
 });
+
+test("recipe tab edits are independent, normalized, validated and saved in display order", () => {
+  applyConfig();
+  const v = settingsValues(config);
+  assert.deepEqual(v.recipeTabs.map(t => t.tag), ["soup", "main", "dessert"]);
+  v.recipeTabs[0].name = "Changed";
+  assert.equal(config.recipeTabs[0].name, "Soups");
+  v.recipeTabs = [{ tag: " #Tea ", name: " Tea " }, { tag: "cake", name: "Cake" }];
+  assert.equal(settingsProblem(v, new Map(), config), null);
+  const saved = toConfig(v);
+  assert.deepEqual(saved.recipeTabs, [{ tag: "tea", name: "Tea" }, { tag: "cake", name: "Cake" }]);
+  try {
+    applyConfig(saved);
+    assert.deepEqual(config.recipeTabs, saved.recipeTabs);
+    assert.equal(settingsProblem({ ...v, recipeTabs: [] }, new Map(), config), null);
+    applyConfig(JSON.parse(JSON.stringify(toConfig({ ...v, recipeTabs: [] }))));
+    assert.deepEqual(settingsValues(config).recipeTabs, []);
+    for (const row of [{ tag: "#All", name: "A" }, { tag: "other", name: "O" },
+      { tag: "TEA", name: "Again" }, { tag: "#", name: "Empty" }, { tag: "ok", name: " " }]) {
+      assert.ok(settingsProblem({ ...v, recipeTabs: [...v.recipeTabs, row] }, new Map(), config));
+    }
+  } finally { applyConfig(); }
+});

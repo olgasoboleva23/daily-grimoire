@@ -32,6 +32,7 @@ export function useDragSource(view, key, day = () => null) {
 
   return {
     start(e) {
+      if (e.currentTarget.hasAttribute("data-swipe")) return e.preventDefault();
       Object.assign(drag, { task: view.task(key()), day: day(), on: true });
       e.dataTransfer?.setData("text/plain", "");
       window.setTimeout(() => { drag.active = true; });

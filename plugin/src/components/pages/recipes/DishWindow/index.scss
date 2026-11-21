@@ -1,0 +1,27 @@
+@use "mixins" as *;
+/* A dish's window (DishWindow/index.ts), block ui-dish on its content; in the document sheet, like
+   Form: Obsidian's window colours, the theme's purple for the ingredients' dots */
+.ui-dish-window { width: min(640px, 100%); }
+.ui-dish {
+  &__empty { padding: $space-l 0; color: var(--text-muted); text-align: center; }
+  &__marks { @include row; flex-wrap: wrap; gap: $space-s; margin-bottom: $space-m; }
+  &__mark {
+    padding: $space-2xs $space-s;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: var(--radius-l);
+    font-size: var(--font-ui-smaller);
+  }
+  &__ingredients { margin: 0 0 $space-l; padding-left: $space-xl; }
+  &__ingredient {
+    &::marker { color: var(--ui-purple); }
+    &--gone { color: var(--text-muted); text-decoration: line-through; }
+  }
+  &__amount { margin-left: $space-s; color: var(--text-muted); }
+  &__bar { @include row; flex-wrap: wrap; gap: $space-s; }
+  &__note { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  &__steps {
+    margin-top: $space-l;
+    padding-top: $space-m;
+    border-top: 1px solid var(--background-modifier-border);
+  }
+}

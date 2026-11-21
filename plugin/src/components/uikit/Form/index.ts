@@ -11,13 +11,17 @@ import { useVueApp } from "#/composables/vueApp.ts";
 //   { name, key, label: true }                      its value as text, not edited
 //   { name, key, file: accept }                     a local File, saved only by the caller
 //   { name, key, select: [{ label, value }] }       a dropdown (for many choices: a list of tasks)
-//   { name, key, pick: () => Promise<string|null> } a button with the value (Choose… when empty)
-//                                                   that sets what pick gives; × clears it
+//   { name, key, pick: values => Promise<string|null>, show?: value => text }
+//                                                   a button with the value (show: its text;
+//                                                   Choose… when empty) that sets what pick
+//                                                   gives (it gets the window's values, a list
+//                                                   line's group in a list); × clears it
 //   { name, key, list: rows, required?, fixed? }    groups of those rows, + adds one, × takes it
 //                                                   off (fixed: neither, the groups as given);
 //                                                   the value: an array of the groups' values.
-//                                                   Rows of text boxes, checkboxes and labels
-//                                                   only: a table, a group a line under the names
+//                                                   Rows of text boxes, checkboxes, labels and
+//                                                   picks only: a table, a group a line under
+//                                                   the names
 // Any row can have `tab`: the window then shows its tabs (UiTabs) and one tab's rows at a time.
 // `values` has the starting ones; the keys in `required` must be set before the button works (it's
 // greyed out; a list: one group at least, each with its own required keys). Form.ask(...) resolves
@@ -36,7 +40,10 @@ export type Row = Tab & (
   | { name: string; key: string; label: true }
   | { name: string; key: string; file: string }
   | { name: string; key: string; select: { label: string; value: string }[] }
-  | { name: string; key: string; pick: () => Promise<string | null> }
+  | {
+    name: string; key: string; pick: (values: Record<string, any>) => Promise<string | null>;
+    show?: (value: string) => string;
+  }
   | { name: string; key: string; list: Row[]; required?: string[]; fixed?: boolean });
 
 export type Values = Record<string, any>;

@@ -42,6 +42,7 @@ export class UiView extends ItemView {
     Object.assign(this.state.dashboard, next.dashboard);
     Object.assign(this.state.calendar, next.calendar);
     Object.assign(this.state.projects, next.projects);
+    Object.assign(this.state.recipes, next.recipes);
 
     await super.setState(s, result);
     if (this.closed) return;

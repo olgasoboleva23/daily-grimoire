@@ -1,7 +1,8 @@
 <!-- The food journal (block ui-food): a week, ‹ › to step it, today back; a row a day: what was
-     eaten (✎ a food by its name, × takes it off, ＋ adds one: a fuzzy search, or a new food with its
-     marks), the marks counted, each free journal's level after its lag (the reasons in the tip),
-     💊 the medication courses on that day, the day's note. ⚙ edits the marks -->
+     eaten (a product: its name edits it; a dish 🍲: its name opens its window; × takes it off, ＋
+     adds one: a fuzzy search of products and dishes, or a new one), the marks counted, each free
+     journal's level after its lag (the reasons in the tip), 💊 the medication courses on that
+     day, the day's note. ⚙ edits the marks -->
 <script setup>
 import { computed, inject, ref } from "vue";
 import { Keymap, Notice } from "obsidian";
@@ -13,9 +14,11 @@ import { vTip } from "#/components/uikit/tooltip.js";
 import { addDays, weekOf } from "#/helpers/dates.js";
 import { dayLabel } from "#/models/course.js";
 import { foodWeek } from "#/models/food.js";
+import { app } from "#/helpers/app.js";
 import {
-  addEaten, editFood, editMarks, pickTrainingTask, removeEaten, setFoodNote,
+  addEaten, editEaten, editMarks, pickTrainingTask, removeEaten, setFoodNote,
 } from "#/controllers/food.js";
+import { openDish } from "#/components/pages/recipes/DishWindow/index.ts";
 
 const ui = inject("ui", null);
 const openMeds = e => ui ? ui.go("meds", {}, e)
@@ -90,9 +93,16 @@ const act = async (write) => {
           <div v-else-if="col.key === 'items'" class="ui-flex ui-wrap ui-gap-xs">
             <span v-for="(f, n) in row.items" :key="n" class="ui-food__item">
               <span
-                v-tip="'edit the food'"
+                v-if="f.kind === 'dish'"
+                v-tip="'open the dish'"
                 class="ui-food__item-name"
-                @click="act(() => editFood(f.id))"
+                @click="openDish(app, f.id)"
+              >🍲 {{ f.name }}{{ f.icons ? ` ${f.icons}` : "" }}</span>
+              <span
+                v-else
+                v-tip="'edit the product'"
+                class="ui-food__item-name"
+                @click="act(() => editEaten(f.id))"
               >{{ f.name }}{{ f.icons ? ` ${f.icons}` : "" }}</span>
               <span class="ui-food__off" @click="act(() => removeEaten(row.date, n))">×</span>
             </span>

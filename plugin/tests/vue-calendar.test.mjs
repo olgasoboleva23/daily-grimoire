@@ -226,22 +226,24 @@ test("dropped onto another open task of its day and group: before or after it, b
   assert.ok(!stretch.classList.contains("ui-cal__task--drop-after"));
 });
 
-test("phone: a short left swipe opens actions; a long one arms completion, moving back disarms", async () => {
+test("phone: left swipes of either length reveal actions, a right swipe closes them", async () => {
   document.body.classList.add("is-mobile");
   mock.timers.enable({ apis: ["setTimeout"] });
   try {
-    const { el, ticked, unplanned } = mount();
+    const { el, ticked, unplanned, view } = mount();
     const walk = row(el, "walk");
     swipe(walk, -60);
     await vue.nextTick();
     assert.equal(walk.dataset.swipe, "open");
+    assert.equal(walk.getAttribute("draggable"), null);
+    assert.equal(fire(walk, "dragstart"), false);
     assert.equal(ticked.length, 0);
     assert.equal(unplanned.length, 0);
     assert.ok(walk.querySelector('[aria-label="remove date"]'));
     touch(walk, "touchstart", 240, 100);
     touch(walk, "touchmove", 60, 100);
     await vue.nextTick();
-    assert.equal(walk.dataset.swipe, "ready");
+    assert.equal(walk.dataset.swipe, "open");
     touch(walk, "touchmove", 180, 100);
     fire(walk, "touchend");
     await vue.nextTick();
@@ -251,23 +253,56 @@ test("phone: a short left swipe opens actions; a long one arms completion, movin
     swipe(walk.querySelector('[aria-label="remove date"]'), 60);
     await vue.nextTick();
     assert.equal(walk.dataset.swipe, undefined);
+    assert.equal(walk.getAttribute("draggable"), "true");
     assert.equal(unplanned.length, 0);
     swipe(walk, -180);
     await vue.nextTick();
-    assert.ok(walk.querySelector("input").checked);
-    mock.timers.tick(1999);
-    assert.equal(ticked.length, 0);
-    mock.timers.tick(1);
+    const primary = walk.querySelector(".ui-task__primary");
+    touch(primary, "touchstart", 0, 0);
+    mock.timers.tick(1499);
+    fire(primary, "touchend");
+    mock.timers.tick(1500);
+    assert.deepEqual(ticked, []);
+    touch(primary, "touchstart", 0, 0);
+    mock.timers.tick(1500);
+    fire(primary, "touchend");
     assert.deepEqual(ticked.map(t => data.T(t).text), ["walk"]);
     swipe(card(el, "plan trip"), -180);
+    await vue.nextTick();
+    card(el, "plan trip").querySelector(".ui-task__primary").click();
     await vue.nextTick();
     assert.deepEqual(ticked.map(t => data.T(t).text), ["walk", "plan trip"]);
     assert.equal(card(el, "plan trip"), undefined);
     const write = row(el, "write");
     swipe(write, -60);
     await vue.nextTick();
-    write.querySelector('[aria-label="remove date"]').click();
+    const move = write.querySelector('[aria-label="remove date"]');
+    touch(move, "touchstart", 0, 0);
+    assert.equal(write.getAttribute("draggable"), null);
+    assert.equal(fire(write, "dragstart"), false);
+    assert.equal(view.drag.task, null);
+    touch(move, "touchmove", 60, 0);
+    assert.equal(move.closest(".ui-task__actions").hasAttribute("data-holding"), false);
+    assert.equal(write.getAttribute("draggable"), null);
+    mock.timers.tick(1500);
+    fire(move, "touchend");
+    assert.deepEqual(unplanned, []);
+    await vue.nextTick();
+    assert.equal(write.getAttribute("draggable"), "true");
+    touch(move, "touchstart", 0, 0);
+    mock.timers.tick(1500);
+    fire(move, "touchend");
     assert.deepEqual(unplanned, ["write"]);
+    const removed = [];
+    view.actions.remove = t => removed.push(data.T(t).text);
+    const stretch = row(el, "stretch");
+    swipe(stretch, -60);
+    await vue.nextTick();
+    const del = stretch.querySelector('[aria-label="delete task"]');
+    touch(del, "touchstart", 0, 0);
+    mock.timers.tick(3000);
+    fire(del, "touchend");
+    assert.deepEqual(removed, ["stretch"]);
   } finally { mock.timers.reset(); document.body.classList.remove("is-mobile"); }
 });
 
@@ -316,7 +351,7 @@ test("phone: primary button completes a card; without Tasks, swiping cannot comp
   } finally { document.body.classList.remove("is-mobile"); }
 });
 
-test("phone: pool swipes add an open copy today; Missed swipes complete on the task's own day", async () => {
+test("phone: pool actions add an open copy today; Missed actions complete on the task's own day", async () => {
   document.body.classList.add("is-mobile");
   try {
     const { el, view, ticked } = mount({ tab: "pool" }, {}, {
@@ -333,7 +368,15 @@ test("phone: pool swipes add an open copy today; Missed swipes complete on the t
     assert.equal(pool.dataset.swipe, "open");
     assert.equal(pool.querySelectorAll('[aria-label="add to today"]').length, 1);
     swipe(pool, -180);
+    assert.deepEqual(added, []);
+    pool.querySelector(".ui-task__primary").click();
     assert.deepEqual(added, [["pool chore", TODAY, false]]);
+    await vue.nextTick();
+    const picker = pool.querySelector('input[type="date"]');
+    picker.value = "2026-11-05";
+    picker.dispatchEvent(new Event("change"));
+    await vue.nextTick();
+    assert.deepEqual(added.at(-1), ["pool chore", "2026-11-05", false]);
     assert.equal(ticked.length, 0);
     const missed = el.querySelector(".ui-missed__row");
     swipe(missed, -60);
@@ -341,6 +384,8 @@ test("phone: pool swipes add an open copy today; Missed swipes complete on the t
     assert.equal(missed.dataset.swipe, "open");
     assert.ok(missed.querySelector('[aria-label="move to today"]'));
     swipe(missed, -180);
+    assert.deepEqual(completed, []);
+    missed.querySelector(".ui-task__primary").click();
     assert.deepEqual(completed, [["late chore", "2026-11-02"]]);
     assert.deepEqual(today, []);
   } finally { document.body.classList.remove("is-mobile"); }

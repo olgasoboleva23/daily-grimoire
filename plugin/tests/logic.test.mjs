@@ -16,22 +16,22 @@ test("weeks", () => {
 
 test("marketChoices: every item bought before, by category, most bought first", () => {
   const h = [
-    { name: "rice", tag: "#home", date: "2026-06-01" },
-    { name: "Apples", tag: "#food", date: "2026-09-01" },
-    { name: "kiwi", tag: "#food", date: "2026-06-12" },
-    { name: "apples", tag: "#food", date: "2026-09-11" },
-    { name: "Rice", tag: "#food", date: "2026-09-03" },
+    { name: "rice", type: "home", date: "2026-06-01" },
+    { name: "Apples", type: "food", date: "2026-09-01" },
+    { name: "kiwi", type: "food", date: "2026-06-12" },
+    { name: "apples", type: "food", date: "2026-09-11" },
+    { name: "Rice", type: "food", date: "2026-09-03" },
   ];
   const c = marketChoices(h, new Set(["kiwi"]));
-  assert.deepEqual(c.map(x => [x.name, x.tag, x.buys, x.last, x.onList]), [
-    ["apples", "#food", 2, "2026-09-11", false],
-    ["Rice", "#food", 2, "2026-09-03", false],     // the last spelling and category win
-    ["kiwi", "#food", 1, "2026-06-12", true],
+  assert.deepEqual(c.map(x => [x.name, x.type, x.buys, x.last, x.onList]), [
+    ["apples", "food", 2, "2026-09-11", false],
+    ["Rice", "food", 2, "2026-09-03", false],     // the last spelling and category win
+    ["kiwi", "food", 1, "2026-06-12", true],
   ]);
 });
 
 test("findChoices: words in any order, a new item when nothing has that name", () => {
-  const c = marketChoices([{ name: "green tea", tag: "#food", date: "2026-09-01" }, { name: "tea cups", tag: "#home", date: "2026-09-02" }], new Set());
+  const c = marketChoices([{ name: "green tea", type: "food", date: "2026-09-01" }, { name: "tea cups", type: "home", date: "2026-09-02" }], new Set());
   assert.deepEqual(findChoices(c, "").map(x => x.name), ["green tea", "tea cups"]);
   assert.deepEqual(findChoices(c, "Tea gr").map(x => x.name), ["green tea", "Tea gr"]);
   assert.equal(findChoices(c, "Tea gr").at(-1).isNew, true);
@@ -40,19 +40,19 @@ test("findChoices: words in any order, a new item when nothing has that name", (
 
 test("supplyStats", () => {
   const h = [
-    { name: "Apples", tag: "#food", date: "2026-09-01" },
-    { name: "apples ", tag: "#food", date: "2026-09-11" },
-    { name: "apples", tag: "#food", date: "2026-09-21" },
-    { name: "Rice", tag: "#food", date: "2026-06-01" },
-    { name: "rice", tag: "#home", date: "2026-09-03" },
-    { name: "kiwi", tag: "#food", date: "2026-06-12" },
+    { name: "Apples", type: "food", date: "2026-09-01" },
+    { name: "apples ", type: "food", date: "2026-09-11" },
+    { name: "apples", type: "food", date: "2026-09-21" },
+    { name: "Rice", type: "food", date: "2026-06-01" },
+    { name: "rice", type: "home", date: "2026-09-03" },
+    { name: "kiwi", type: "food", date: "2026-06-12" },
   ];
   const s = supplyStats(h, "2026-09-30");
   assert.deepEqual(s.map(x => x.name), ["apples", "rice"]);          // bought once: not a staple
   const apples = s[0];
-  assert.deepEqual([apples.buys, apples.avg, apples.since, apples.due, apples.tag], [3, 10, 9, true, "#food"]);
+  assert.deepEqual([apples.buys, apples.avg, apples.since, apples.due, apples.type], [3, 10, 9, true, "food"]);
   const salt = s[1];
-  assert.deepEqual([salt.buys, salt.avg, salt.tag], [2, null, "#home"]); // <3 buys: no forecast; last tag wins
+  assert.deepEqual([salt.buys, salt.avg, salt.type], [2, null, "home"]); // <3 buys: no forecast; last type wins
   assert.equal(salt.due, false);
   assert.equal(supplyStats(h, "2026-09-25")[0].due, false);        // 4 of 10 days
 });

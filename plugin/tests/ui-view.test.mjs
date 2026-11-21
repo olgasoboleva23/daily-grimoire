@@ -246,7 +246,7 @@ test("openUi: the newest app tab, else one new pinned tab", async () => {
   assert.equal(extra.pinned, false);
 });
 
-test("the drawer: Projects, Finance, Shop, Supplies, Medication, Food, then ⚙ Settings; ↗ opens a tab", async () => {
+test("the drawer: Projects, Finance, Shop, Supplies, Medication, Food, Recipes, then ⚙ Settings; ↗ opens a tab", async () => {
   const { mount } = await import("@vue/test-utils");
   const PageNavigation = (await import("#/components/app/PageNavigation/index.vue")).default;
   const w = workspace([]);
@@ -260,8 +260,8 @@ test("the drawer: Projects, Finance, Shop, Supplies, Medication, Food, then ⚙ 
   const rows = shell.findAll(".ui-menu__row .ui-grow");
 
   assert.deepEqual(rows.map(r => r.findAll("span").at(-1).text()),
-    ["Projects", "Finance", "Shop", "Supplies", "Medication", "Food", "Settings"]);
-  assert.match(rows[6].text(), /⚙/);
+    ["Projects", "Finance", "Shop", "Supplies", "Medication", "Food", "Recipes", "Settings"]);
+  assert.match(rows[7].text(), /⚙/);
   await shell.find(".ui-menu__open-tab").trigger("click");
   await new Promise(r => setTimeout(r));
   assert.equal(w.made.length, 1);

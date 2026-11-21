@@ -10,12 +10,13 @@ import { loadCycle } from "#/controllers/widgets/cycle.js";
 import { loadFinance, loadFinanceLine } from "#/controllers/widgets/finance.js";
 import { loadWeight } from "#/controllers/widgets/weight.js";
 import {
-  COURSES, CYCLE, FOOD_DATA, FOOD_LOG, GOALS, JOURNALS, LEDGER, MARKET_NOTE, MARKET_RECORDS,
-  PURCHASES, RULES, SAVINGS, SHOP, TASKS, WEIGHT,
+  COURSES, CYCLE, DISHES, FOOD_DATA, FOOD_LOG, GOALS, JOURNALS, LEDGER, MARKET_NOTE, MARKET_RECORDS,
+  CONFIG, PURCHASES, RULES, SAVINGS, SHOP, TASKS, WEIGHT,
 } from "#/helpers/paths.js";
 import { loadDailyNote } from "#/controllers/widgets/dailyNote.js";
 import { loadPomodoro } from "#/controllers/widgets/pomodoro.js";
 import { loadMeds } from "#/controllers/meds.js";
+import { loadRecipes } from "#/controllers/dishes.js";
 import { loadFood } from "#/controllers/food.js";
 // the widgets' markup: components/pages/dashboard/widgets/
 import XpToday from "#/components/pages/dashboard/widgets/xp/XpToday/index.vue";
@@ -36,6 +37,7 @@ import DailyNoteOpen from "#/components/pages/dashboard/widgets/DailyNoteOpen.vu
 import PomodoroTimer from "#/components/pages/dashboard/widgets/pomodoro/index.vue";
 // the Vue pages: components/pages/<page>/
 import MedsPage from "#/components/pages/meds/index.vue";
+import RecipesPage from "#/components/pages/recipes/index.vue";
 import FoodPage from "#/components/pages/food/index.vue";
 
 // the widgets: name → { view: the .vue, load(ctx): its data, cardButton: a .vue next to the
@@ -72,9 +74,13 @@ export const blocks = {
   },
   // the medication courses from JSON
   meds: { view: MedsPage, load: loadMeds, watches: [COURSES] },
+  recipes: {
+    view: RecipesPage, load: loadRecipes, watches: [DISHES, MARKET_RECORDS, FOOD_DATA, CONFIG],
+    watchesNote: (data, path) => data?.dishes.some(dish => dish.link === path),
+  },
   // the food journal from JSON
   food: {
     view: FoodPage, load: loadFood,
-    watches: [FOOD_DATA, FOOD_LOG, COURSES, `${JOURNALS}/`, TASK_FILES],
+    watches: [FOOD_DATA, FOOD_LOG, DISHES, MARKET_RECORDS, COURSES, `${JOURNALS}/`, TASK_FILES],
   },
 };

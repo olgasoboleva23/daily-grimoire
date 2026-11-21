@@ -1,9 +1,11 @@
 <!-- A row of the Form window (the shapes: Form/index.ts): Obsidian's setting row, its name and
-     its control; `bare`: the control alone (a list's cell). A list row: its groups, each its rows
-     again, a × each and a + under them (fixed: neither). Rows of text boxes, checkboxes and labels
-     only: one grid (--ui-form-cols), a line of the rows' names (a checkbox's description as its
-     name's tooltip), then a line a group; a text box's column shares the width, the others fit
-     what's in them. Other rows: the groups stacked. A list named as its tab has no heading -->
+     its control; `bare`: the control alone (`cell`: in a list's line, whose × takes the group
+     off, so a pick there has no Clear). A list row: its groups, each its rows
+     again, a × each and a + under them (fixed: neither). Rows of text boxes, checkboxes, labels
+     and picks only: one grid (--ui-form-cols), a line of the rows' names (a checkbox's
+     description as its name's tooltip), then a line a group; a text box's and a pick's column
+     share the width, the others fit what's in them. Other rows: the groups stacked. A list named
+     as its tab has no heading -->
 <script setup>
 /* eslint-disable vue/no-mutating-props -- `values` is the window's one reactive object (or a
    list group's in it): every row writes its own key there, Form/index.ts resolves to it */
@@ -13,6 +15,7 @@ const props = defineProps({
   row: { type: Object, required: true },
   values: { type: Object, required: true },
   bare: { type: Boolean, default: false },
+  cell: { type: Boolean, default: false },
 });
 const resourcePath = inject("resourcePath");
 // a text box offers itself for the window's first focus (the window keeps the first one)
@@ -30,13 +33,14 @@ if (list) {
 
 const groups = computed(() => list ? props.values[row.key] : []);
 const lines = list
-  && row.list.every(s => ("text" in s && !s.lines) || "check" in s || "label" in s);
-const cols = list && row.list.map(s => "text" in s && !s.color ? "minmax(0, 1fr)" : "auto")
+  && row.list.every(s => ("text" in s && !s.lines) || "check" in s || "label" in s || "pick" in s);
+const wide = s => ("text" in s && !s.color) || "pick" in s;
+const cols = list && row.list.map(s => wide(s) ? "minmax(0, 1fr)" : "auto")
   .concat(row.fixed ? [] : "auto").join(" ");
 const narrow = s => "check" in s || !!s.color;
 // a pick row: what its picker gives (null: closed, the value stays)
 const pick = async () => {
-  const v = await row.pick();
+  const v = await row.pick(props.values);
 
   if (v) props.values[row.key] = v;
 };
@@ -75,7 +79,12 @@ const model = computed({
           v-for="(s, i) in row.list"
           :key="i"
           :class="['ui-form__cell', { 'ui-form__cell--narrow': narrow(s) }]"
-        ><FormRow :row="s" :values="g" bare /></div>
+        ><FormRow
+          :row="s"
+          :values="g"
+          bare
+          cell
+        /></div>
         <div v-if="!row.fixed" class="ui-form__cell ui-form__cell--narrow">
           <button title="Remove" @click="groups.splice(n, 1)">×</button>
         </div>
@@ -126,9 +135,11 @@ const model = computed({
     <option v-for="(c, i) in row.select" :key="i" :value="c.value">{{ c.label }}</option>
   </select>
   <template v-else-if="'pick' in row">
-    <button class="ui-form__pick" @click="pick">{{ values[row.key] || "Choose…" }}</button>
+    <button class="ui-form__pick" @click="pick">
+      {{ values[row.key] ? (row.show?.(values[row.key]) ?? values[row.key]) : "Choose…" }}
+    </button>
     <button
-      v-if="values[row.key]"
+      v-if="values[row.key] && !cell"
       class="ui-form__clear"
       title="Clear"
       @click="values[row.key] = ''"

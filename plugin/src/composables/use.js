@@ -50,16 +50,25 @@ export function useBusy(c, watched, el, cls) {
 // Dataview has it)
 /**
  * @param {any} c @param {() => void} fn
- * @param {{ watched?: (path: string) => boolean, note?: string, delay?: number }} [options]
+ * @param {{ watched?: (path: string) => boolean, linked?: (path: string) => boolean,
+ *   note?: string, delay?: number }} [options]
  */
 export function useDataviewChanges(c, fn, options = {}) {
-  const { watched = null, note = null, delay = 1000 } = options;
+  const { watched = null, linked = null, note = null, delay = 1000 } = options;
   const later = debounce(fn, delay, true);
   c.register(() => later.cancel());
   c.registerEvent(c.app.metadataCache.on("dataview:metadata-change", (_type, file) => {
     if (!watched || watched(file?.path ?? "")) later();
   }));
-  if (note) c.registerEvent(c.app.metadataCache.on("changed", f => f.path === note && later()));
+  if (note || linked) c.registerEvent(c.app.metadataCache.on("changed", f => {
+    if (f.path === note || linked?.(f.path)) later();
+  }));
+  if (linked) {
+    c.registerEvent(c.app.vault.on("delete", f => linked(f.path) && later()));
+    c.registerEvent(c.app.vault.on("rename", (f, old) => {
+      if (linked(old) || linked(f.path)) later();
+    }));
+  }
 }
 
 // fn() each time Dataview's index is built (a cold start: Dataview reads the vault after the tabs

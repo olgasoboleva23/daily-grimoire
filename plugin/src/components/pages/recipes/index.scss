@@ -1,0 +1,11 @@
+@use "mixins" as *;
+/* ===== The recipe book (block ui-recipes): inside its card; the list is a UiTable ===== */
+.ui-recipes {
+  color: var(--ui-text);
+
+  &__head, &__tabs { margin-bottom: $space-l; }
+  &__none { padding: $space-l 0; text-align: center; color: alpha(--ui-purple-deep, 65%); }
+  .ui-table &__dish { min-width: 10em; }
+  &__name { cursor: pointer; font-weight: 600; color: var(--ui-purple-deep); }
+  &__ingredients { font-size: $text-m; color: alpha(--ui-purple-deep, 65%); }
+}

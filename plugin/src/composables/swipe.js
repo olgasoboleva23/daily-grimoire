@@ -1,13 +1,14 @@
-// Phone tasks: left reveals their buttons, further left arms the primary action; right closes.
+// Phone tasks: left reveals their buttons; right closes.
 // Keep vertical scrolling native, and keep horizontal touches out of Obsidian's sidebar gesture.
 import { reactive } from "vue";
 
-const OPEN = 32, COMMIT = 160;
+const OPEN = 32;
 
 export function useSwipe(view, key, primary, when = () => true) {
-  const swipe = reactive({ kind: null, progress: 0 });
+  const swipe = reactive({ kind: null });
   let s = null;
-  const reset = open => Object.assign(swipe, { kind: open ? "open" : null, progress: 0 });
+  const reset = open => { swipe.kind = open ? "open" : null; };
+
   const cancel = () => {
     if (s) reset(s.open);
     s = null;
@@ -41,22 +42,18 @@ export function useSwipe(view, key, primary, when = () => true) {
     if (s.axis !== "x") return;
     e.stopPropagation();
     s.dx = dx;
-    swipe.progress = Math.min(1, Math.max(0, -dx / COMMIT));
-    swipe.kind = dx <= -COMMIT ? "ready"
-      : dx <= -OPEN || (s.open && dx < OPEN) ? "open" : null;
+    swipe.kind = dx <= -OPEN || (s.open && dx < OPEN) ? "open" : null;
   };
 
   const end = e => {
     if (!s) return;
     const { axis, open, dx } = s;
-    const commit = swipe.kind === "ready" && !view.drag.on;
 
     s = null;
     if (axis !== "x") return reset(open);
     e.stopPropagation();
     if (e.cancelable) e.preventDefault();   // don't also tap a button exposed under the finger
     reset(dx <= -OPEN || (open && dx < OPEN));
-    if (commit) run();
   };
 
   return { swipe, start, move, end, cancel, run };

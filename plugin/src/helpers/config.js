@@ -1,3 +1,4 @@
+import { recipeTab } from "#/models/settings.js";
 import * as prompts from "#/models/promptDefaults.js";
 
 // Areas, difficulties, XP and gold, levels, market categories: the numbers the widgets share.
@@ -9,6 +10,7 @@ export const THEMES = [
   { value: "winx", label: "Winx" },
   { value: "winx-dark", label: "Winx dark" },
   { value: "gothic", label: "Gothic" },
+  { value: "heavenly-delusion", label: "Heavenly Delusion" },
   { value: "da2", label: "Dragon Age 2" },
 ];
 
@@ -18,6 +20,7 @@ const UI_LABELS = {
 
 export const themeLabels = theme => ({
   gothic: { xp: ["Затишье", "Искра", "Поток", "Разряд", "Буря"], market: "Market" },
+  "heavenly-delusion": { xp: ["Тишина", "Эхо", "Сигнал", "Контакт", "Горизонт"], market: "Market" },
   da2: { xp: ["Покой", "Пробуждение", "Пламя", "Сияние", "Справедливость"], market: "Market" },
 }[theme] ?? UI_LABELS);
 
@@ -40,6 +43,11 @@ const AREAS = [
   { key: "rest", icon: "🌙", title: "Rest", name: "Serenity", color: "#6aa6e0" },
 ];
 
+const RECIPE_TABS = [
+  { tag: "soup", name: "Soups" }, { tag: "main", name: "Mains" },
+  { tag: "dessert", name: "Desserts" },
+];
+
 // XP Today's aura: up to `spark` XP a day SPARK, up to `glow` GLOW, up to `aura` AURA, above it
 // TRANSFORMATION; a level costs base + (n - 1) × step XP
 const LEVELS = { spark: 10, glow: 20, aura: 30 };
@@ -50,12 +58,13 @@ const config = {
   promptStart: prompts.start, promptFinal: prompts.final,
   theme: "winx", difficulties: [], areas: [], levels: [], levelCost: { base: 0, step: 0 },
   xpMap: {}, areaMap: {}, areaIcons: {}, areaColors: {},
+  recipeTabs: [],
   marketCategories: [
-    { label: "🌿 Harvest", tag: "#food" },
-    { label: "🌸 Bloom", tag: "#care" },
-    { label: "🐾 Familiar", tag: "#pet" },
-    { label: "🏰 Sanctuary", tag: "#home" },
-    { label: "✨ Vitality", tag: "#health" },
+    { label: "🌿 Harvest", type: "food" },
+    { label: "🌸 Bloom", type: "care" },
+    { label: "🐾 Familiar", type: "pet" },
+    { label: "🏰 Sanctuary", type: "home" },
+    { label: "✨ Vitality", type: "health" },
   ],
 };
 
@@ -67,6 +76,10 @@ export function applyConfig(json = {}) {
   const d = json.difficulties ?? {};
   const areas = Array.isArray(json.areas) && json.areas.length ? json.areas : AREAS;
   const lv = { ...LEVELS, ...json.levels }, cost = { ...LEVEL_COST, ...json.levelCost };
+
+  const tabs = Array.isArray(json.recipeTabs) ? json.recipeTabs : RECIPE_TABS;
+
+  config.recipeTabs.splice(0, config.recipeTabs.length, ...tabs.map(recipeTab));
 
   config.promptStart = json.promptStart?.trim?.() || prompts.start;
   config.promptFinal = json.promptFinal?.trim?.() || prompts.final;

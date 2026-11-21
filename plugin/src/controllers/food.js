@@ -1,15 +1,18 @@
-// The food page's controller (components/pages/food): its data (the foods and their marks, the
-// log, the free journals, the medication courses) and its writes: something eaten on a day (a
-// fuzzy search of the foods, or a new one with its marks), a food edited, an eaten one taken off,
-// a day's note, the marks edited.
+// The food page's controller (components/pages/food): its data (the food products and dishes
+// with their marks, the log, the free journals, the medication courses) and its writes: something
+// eaten on a day (a fuzzy search of the products and dishes, recently eaten first, or a new
+// product / dish), an eaten product edited in the market's catalog, an eaten one taken off, a
+// day's note, the marks edited, the training task.
 import { prepareFuzzySearch } from "obsidian";
 import { app } from "#/helpers/app.js";
 import { readJson } from "#/helpers/files.js";
 import { collection } from "#/helpers/collection.js";
 import { todayYmd } from "#/helpers/dates.js";
 import {
-  foodList, marksOf, newFoodId, withEaten, withFood, withMarks, withNote, withoutEaten, withTask,
+  foodChoices, marksOf, withEaten, withMarks, withNote, withoutEaten, withTask,
 } from "#/models/food.js";
+import { addProduct, askDish, readFoodCatalog } from "./dishes.js";
+import { editMarketItem } from "./widgets/market.js";
 import { readJournals } from "#/controllers/journals.js";
 import { forFood } from "#/models/course.js";
 import { T } from "#/models/calendarData.js";
@@ -18,9 +21,9 @@ import { pickTask } from "#/components/uikit/TaskSearch/index.js";
 import { taskStore } from "#/store/tasks.js";
 import { Search } from "#/components/uikit/Search/index.ts";
 import { Form } from "#/components/uikit/Form/index.ts";
-import { COURSES, FOOD_DATA, FOOD_LOG } from "#/helpers/paths.js";
+import { COURSES, DISHES, FOOD_DATA, FOOD_LOG } from "#/helpers/paths.js";
 
-// food.json (the foods, the marks, the training task) and log.json (the days): each write one
+// food.json (the marks and the training task) and log.json (the days): each write one
 // edit of its file
 const food = collection(FOOD_DATA), log = collection(FOOD_LOG);
 const readFood = () => readJson(FOOD_DATA, {});
@@ -32,69 +35,48 @@ const courses = async () =>
 
 export async function loadFood() {
   const [data, days, journals, taking] =
-    await Promise.all([readFood(), readJson(FOOD_LOG, {}), readJournals(), courses()]);
+    await Promise.all([readFoodCatalog(), readJson(FOOD_LOG, {}), readJournals(), courses()]);
 
   const id = data.task ?? null, rec = id && taskStore.records.get(id);
   const done = id ? taskStore.tasks.map(T).filter(t => t.id === id && t.isDone) : [];
   const task = id && { id, name: rec?.name ?? id, days: new Set(done.map(t => t.doneOn)) };
 
   return {
-    task, today: todayYmd(), foods: foodList(data), marks: marksOf(data), log: days, journals,
+    ...data, task, today: todayYmd(), log: days, journals,
     courses: taking,
   };
 }
 
-// a food's window: its name and a box per mark; null when closed
-async function askFood(food, title) {
-  const marks = marksOf(await readFood());
-  const v = await Form.ask(app, title, [
-    { name: "Name", key: "name", text: "каша с 4 ч" },
-    ...marks.map(m => ({ name: `${m.icon} ${m.name}`, key: m.tag, check: "" })),
-  ], {
-    values: { name: food.name, ...Object.fromEntries(food.marks.map(t => [t, true])) },
-    required: ["name"], submit: "Save",
-  });
-
-  return v && { ...food, name: v.name.trim(), marks: marks.filter(m => v[m.tag]).map(m => m.tag) };
-}
-
-// ＋ on a day: a food from the search (fuzzy), or a new one typed (its marks asked)
 export async function addEaten(date) {
-  const list = foodList(await readFood());
-  const find = q => {
-    const fuzzy = prepareFuzzySearch(q.trim()), named = list.some(f => f.name === q.trim());
-    const found = q.trim() ? list.filter(f => fuzzy(f.name)) : list;
+  const [data, days] = await Promise.all([readFoodCatalog(), readJson(FOOD_LOG, {})]);
+  const choices = foodChoices({ ...data, log: days, today: todayYmd() });
+  const pick = await Search.pick(app, "What was eaten…", query => {
+    const q = query.trim();
 
-    return q.trim() && !named ? [...found, { name: q.trim(), isNew: true }] : found;
-  };
+    if (!q) return choices;
+    const match = prepareFuzzySearch(q);
 
-  const pick = await Search.pick(app, "What was eaten…", find, (f, el) => {
-    el.createSpan({ text: f.isNew ? `+ new: ${f.name}` : f.name });
+    return [...choices.filter(c => match([c.name, ...c.ingredients].join(" "))),
+      { name: q, create: "product" }, { name: q, create: "dish" }];
+  }, (c, el) => {
+    const ingredients = c.kind === "dish" ? ` (${c.ingredients.join(", ")})` : "";
+    el.createSpan({ text: c.create ? `+ new ${c.create}: ${c.name}`
+      : `${c.kind === "dish" ? "🍲 " : ""}${c.name}${ingredients} ${c.icons}`.trim() });
   });
 
   if (!pick) return;
   let id = pick.id;
 
-  if (pick.isNew) {
-    const asked = await askFood({ name: pick.name, marks: [] }, `✦ ${pick.name}`);
-
-    if (!asked) return;
-    // the id taken inside the write, from the file as it is then
-    await food.edit(d => {
-      id = newFoodId(d);
-      return withFood(d, { ...asked, id });
-    });
-  }
-
-  await log.edit(l => withEaten(l, date, id));
+  if (pick.create === "product") id = await addProduct(pick.name);
+  if (pick.create === "dish") id = await askDish(app, { name: pick.name });
+  if (id) await log.edit(l => withEaten(l, date, id));
 }
 
-// ✎ a food: its name and marks (the log keeps its id, so every day shows the change)
-export async function editFood(id) {
-  const found = foodList(await readFood()).find(f => f.id === id);
-  const edited = found && await askFood(found, `✦ ${found.name}`);
+export async function editEaten(id) {
+  if (id.startsWith("m")) return editMarketItem(id);
+  const dish = (await readJson(DISHES, {}))[id];
 
-  if (edited) await food.edit(d => withFood(d, edited));
+  if (dish) return askDish(app, { ...dish, id });
 }
 
 export const removeEaten = (date, n) => log.edit(l => withoutEaten(l, date, n));

@@ -2,6 +2,7 @@
      ▶ resume: from today -->
 <script setup>
 import { computed, inject } from "vue";
+import { vHoldAction } from "#/composables/holdAction.js";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import GroupCard from "./GroupCard.vue";
 import TaskText from "#/components/pages/calendar/TaskText.vue";
@@ -66,6 +67,7 @@ const pause = c => {
       >{{ c.when }}</span>{{ c.history }}</template>
       <template #extra>
         <UiButton
+          v-hold-action="() => pause(c)"
           :title="c.button.title"
           :disabled="c.flip"
           @click="pause(c)"

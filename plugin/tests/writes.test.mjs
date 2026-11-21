@@ -316,11 +316,23 @@ test("🗑 on a pool card: out of the pool, its record and history kept; undo pu
   delete globalThis.document;
 });
 
-test("Missed? done on its own day: the Tasks plugin gets the task's note", async () => {
-  const day = "2026-11-01", seen = [];
-  vault({ [MASTER]: `- [ ] t1 [repeat:: every day] [due:: ${day}]\n` }, { t1: { name: "walk" } });
-  const t = { ...taskStore.tasks[0], line: 0 };
-  const TASKS = { executeToggleTaskDoneCommand: (line, path) => (seen.push(path), line) };
-  await makeActions({ today: "2026-11-02", TASKS }).doneOnItsDay(t);
-  assert.deepEqual(seen, [MASTER]);
+test("Missed? completes on its own day; Undo restores the original recurring task", async () => {
+  const parts = notices();
+  try {
+    const seen = [], day = "2026-11-01";
+    const before = `- [ ] t1 [repeat:: every day] [due:: ${day}]\n`;
+    const files = vault({ [MASTER]: before }, { t1: { name: "walk" } });
+    const t = { ...taskStore.tasks[0], line: 0 };
+    const TASKS = { executeToggleTaskDoneCommand(line, path) {
+      seen.push(path);
+      return line.replace("2026-11-01", "2026-11-03") + "\n"
+        + line.replace("[ ]", "[x]") + " [completion:: 2026-11-02]";
+    } };
+    await makeActions({ today: "2026-11-02", TASKS }).doneOnItsDay(t);
+    assert.deepEqual(seen, [MASTER]);
+    assert.ok(files[MASTER].includes(`[completion:: ${day}]`));
+    assert.equal(parts[1].textContent, "Undo");
+    await parts[1].onclick();
+    assert.equal(files[MASTER], before);
+  } finally { delete globalThis.document; }
 });

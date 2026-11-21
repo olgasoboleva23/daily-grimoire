@@ -55,6 +55,7 @@ export const taskWindow = async (preset = {}, required = false, { variants = tru
   for (;;) {
     const pick = await Form.ask(app, required ? "✦ New task" : "✦ Edit task", rows, {
       values, required: required ? ["difficulty", "area"] : [],
+      submit: "name" in preset && !required ? "Save" : "Next →",
     });
 
     if (!pick) return null;
