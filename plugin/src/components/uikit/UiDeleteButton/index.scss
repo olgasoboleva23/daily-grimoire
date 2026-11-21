@@ -1,0 +1,8 @@
+@use "mixins" as *;
+/* UiDeleteButton (block ui-del): armed, the same round button in red with ✓? (three classes over
+   the round kind's button.ui-btn.ui-btn--round; its size and font stay) */
+button.ui-btn.ui-del.ui-del--armed {
+  border-color: var(--ui-danger);
+  background: var(--ui-danger);
+  color: var(--ui-on-accent);
+}

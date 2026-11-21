@@ -23,14 +23,6 @@ $fade: 18px;   // the buttons' background fades in over this much of the text
 .ui-cal .ui-task__btns {
   display: flex;
   gap: $space-xs;
-  button.ui-task__btns-del--armed {
-    width: auto;
-    padding: 0 $space-m;
-    border-color: var(--ui-danger);
-    background: var(--ui-danger);
-    color: var(--ui-on-accent);
-    font-size: $text-m;
-  }
 }
 #{context.$desktop} {
     .ui-cal {

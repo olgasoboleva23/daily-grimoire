@@ -61,7 +61,7 @@ test("a bought item back on the list can be bought again; a line that changed me
   assert.ok(!tea().classes().includes("ui-market__item--bought"));   // free again
 });
 
-test("🗑: a tapped name shows it; the first click arms it, the second takes the line off unbought",
+test("🗑: a tapped name shows it; armed by the first click, the second takes the line off unbought",
   async () => {
     const { nextTick } = await import("vue");
     const { files } = vault({ [`${MARKET}.md`]: NOTE });
@@ -71,7 +71,7 @@ test("🗑: a tapped name shows it; the first click arms it, the second takes th
     await tea().find(".ui-market__text").trigger("click");
     assert.ok(tea().classes().includes("ui-market__item--open"));
     await tea().find(".ui-market__del").trigger("click");
-    assert.ok(tea().find(".ui-market__del").classes().includes("ui-market__del--armed"));
+    assert.ok(tea().find(".ui-market__del").classes().includes("ui-del--armed"));
     assert.equal(tea().find(".ui-market__del").text(), "✓?");
     assert.equal(files[`${MARKET}.md`], NOTE);
     await tea().find(".ui-market__del").trigger("click");

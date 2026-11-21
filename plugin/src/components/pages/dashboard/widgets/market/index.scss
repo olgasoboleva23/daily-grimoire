@@ -28,17 +28,9 @@
     font-size: $text-xl;
   }
 
-  /* 🗑: only on a row's hover or its name tapped (the phone has no hover); armed: red, ✓? */
-  button#{&}__del { display: none; }
+  /* 🗑: only on a row's hover or its name tapped (the phone has no hover), or while armed */
+  button#{&}__del:not(.ui-del--armed) { display: none; }
   &__item:hover button#{&}__del, &__item--open button#{&}__del { display: inline-flex; }
-  &__item button#{&}__del--armed {
-    width: auto;
-    padding: 0 $space-m;
-    border-color: var(--ui-danger);
-    background: var(--ui-danger);
-    color: var(--ui-on-accent);
-    font-size: $text-m;
-  }
 
   /* the bought button's tick (a UiButton add, jump): its own soft glow at rest */
   &__tick { width: 30px; height: 19.5px; filter: drop-shadow(0 0 1.5px var(--ui-highlight)); }

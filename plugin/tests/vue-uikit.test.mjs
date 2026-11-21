@@ -286,3 +286,24 @@ test("UiNav: the current item is the page; the one whose drawer is open, expande
   assert.deepEqual(items.map(b => b.attributes("aria-current")), [undefined, "page", undefined]);
   assert.deepEqual(items.map(b => b.attributes("aria-expanded")), [undefined, undefined, "true"]);
 });
+
+test("UiDeleteButton: the first click arms it (✓?, «click again») for 3 s, the second deletes",
+  async t => {
+    t.mock.timers.enable({ apis: ["setTimeout"] });
+    const Del = (await import("../src/components/uikit/UiDeleteButton/index.vue")).default;
+    const w = mount(Del, { props: { title: "delete task" } });
+    const b = () => w.find("button");
+
+    draws(w, '<button class="ui-btn ui-btn--round ui-del" aria-label="delete task" '
+      + 'data-tip="ui-tooltip">🗑</button>');
+    await b().trigger("click");
+    assert.equal(b().text(), "✓?");
+    assert.ok(b().classes().includes("ui-del--armed"));
+    assert.equal(b().attributes("aria-label"), "Click again to delete");
+    t.mock.timers.tick(3000); await nextTick();
+    assert.equal(b().text(), "🗑");
+    assert.equal(w.emitted("delete"), undefined);
+    await b().trigger("click"); await b().trigger("click");
+    assert.equal(w.emitted("delete").length, 1);
+    assert.equal(b().text(), "🗑");
+  });

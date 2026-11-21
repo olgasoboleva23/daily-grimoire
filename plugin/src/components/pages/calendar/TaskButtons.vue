@@ -1,10 +1,11 @@
 <!-- a task's hover buttons: ⏭ (a dated 🔁 one), ✏️ (the task window, then the Tasks dialog), 🗑
-     (click twice: the first arms it for 3 s); @gone when the task leaves (skipped, deleted) so
-     its row goes at once -->
+     (UiDeleteButton: click twice, the first arms it for 3 s; the phone: a hold); @gone when the
+     task leaves (skipped, deleted) so its row goes at once -->
 <script setup>
 import { vHoldAction } from "#/composables/holdAction.js";
-import { computed, inject, ref } from "vue";
+import { inject } from "vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiDeleteButton from "#/components/uikit/UiDeleteButton/index.vue";
 
 const props = defineProps({
   task: { type: Object, required: true },
@@ -14,10 +15,6 @@ const props = defineProps({
 });
 const emit = defineEmits(["gone"]);
 const view = inject("calendar");
-const armed = ref(false), disarmed = ref(false);
-const del = computed(() => armed.value
-  ? { text: "✓?", title: "Click again to delete" }
-  : { text: "🗑", title: disarmed.value ? "Delete task" : "delete task" });
 const edit = () => {
   const t = view.task(props.task.key);
 
@@ -40,13 +37,7 @@ const unplan = () => {
   view.actions.unplan(t);
 };
 
-async function remove(confirmed = false) {
-  if (!confirmed && !armed.value) {
-    armed.value = true;
-    window.setTimeout(() => { armed.value = false; disarmed.value = true; }, 3000);
-    return;
-  }
-
+async function remove() {
   const t = view.task(props.task.key);
 
   if (!t) return;
@@ -73,10 +64,10 @@ async function remove(confirmed = false) {
   <UiButton class="ui-task__btns-edit" :title="editTitle" @click="edit">
     <span class="ui-pencil">✏️</span>
   </UiButton>
-  <UiButton
-    v-hold-action="() => remove(true)"
-    :title="del.title"
-    :class="['ui-task__btns-del', { 'ui-task__btns-del--armed': armed }]"
-    @click="remove()"
-  >{{ del.text }}</UiButton>
+  <UiDeleteButton
+    v-hold-action="remove"
+    title="delete task"
+    class="ui-task__btns-del"
+    @delete="remove"
+  />
 </template>
