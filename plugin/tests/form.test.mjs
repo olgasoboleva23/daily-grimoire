@@ -250,3 +250,18 @@ test("Form: a pick row's picker gets the window's values (a new note named after
     await new Promise(r => setTimeout(r));
     assert.equal(form.values.link, "Stew.md");
   });
+
+test("Form: a pick's text is drawn again after its picker, the value the same (a product renamed)",
+  async () => {
+    const names = { m1: "rice" };
+    const form = createForm([{ name: "Product", key: "item", pick: async () => {
+      names.m1 = "brown rice";
+      return "m1";
+    }, show: id => names[id] }], { item: "m1" });
+    const button = () => form.contentEl.querySelector(".ui-form__pick");
+
+    button().click();
+    await new Promise(r => setTimeout(r));
+    await nextTick();
+    assert.equal(button().textContent.trim(), "brown rice");
+  });

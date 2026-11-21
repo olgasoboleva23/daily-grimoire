@@ -38,11 +38,14 @@ const wide = s => ("text" in s && !s.color) || "pick" in s;
 const cols = list && row.list.map(s => wide(s) ? "minmax(0, 1fr)" : "auto")
   .concat(row.fixed ? [] : "auto").join(" ");
 const narrow = s => "check" in s || !!s.color;
-// a pick row: what its picker gives (null: closed, the value stays)
+// a pick row: what its picker gives (null: closed, the value stays); its text drawn again after
+// (the same value can show a new name: a product renamed in its own window)
+const drawn = ref(0);
 const pick = async () => {
   const v = await row.pick(props.values);
 
   if (v) props.values[row.key] = v;
+  drawn.value++;
 };
 
 const choices = computed(() =>
@@ -135,7 +138,7 @@ const model = computed({
     <option v-for="(c, i) in row.select" :key="i" :value="c.value">{{ c.label }}</option>
   </select>
   <template v-else-if="'pick' in row">
-    <button class="ui-form__pick" @click="pick">
+    <button :key="drawn" class="ui-form__pick" @click="pick">
       {{ values[row.key] ? (row.show?.(values[row.key]) ?? values[row.key]) : "Choose…" }}
     </button>
     <button

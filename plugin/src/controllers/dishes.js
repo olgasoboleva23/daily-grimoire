@@ -15,7 +15,7 @@ import { dishList, marksOf, recipeCourse } from "#/models/food.js";
 import { validNoteLink } from "./journal.js";
 import { createNote } from "./notes.js";
 import { KINDS } from "#/models/kinds.js";
-import { addProduct, addToMarket } from "./widgets/market.js";
+import { addProduct, addToMarket, editMarketItem } from "./widgets/market.js";
 import { Form } from "#/components/uikit/Form/index.ts";
 import { Search } from "#/components/uikit/Search/index.ts";
 
@@ -118,19 +118,28 @@ export async function pickRecipeNote(app, dish = "") {
 
 export async function askDish(app, dish = null, ask = Form.ask.bind(Form)) {
   const items = new Map((await products()).map(p => [p.id, p.name]));
+
+  const named = async id => {
+    items.set(id, (await readJson(MARKET_RECORDS, {}))[id]?.name ?? id);
+    return id;
+  };
+
+  // a line's product: chosen, its own edit window (a name, marks); none yet, the picker
+  const product = async line => {
+    if (line.item) {
+      await editMarketItem(line.item);
+      return named(line.item);
+    }
+
+    const id = await pickProduct(app);
+
+    return id && !items.has(id) ? named(id) : id;
+  };
+
   const values = await ask(app, dish?.id ? "Edit dish" : "New dish", [
     { name: "Name", key: "name", text: "Dish name" },
     { name: "Ingredients", key: "ingredients", required: ["item"], list: [
-      { name: "Product", key: "item", pick: async () => {
-        const id = await pickProduct(app);
-
-        if (id && !items.has(id)) {
-          const catalog = await readJson(MARKET_RECORDS, {});
-          items.set(id, catalog[id]?.name ?? id);
-        }
-
-        return id;
-      }, show: id => items.get(id) ?? id },
+      { name: "Product", key: "item", pick: product, show: id => items.get(id) ?? id },
       { name: "Amount", key: "amount", text: "500 г" },
     ] },
     { name: "Note", key: "link", pick: v => pickRecipeNote(app, v.name), show: noteName },

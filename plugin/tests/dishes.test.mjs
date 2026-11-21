@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { addDish, askDish, dishToList, editDish, loadRecipes, removeDish } from "#/controllers/dishes.js";
 import { addEaten, loadFood } from "#/controllers/food.js";
 import { Search } from "#/components/uikit/Search/index.ts";
+import { Form } from "#/components/uikit/Form/index.ts";
 import { foodChoices, foodWeek } from "#/models/food.js";
 import { DISHES, FOOD_DATA, FOOD_LOG, MARKET_NOTE, MARKET_RECORDS } from "#/helpers/paths.js";
 import { KINDS } from "#/models/kinds.js";
@@ -155,3 +156,22 @@ test("changing recipe tab order reclassifies an existing dish", async () => {
     assert.equal((await loadRecipes()).dishes[0].course, "quick");
   } finally { applyConfig(); }
 });
+
+test("the dish form: a line's product opens its edit window (not the picker); the line shows the new name",
+  async t => {
+    const { app, files } = fixture();
+    t.mock.method(Search, "pick", async () => assert.fail("no picker on a chosen product"));
+    t.mock.method(Form, "ask", async (_app, title, _rows, { values }) => {
+      assert.equal(title, "Edit item");
+      return { ...values, name: "Green peas" };
+    });
+
+    await askDish(app, dish, async (_app, _title, rows) => {
+      const product = rows.find(r => r.key === "ingredients").list[0];
+
+      assert.equal(await product.pick({ item: "m1", amount: "2" }), "m1");
+      assert.equal(product.show("m1"), "Green peas");
+      return null;
+    });
+    assert.equal(JSON.parse(files[MARKET_RECORDS]).m1.name, "Green peas");
+  });
