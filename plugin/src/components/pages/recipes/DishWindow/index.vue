@@ -1,8 +1,8 @@
 <!-- A dish's window content (block ui-dish; DishWindow/index.ts opens it): its marks, its
-     ingredients with their amounts («beef / chicken»: an alternative; a product gone: struck
-     out), the buttons (🛒 its products onto the shopping list, asked first; ✏️ the dish form, 📄
-     the recipe note, 🗑), then the note's steps drawn by Obsidian (without its properties). An
-     ordered dish has no note -->
+     ingredients with their amounts (an alternative's products under theirs, «↳ chicken 500 г»;
+     a product gone: struck out), the buttons (🛒 its products onto the shopping list, asked
+     first; ✏️ the dish form, 📄 the recipe note, 🗑), then the note's steps drawn by Obsidian
+     (without its properties). An ordered dish has no note -->
 <script setup>
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { MarkdownRenderer, Notice } from "obsidian";
@@ -54,8 +54,7 @@ const act = async write => {
 const cart = () => act(() => toList(d.value));
 
 const edit = () => act(async () => {
-  if (await askDish(app, { ...d.value, ingredients: d.value.ingredients
-    .map(({ item, amount }) => ({ item, amount })) })) await load();
+  if (await askDish(app, d.value)) await load();
 });
 
 function open(e) {
@@ -83,8 +82,16 @@ const remove = () => act(async () => {
         :key="n"
         :class="['ui-dish__ingredient', { 'ui-dish__ingredient--gone': i.name === i.item }]"
       >
-        <span class="ui-dish__product">{{ i.alt ? `${i.name} / ${i.altName}` : i.name }}</span>
+        <span class="ui-dish__product">{{ i.name }}</span>
         <span v-if="i.amount" class="ui-dish__amount">{{ i.amount }}</span>
+        <div
+          v-for="(a, k) in i.alt"
+          :key="k"
+          :class="['ui-dish__alt', { 'ui-dish__alt--gone': a.name === a.item }]"
+        >
+          ↳ <span class="ui-dish__product">{{ a.name }}</span>
+          <span v-if="a.amount" class="ui-dish__amount">{{ a.amount }}</span>
+        </div>
       </li>
     </ul>
     <div class="ui-dish__bar">

@@ -1,7 +1,9 @@
 <!-- Celestial Market: the list by category, a round ✓ per item (the sparkle plays, then it's
      written as bought), what runs low soon, and links to the market and the supplies. 🗑 takes a
      line off unbought: shown on a row's hover (the phone: a tap on its name), UiDeleteButton (the
-     first click arms it, the second one removes) -->
+     first click arms it, the second one removes). The amounts the recipes put (🛒): one after
+     the name, several a ⚖ count, each «dish — amount» in its tooltip and, on the tap, listed
+     under the name -->
 <script setup>
 import { inject, reactive, ref, watch } from "vue";
 import { Keymap } from "obsidian";
@@ -12,6 +14,7 @@ import UiGroupHeader from "#/components/uikit/UiGroupHeader.vue";
 import UiNoteLink from "#/components/uikit/UiNoteLink.vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import UiDeleteButton from "#/components/uikit/UiDeleteButton/index.vue";
+import { vTip } from "#/components/uikit/tooltip.js";
 import { MARKET } from "#/helpers/paths.js";
 import { editMarketItem, buyMarketItem, removeMarketItem } from "#/controllers/widgets/market.js";
 
@@ -37,8 +40,10 @@ async function buy(r) {
   }
 }
 
-// 🗑: the row whose name was tapped (the phone has no hover)
+// 🗑 and the amounts' list: the row whose name was tapped (the phone has no hover)
 const open = ref(null);
+// a dish's need of a row's product: "Pilaf — 900 g", or the dish alone
+const need = n => n.amount ? `${n.dish} — ${n.amount}` : n.dish;
 
 // a row gone from the list lets go of its mark: back on the list later, it can be bought again
 watch(() => props.state.data.groups, groups => {
@@ -64,10 +69,22 @@ watch(() => props.state.data.groups, groups => {
             'ui-market__item--open': open === key(r),
           }"
         >
-          <span
-            class="ui-market__text ui-grow"
-            @click="open = open === key(r) ? null : key(r)"
-          >{{ r.name }}</span>
+          <div class="ui-market__text ui-grow" @click="open = open === key(r) ? null : key(r)">
+            {{ r.name }}
+            <span
+              v-if="r.needs?.length > 1"
+              v-tip="r.needs.map(n => `• ${need(n)}`).join('\n')"
+              class="ui-market__need"
+            >⚖{{ r.needs.length }}</span>
+            <span
+              v-else-if="r.needs?.[0]?.amount"
+              v-tip="need(r.needs[0])"
+              class="ui-market__need"
+            >{{ r.needs[0].amount }}</span>
+            <ul v-if="open === key(r) && r.needs?.length" class="ui-market__needs">
+              <li v-for="(n, k) in r.needs" :key="k">{{ need(n) }}</li>
+            </ul>
+          </div>
           <UiDeleteButton
             title="off the list"
             class="ui-market__del"

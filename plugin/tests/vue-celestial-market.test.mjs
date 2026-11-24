@@ -78,3 +78,29 @@ test("🗑: a tapped name shows it; armed by the first click, the second takes t
     await new Promise(r => setTimeout(r)); await nextTick();
     assert.equal(files[`${MARKET}.md`], "# Market\n\n## 🌿 Harvest\n\n- [ ] m2\n");
   });
+
+test("a row's amounts: one shows after the name, several a ⚖ count; a tap on the name lists them",
+  async () => {
+    const rows = [
+      { line: 3, id: "m1", name: "chicken thigh", needs: [
+        { dish: "Pilaf", amount: "900 g" }, { dish: "Soup", amount: "400 g" }] },
+      { line: 5, id: "m2", name: "rice", needs: [{ dish: "Pilaf", amount: "2 cups" }] },
+      { line: 6, id: "m3", name: "salt", needs: [{ dish: "Soup", amount: "" }] },
+      { line: 7, id: "m4", name: "tea", needs: [] },
+    ];
+    const w = mount(View, { props: { state: { data: { ...data, groups: [{ label: "x", rows }] } } } });
+    const items = w.findAll(".ui-market__item");
+    const need = i => items[i].find(".ui-market__need");
+
+    assert.equal(need(0).text(), "⚖2");
+    assert.equal(need(1).text(), "2 cups");
+    assert.equal(need(2).exists(), false);
+    assert.equal(need(3).exists(), false);
+    assert.equal(items[0].find(".ui-market__needs").exists(), false);
+    await items[0].find(".ui-market__text").trigger("click");
+    assert.deepEqual(w.findAll(".ui-market__item")[0].findAll(".ui-market__needs li")
+      .map(l => l.text()), ["Pilaf — 900 g", "Soup — 400 g"]);
+    await items[2].find(".ui-market__text").trigger("click");
+    assert.deepEqual(w.findAll(".ui-market__item")[2].findAll(".ui-market__needs li")
+      .map(l => l.text()), ["Soup"]);
+  });

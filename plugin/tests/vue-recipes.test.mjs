@@ -114,21 +114,36 @@ test("the recipes page: a dish's name opens its window; 🛒 asks, then puts its
     const button = w.findAll(".ui-recipes__cart")[1];
 
     assert.deepEqual(await cart(button, null),
-      [["To the shopping list?", { dish: "Porridge",
-        lines: [{ on: true, name: "oats" }, { on: true, name: "milk" }] }]]);
+      [["To the shopping list?", { dish: "Porridge", lines: [
+        { on: true, name: "oats", amount: "1 cup" }, { on: true, name: "milk", amount: "" }] }]]);
     assert.equal(written[`${MARKET}.md`], "");
     await cart(button, {});
-    assert.equal(written[`${MARKET}.md`].trim().split("\n").length, 2);
-    assert.match(Notice.last, /2/);
+    assert.deepEqual(written[`${MARKET}.md`].trim().split("\n"),
+      ["- [ ] m1 [need:: Porridge · 1 cup]", "- [ ] m2 [need:: Porridge]"]);
+    assert.match(Notice.last, /2 → Celestial Market/);
   });
+
+test("🛒: a product on the list already gets the dish's amount; the notice says so", async () => {
+  const { files: written } = vault({
+    [MARKET_RECORDS]: JSON.stringify(ITEMS), [DISHES]: JSON.stringify(DISH),
+    [FOOD_DATA]: JSON.stringify({ marks: MARKS }),
+    [`${MARKET}.md`]: "- [ ] m1 [need:: Muesli · 2 cups]\n",
+  });
+  const w = await page();
+
+  await cart(w.findAll(".ui-recipes__cart")[1], {});
+  assert.deepEqual(written[`${MARKET}.md`].trim().split("\n"), [
+    "- [ ] m1 [need:: Muesli · 2 cups] [need:: Porridge · 1 cup]", "- [ ] m2 [need:: Porridge]"]);
+  assert.match(Notice.last, /1 → Celestial Market.*1 on the list already/);
+});
 
 test("the dish window: 🛒 asks too, then puts the dish's products on the list", async () => {
   const { files: written } = files();
   const w = mount(DishView, { props: { dish: "d2", owner: new Component() } });
 
   await tick(); await tick();
-  assert.deepEqual(await cart(w.find(".ui-dish__cart"), {}),
-    [["To the shopping list?", { dish: "Cake from the café", lines: [{ on: true, name: "cocoa" }] }]]);
+  assert.deepEqual(await cart(w.find(".ui-dish__cart"), {}), [["To the shopping list?",
+    { dish: "Cake from the café", lines: [{ on: true, name: "cocoa", amount: "" }] }]]);
   assert.equal(written[`${MARKET}.md`].trim().split("\n").length, 1);
 });
 
@@ -223,39 +238,52 @@ test("⚙ Settings: a Recipes tab, a line a page tab (its tag, its name)", async
   assert.deepEqual(row.required, ["key", "name"]);
 });
 
-test("an alternative: «oats / cocoa» on the page and in the window; 🛒 asks which one goes",
-  async () => {
-    const { files: written } = vault({
-      [MARKET_RECORDS]: JSON.stringify(ITEMS), [FOOD_DATA]: JSON.stringify({ marks: MARKS }),
-      [DISHES]: JSON.stringify({ d1: { ...DISH.d1, ingredients: [
-        { item: "m1", amount: "1 cup", alt: "m3" }, { item: "m2", amount: "" }] } }),
-      [`${MARKET}.md`]: "",
-    });
-    const w = await page();
-
-    assert.equal(w.find(".ui-recipes__ingredients").text(), "oats / cocoa, milk");
-    const ask = Form.ask;
-    let asked;
-
-    Form.ask = async (_app, _title, rows, { values }) => {
-      asked = { rows, values };
-      return { ...values, alt0: "m3" };
-    };
-    try { await w.find(".ui-recipes__cart").trigger("click"); await tick(); await tick(); } finally {
-      Form.ask = ask;
-    }
-    const choice = asked.rows.find(r => r.key === "alt0");
-
-    assert.deepEqual(choice.options, [{ label: "oats", value: "m1" }, { label: "cocoa", value: "m3" }]);
-    assert.equal(asked.values.alt0, "m1");
-    assert.deepEqual(asked.values.lines.map(l => l.name), ["oats / cocoa", "milk"]);
-    assert.deepEqual(written[`${MARKET}.md`].trim().split("\n").sort(), ["- [ ] m2", "- [ ] m3"]);
-
-    const win = mount(DishView, { props: { dish: "d1", owner: new Component() } });
-
-    await tick(); await tick();
-    assert.equal(win.find(".ui-dish__product").text(), "oats / cocoa");
+test("an alternative of two products: «oats / cocoa + milk» on the page, each with its amount "
+  + "under the main one in the window and in 🛒 (unticked there)", async () => {
+  const { files: written } = vault({
+    [MARKET_RECORDS]: JSON.stringify(ITEMS), [FOOD_DATA]: JSON.stringify({ marks: MARKS }),
+    [DISHES]: JSON.stringify({ d1: { ...DISH.d1, ingredients: [{ item: "m1", amount: "1 cup",
+      alt: [{ item: "m3", amount: "2 tsp" }, { item: "m2", amount: "1 glass" }] }] } }),
+    [`${MARKET}.md`]: "",
   });
+  const w = await page();
+
+  assert.equal(w.find(".ui-recipes__ingredients").text(), "oats / cocoa + milk");
+  const ask = Form.ask;
+  let asked;
+
+  Form.ask = async (_app, _title, _rows, { values }) => {
+    asked = values;
+    return { ...values, lines: values.lines.map(l => ({ ...l, on: !l.on })) };
+  };
+  try { await w.find(".ui-recipes__cart").trigger("click"); await tick(); await tick(); } finally {
+    Form.ask = ask;
+  }
+  assert.deepEqual(asked.lines, [{ on: true, name: "oats", amount: "1 cup" },
+    { on: false, name: "↳ cocoa", amount: "2 tsp" }, { on: false, name: "↳ milk", amount: "1 glass" }]);
+  assert.deepEqual(written[`${MARKET}.md`].trim().split("\n"),
+    ["- [ ] m3 [need:: Porridge · 2 tsp]", "- [ ] m2 [need:: Porridge · 1 glass]"]);
+
+  const win = mount(DishView, { props: { dish: "d1", owner: new Component() } });
+
+  await tick(); await tick();
+  assert.deepEqual(win.findAll(".ui-dish__alt").map(a =>
+    [a.find(".ui-dish__product").text(), a.find(".ui-dish__amount").text()]),
+  [["cocoa", "2 tsp"], ["milk", "1 glass"]]);
+});
+
+test("🛒: an amount changed in the window goes onto the list", async () => {
+  const { files: written } = files();
+  const w = await page();
+  const ask = Form.ask;
+
+  Form.ask = async (_app, _title, _rows, { values }) =>
+    ({ ...values, lines: values.lines.map(l => ({ ...l, amount: l.name === "oats" ? "2 cups" : "" })) });
+  try {
+    await w.findAll(".ui-recipes__cart")[1].trigger("click"); await tick(); await tick();
+  } finally { Form.ask = ask; }
+  assert.match(written[`${MARKET}.md`], /m1 \[need:: Porridge · 2 cups\]/);
+});
 
 test("🛒: a line a checkbox, all ticked; an unticked line stays off the list", async () => {
   const { files: written } = files();
@@ -273,8 +301,8 @@ test("🛒: a line a checkbox, all ticked; an unticked line stays off the list",
   const list = rows.find(r => r.key === "lines");
 
   assert.equal(list.fixed, true);
-  assert.deepEqual(list.list.map(r => r.key), ["on", "name"]);
-  assert.equal(written[`${MARKET}.md`].trim(), "- [ ] m1");
+  assert.deepEqual(list.list.map(r => r.key), ["on", "name", "amount"]);
+  assert.equal(written[`${MARKET}.md`].trim(), "- [ ] m1 [need:: Porridge · 1 cup]");
 });
 
 test("🛒: all unticked: nothing is added, and the notice says so", async () => {
@@ -289,4 +317,27 @@ test("🛒: all unticked: nothing is added, and the notice says so", async () =>
   } finally { Form.ask = ask; }
   assert.equal(written[`${MARKET}.md`], "");
   assert.match(Notice.last, /nothing ticked/);
+});
+
+test("✏️ on the page and in the dish window: the form gets each line's alternative", async () => {
+  vault({
+    [MARKET_RECORDS]: JSON.stringify(ITEMS), [FOOD_DATA]: JSON.stringify({ marks: MARKS }),
+    [DISHES]: JSON.stringify({ d1: { ...DISH.d1, ingredients: [
+      { item: "m1", amount: "1 cup", alt: [{ item: "m3", amount: "2 tsp" }] }] } }),
+  });
+  const ask = Form.ask, asked = [];
+
+  Form.ask = async (_app, _title, _rows, { values }) => { asked.push(values); return null; };
+  try {
+    const w = await page();
+
+    await w.find("[aria-label='edit the dish']").trigger("click"); await tick(); await tick();
+    const win = mount(DishView, { props: { dish: "d1", owner: new Component() } });
+
+    await tick(); await tick();
+    await win.find(".ui-dish__edit").trigger("click"); await tick(); await tick();
+  } finally { Form.ask = ask; }
+  assert.equal(asked.length, 2);
+  for (const values of asked)
+    assert.deepEqual(values.ingredients[0].alt.map(a => [a.item, a.amount]), [["m3", "2 tsp"]]);
 });

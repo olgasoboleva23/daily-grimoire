@@ -16,6 +16,7 @@
     &::marker { color: var(--ui-purple); }
     &--gone { color: var(--text-muted); text-decoration: line-through; }
   }
+  &__alt--gone { color: var(--text-muted); text-decoration: line-through; }
   &__amount { margin-left: $space-s; color: var(--text-muted); }
   &__bar { @include row; flex-wrap: wrap; gap: $space-s; }
   &__note { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

@@ -1,6 +1,6 @@
 // The food journal (pure; tests/food.test.mjs). The products are the market's items of type
 // food (Market/items.json: { name, type, marks: [tag] }); a dish (dishes.json: { name, type,
-// ingredients: [{ item, amount, alt? }], link }) counts each main product's marks once per dish.
+// ingredients: [{ item, amount, alt?: [{ item, amount }] }], link }) uses its main products' marks.
 // food.json: the marks ({ tag, icon, name }: a tag kept once made, so a mark renamed keeps its
 // products) and the training task's id. log.json: a day by date, { eaten: [product or dish id],
 // note }; a day with nothing eaten and no note isn't kept. The picker's order: recently eaten
@@ -26,13 +26,18 @@ export function dishList({ items, dishes }) {
   return dishes.map(d => {
     const marks = new Set();
     let missing = false;
-    const ingredients = d.ingredients.map(({ item, amount, alt = "" }) => {
+    const ingredients = d.ingredients.map(({ item, amount, alt }) => {
       const product = products.get(item);
-      const alternative = products.get(alt);
+      const alternatives = (Array.isArray(alt) ? alt : []).map(({ item, amount }) => {
+        const replacement = products.get(item);
 
-      if (!product || (alt && !alternative)) missing = true;
+        if (!replacement) missing = true;
+        return { item, amount, name: replacement?.name ?? item };
+      });
+
+      if (!product) missing = true;
       for (const tag of product?.marks ?? []) marks.add(tag);
-      return { item, amount, name: product?.name ?? item, alt, altName: alternative?.name ?? alt };
+      return { item, amount, name: product?.name ?? item, alt: alternatives };
     });
 
     return { ...d, ingredients, marks: [...marks], missing };
@@ -45,7 +50,8 @@ function menu(data) {
 
   return new Map(entries.map(f => [f.id, {
     id: f.id, kind: f.ingredients ? "dish" : "item", name: f.name,
-    ingredients: f.ingredients?.map(i => i.alt ? `${i.name} / ${i.altName}` : i.name) ?? [],
+    ingredients: f.ingredients?.map(i =>
+      i.alt.length ? `${i.name} / ${i.alt.map(a => a.name).join(" + ")}` : i.name) ?? [],
     marks: f.marks,
     icons: f.marks.map(tag => icons.get(tag) ?? "").join(""),
   }]));

@@ -202,3 +202,16 @@ test("the morning summary: today's open tasks and the overdue ones as the calend
     t("-", "2026-11-06"), t("x", "2026-11-05"), t(" ", "2026-11-12")];
   assert.deepEqual(dayCounts(tasks, "2026-11-10"), { due: 1, overdue: 2 });   // a skipped copy isn't overdue
 });
+
+test("MarketItem keeps repeated needs in line order through purchase", () => {
+  const line = "- [ ] m1 [need:: Stew · 900 g] [need:: Soup] [need:: Salad · 400 g]";
+  const item = new MarketItem(line);
+  const needs = [
+    { dish: "Stew", amount: "900 g" }, { dish: "Soup", amount: "" },
+    { dish: "Salad", amount: "400 g" },
+  ];
+  assert.deepEqual(item.needs, needs);
+  const bought = new MarketItem(item.bought("2026-11-24"));
+  assert.deepEqual(bought.needs, needs);
+  assert.equal(bought.doneOn, "2026-11-24");
+});

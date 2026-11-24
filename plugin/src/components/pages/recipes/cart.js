@@ -1,39 +1,44 @@
 // 🛒 a dish's products onto the shopping list (the recipes page's and a dish's window's button):
-// asked first (the dish; for a line with an alternative, which one, its main product picked;
-// then a checkbox a line, all ticked: untick what's at home), then put; a notice says how many
-// went on (those on the list already stay as they are)
+// asked first (the dish; a checkbox a product with its amount, the main ones ticked, an
+// alternative's products under theirs, unticked: tick what you'll cook with, untick what's at
+// home, change an amount), then put, each with the dish and its amount; a notice says how many
+// lines went on and how many were on the list already (those got the amount)
 import { Notice } from "obsidian";
 import { Form } from "#/components/uikit/Form/index.ts";
 import { app } from "#/helpers/app.js";
 import { productsToList } from "#/controllers/dishes.js";
 
-// dish: loadRecipes's ({ id, name, ingredients: [{ item, name, alt, altName }] })
+// a dish's ingredient as the page writes it: "paste / powder + garlic"
+export const ingredientText = i =>
+  i.alt.length ? `${i.name} / ${i.alt.map(a => a.name).join(" + ")}` : i.name;
+
+// dish: loadRecipes's ({ name, ingredients: [{ item, amount, name, alt: [{ item, amount, name }]
+// }] })
 export async function toList(dish) {
-  const lines = dish.ingredients.map((i, n) => ({ ...i, key: `alt${n}` }));
-  const choices = lines.filter(i => i.alt);
+  const products = dish.ingredients.flatMap(i => [{ ...i, on: true },
+    ...i.alt.map(a => ({ ...a, on: false, name: `↳ ${a.name}` }))]);
   const values = await Form.ask(app, "To the shopping list?", [
     { name: "Dish", key: "dish", label: true },
-    ...choices.map(i => ({ name: i.name, key: i.key, options: [
-      { label: i.name, value: i.item }, { label: i.altName, value: i.alt },
-    ] })),
     { name: "Products", key: "lines", fixed: true, list: [
       { name: "Buy", key: "on", check: "" },
       { name: "Product", key: "name", label: true },
+      { name: "Amount", key: "amount", text: "500 г" },
     ] },
   ], {
     values: {
-      dish: dish.name, ...Object.fromEntries(choices.map(i => [i.key, i.item])),
-      lines: lines.map(i => ({ on: true, name: i.alt ? `${i.name} / ${i.altName}` : i.name })),
+      dish: dish.name, lines: products.map(({ on, name, amount }) => ({ on, name, amount })),
     },
     submit: "Add",
   });
 
   if (!values) return;
-  // the ticked lines, each its product picked (no choice: its main one)
-  const ids = lines.filter((_, k) => values.lines[k].on).map(i => values[i.key] || i.item);
+  const lines = products.flatMap((p, k) => values.lines[k].on
+    ? [{ item: p.item, amount: values.lines[k].amount?.trim() ?? "", dish: dish.name }] : []);
 
-  if (!ids.length) return void new Notice("✦ nothing ticked, nothing added");
-  const n = await productsToList(ids);
+  if (!lines.length) return void new Notice("✦ nothing ticked, nothing added");
+  const { added, joined } = await productsToList(lines);
+  const said = [added && `${added} → Celestial Market`, joined && `${joined} on the list already`];
 
-  new Notice(n ? `✦ ${n} → Celestial Market` : "✦ all of it is on the list already");
+  new Notice(`✦ ${said.filter(Boolean).join(", ") || "all of it is on the list already"}`
+    + (joined ? " (amount added)" : ""));
 }

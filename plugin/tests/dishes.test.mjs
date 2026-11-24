@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import {
   addDish, askDish, editDish, loadRecipes, productsToList, removeDish,
 } from "#/controllers/dishes.js";
+import { loadCelestialMarket } from "#/controllers/widgets/market.js";
 import { addEaten, loadFood } from "#/controllers/food.js";
 import { Search } from "#/components/uikit/Search/index.ts";
 import { Form } from "#/components/uikit/Form/index.ts";
@@ -66,15 +67,36 @@ test("concurrent dish adds use distinct ids; invalid links preserve data; logged
   assert.equal(await addDish(dish), "d3");
 });
 
-test("only selected food products are added, once even across concurrent clicks", async () => {
+test("market amounts are merged by product and kept by dish across concurrent clicks", async () => {
   const { files } = fixture();
-  files[MARKET_NOTE] = "- [x] m1";
-  const selected = ["m2", "m2", "missing", "m3"];
-  const counts = await Promise.all([productsToList(selected), productsToList(selected)]);
-  assert.deepEqual(counts.sort(), [0, 1]);
-  assert.equal(await productsToList(["m2"]), 0);
-  assert.equal(await productsToList([]), 0);
-  assert.equal(files[MARKET_NOTE], "- [x] m1\n- [ ] m2\n");
+  files[MARKET_NOTE] = "## Shopping\r\n- [ ] m1\r\n- [x] m2 [completion:: 2026-11-20]\r\n";
+  const stew = { item: "m1", amount: "900 g", dish: "Stew [large]" };
+  const side = { item: "m2", amount: "", dish: "Side" };
+  const results = await Promise.all([
+    productsToList([stew, stew, side, { ...side, item: "m3" }, { ...side, item: "m99" }]),
+    productsToList([{ ...stew, dish: "Soup", amount: "400 g" }, side,
+      { ...side, dish: "Salad", amount: "[to taste]" }]),
+  ]);
+  assert.deepEqual(results, [{ added: 1, joined: 1 }, { added: 0, joined: 2 }]);
+  assert.deepEqual(await productsToList([stew, side]), { added: 0, joined: 0 });
+  assert.deepEqual(await productsToList([]), { added: 0, joined: 0 });
+  assert.equal(files[MARKET_NOTE], [
+    "## Shopping", "- [ ] m1 [need:: Stew (large) · 900 g] [need:: Soup · 400 g]",
+    "- [x] m2 [completion:: 2026-11-20]", "- [ ] m2 [need:: Side] [need:: Salad · (to taste)]", "",
+  ].join("\r\n"));
+  const rows = (await loadCelestialMarket()).groups.flatMap(g => g.rows);
+  assert.deepEqual(rows.find(r => r.id === "m2").needs,
+    [{ dish: "Side", amount: "" }, { dish: "Salad", amount: "(to taste)" }]);
+});
+
+test("a new shopping list keeps both amounts on its first product line", async () => {
+  const { files } = fixture();
+  delete files[MARKET_NOTE];
+  const lines = [
+    { item: "m1", dish: "Stew", amount: "4" }, { item: "m1", dish: "Soup", amount: "2" },
+  ];
+  assert.deepEqual(await productsToList(lines), { added: 1, joined: 0 });
+  assert.equal(files[MARKET_NOTE], "- [ ] m1 [need:: Stew · 4] [need:: Soup · 2]\n");
 });
 
 test("dish form saves the picked products and the note path", async () => {
@@ -179,35 +201,46 @@ test("the dish form: a line's product opens its edit window (not the picker); th
     assert.equal(JSON.parse(files[MARKET_RECORDS]).m1.name, "Green peas");
   });
 
-test("an ingredient saves its alternative and clears it on edit", async () => {
+test("an ingredient stores alternatives with separate amounts and can clear them", async () => {
   const { files } = fixture();
-  const line = { item: "m1", amount: "2", alt: "m2" };
-  const id = await addDish({ ...dish, ingredients: [line, line] });
+  const alt = [{ item: "m2", amount: "3" }, { item: "m4", amount: "a pinch" }];
+  const line = { item: "m1", amount: "2", alt };
+  const id = await addDish({ ...dish, ingredients: [line] });
   const stored = () => JSON.parse(files[DISHES])[id].ingredients;
-  assert.deepEqual(stored(), [line, line]);
-  await editDish(id, { ...dish, ingredients: ["", "  ", 9].map(alt => ({ ...line, alt })) });
-  assert.deepEqual(stored(), Array(3).fill({ item: "m1", amount: "2" }));
+  assert.deepEqual(stored(), [line]);
+  await editDish(id, { ...dish, ingredients: [{ ...line, alt: [{ amount: "1" }] }] });
+  assert.deepEqual(stored(), [{ item: "m1", amount: "2" }]);
   const loaded = (await loadRecipes()).dishes.find(d => d.id === id);
-  assert.deepEqual([loaded.ingredients[0].alt, loaded.ingredients[0].altName], ["", ""]);
+  assert.deepEqual(loaded.ingredients[0].alt, []);
 });
 
-test("the Or picker can select, clear, cancel or create an alternative", async t => {
+test("the Or form edits a copy and can save several products, clear or cancel", async t => {
   const { app } = fixture();
-  let choose;
-  t.mock.method(Search, "pick", async (_app, _title, choices) => choose(choices));
+  const alt = [{ item: "m2", amount: "3" }];
+  t.mock.method(Search, "pick", async (_app, _title, choices) => choices("Lentils").at(-1));
   t.mock.method(Form, "ask", async (_app, _title, _rows, { values }) => values);
-  await askDish(app, dish, async (_app, _title, rows) => {
+  let form;
+  await askDish(app, dish, async (_app, title, rows, options) => {
+    if (title.startsWith("Instead of")) return form(title, rows, options);
     const fields = rows.find(r => r.key === "ingredients").list;
     assert.deepEqual(fields.map(f => f.name), ["Product", "Or", "Amount"]);
     const or = fields[1];
-    choose = choices => choices("Beans")[1];
-    assert.equal(or.show(await or.pick({})), "Beans");
-    choose = choices => choices("")[0];
-    assert.equal(await or.pick({ alt: "m2" }), "");
-    choose = () => null;
-    assert.equal(await or.pick({ alt: "m2" }), null);
-    choose = choices => choices("Lentils").at(-1);
-    assert.equal(or.show(await or.pick({})), "Lentils");
+    form = async (heading, [row], { values, submit }) => {
+      assert.equal(heading, "Instead of Peas");
+      assert.equal(submit, "OK");
+      assert.equal(row.key, "alt");
+      values.alt[0].amount = "7";
+      values.alt.push({ item: await row.list[0].pick({}), amount: "1" }, { amount: "2" });
+      return values;
+    };
+    const next = await or.pick({ item: "m1", alt });
+    assert.deepEqual(next.map(a => a.amount), ["7", "1"]);
+    assert.equal(or.show(next), "Beans + Lentils");
+    assert.equal(alt[0].amount, "3");
+    form = title => { assert.equal(title, "Instead of …"); return { alt: [] }; };
+    assert.deepEqual(await or.pick({}), []);
+    form = () => null;
+    assert.equal(await or.pick({ item: "m1", alt }), null);
     return null;
   });
 });

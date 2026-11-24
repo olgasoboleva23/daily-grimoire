@@ -73,13 +73,15 @@ export async function editMarketItem(id, ask = Form.ask.bind(Form)) {
   if (!saved) new Notice("Item changed. Open it again to edit.");
 }
 
+const parseMarket = text => parseNote(MARKET_NOTE, text.replace(/\r\n/g, "\n"));
+
 // Read the log and catalog together, without waiting for Dataview's index. Missing records show
 // their ID instead of another item.
 async function marketState() {
   const file = app.vault.getFileByPath(MARKET_NOTE);
   const records = await readJson(MARKET_RECORDS, null);
   const text = file ? await app.vault.read(file) : "";
-  const tasks = parseNote(MARKET_NOTE, text).filter(t => t.status !== null)
+  const tasks = parseMarket(text).filter(t => t.status !== null)
     .map(t => ({ ...t, rec: records?.[MarketItem.of(t).id] ?? null }));
   const items = tasks.map(MarketItem.of);
 
@@ -99,7 +101,9 @@ export async function loadCelestialMarket() {
   if (mkt.missing) return { missing: true, path: MARKET_NOTE };
   const items = mkt.items.filter(i => i.isOpen);
   // a row: its line (to find it again) and its name (shown, and to check it's the same item)
-  const row = i => ({ line: i.src.line, id: i.id, name: i.name, type: i.type });
+  const row = i => ({
+    line: i.src.line, id: i.id, name: i.name, type: i.type, needs: i.needs,
+  });
   const n = items.length;
 
   return {
@@ -175,7 +179,7 @@ async function addItem(name, type, id) {
 
   let added = false;
   await app.vault.process(file, text => {
-    const listed = parseNote(MARKET_NOTE, text).map(MarketItem.of)
+    const listed = parseMarket(text).map(MarketItem.of)
       .some(i => i.isOpen && i.id === id);
 
     added = !listed;
@@ -183,6 +187,60 @@ async function addItem(name, type, id) {
   });
   return added;
 }
+
+// Put recipe needs on a product's open row or add that row once. Count each changed row once.
+export const productsToList = requests => adding(async () => {
+  const counts = { added: 0, joined: 0 };
+
+  if (!requests.length) return counts;
+  const records = await readJson(MARKET_RECORDS, {});
+  const selected = requests.filter(({ item }) => records[item]?.type === "food");
+
+  if (!selected.length) return counts;
+  const update = text => {
+    const lines = text.split("\n");
+    const open = new Map(), added = new Map(), joined = new Set();
+
+    for (const row of parseMarket(text)) {
+      const entry = MarketItem.of(row);
+
+      if (entry.isOpen && entry.id && !open.has(entry.id)) open.set(entry.id, row.line);
+    }
+
+    for (const { item, dish, amount } of selected) {
+      const index = open.get(item);
+
+      if (index === undefined) {
+        const line = added.get(item) ?? `- [ ] ${item}`;
+
+        added.set(item, new MarketItem(line).withNeed(dish, amount));
+      } else {
+        const line = lines[index];
+        const updated = new MarketItem(line).withNeed(dish, amount);
+
+        if (updated === line) continue;
+        lines[index] = updated;
+        joined.add(item);
+      }
+    }
+
+    counts.added = added.size;
+    counts.joined = joined.size;
+    const current = lines.join("\n");
+
+    if (!added.size) return current;
+    const newline = text.includes("\r\n") ? "\r\n" : "\n";
+    const separator = current && !current.endsWith("\n") ? newline : "";
+
+    return current + separator + [...added.values()].join(newline) + newline;
+  };
+
+  const file = app.vault.getFileByPath(MARKET_NOTE);
+
+  if (file) await app.vault.process(file, update);
+  else await appendLine(MARKET_NOTE, update("").trimEnd());
+  return counts;
+});
 
 // Change the displayed row only while that line is still the same open item.
 function editOpenItem({ line, id, name }, change) {

@@ -104,17 +104,21 @@ test("foodWeek: a medicine with ranges is off the course's gap days (days 3-4 he
     [["МА", "АЕ"], ["АЕ"], ["МА", "АЕ"], []]);
 });
 
-test("food choices show both products; day counts use only the main ingredient", () => {
+test("food choices show the replacement set; day counts use only the main ingredient", () => {
   const date = "2026-11-20";
   const data = { items, dishes: [{ id: "d1", name: "Meal", ingredients: [
-    { item: "m1", alt: "m2", amount: "100 g" },
+    { item: "m1", amount: "100 g", alt: [
+      { item: "m2", amount: "50 g" }, { item: "m9", amount: "" },
+    ] },
   ] }], marks: DEFAULT_MARKS, log: { [date]: { eaten: ["d1"] } } };
   const choice = foodChoices({ ...data, today: date }).find(c => c.id === "d1");
-  assert.deepEqual(choice.ingredients, [items.map(p => p.name).join(" / ")]);
+  assert.deepEqual(choice.ingredients, [`${items[0].name} / ${items[1].name} + m9`]);
   const [day] = foodWeek({ ...data, days: [date], journals: [], courses: [] });
   assert.deepEqual(day.counts, { m1: 1, m2: 0, m3: 0 });
-  const [gone] = dishList({ ...data, items: items.slice(0, 1) });
+  const [gone] = dishList(data);
   assert.equal(gone.missing, true);
   assert.deepEqual(gone.ingredients[0],
-    { item: "m1", name: items[0].name, alt: "m2", altName: "m2", amount: "100 g" });
+    { item: "m1", name: items[0].name, amount: "100 g", alt: [
+      { item: "m2", name: items[1].name, amount: "50 g" }, { item: "m9", name: "m9", amount: "" },
+    ] });
 });

@@ -39,8 +39,14 @@ const cols = list && row.list.map(s => wide(s) ? "minmax(0, 1fr)" : "auto")
   .concat(row.fixed ? [] : "auto").join(" ");
 const narrow = s => "check" in s || !!s.color;
 // a pick row: what its picker gives ("": cleared; null: closed, the value stays); its text drawn
-// again after (the same value can show a new name: a product renamed in its own window)
+// again after (the same value can show a new name: a product renamed in its own window); an empty
+// value or list shows «Choose…»
 const drawn = ref(0);
+const picked = computed(() => {
+  const v = props.values[row.key];
+
+  return Array.isArray(v) ? v.length > 0 : !!v;
+});
 const pick = async () => {
   const v = await row.pick(props.values);
 
@@ -139,7 +145,7 @@ const model = computed({
   </select>
   <template v-else-if="'pick' in row">
     <button :key="drawn" class="ui-form__pick" @click="pick">
-      {{ values[row.key] ? (row.show?.(values[row.key]) ?? values[row.key]) : "Choose…" }}
+      {{ picked ? (row.show?.(values[row.key]) ?? values[row.key]) : "Choose…" }}
     </button>
     <button
       v-if="values[row.key] && !cell"

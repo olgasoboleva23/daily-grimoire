@@ -24,8 +24,29 @@
   }
 
   &__text {
+    min-width: 0;
     color: var(--ui-text);
     font-size: $text-xl;
+  }
+
+  /* the recipes' amount (or ⚖ and how many): muted, cut short; the whole in its tooltip */
+  &__need {
+    display: inline-block;
+    max-width: 60%;
+    margin-left: $space-s;
+    overflow: hidden;
+    vertical-align: bottom;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--text-muted);
+    font-size: $text-m;
+  }
+
+  &__needs {
+    margin: $space-2xs 0 0;
+    padding-left: $space-xl;
+    color: var(--text-muted);
+    font-size: $text-m;
   }
 
   /* 🗑: only on a row's hover or its name tapped (the phone has no hover), or while armed */

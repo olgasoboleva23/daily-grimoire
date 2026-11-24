@@ -3,7 +3,7 @@
 // catalog read by: controllers/widgets/market.js.
 import config from "#/helpers/config.js";
 import { diffDays } from "#/helpers/dates.js";
-import { LineItem, lineOf, withField } from "./lineItem.js";
+import { FIELD, LineItem, lineOf, withField } from "./lineItem.js";
 
 // the categories, and "✦ Other" for an item without one
 export const marketCats = [...config.marketCategories, { label: "✦ Other", type: "other" }];
@@ -16,6 +16,13 @@ export const catLabel = type => marketCats.find(c => c.type === type)?.label ?? 
 // a line bought before 2026-11-11 has its date as "✅ 2026-10-01"; newer ones [completion:: …]
 const CHECKED = /\s*✅\s*(\d{4}-\d{2}-\d{2})/u;
 
+const needValues = line => [...line.matchAll(FIELD)]
+  .filter(([, key]) => key === "need").map(([, , value]) => value);
+const needSeparator = " · ";
+const needText = value => value.trim().replace(/\[/g, "(").replace(/\]/g, ")")
+  .replace(/[\r\n]+/g, " ");
+
+// An open line may have repeated [need:: Dish · amount] fields (amount optional).
 // One line of the log: "- [ ] m12" (its record in items.json: name, type), bought
 // "- [x] m12 [completion:: date]".
 export class MarketItem extends LineItem {
@@ -25,6 +32,26 @@ export class MarketItem extends LineItem {
   get doneOn()   { return super.doneOn ?? this.line.match(CHECKED)?.[1] ?? null; }
   get type()     { return this.rec?.type ?? "other"; }
   get category() { return catOf(this.type); }
+  get needs() {
+    return needValues(this.line).map(value => {
+      const cut = value.indexOf(needSeparator);
+
+      return cut === -1 ? { dish: value, amount: "" }
+        : { dish: value.slice(0, cut), amount: value.slice(cut + needSeparator.length) };
+    });
+  }
+
+  withNeed(dish, amount = "") {
+    const name = needText(dish);
+    const quantity = needText(amount);
+    const value = quantity ? `${name}${needSeparator}${quantity}` : name;
+
+    if (!name || needValues(this.line).includes(value)) return this.line;
+    const body = this.line.trimEnd();
+
+    return `${body} [need:: ${value}]${this.line.slice(body.length)}`;
+  }
+
   // bought on `date`; a line that isn't open comes back as it is
   bought(date) {
     return this.isOpen ? withField(this.line.replace("- [ ]", "- [x]"), "completion", date)

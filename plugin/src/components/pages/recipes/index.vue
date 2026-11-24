@@ -15,7 +15,7 @@ import UiTabs from "#/components/uikit/UiTabs/index.vue";
 import { app } from "#/helpers/app.js";
 import config from "#/helpers/config.js";
 import { askDish } from "#/controllers/dishes.js";
-import { toList } from "./cart.js";
+import { ingredientText, toList } from "./cart.js";
 import { openDish } from "./DishWindow/index.ts";
 
 const props = defineProps({ state: { type: Object, required: true } });
@@ -32,7 +32,7 @@ const course = computed(() =>
 
 const icons = computed(() => new Map(d.value.marks.map(m => [m.tag, m.icon])));
 const rows = computed(() => d.value.dishes.map(x => ({
-  ...x, ingredients: x.ingredients.map(i => i.alt ? `${i.name} / ${i.altName}` : i.name).join(", "),
+  ...x, ingredients: x.ingredients.map(ingredientText).join(", "),
   icons: x.marks.map(t => icons.value.get(t) ?? "").join(""),
 })));
 const found = computed(() => {
@@ -59,12 +59,7 @@ const act = async write => {
 
 const cart = id => act(() => toList(d.value.dishes.find(x => x.id === id)));
 
-const edit = id => {
-  const dish = d.value.dishes.find(x => x.id === id);
-
-  return act(() => askDish(app, { ...dish,
-    ingredients: dish.ingredients.map(({ item, amount }) => ({ item, amount })) }));
-};
+const edit = id => act(() => askDish(app, d.value.dishes.find(x => x.id === id)));
 </script>
 
 <template>

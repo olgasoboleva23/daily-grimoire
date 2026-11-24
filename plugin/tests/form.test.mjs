@@ -266,7 +266,28 @@ test("Form: a pick's text is drawn again after its picker, the value the same (a
     assert.equal(button().textContent.trim(), "brown rice");
   });
 
-test("Form: a pick resolving \"\" clears its value (— no alternative); null (closed) keeps it",
+test("Form: a pick holding a list shows «Choose…» while it's empty, its text when not",
+  async () => {
+    let answer = [];
+    const show = list => list.map(p => p.name).join(" + ");
+    const form = createForm([{ name: "Or", key: "alt", pick: async () => answer, show }],
+      { alt: [{ name: "curry powder" }, { name: "dried garlic" }] });
+    const button = () => form.contentEl.querySelector(".ui-form__pick");
+    const click = async () => {
+      button().click();
+      await new Promise(r => setTimeout(r));
+      await nextTick();
+    };
+
+    assert.equal(button().textContent.trim(), "curry powder + dried garlic");
+    await click();
+    assert.equal(button().textContent.trim(), "Choose…");
+    answer = [{ name: "turmeric" }];
+    await click();
+    assert.equal(button().textContent.trim(), "turmeric");
+  });
+
+test("Form: a pick resolving \"\" clears its value; null (closed) keeps it",
   async () => {
     let answer = null;
     const form = createForm([{ name: "Or", key: "alt", pick: async () => answer }], { alt: "m2" });
