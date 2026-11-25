@@ -4,8 +4,8 @@ import { monthGrid, weekOf } from "#/shared/lib/dates.js";
 import { supplyStats, marketChoices } from "#/entities/product/index.js";
 import { findChoices } from "#/shared/lib/find.js";
 import { Task, projectRepeats, ruleText } from "#/entities/task/index.js";
-import { levelInfo, xpLegend } from "#/models/xp.js";
-import { vitals } from "#/models/vitals.js";
+import { levelInfo, xpLegend } from "#/widgets/xp/model/xp.js";
+import { vitals } from "#/widgets/xp/model/hp.js";
 import { mana, mpPhases, mpLine, mpTable } from "#/entities/cycle/index.js";
 
 // 2026-10-19 is a Monday

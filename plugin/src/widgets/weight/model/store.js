@@ -1,4 +1,4 @@
-// The weight card's controller: what it shows. Weight: a line chart of the last 30
+// Data for the weight card. Weight: a line chart of the last 30
 // days, the last value, the change vs a week ago; the free journals (a note each in JOURNALS: its
 // name the file's, its `reasons` and `lag` its properties): a level 0–3 and today's reasons, bars
 // for 30 days (the reasons in the tooltip) over the cycle's period days.

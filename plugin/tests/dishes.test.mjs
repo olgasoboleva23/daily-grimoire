@@ -1,10 +1,10 @@
 // Recipe writes, product lookup and shopping-list writes against an in-memory vault.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { loadRecipes } from "#/controllers/dishes.js";
+import { loadRecipes } from "#/widgets/dish-window/index.js";
 import { editProduct, foodProducts, readMarketItem } from "#/entities/product/index.js";
 import { addDish, editDish, readDish, removeDish } from "#/entities/dish/index.js";
-import { loadCelestialMarket } from "#/controllers/widgets/market.js";
+import { loadCelestialMarket } from "#/widgets/market/model/store.js";
 import { productsToList } from "#/features/add-to-list/operation/productsToList.js";
 import { addToMarket } from "#/features/add-to-list/operation/addItem.js";
 import { loadFood } from "#/controllers/food.js";

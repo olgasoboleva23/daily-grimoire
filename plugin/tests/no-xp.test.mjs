@@ -1,8 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import config, { applyConfig } from "#/shared/config/index.js";
-import { taskXp } from "#/models/xp.js";
-import { vitals } from "#/models/vitals.js";
+import { taskXp } from "#/widgets/xp/model/xp.js";
+import { vitals } from "#/widgets/xp/model/hp.js";
 import { settingsValues, toConfig } from "#/features/save-settings/index.js";
 
 test("No XP keeps experience at zero and allows configuring gold", () => {

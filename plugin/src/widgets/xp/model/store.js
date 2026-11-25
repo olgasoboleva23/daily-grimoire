@@ -1,13 +1,13 @@
-// The XP widgets' controller. Level: total XP of the tasks done up to the page's day, the level it
+// The XP widget's loaders. Level: total XP of the tasks done up to the page's day, the level it
 // makes, progress to the next; HP (the missed tasks against today's done ones) and MP (the day of
 // the cycle). Life Areas: a radar of XP per area over the last 4 weeks.
 // XP Today: the day's XP, its aura level, ↑/↓ against the 7-day average, the month as a heatmap.
-// The markup: widgets/xp/.
+// The three views are in widgets/xp/ui/.
 import config from "#/shared/config/index.js";
 import { pageDay, todayYmd, ymd } from "#/shared/lib/dates.js";
 import { T, taskStore } from "#/entities/task/index.js";
-import { levelInfo, taskXp, xpLegend } from "#/models/xp.js";
-import { vitals } from "#/models/vitals.js";
+import { levelInfo, taskXp, xpLegend } from "./xp.js";
+import { vitals } from "./hp.js";
 import { mana, mpLine, mpTable, readCycle } from "#/entities/cycle/index.js";
 import { chartColor, chartScale } from "#/shared/lib/chart.js";
 

@@ -15,7 +15,7 @@ before(async () => {
   ({ reactive } = await import("vue"));
   RecipesPage = (await import("#/components/pages/recipes/index.vue")).default;
   ({ openDish } = await import("#/components/pages/recipes/DishWindow/open.js"));
-  ({ loadRecipes } = await import("#/controllers/dishes.js"));
+  ({ loadRecipes } = await import("#/widgets/dish-window/index.js"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
 });
 const tick = () => new Promise(r => setTimeout(r));

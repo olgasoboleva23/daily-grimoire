@@ -1,7 +1,7 @@
 // Loads food, journal and medication data for the Food page.
 import { readLog } from "#/entities/food-log/index.js";
 import { todayYmd } from "#/shared/lib/dates.js";
-import { readFoodCatalog } from "./dishes.js";
+import { readFoodCatalog } from "#/widgets/dish-window/index.js";
 import { readJournals } from "#/entities/weight/index.js";
 import { forFood, readCourses } from "#/entities/course/index.js";
 import { T, taskStore } from "#/entities/task/index.js";

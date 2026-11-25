@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { Notice } from "obsidian";
 import config, { applyConfig, CONFIG, TASK_RECORDS } from "#/shared/config/index.js";
 import { saveSettings, settingsValues, settingsProblem, toConfig, areaMoves } from "#/features/save-settings/index.js";
-import { levelInfo } from "#/models/xp.js";
+import { levelInfo } from "#/widgets/xp/model/xp.js";
 import { taskStore } from "#/entities/task/index.js";
 import { vault } from "./stubs/vault.mjs";
 

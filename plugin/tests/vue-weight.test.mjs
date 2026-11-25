@@ -127,7 +127,7 @@ test("Weight: the log's picks follow the data: a new day starts empty", async ()
 });
 
 test("loadWeight: every journal of the folder, by name, its reasons, lag and today's entry", async () => {
-  const { loadWeight } = await import("#/controllers/widgets/weight.js");
+  const { loadWeight } = await import("#/widgets/weight/model/store.js");
 
   vault({ [SKIN]: "- 2026-11-05 2 🍰 sweets\n", [GUT]: "" }, { props: { [SKIN]: { reasons: ["🍰 sweets"], lag: 1 }, [GUT]: {} } });
   const { logs } = await loadWeight({ dv: { page: () => null }, app: (await import("#/shared/host/index.js")).app });

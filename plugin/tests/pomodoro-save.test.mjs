@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { setApp } from "#/shared/host/index.js";
-import { save } from "#/controllers/widgets/pomodoro.js";
+import { save } from "#/widgets/pomodoro/model/repository/pomodoro.js";
 import { POMODORO as PATH } from "#/shared/config/index.js";
 
 globalThis.window ??= {};
