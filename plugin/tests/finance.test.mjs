@@ -53,3 +53,10 @@ test("amount: a number as people write it, the same rule wherever a sum is read 
   assert.equal(amount("1.2.3"), null);
   assert.equal(amount(""), null);
 });
+
+test("an escaped pipe in a transaction description keeps its amount in the total", () => {
+  const rows = parseLedger(String.raw`| 2026-11-22 | 10:00 | -700 | Food | Coffee \| cake |`);
+
+  assert.equal(rows[0].description, "Coffee | cake");
+  assert.equal(summarize(rows).spent, 700);
+});

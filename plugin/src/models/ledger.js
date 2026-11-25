@@ -15,7 +15,7 @@ export function parseLedger(text) {
     const t = line.trim();
 
     if (!t.startsWith("|")) continue;
-    const cells = t.slice(1, -1).split("|").map(c => c.trim());
+    const cells = t.slice(1, -1).split(/(?<!\\)\|/).map(c => c.trim().replace(/\\\|/g, "|"));
 
     if (cells.length !== 5 || cells[0] === "date" || /^[-:\s]+$/.test(cells[0])) continue;
     const amount = toAmount(cells[2]);
