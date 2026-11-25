@@ -14,8 +14,11 @@ import UiFieldList from "#/shared/ui/UiFieldList/index.vue";
 import { useWrite } from "#/shared/ui/Window/index.ts";
 import { productsToList } from "#/controllers/dishes.js";
 
-// loadRecipes's: { name, ingredients: [{ item, amount, name, alt: [{ item, amount, name }] }] }
-const props = defineProps({ dish: { type: Object, required: true } });
+// Omit archived products from the cart, keeping unknown ingredient IDs visible in older recipes.
+const props = defineProps({
+  dish: { type: Object, required: true },
+  archived: { type: Set, required: true },
+});
 const emit = defineEmits(["done"]);
 
 const COLUMNS = [
@@ -25,7 +28,7 @@ const COLUMNS = [
 const v = reactive({ lines: props.dish.ingredients.flatMap(i => [
   { item: i.item, on: true, name: i.name, amount: i.amount },
   ...i.alt.map(a => ({ item: a.item, on: false, name: `↳ ${a.name}`, amount: a.amount })),
-]) });
+]).filter(line => !props.archived.has(line.item)) });
 const { busy, run } = useWrite(emit);
 
 const add = () => run(async () => {

@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { monthGrid, weekOf } from "#/shared/lib/dates.js";
-import { supplyStats, marketChoices } from "#/models/market.js";
+import { supplyStats, marketChoices } from "#/entities/product/index.js";
 import { findChoices } from "#/shared/lib/find.js";
 import { Task, projectRepeats, ruleText } from "#/entities/task/index.js";
 import { levelInfo, xpLegend } from "#/models/xp.js";

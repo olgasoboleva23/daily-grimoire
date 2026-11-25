@@ -233,15 +233,17 @@ test("＋ on a day: the search of products and dishes; one picked is logged, a n
   } finally { windows.restore(); }
 });
 
-test("an archived dish keeps its name and marks on eaten days and is omitted from the picker", async t => {
+test("archived dishes and products keep their names and marks on eaten days and stay out of the picker", async t => {
   vault({
-    [MARKET_RECORDS]: JSON.stringify({ m1: { name: "Свёкла", type: "food", marks: ["m1"] } }),
+    [MARKET_RECORDS]: JSON.stringify({ m1: { name: "Свёкла", type: "food", marks: ["m1"] },
+      m2: { name: "Кефир", type: "food", marks: ["m2"], deleted: true } }),
     [DISHES]: JSON.stringify({ d1: { name: "Борщ", ingredients: [{ item: "m1" }], deleted: true } }),
-    [FOOD_LOG]: JSON.stringify({ "2026-11-02": { eaten: ["d1"] } }),
+    [FOOD_LOG]: JSON.stringify({ "2026-11-02": { eaten: ["d1", "m2"] } }),
   });
   const w = mount(FoodPage, { props: { state: { data: await loadFood() } } });
   const day = w.findAll(".ui-table__row")[0];
 
+  assert.match(day.text(), /Кефир \(deleted\) 🥛/);
   assert.match(day.text(), /Борщ \(deleted\) 🍫/);
   assert.equal(day.find(".ui-food__count").text(), "1");
   let choices;

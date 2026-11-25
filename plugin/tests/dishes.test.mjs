@@ -1,11 +1,10 @@
 // Recipe writes, product lookup and shopping-list writes against an in-memory vault.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { loadRecipes, productsToList, readProducts } from "#/controllers/dishes.js";
+import { loadRecipes, productsToList } from "#/controllers/dishes.js";
+import { editProduct, foodProducts, readMarketItem } from "#/entities/product/index.js";
 import { addDish, editDish, readDish, removeDish } from "#/entities/dish/index.js";
-import {
-  addToMarket, editMarketItem, loadCelestialMarket, readMarketItem,
-} from "#/controllers/widgets/market.js";
+import { addToMarket, loadCelestialMarket } from "#/controllers/widgets/market.js";
 import { loadFood } from "#/controllers/food.js";
 import { Search } from "#/shared/ui/Search/index.ts";
 import { pickRecipeNote } from "#/components/windows/recipes/DishFormWindow/pickRecipeNote.js";
@@ -179,15 +178,15 @@ test("dishes keep their type across edits while it is hidden in settings", async
   assert.equal(JSON.parse(files[DISHES])[id].type, "");
 });
 
-test("readProducts returns current names and marks for food records only", async () => {
+test("foodProducts returns current names and marks for food records only", async () => {
   const { files } = fixture();
   const records = JSON.parse(files[MARKET_RECORDS]);
   records.m4 = { name: "Mint", type: "food" };
   files[MARKET_RECORDS] = JSON.stringify(records);
   const before = await readMarketItem("m1");
 
-  assert.equal(await editMarketItem("m1", { ...before, name: "Green peas" }, before), true);
-  assert.deepEqual(await readProducts(), [
+  assert.equal(await editProduct("m1", { ...before, name: "Green peas" }, before), true);
+  assert.deepEqual(await foodProducts(), [
     { id: "m1", name: "Green peas", marks: ["a"] },
     { id: "m2", name: "Beans", marks: ["a", "b"] },
     { id: "m4", name: "Mint", marks: [] },

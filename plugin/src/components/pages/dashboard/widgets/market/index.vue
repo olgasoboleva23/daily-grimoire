@@ -16,7 +16,7 @@ import UiButton from "#/shared/ui/UiButton/index.vue";
 import UiDeleteButton from "#/shared/ui/UiDeleteButton/index.vue";
 import { vTip } from "#/shared/ui/tooltip.js";
 import { MARKET } from "#/shared/config/index.js";
-import { buyMarketItem, removeMarketItem } from "#/controllers/widgets/market.js";
+import { buyItem, removeItem } from "#/entities/product/index.js";
 import { openEditItem } from "#/components/windows/market/MarketItemWindow/open.js";
 
 const props = defineProps({ state: { type: Object, required: true } });
@@ -35,7 +35,7 @@ async function buy(r) {
   let written = false;
 
   try {
-    written = await buyMarketItem(r);
+    written = await buyItem(r);
   } finally {
     if (!written) bought.delete(key(r));
   }
@@ -89,7 +89,7 @@ watch(() => props.state.data.groups, groups => {
           <UiDeleteButton
             title="off the list"
             class="ui-market__del"
-            @delete="removeMarketItem(r)"
+            @delete="removeItem(r)"
           />
           <UiButton v-if="r.id" title="edit item" @click="openEditItem(r.id)">
             <span class="ui-pencil">✎</span>

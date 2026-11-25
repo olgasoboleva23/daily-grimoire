@@ -415,3 +415,35 @@ test("✏️ on the page and in the dish window: the form gets each line's alter
   } finally { windows.restore(); }
   assert.deepEqual(asked, [["oats", "cocoa", "Porridge"], ["oats", "cocoa", "Porridge"]]);
 });
+
+
+test("the cart skips archived mains and alternatives but keeps active and missing ingredient rows", async () => {
+  const recipe = { ...DISH.d1, ingredients: [
+    { item: "m1", amount: "1 cup", alt: [{ item: "m2", amount: "2 cups" }] },
+    { item: "m3", amount: "1 tsp", alt: [{ item: "m4", amount: "" }, { item: "m7", amount: "" }] },
+  ] };
+  const { files: written } = vault({
+    [MARKET_RECORDS]: JSON.stringify({ ...ITEMS, m4: { name: "sugar", type: "food" } }),
+    [DISHES]: JSON.stringify({ d1: recipe }), [`${MARKET}.md`]: "",
+  });
+  const w = await page();
+  const records = JSON.parse(written[MARKET_RECORDS]);
+  records.m1.deleted = true;
+  records.m4.deleted = true;
+  written[MARKET_RECORDS] = JSON.stringify(records);
+  const [, asked] = await cart(w.get(".ui-recipes__cart"), l => ({ ...l, on: true }));
+
+  assert.deepEqual(asked.lines, [
+    { on: false, name: "↳ milk", amount: "2 cups" }, { on: true, name: "cocoa", amount: "1 tsp" },
+    { on: false, name: "↳ m7", amount: "" },
+  ]);
+  assert.deepEqual(written[`${MARKET}.md`].trim().split("\n"),
+    ["- [ ] m2 [need:: Porridge · 2 cups]", "- [ ] m3 [need:: Porridge · 1 tsp]"]);
+  records.m2.deleted = true;
+  records.m3.deleted = true;
+  written[MARKET_RECORDS] = JSON.stringify(records);
+  const [, onlyMissing] = await cart(w.get(".ui-recipes__cart"));
+  assert.deepEqual(onlyMissing.lines, [{ on: false, name: "↳ m7", amount: "" }]);
+  assert.match(Notice.last, /nothing ticked, nothing added/);
+  assert.deepEqual(JSON.parse(written[DISHES]).d1, recipe);
+});

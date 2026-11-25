@@ -7,12 +7,13 @@ import { Notice, prepareFuzzySearch } from "obsidian";
 import { app } from "#/shared/host/index.js";
 import { dm } from "#/shared/lib/dates.js";
 import { findChoices } from "#/shared/lib/find.js";
-import { catLabel, marketCats } from "#/models/market.js";
+import {
+  catLabel, foodProducts, marketCats, readMarketChoices, readMarketItem,
+} from "#/entities/product/index.js";
 import { openWindow, askValue } from "#/shared/ui/Window/index.ts";
 import { Search } from "#/shared/ui/Search/index.ts";
-import { addToMarket, readMarketChoices, readMarketItem } from "#/controllers/widgets/market.js";
+import { addToMarket } from "#/controllers/widgets/market.js";
 import { readMarks } from "#/entities/food-log/index.js";
-import { readProducts } from "#/controllers/dishes.js";
 import MarketItemWindow from "./index.vue";
 
 // the new product's id, null closed
@@ -49,7 +50,7 @@ export async function addMarketItem() {
 
 // a food product's id: picked, or a new one typed (its window first); null closed
 export async function pickOrAddProduct() {
-  const items = await readProducts();
+  const items = await foodProducts();
   const pick = await Search.pick(app, "Choose a product", query => {
     const q = query.trim();
 

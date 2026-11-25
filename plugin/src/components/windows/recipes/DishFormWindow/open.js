@@ -5,7 +5,7 @@
 import { Notice } from "obsidian";
 import config from "#/shared/config/index.js";
 import { openWindow } from "#/shared/ui/Window/index.ts";
-import { readProducts } from "#/controllers/dishes.js";
+import { foodProducts } from "#/entities/product/index.js";
 import { readDish } from "#/entities/dish/index.js";
 import DishFormWindow from "./index.vue";
 
@@ -18,7 +18,7 @@ export async function openDishForm(dish = null) {
     return null;
   }
 
-  const products = new Map((await readProducts()).map(p => [p.id, p.name]));
+  const products = new Map((await foodProducts()).map(p => [p.id, p.name]));
   const types = config.dishTypes.map(t => ({ label: t.name, value: t.key }));
 
   return openWindow(DishFormWindow, {

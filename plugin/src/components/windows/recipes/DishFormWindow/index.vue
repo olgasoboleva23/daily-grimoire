@@ -19,7 +19,7 @@ import {
 } from "#/components/windows/market/MarketItemWindow/open.js";
 import AlternativesWindow from "#/components/windows/recipes/AlternativesWindow/index.vue";
 import { addDish, editDish } from "#/entities/dish/index.js";
-import { readMarketItem } from "#/controllers/widgets/market.js";
+import { readMarketItem } from "#/entities/product/index.js";
 import { pickRecipeNote } from "./pickRecipeNote.js";
 
 const props = defineProps({

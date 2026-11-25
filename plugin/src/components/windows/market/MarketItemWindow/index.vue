@@ -3,7 +3,7 @@
      until a name; resolves the new id (addProduct). Edit item (the market's and supplies' ✎, an
      eaten product, a dish's chosen product): Name, Category, the marks' checks only when it was
      food (`marks` is empty otherwise); Save greyed until a name and a category; resolves true
-     (editMarketItem, against `before`: the record as it was on disk when it opened) -->
+     (editProduct, against `before`: the record as it was on disk when it opened) -->
 <script setup>
 import { computed, reactive } from "vue";
 import UiWindow from "#/shared/ui/UiWindow/index.vue";
@@ -11,8 +11,7 @@ import UiField from "#/shared/ui/UiField/index.vue";
 import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
 import UiFieldChoice from "#/shared/ui/UiFieldChoice/index.vue";
 import { filled, useWrite } from "#/shared/ui/Window/index.ts";
-import { marketCats } from "#/models/market.js";
-import { addProduct, editMarketItem } from "#/controllers/widgets/market.js";
+import { addProduct, editProduct, marketCats } from "#/entities/product/index.js";
 
 const props = defineProps({
   name: { type: String, default: "" },        // new: the name typed in the search
@@ -37,7 +36,7 @@ const save = () => run(() => {
   const marks = props.marks.filter(m => v.checked[m.tag]).map(m => m.tag);
 
   return editing
-    ? editMarketItem(props.id, {
+    ? editProduct(props.id, {
       name: v.name, type: v.type, marks: was.type === "food" ? marks : undefined,
     }, props.before)
     : addProduct({ name: v.name, marks });

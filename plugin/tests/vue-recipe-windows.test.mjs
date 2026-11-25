@@ -21,15 +21,14 @@ const files = (dishes = { d1: DISH }) => vault({
   [FOOD_DATA]: JSON.stringify({ marks: [] }), [`${MARKET}.md`]: "",
 });
 const TYPES = [{ key: "soup", name: "Soups" }, { key: "main", name: "Mains" }];
-let Search, testWindows, windows, openDishForm, CartWindow, openWindow, loadRecipes;
+let Search, testWindows, windows, openDishForm, openCart, loadRecipes;
 before(async () => {
   window.moment = () => ({ format: () => "2026-11-20" });
   ({ Search } = await import("#/shared/ui/Search/index.ts"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
-  ({ openWindow } = await import("#/shared/ui/Window/index.ts"));
   ({ openDishForm } = await import("#/components/windows/recipes/DishFormWindow/open.js"));
   ({ loadRecipes } = await import("#/controllers/dishes.js"));
-  CartWindow = (await import("#/components/windows/recipes/CartWindow/index.vue")).default;
+  ({ openCart } = await import("#/components/windows/recipes/CartWindow/open.js"));
   config.dishTypes = TYPES;
   windows = testWindows();
 });
@@ -169,7 +168,7 @@ test("To the shopping list?: the dish, a fixed table (Buy, Product, Amount): mai
   + "alternatives (↳) not; amounts editable; Add puts the ticked ones", async () => {
   const { files: written } = files();
   const [d] = (await loadRecipes()).dishes;
-  const running = openWindow(CartWindow, { dish: d });
+  const running = openCart(d);
   const w = await windows.next();
 
   assert.equal(w.title, "To the shopping list?");
@@ -198,7 +197,7 @@ test("To the shopping list?: the dish, a fixed table (Buy, Product, Amount): mai
 test("To the shopping list?: nothing ticked, the notice, nothing added", async () => {
   const { files: written } = files();
   const [d] = (await loadRecipes()).dishes;
-  const running = openWindow(CartWindow, { dish: d });
+  const running = openCart(d);
   const w = await windows.next();
 
   for (const l of lines(w)) await l.find("input[type=checkbox]").setValue(false);
@@ -207,4 +206,17 @@ test("To the shopping list?: nothing ticked, the notice, nothing added", async (
   assert.equal(written[`${MARKET}.md`], "");
   await w.close();
   assert.equal(await running, null);
+});
+
+test("the dish form offers active products and keeps stored ingredients when only the name changes", async () => {
+  const { files: written } = files();
+  written[MARKET_RECORDS] = JSON.stringify({ ...ITEMS, m3: { ...ITEMS.m3, deleted: true } });
+  const running = openDishForm({ id: "d1" });
+  const w = await windows.next();
+
+  assert.deepEqual([...w.props.products.keys()], ["m1", "m2"]);
+  await w.wrapper.find("input").setValue("Weekend porridge");
+  await w.submit();
+  assert.equal(await running, "d1");
+  assert.deepEqual(dish(written, "d1"), { ...DISH, name: "Weekend porridge" });
 });

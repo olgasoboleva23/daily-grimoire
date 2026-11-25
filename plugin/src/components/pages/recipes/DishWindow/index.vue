@@ -6,11 +6,11 @@
 <script setup>
 import { computed, inject, nextTick, onMounted, ref, watch } from "vue";
 import { MarkdownRenderer, Notice } from "obsidian";
-import { confirm, openWindow, WINDOW } from "#/shared/ui/Window/index.ts";
+import { confirm, WINDOW } from "#/shared/ui/Window/index.ts";
 import { openNote, app } from "#/shared/host/index.js";
 import UiWindow from "#/shared/ui/UiWindow/index.vue";
 import { openDishForm } from "#/components/windows/recipes/DishFormWindow/open.js";
-import CartWindow from "#/components/windows/recipes/CartWindow/index.vue";
+import { openCart } from "#/components/windows/recipes/CartWindow/open.js";
 import { loadRecipes } from "#/controllers/dishes.js";
 import { removeDish } from "#/entities/dish/index.js";
 
@@ -57,7 +57,7 @@ const act = async write => {
   try { await write(); } catch (e) { console.error(e); new Notice(`✦ Not saved (${e.message})`); }
 };
 
-const cart = () => act(() => openWindow(CartWindow, { dish: d.value }));
+const cart = () => act(() => openCart(d.value));
 
 const edit = () => act(async () => {
   if (await openDishForm(d.value)) await load();

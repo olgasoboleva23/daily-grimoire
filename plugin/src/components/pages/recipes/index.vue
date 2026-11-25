@@ -13,9 +13,8 @@ import UiInput from "#/shared/ui/UiInput/index.vue";
 import UiTable from "#/shared/ui/UiTable/index.vue";
 import UiTabs from "#/shared/ui/UiTabs/index.vue";
 import config from "#/shared/config/index.js";
-import { openWindow } from "#/shared/ui/Window/index.ts";
 import { openDishForm } from "#/components/windows/recipes/DishFormWindow/open.js";
-import CartWindow from "#/components/windows/recipes/CartWindow/index.vue";
+import { openCart } from "#/components/windows/recipes/CartWindow/open.js";
 import { ingredientText } from "#/entities/dish/index.js";
 import { openDish } from "./DishWindow/open.js";
 
@@ -60,7 +59,7 @@ const act = async write => {
 
 const dish = id => d.value.dishes.find(x => x.id === id);
 
-const cart = id => act(() => openWindow(CartWindow, { dish: dish(id) }));
+const cart = id => act(() => openCart(dish(id)));
 
 const edit = id => act(() => openDishForm(dish(id)));
 </script>

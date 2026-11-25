@@ -1,22 +1,15 @@
 // Catalog data shared by Recipes, the dish viewer and the food journal.
-import config, { MARKET_RECORDS } from "#/shared/config/index.js";
-import { readJson } from "#/shared/vault/index.js";
+import config from "#/shared/config/index.js";
+import { foodProducts } from "#/entities/product/index.js";
 import { marksOf, readFood } from "#/entities/food-log/index.js";
 import { Dish, readDishes } from "#/entities/dish/index.js";
 import { productsToList } from "./widgets/market.js";
 
 export { productsToList };
 
-const rows = records => Object.entries(records).map(([id, r]) => ({ ...r, id }));
-
-export async function readProducts() {
-  return rows(await readJson(MARKET_RECORDS, {})).filter(p => p.type === "food")
-    .map(({ id, name, marks }) => ({ id, name, marks: marks ?? [] }));
-}
-
 export async function readFoodCatalog(options) {
   const [items, dishes, food] = await Promise.all([
-    readProducts(), readDishes(options), readFood(),
+    foodProducts(options), readDishes(options), readFood(),
   ]);
 
   return {

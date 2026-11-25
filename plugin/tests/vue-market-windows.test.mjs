@@ -178,6 +178,7 @@ test("the product search: a product picked; + new opens New product with the typ
   async t => {
     const { files } = food({
       m1: { name: "Peas", type: "food" }, m2: { name: "Glue", type: "home" },
+      m0: { name: "Beans", type: "food", deleted: true },
     });
     const shown = [];
     const search = query => async (_app, title, find, render) => {
