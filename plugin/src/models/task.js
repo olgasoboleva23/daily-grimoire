@@ -10,9 +10,9 @@
 // (t is kept as .src, for its path and line) or a raw line with new Task(line, null, rec).
 // A pool item is a record with pool: true, no line; its copies on the days are ordinary tasks with
 // its id.
-import { addDays, diffDays } from "#/helpers/dates.js";
+import { addDays, diffDays } from "#/shared/lib/dates.js";
 import { projectRepeats } from "./repeats.js";
-import { ANY, FIELD, LineItem, lineOf, withField } from "./lineItem.js";
+import { ANY, FIELD, LineItem, lineOf, withField } from "#/shared/lib/lineItem.js";
 
 // the fields that put a task on a day
 const DATES = ["due", "scheduled", "start"];

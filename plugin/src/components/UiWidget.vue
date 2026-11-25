@@ -7,10 +7,10 @@ const heights = new WeakMap();
 import {
   nextTick, onMounted, onActivated, onErrorCaptured, provide, reactive, ref, watch,
 } from "vue";
-import { useObsidian } from "#/composables/vueApp.ts";
+import { useObsidian } from "#/shared/lib/vueApp.ts";
 import {
   useDataviewChanges, useFileChanges, useRedraw, useTabDate, useWhenIndexed,
-} from "#/composables/use.js";
+} from "#/shared/lib/use.js";
 import { app } from "#/helpers/app.js";
 import { blockDv } from "#/helpers/plugins.js";
 import { taskStore } from "#/store/tasks.js";

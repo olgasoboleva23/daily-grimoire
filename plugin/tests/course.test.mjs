@@ -1,8 +1,9 @@
+import { inRanges, parseRanges, rangesProblem } from "#/shared/lib/ranges.js";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   columns, courseData, courseList, courseOf, courseProblem, dayLabel, edited, forFood,
-  formValues, inRanges, intake, next, parseRanges, rangesProblem, withDayNote, withMark,
+  formValues, intake, next, withDayNote, withMark,
 } from "#/models/course.js";
 
 test("a mark goes round ☐ → ✅ → ❌ → ☐; a day's label in Russian", () => {

@@ -17,7 +17,7 @@ before(async () => {
   HTMLElement.prototype.isShown = function () { return !this.closest("[data-hidden]") && this.style.display !== "contents"; };
   setApp({ workspace: bus, metadataCache: bus, vault: bus, plugins: { plugins: { dataview: { api: { index: { initialized: true } } } } } });
   const { Component } = await import("obsidian");
-  const { useVueApp } = await import("#/composables/vueApp.ts");
+  const { useVueApp } = await import("#/shared/lib/vueApp.ts");
   const { default: Widget } = await import("#/components/UiWidget.vue");
   // what a page does: UiWidget on an element, owned by an Obsidian component
   VueHost = class extends Component {

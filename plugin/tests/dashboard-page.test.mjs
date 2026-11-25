@@ -17,7 +17,7 @@ before(async () => {
   ({ mount } = await import("@vue/test-utils"));
   Dashboard = (await import("#/components/pages/dashboard/index.vue")).default;
   DashboardDate = (await import("#/components/pages/dashboard/DashboardDate.vue")).default;
-  ({ todayYmd } = await import("#/helpers/dates.js"));
+  ({ todayYmd } = await import("#/shared/lib/dates.js"));
 });
 
 function page() {

@@ -2,8 +2,8 @@
 // or type a new one.
 import { Search } from "#/components/uikit/Search/index.ts";
 import config from "#/helpers/config.js";
-import { dm } from "#/helpers/dates.js";
-import { findChoices } from "#/helpers/find.js";
+import { dm } from "#/shared/lib/dates.js";
+import { findChoices } from "#/shared/lib/find.js";
 import { Task, taskChoices } from "#/models/task.js";
 import { taskStore } from "#/store/tasks.js";
 import { app } from "#/helpers/app.js";

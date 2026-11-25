@@ -4,7 +4,7 @@
 // update: one record through fn (null: nothing written); false when the id isn't there.
 // add: a record under a new id made inside the write from the file's keys.
 import { editJson } from "./files.js";
-import { nextId } from "./ids.js";
+import { nextId } from "#/shared/lib/ids.js";
 
 export function collection(path) {
   const edit = fn => editJson(path, fn);

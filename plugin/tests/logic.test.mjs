@@ -1,8 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { monthGrid, weekOf } from "#/helpers/dates.js";
+import { monthGrid, weekOf } from "#/shared/lib/dates.js";
 import { supplyStats, marketChoices } from "#/models/market.js";
-import { findChoices } from "#/helpers/find.js";
+import { findChoices } from "#/shared/lib/find.js";
 import { projectRepeats, ruleText } from "#/models/repeats.js";
 import { levelInfo, xpLegend } from "#/models/xp.js";
 import { vitals, mana, mpPhases, mpLine, mpTable } from "#/models/vitals.js";

@@ -2,9 +2,9 @@
 // The pomodoro's controller: its state in 00 System/Data/pomodoro.json (settings, the current
 // session, the mini row, today's stats); the end-of-session sound, the meditation's music and
 // the save. The shared running session and clock live in widgets/pomodoro.
-import { todayYmd } from "#/helpers/dates.js";
+import { todayYmd } from "#/shared/lib/dates.js";
 import { readJson } from "#/helpers/files.js";
-import { AudioEngine, isMuted } from "#/helpers/sounds.js";
+import { AudioEngine, isMuted } from "#/shared/lib/sounds.js";
 import { app } from "#/helpers/app.js";
 import { addStats } from "#/models/timer.js";
 import { ASSETS, POMODORO, SOUNDS } from "#/helpers/paths.js";

@@ -7,7 +7,7 @@
 // drag); `on` from a dragstart until the next touch, so a drag's finger moves don't count as a
 // swipe (swipe.js).
 import { computed, reactive } from "vue";
-import { AudioEngine } from "#/helpers/sounds.js";
+import { AudioEngine } from "#/shared/lib/sounds.js";
 import { SOUNDS } from "#/helpers/paths.js";
 import { canReorder } from "#/models/calendarData.js";
 

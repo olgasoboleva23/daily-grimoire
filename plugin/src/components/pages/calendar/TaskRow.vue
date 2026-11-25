@@ -7,14 +7,14 @@
      onto a day or the panel, and an open one is a reorder target in its day (drag.js); on the
      phone a left swipe reveals its actions -->
 <script setup>
-import { vHoldAction } from "#/composables/holdAction.js";
+import { vHoldAction } from "#/shared/lib/holdAction.js";
 import { vTip } from "#/components/uikit/tooltip.js";
 import { computed, inject, ref } from "vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import TaskText from "./TaskText.vue";
 import TaskButtons from "./TaskButtons.vue";
 import { useDragSource, useReorder } from "#/composables/drag.js";
-import { useSwipe } from "#/composables/swipe.js";
+import { useSwipe } from "#/shared/lib/swipe.js";
 
 const props = defineProps({
   task: { type: Object, required: true },

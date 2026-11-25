@@ -1,7 +1,7 @@
 // @ts-check
 // The pomodoro's clock, without markup (tested by tests/pomodoro.test.mjs). `now` is the clock
 // (Date.now; a test's own).
-import { todayYmd } from "#/helpers/dates.js";
+import { todayYmd } from "#/shared/lib/dates.js";
 
 /** @typedef {"focus" | "break" | "meditation"} SessionType */
 /** @typedef {{ focusMin: number, breakMin: number, meditationMin: number, music?: string | null }}

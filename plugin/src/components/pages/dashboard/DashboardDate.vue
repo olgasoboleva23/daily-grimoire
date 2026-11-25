@@ -1,7 +1,7 @@
 <!-- The dashboard's date row (where the note had the Meta Bind field): the date field, ‹ ›, "today"
      when another day shows. @go(date): another day (null: today) -->
 <script setup>
-import { addDays } from "#/helpers/dates.js";
+import { addDays } from "#/shared/lib/dates.js";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 
 const props = defineProps({

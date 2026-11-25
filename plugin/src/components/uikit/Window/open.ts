@@ -10,7 +10,7 @@
 import { Component, Modal, type App } from "obsidian";
 import { h, type Component as VueComponent } from "vue";
 import { app } from "#/helpers/app.js";
-import { useVueApp } from "#/composables/vueApp.ts";
+import { useVueApp } from "#/shared/lib/vueApp.ts";
 
 type Props = Record<string, unknown>;
 type Finish = (result: unknown) => void;

@@ -1,7 +1,7 @@
 <!-- "✦ Open": the day's note (made if it's missing) -->
 <script setup>
 import { ref } from "vue";
-import { isMuted, toggleMute } from "#/helpers/sounds.js";
+import { isMuted, toggleMute } from "#/shared/lib/sounds.js";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import { openDaily } from "#/controllers/widgets/dailyNote.js";
 

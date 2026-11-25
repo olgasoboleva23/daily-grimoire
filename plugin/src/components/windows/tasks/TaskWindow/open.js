@@ -4,7 +4,7 @@ import { openWindow } from "#/components/uikit/Window/open.ts";
 import { pickTask } from "#/components/uikit/TaskSearch/index.js";
 import { readTaskEdit, saveNewTask, saveTaskEdit } from "#/controllers/tasks.js";
 import { app } from "#/helpers/app.js";
-import { todayYmd } from "#/helpers/dates.js";
+import { todayYmd } from "#/shared/lib/dates.js";
 import { STICKERS } from "#/helpers/paths.js";
 import { tasksApi } from "#/helpers/plugins.js";
 import { Task } from "#/models/task.js";

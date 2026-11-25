@@ -25,7 +25,7 @@ before(async () => {
   data = await import("#/models/calendarData.js");
   actions = await import("#/controllers/calendar.js");
   state = await import("#/store/calendar.js");
-  ({ useLater } = await import("#/composables/use.js"));
+  ({ useLater } = await import("#/shared/lib/use.js"));
   ({ dragState } = await import("#/composables/drag.js"));
   ({ Component } = await import("obsidian"));
 });

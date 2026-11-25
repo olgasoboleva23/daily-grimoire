@@ -3,13 +3,13 @@
 // name the file's, its `reasons` and `lag` its properties): a level 0–3 and today's reasons, bars
 // for 30 days (the reasons in the tooltip) over the cycle's period days. Writes: today's weight in
 // Weight.md (a journal's: controllers/journals.js). The markup: widgets/weight.
-import { addDays, dm, todayYmd } from "#/helpers/dates.js";
+import { addDays, dm, todayYmd } from "#/shared/lib/dates.js";
 import { WeightLog } from "#/models/weightLog.js";
 import { readJournals } from "#/controllers/journals.js";
 import { cycleLog } from "./cycle.js";
 import { chartColor, chartScale } from "#/shared/lib/chart.js";
 import { edit } from "#/helpers/files.js";
-import { amount } from "#/helpers/format.js";
+import { amount } from "#/shared/lib/format.js";
 import { WEIGHT } from "#/helpers/paths.js";
 
 const DAYS = 30;

@@ -2,13 +2,13 @@
      ▶ resume: from today -->
 <script setup>
 import { computed, inject } from "vue";
-import { vHoldAction } from "#/composables/holdAction.js";
+import { vHoldAction } from "#/shared/lib/holdAction.js";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import GroupCard from "./GroupCard.vue";
 import TaskText from "#/components/pages/calendar/TaskText.vue";
 import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";
 import { T } from "#/models/calendarData.js";
-import { dm } from "#/helpers/dates.js";
+import { dm } from "#/shared/lib/dates.js";
 import { ruleText } from "#/models/repeats.js";
 import { byArea } from "#/helpers/panelGroups.js";
 

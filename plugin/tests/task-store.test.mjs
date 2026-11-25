@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseNote } from "#/models/taskFile.js";
+import { parseNote } from "#/shared/lib/noteLines.js";
 import { setApp } from "#/helpers/app.js";
 import { taskStore, useTaskStore, stageTasks, records } from "#/store/tasks.js";
 

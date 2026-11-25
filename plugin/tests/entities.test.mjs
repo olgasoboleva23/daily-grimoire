@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Task } from "#/models/task.js";
-import { weekOf } from "#/helpers/dates.js";
+import { weekOf } from "#/shared/lib/dates.js";
 import { Goal, reminders } from "#/models/goal.js";
 import { CycleLog } from "#/models/cycleLog.js";
 import { WeightLog } from "#/models/weightLog.js";

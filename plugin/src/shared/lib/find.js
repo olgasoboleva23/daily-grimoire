@@ -9,3 +9,5 @@ export function findChoices(choices, query) {
 
   return !q || named ? found : [...found, { name: q, isNew: true }];
 }
+
+export const byName = (a, b) => a.name.localeCompare(b.name, "ru");

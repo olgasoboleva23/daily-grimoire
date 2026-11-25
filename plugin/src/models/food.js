@@ -7,8 +7,9 @@
 // first. The week's rows for the food page: what was eaten with its marks' icons, the marks
 // counted, each free journal's level after its lag (a rash shows the next day), the medication
 // courses on that day, the note.
-import { addDays, diffDays } from "#/helpers/dates.js";
-import { inRanges, rangesOf } from "#/models/course.js";
+import { addDays, diffDays } from "#/shared/lib/dates.js";
+import { byName } from "#/shared/lib/find.js";
+import { inRanges, rangesOf } from "#/shared/lib/ranges.js";
 
 export const DEFAULT_MARKS = [
   { tag: "m1", icon: "🍫", name: "какао" },
@@ -17,8 +18,6 @@ export const DEFAULT_MARKS = [
 ];
 
 export const marksOf = data => data.marks ?? DEFAULT_MARKS;
-
-const byName = (a, b) => a.name.localeCompare(b.name, "ru");
 
 export function dishList({ items, dishes }) {
   const products = new Map(items.map(p => [p.id, p]));

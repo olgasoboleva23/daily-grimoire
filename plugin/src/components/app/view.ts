@@ -1,6 +1,6 @@
 import { ItemView, Keymap, Notice, Platform, type ViewStateResult } from "obsidian";
 import { reactive, watch } from "vue";
-import { useVueApp } from "#/composables/vueApp.ts";
+import { useVueApp } from "#/shared/lib/vueApp.ts";
 import { isStep, readState, saved, withParams } from "#/store/router.js";
 import { APP_NAME } from "#/helpers/name.js";
 import { pages, UI_VIEW } from "./pages.js";

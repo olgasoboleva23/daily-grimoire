@@ -3,7 +3,7 @@
 // then the ones done that day. The markup:
 // widgets/quests/.
 import config from "#/helpers/config.js";
-import { pageDay, ymd } from "#/helpers/dates.js";
+import { pageDay, ymd } from "#/shared/lib/dates.js";
 import { T, taskKey, daytimeMark, daytimeRank } from "#/models/calendarData.js";
 import { taskStore } from "#/store/tasks.js";
 

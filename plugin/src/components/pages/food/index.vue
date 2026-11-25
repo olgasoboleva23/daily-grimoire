@@ -11,7 +11,7 @@ import UiInput from "#/components/uikit/UiInput/index.vue";
 import UiTable from "#/components/uikit/UiTable/index.vue";
 import { openUi } from "#/components/app/open.ts";
 import { vTip } from "#/components/uikit/tooltip.js";
-import { addDays, weekOf } from "#/helpers/dates.js";
+import { addDays, weekOf } from "#/shared/lib/dates.js";
 import { dayLabel } from "#/models/course.js";
 import { foodWeek } from "#/models/food.js";
 import { pickTask } from "#/components/uikit/TaskSearch/index.js";

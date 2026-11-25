@@ -7,7 +7,7 @@ before(async () => {
   GlobalRegistrator.register();
   HTMLElement.prototype.isShown = function () { return !this.hidden; };
   ({ Component } = await import("obsidian"));
-  ({ useVueApp } = await import("#/composables/vueApp.ts"));
+  ({ useVueApp } = await import("#/shared/lib/vueApp.ts"));
   ({ h, ref, nextTick } = await import("vue"));
   Drawer = (await import("#/components/uikit/UiDrawer/index.vue")).default;
 });
@@ -41,7 +41,7 @@ test("the tab's shadow drawer traps Tab, closes on Escape and restores the actua
 });
 
 test("task sounds recognise a checkbox across the shadow boundary and in native Markdown", async () => {
-  const { installSounds, AudioEngine } = await import("#/helpers/sounds.js");
+  const { installSounds, AudioEngine } = await import("#/shared/lib/sounds.js");
   const calls = [], play = AudioEngine.prototype.play;
   AudioEngine.prototype.play = function (options) { calls.push([this.path, options]); };
   const owner = new Component(), host = document.body.appendChild(document.createElement("div"));

@@ -2,17 +2,17 @@
      its day, with Tasks) or ☀️ (moved to today) takes it off at once, the write follows. A row is
      dragged onto a day (drag.js); a swipe reveals the actions on the phone -->
 <script setup>
-import { vHoldAction } from "#/composables/holdAction.js";
+import { vHoldAction } from "#/shared/lib/holdAction.js";
 import { computed, inject, reactive, watch } from "vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import TaskText from "#/components/pages/calendar/TaskText.vue";
 import TaskButtons from "#/components/pages/calendar/TaskButtons.vue";
 import { T } from "#/models/calendarData.js";
-import { dm } from "#/helpers/dates.js";
-import { AudioEngine } from "#/helpers/sounds.js";
+import { dm } from "#/shared/lib/dates.js";
+import { AudioEngine } from "#/shared/lib/sounds.js";
 import { ASSETS, SOUNDS } from "#/helpers/paths.js";
 import { useDragSource } from "#/composables/drag.js";
-import { useSwipe } from "#/composables/swipe.js";
+import { useSwipe } from "#/shared/lib/swipe.js";
 
 const view = inject("calendar");
 const ctx = computed(() => view.ctx);

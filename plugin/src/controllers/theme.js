@@ -3,7 +3,7 @@ import { watch } from "vue";
 import config, { THEMES } from "#/helpers/config.js";
 import { THEME_IMAGES } from "#/helpers/paths.js";
 import { taskStore } from "#/store/tasks.js";
-import { useFileChanges } from "#/composables/use.js";
+import { useFileChanges } from "#/shared/lib/use.js";
 
 export function useTheme(plugin) {
   const { app } = plugin, body = document.body;

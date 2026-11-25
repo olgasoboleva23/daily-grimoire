@@ -3,7 +3,7 @@
      (helpers/sounds.js: a gem for ✅, the slowed gem back to ☐, a chime for ❌); `static`: a plain
      box, for a legend or inside another button; `size` s: a small one -->
 <script setup>
-import { playMark } from "#/helpers/sounds.js";
+import { playMark } from "#/shared/lib/sounds.js";
 
 const props = defineProps({
   mark: { type: String, default: "☐" },   // ☐ | ✅ | ❌

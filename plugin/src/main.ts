@@ -4,7 +4,7 @@ import { openUi } from "./components/app/open.ts";
 import { registerCommands } from "./commands/commands.ts";
 import { useNotify } from "./composables/notify.js";
 import { setApp } from "./helpers/app.js";
-import { installSounds } from "./helpers/sounds.js";
+import { installSounds } from "#/shared/lib/sounds.js";
 import { useTheme } from "./controllers/theme.js";
 import { useTaskStore } from "./store/tasks.js";
 

@@ -2,8 +2,8 @@
 // bought from it, pure (tested by tests/logic.test.mjs, tests/entities.test.mjs); log and
 // catalog read by: controllers/widgets/market.js.
 import config from "#/helpers/config.js";
-import { diffDays } from "#/helpers/dates.js";
-import { FIELD, LineItem, lineOf, withField } from "./lineItem.js";
+import { diffDays } from "#/shared/lib/dates.js";
+import { FIELD, LineItem, lineOf, withField } from "#/shared/lib/lineItem.js";
 
 // the categories, and "✦ Other" for an item without one
 export const marketCats = [...config.marketCategories, { label: "✦ Other", type: "other" }];

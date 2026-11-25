@@ -2,7 +2,7 @@
 // Writes eaten items, day notes, mark definitions and the training task.
 import { readJson } from "#/helpers/files.js";
 import { collection } from "#/helpers/collection.js";
-import { todayYmd } from "#/helpers/dates.js";
+import { todayYmd } from "#/shared/lib/dates.js";
 import {
   marksOf, withEaten, withMarks, withNote, withoutEaten, withTask,
 } from "#/models/food.js";

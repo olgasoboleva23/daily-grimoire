@@ -1,7 +1,7 @@
 // The daily note button's controller ("✦ Open"): the page's date's daily note, opened, made first
 // when it's missing (models/kinds.js daily). The markup: widgets/DailyNoteOpen.vue.
 import { Platform } from "obsidian";
-import { ymd } from "#/helpers/dates.js";
+import { ymd } from "#/shared/lib/dates.js";
 import { app } from "#/helpers/app.js";
 import { inUi } from "#/components/app/open.ts";
 import { dailyFolder } from "#/helpers/paths.js";

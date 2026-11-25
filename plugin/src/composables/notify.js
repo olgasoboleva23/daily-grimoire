@@ -1,7 +1,7 @@
 import { Platform } from "obsidian";
 import { dataview } from "#/helpers/plugins.js";
-import { useDataviewChanges, useNewDay, useWhenIndexed } from "./use.js";
-import { todayYmd } from "#/helpers/dates.js";
+import { useDataviewChanges, useNewDay, useWhenIndexed } from "#/shared/lib/use.js";
+import { todayYmd } from "#/shared/lib/dates.js";
 import { Goal, reminders, dayCounts } from "#/models/goal.js";
 import { GOALS, TASKS } from "#/helpers/paths.js";
 import { T } from "#/models/calendarData.js";

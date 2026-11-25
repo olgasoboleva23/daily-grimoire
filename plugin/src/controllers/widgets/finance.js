@@ -3,8 +3,8 @@
 // ◀ ▶ step through the months. The data (00 System/Data/Finance) stays in the vault. The markup:
 // pages/finance (the Finance page; its styles also hold the dashboard card's
 // ui-fin__month block), widgets/finance/index.vue (the dashboard's card).
-import { dm } from "#/helpers/dates.js";
-import { money } from "#/helpers/format.js";
+import { dm } from "#/shared/lib/dates.js";
+import { money } from "#/shared/lib/format.js";
 import { readJson } from "#/helpers/files.js";
 import { LEDGER, RULES } from "#/helpers/paths.js";
 import { monthReport, parseLedger, summarize } from "#/models/ledger.js";

@@ -3,7 +3,7 @@
 import { shallowReactive } from "vue";
 import { Notice } from "obsidian";
 import { collection } from "#/helpers/collection.js";
-import { nextId } from "#/helpers/ids.js";
+import { nextId } from "#/shared/lib/ids.js";
 import { readJson, serial } from "#/helpers/files.js";
 import { DISHES, FOOD_DATA, FOOD_LOG, MARKET_RECORDS } from "#/helpers/paths.js";
 import config from "#/helpers/config.js";

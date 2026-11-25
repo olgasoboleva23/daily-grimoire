@@ -3,7 +3,7 @@
 import { Notice } from "obsidian";
 import { readJson } from "#/helpers/files.js";
 import { collection } from "#/helpers/collection.js";
-import { todayYmd } from "#/helpers/dates.js";
+import { todayYmd } from "#/shared/lib/dates.js";
 import { COURSES } from "#/helpers/paths.js";
 import {
   courseData, courseList, courseOf, edited, formValues, intake, withDayNote, withMark,

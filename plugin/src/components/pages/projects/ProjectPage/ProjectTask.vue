@@ -9,7 +9,7 @@ import UiCheckbox from "#/components/uikit/UiCheckbox/index.vue";
 import TaskText from "#/components/pages/calendar/TaskText.vue";
 import { app } from "#/helpers/app.js";
 import config from "#/helpers/config.js";
-import { addDays, todayYmd } from "#/helpers/dates.js";
+import { addDays, todayYmd } from "#/shared/lib/dates.js";
 import { tasksApi } from "#/helpers/plugins.js";
 import { editTask } from "#/components/windows/tasks/TaskWindow/open.js";
 import { tickTask } from "#/controllers/tasks.js";

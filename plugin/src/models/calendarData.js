@@ -1,7 +1,7 @@
 // The calendar's model, no DOM (CalendarData), and the keys that name a task in its markup.
 // Tasks are Dataview tasks ({ status, text, path, line }), each with its Task.
 import { Task, historyOf } from "./task.js";
-import { addDays, diffDays, dm, weekday } from "#/helpers/dates.js";
+import { addDays, diffDays, dm, weekday } from "#/shared/lib/dates.js";
 import { projectRepeats } from "./repeats.js";
 
 export const T = t => (t.uiTask ??= Task.of(t));   // a Dataview task's Task, made once

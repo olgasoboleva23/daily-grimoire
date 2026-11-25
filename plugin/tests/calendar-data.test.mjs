@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { weekOf } from "#/helpers/dates.js";
+import { weekOf } from "#/shared/lib/dates.js";
 import { T, CalendarData, canReorder } from "#/models/calendarData.js";
 import { idTask } from "./stubs/idTask.mjs";
 

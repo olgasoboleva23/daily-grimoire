@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { nextId } from "#/helpers/ids.js";
+import { nextId } from "#/shared/lib/ids.js";
 
 test("nextId: the biggest prefix<N> plus one; other keys skipped", () => {
   assert.equal(nextId("m", ["m2", "m10", null, "x7"]), "m11");

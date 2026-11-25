@@ -13,7 +13,7 @@
 import { computed, ref } from "vue";
 import { app } from "#/helpers/app.js";
 import { APP_NAME } from "#/helpers/name.js";
-import { parseNote } from "#/models/taskFile.js";
+import { parseNote } from "#/shared/lib/noteLines.js";
 import { Task } from "#/models/task.js";
 import { collection } from "#/helpers/collection.js";
 import { applyConfig } from "#/helpers/config.js";

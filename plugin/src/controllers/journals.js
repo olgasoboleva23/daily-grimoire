@@ -6,7 +6,7 @@ import { BodyLog } from "#/models/bodyLog.js";
 import { KINDS } from "#/models/kinds.js";
 import { createNote } from "#/controllers/notes.js";
 import { edit } from "#/helpers/files.js";
-import { todayYmd } from "#/helpers/dates.js";
+import { todayYmd } from "#/shared/lib/dates.js";
 import { JOURNALS } from "#/helpers/paths.js";
 
 // [{ path, name, reasons, lag, entries: Map date → { date, level, reasons } }], by name

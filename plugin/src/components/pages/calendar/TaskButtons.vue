@@ -2,7 +2,7 @@
      (UiDeleteButton: click twice, the first arms it for 3 s; the phone: a hold); @gone when the
      task leaves (skipped, deleted) so its row goes at once -->
 <script setup>
-import { vHoldAction } from "#/composables/holdAction.js";
+import { vHoldAction } from "#/shared/lib/holdAction.js";
 import { inject } from "vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import UiDeleteButton from "#/components/uikit/UiDeleteButton/index.vue";

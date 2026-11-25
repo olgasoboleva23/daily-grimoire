@@ -1,6 +1,6 @@
 // The market catalog and shopping list. Supplies derives its purchase history from the list.
 // Reads back the latest records; writes cover products, marks and shopping rows.
-import { todayYmd } from "#/helpers/dates.js";
+import { todayYmd } from "#/shared/lib/dates.js";
 import {
   MarketItem, catOf, historyOf, marketCats, marketChoices, openKeys,
   supplyStats,
@@ -8,9 +8,9 @@ import {
 import { marksOf } from "#/models/food.js";
 import { Notice } from "obsidian";
 import { collection } from "#/helpers/collection.js";
-import { nextId } from "#/helpers/ids.js";
+import { nextId } from "#/shared/lib/ids.js";
 import { appendLine, editLine, readJson, serial } from "#/helpers/files.js";
-import { parseNote } from "#/models/taskFile.js";
+import { parseNote } from "#/shared/lib/noteLines.js";
 import { app } from "#/helpers/app.js";
 import { FOOD_DATA, MARKET_NOTE, MARKET_RECORDS } from "#/helpers/paths.js";
 

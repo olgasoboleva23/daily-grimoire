@@ -1,6 +1,6 @@
 // The writes of new notes: a watch / read / game / recipe / work task note (models/kinds.js) from
 // its window's values, in its folder (made when missing).
-import { todayYmd } from "#/helpers/dates.js";
+import { todayYmd } from "#/shared/lib/dates.js";
 import { Note, notePath } from "#/models/note.js";
 import { app } from "#/helpers/app.js";
 

@@ -1,12 +1,12 @@
 // Project and stage reads and writes, including task links checked against the current stage.
 import { Notice } from "obsidian";
 import { app as vaultApp } from "#/helpers/app.js";
-import { nextId } from "#/helpers/ids.js";
+import { nextId } from "#/shared/lib/ids.js";
 import { MASTER, PROJECTS } from "#/helpers/paths.js";
 import { edit, readJson } from "#/helpers/files.js";
 import { importCover } from "#/helpers/images.js";
 import { notes, projects } from "#/store/tasks.js";
-import { parseNote } from "#/models/taskFile.js";
+import { parseNote } from "#/shared/lib/noteLines.js";
 import { Task } from "#/models/task.js";
 import { editTaskLine } from "#/controllers/tasks.js";
 

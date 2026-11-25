@@ -16,7 +16,7 @@ import UiTable from "#/components/uikit/UiTable/index.vue";
 import { TIMES, next } from "#/models/course.js";
 import { setDayNote, tickMeds } from "#/controllers/meds.js";
 import { openEditCourse } from "#/components/windows/meds/CourseWindow/open.js";
-import { playMark } from "#/helpers/sounds.js";
+import { playMark } from "#/shared/lib/sounds.js";
 
 const props = defineProps({
   id: { type: String, required: true },

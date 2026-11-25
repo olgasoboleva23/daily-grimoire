@@ -6,7 +6,7 @@ import { Platform } from "obsidian";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import { T } from "#/models/calendarData.js";
 import { goTo } from "#/store/calendar.js";
-import { addDays, addMonths } from "#/helpers/dates.js";
+import { addDays, addMonths } from "#/shared/lib/dates.js";
 
 const M = d => window.moment(d);
 const view = inject("calendar");

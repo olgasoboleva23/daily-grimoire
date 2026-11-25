@@ -5,8 +5,8 @@
 // then on the list; the product search (a dish's line): a food product, or + new → New product.
 import { Notice, prepareFuzzySearch } from "obsidian";
 import { app } from "#/helpers/app.js";
-import { dm } from "#/helpers/dates.js";
-import { findChoices } from "#/helpers/find.js";
+import { dm } from "#/shared/lib/dates.js";
+import { findChoices } from "#/shared/lib/find.js";
 import { catLabel, marketCats } from "#/models/market.js";
 import { openWindow } from "#/components/uikit/Window/open.ts";
 import { askValue } from "#/components/uikit/FieldWindow/ask.js";

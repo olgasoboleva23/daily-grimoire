@@ -1,13 +1,13 @@
 <script setup>
 import { Notice } from "obsidian";
 import { computed, markRaw, onActivated, provide, ref, watch } from "vue";
-import { useLater, useNewDay, useRedraw } from "#/composables/use.js";
+import { useLater, useNewDay, useRedraw } from "#/shared/lib/use.js";
 import { app } from "#/helpers/app.js";
-import { useObsidian } from "#/composables/vueApp.ts";
+import { useObsidian } from "#/shared/lib/vueApp.ts";
 import { tasksApi } from "#/helpers/plugins.js";
 import { taskStore } from "#/store/tasks.js";
 import config from "#/helpers/config.js";
-import { todayYmd } from "#/helpers/dates.js";
+import { todayYmd } from "#/shared/lib/dates.js";
 import { CalendarData, T, findTask, taskInfo } from "#/models/calendarData.js";
 import { baseDate, shownDays } from "#/store/calendar.js";
 import { makeActions } from "#/controllers/calendar.js";

@@ -2,7 +2,7 @@
      next 7 days; a chip is a drop zone (drag.js) -->
 <script setup>
 import { computed, inject } from "vue";
-import { addDays } from "#/helpers/dates.js";
+import { addDays } from "#/shared/lib/dates.js";
 import { useDropZone } from "#/composables/drag.js";
 
 const view = inject("calendar");

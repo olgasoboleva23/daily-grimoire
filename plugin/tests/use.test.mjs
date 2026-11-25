@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { useRedraw, useNewDay, useBusy, useDataviewChanges, useFileChanges, useWhenIndexed, useTabDate } from "#/composables/use.js";
+import { useRedraw, useNewDay, useBusy, useDataviewChanges, useFileChanges, useWhenIndexed, useTabDate } from "#/shared/lib/use.js";
 import { openNote } from "#/components/app/open.ts";
 import { setApp } from "#/helpers/app.js";
 
