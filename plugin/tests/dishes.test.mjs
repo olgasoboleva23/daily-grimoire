@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import {
   addDish, askDish, editDish, loadRecipes, productsToList, removeDish,
 } from "#/controllers/dishes.js";
-import { loadCelestialMarket } from "#/controllers/widgets/market.js";
+import { addToMarket, loadCelestialMarket } from "#/controllers/widgets/market.js";
 import { addEaten, loadFood } from "#/controllers/food.js";
 import { Search } from "#/components/uikit/Search/index.ts";
 import { Form } from "#/components/uikit/Form/index.ts";
@@ -87,6 +87,20 @@ test("market amounts are merged by product and kept by dish across concurrent cl
   const rows = (await loadCelestialMarket()).groups.flatMap(g => g.rows);
   assert.deepEqual(rows.find(r => r.id === "m2").needs,
     [{ dish: "Side", amount: "" }, { dish: "Salad", amount: "(to taste)" }]);
+});
+
+test("manual and recipe additions share one open row and leave purchase history intact", async () => {
+  const { files } = fixture();
+  const history = "- [x] m1 [completion:: 2026-11-20]\n";
+
+  files[MARKET_NOTE] = history;
+  const results = await Promise.all([
+    addToMarket("Peas", "food", "m1"),
+    productsToList([{ item: "m1", dish: "Soup", amount: "200 g" }]),
+  ]);
+
+  assert.deepEqual(results, [true, { added: 0, joined: 1 }]);
+  assert.equal(files[MARKET_NOTE], history + "- [ ] m1 [need:: Soup · 200 g]\n");
 });
 
 test("a new shopping list keeps both amounts on its first product line", async () => {

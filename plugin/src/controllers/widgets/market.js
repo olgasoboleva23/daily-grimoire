@@ -157,44 +157,36 @@ export const addToMarket = (name, type, id = null) => adding(() => addItem(name,
 
 // the first item of a new vault starts the catalog (its folder too)
 async function addItem(name, type, id) {
-  const state = await marketState();
+  if (id) {
+    const records = await readJson(MARKET_RECORDS, {});
 
-  if (!id) await catalog.edit(records => {
-    id ??= Object.keys(records)
-      .find(k => records[k].name.trim().toLowerCase() === name.trim().toLowerCase());
-    if (!id) {
-      id = nextId("m", [...Object.keys(records), ...state.items.map(i => i.id)]);
+    if (!records[id]) throw new Error(`Market record ${id} is missing`);
+  } else {
+    const { items } = await marketState();
+
+    await catalog.edit(records => {
+      id = Object.keys(records)
+        .find(k => records[k].name.trim().toLowerCase() === name.trim().toLowerCase());
+      if (id) return null;
+      id = nextId("m", [...Object.keys(records), ...items.map(i => i.id)]);
       records[id] = { name, type };
-    }
-
-    return records;
-  });
-  else if (!state.records?.[id]) throw new Error(`Market record ${id} is missing`);
-  const file = app.vault.getFileByPath(MARKET_NOTE);
-
-  if (!file) {
-    await appendLine(MARKET_NOTE, `- [ ] ${id}`);
-    return true;
+      return records;
+    });
   }
 
-  let added = false;
-  await app.vault.process(file, text => {
-    const listed = parseMarket(text).map(MarketItem.of)
-      .some(i => i.isOpen && i.id === id);
-
-    added = !listed;
-    return listed ? text : `${text.trimEnd()}\n- [ ] ${id}\n`;
-  });
-  return added;
+  return (await writeShoppingList([{ item: id }])).added > 0;
 }
 
-// Put recipe needs on a product's open row or add that row once. Count each changed row once.
 export const productsToList = requests => adding(async () => {
-  const counts = { added: 0, joined: 0 };
-
-  if (!requests.length) return counts;
+  if (!requests.length) return { added: 0, joined: 0 };
   const records = await readJson(MARKET_RECORDS, {});
-  const selected = requests.filter(({ item }) => records[item]?.type === "food");
+
+  return writeShoppingList(requests.filter(({ item }) => records[item]?.type === "food"));
+});
+
+// The caller holds the addition queue. All changes to existing rows and new rows share one write.
+async function writeShoppingList(selected) {
+  const counts = { added: 0, joined: 0 };
 
   if (!selected.length) return counts;
   const update = text => {
@@ -213,10 +205,10 @@ export const productsToList = requests => adding(async () => {
       if (index === undefined) {
         const line = added.get(item) ?? `- [ ] ${item}`;
 
-        added.set(item, new MarketItem(line).withNeed(dish, amount));
+        added.set(item, dish ? new MarketItem(line).withNeed(dish, amount) : line);
       } else {
         const line = lines[index];
-        const updated = new MarketItem(line).withNeed(dish, amount);
+        const updated = dish ? new MarketItem(line).withNeed(dish, amount) : line;
 
         if (updated === line) continue;
         lines[index] = updated;
@@ -240,7 +232,7 @@ export const productsToList = requests => adding(async () => {
   if (file) await app.vault.process(file, update);
   else await appendLine(MARKET_NOTE, update("").trimEnd());
   return counts;
-});
+}
 
 // Change the displayed row only while that line is still the same open item.
 function editOpenItem({ line, id, name }, change) {
