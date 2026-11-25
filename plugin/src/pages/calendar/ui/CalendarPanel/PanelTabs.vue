@@ -2,7 +2,7 @@
 <script setup>
 import { computed, inject } from "vue";
 import UiTabs from "#/shared/ui/UiTabs/index.vue";
-import { calendarProjects } from "#/pages/calendar/index.js";
+import { calendarProjects } from "../../model/panelGroup.js";
 
 const view = inject("calendar");
 const state = view.state;

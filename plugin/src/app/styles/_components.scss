@@ -30,7 +30,7 @@
 @use "scroll-cards";
 @use "../../widgets/weight/ui" as weight;
 @use "../../widgets/savings/ui" as savings;
-@use "../../components/pages/calendar/TaskCard";
+@use "../../pages/calendar/ui/TaskCard";
 @use "../../shared/ui/UiButton";
 @use "../../shared/ui/UiDeleteButton";
 @use "../../shared/ui/UiEmpty";
@@ -39,8 +39,8 @@
 @use "syncing";
 @use "nav";
 @use "busy";
-@use "../../components/pages/calendar/CalendarTab";
-@use "../../components/pages/calendar/CalendarMissed";
+@use "../../pages/calendar/ui/CalendarTab";
+@use "../../pages/calendar/ui/CalendarMissed";
 @use "../../components/pages/dashboard";
 // was injected by the widget itself, after everything else: last
 @use "../../components/pages/finance" as finance-page;

@@ -13,7 +13,7 @@ import { computed, inject, ref } from "vue";
 import UiButton from "#/shared/ui/UiButton/index.vue";
 import { TaskText } from "#/entities/task/index.js";
 import TaskButtons from "./TaskButtons.vue";
-import { useDragSource, useReorder } from "#/composables/drag.js";
+import { useDragSource, useReorder } from "./drag.js";
 import { useSwipe } from "#/shared/lib/swipe.js";
 
 const props = defineProps({

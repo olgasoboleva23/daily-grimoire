@@ -14,7 +14,7 @@ const line = () => `- [ ] t1 [repeat:: every week on Monday, Wednesday, Friday w
 before(async () => {
   ({ mount } = await import("@vue/test-utils"));
   ({ reactive, shallowReactive, nextTick } = await import("vue"));
-  Regulars = (await import("#/components/pages/calendar/CalendarPanel/RegularsTab.vue")).default;
+  Regulars = (await import("#/pages/calendar/ui/CalendarPanel/RegularsTab.vue")).default;
   ({ CalendarData, calendarTaskInfo } = await import("#/pages/calendar/model/calendarData.js"));
 });
 

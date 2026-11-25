@@ -4,10 +4,10 @@
 import { computed, inject } from "vue";
 import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
 import GroupCard from "./GroupCard.vue";
-import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";
+import TaskCard from "../TaskCard/index.vue";
 import { T } from "#/entities/task/index.js";
 import { diffDays } from "#/shared/lib/dates.js";
-import { areaTitle } from "#/pages/calendar/index.js";
+import { areaTitle } from "../../model/panelGroup.js";
 
 const M = d => window.moment(d);
 const view = inject("calendar");

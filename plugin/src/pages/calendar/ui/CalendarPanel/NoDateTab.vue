@@ -2,8 +2,8 @@
 <script setup>
 import { computed, inject } from "vue";
 import GroupCard from "./GroupCard.vue";
-import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";
-import { SHOWN, byArea } from "#/pages/calendar/index.js";
+import TaskCard from "../TaskCard/index.vue";
+import { SHOWN, byArea } from "../../model/panelGroup.js";
 
 const view = inject("calendar");
 

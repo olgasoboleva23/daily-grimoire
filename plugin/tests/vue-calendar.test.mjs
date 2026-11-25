@@ -22,12 +22,12 @@ before(async () => {
     loadLocalStorage: () => null, saveLocalStorage() {}, commands: { executeCommandById() {} },
   });
   vue = await import("vue");
-  Tab = (await import("#/components/pages/calendar/CalendarTab/index.vue")).default;
+  Tab = (await import("#/pages/calendar/ui/CalendarTab/index.vue")).default;
   data = await import("#/pages/calendar/model/calendarData.js");
-  actions = await import("#/controllers/calendar.js");
+  actions = await import("#/pages/calendar/ui/actions.js");
   state = await import("#/pages/calendar/model/store.js");
   ({ useLater } = await import("#/shared/lib/use.js"));
-  ({ dragState } = await import("#/composables/drag.js"));
+  ({ dragState } = await import("#/pages/calendar/ui/drag.js"));
   ({ Component } = await import("obsidian"));
 });
 
@@ -69,7 +69,7 @@ const box = (el, text) => [...el.querySelectorAll(".ui-cal__task--open")].find(r
   .querySelector("input");
 
 test("CalendarPage: cached while hidden, refreshed on return; subscriptions end on close", async () => {
-  const Calendar = (await import("#/components/pages/calendar/index.vue")).default;
+  const Calendar = (await import("#/pages/calendar/ui/index.vue")).default;
   const { taskStore } = await import("#/entities/task/index.js");
   const { mount } = await import("@vue/test-utils");
   const shown = vue.ref(true);

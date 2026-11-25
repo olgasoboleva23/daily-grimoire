@@ -9,7 +9,7 @@ let mount, TaskText, TaskRow, TaskCard;
 before(async () => {
   ({ mount } = await import("@vue/test-utils"));
   // a component is <Name>.vue, or <Name>/index.vue when it has its own styles
-  const load = async n => (await import(`../src/components/pages/calendar/${n}`)).default;
+  const load = async n => (await import(`../src/pages/calendar/ui/${n}`)).default;
   ({ TaskText } = await import("#/entities/task/index.js"));
   [TaskRow, TaskCard] = await Promise.all(["TaskRow.vue", "TaskCard/index.vue"].map(load));
 });
@@ -63,7 +63,7 @@ test("the calendar pencil opens Edit task, then passes the named line to Tasks",
   const { testWindows } = await import("./stubs/windows.mjs");
   const { flushPromises } = await import("@vue/test-utils");
   const { taskStore } = await import("#/entities/task/index.js");
-  const { makeActions } = await import("#/controllers/calendar.js");
+  const { makeActions } = await import("#/pages/calendar/ui/actions.js");
   const line = "- [ ] t1 [due:: 2026-11-11]";
   const records = { t1: { name: "Walk", area: "body" } };
   const { app, files } = vault({

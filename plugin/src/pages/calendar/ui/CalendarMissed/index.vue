@@ -6,11 +6,11 @@ import { vHoldAction } from "#/shared/lib/holdAction.js";
 import { computed, inject, reactive, watch } from "vue";
 import UiButton from "#/shared/ui/UiButton/index.vue";
 import { TaskText, T } from "#/entities/task/index.js";
-import TaskButtons from "#/components/pages/calendar/TaskButtons.vue";
+import TaskButtons from "../TaskButtons.vue";
 import { dm } from "#/shared/lib/dates.js";
 import { AudioEngine } from "#/shared/lib/sounds.js";
 import { ASSETS, SOUNDS } from "#/shared/config/index.js";
-import { useDragSource } from "#/composables/drag.js";
+import { useDragSource } from "../drag.js";
 import { useSwipe } from "#/shared/lib/swipe.js";
 
 const view = inject("calendar");

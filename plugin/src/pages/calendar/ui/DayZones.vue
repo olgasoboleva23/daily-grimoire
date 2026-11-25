@@ -2,7 +2,7 @@
      (planned for it) -->
 <script setup>
 import { computed, inject } from "vue";
-import { useDropZone } from "#/composables/drag.js";
+import { useDropZone } from "./drag.js";
 
 const props = defineProps({ day: { type: String, required: true } });
 const view = inject("calendar");

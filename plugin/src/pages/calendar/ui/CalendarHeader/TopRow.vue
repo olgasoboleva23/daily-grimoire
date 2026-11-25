@@ -2,7 +2,7 @@
 <script setup>
 import { computed, inject } from "vue";
 import UiButton from "#/shared/ui/UiButton/index.vue";
-import { goTo } from "#/pages/calendar/index.js";
+import { goTo } from "../../model/store.js";
 import { app } from "#/shared/host/index.js";
 import { APP_NAME } from "#/shared/config/index.js";
 

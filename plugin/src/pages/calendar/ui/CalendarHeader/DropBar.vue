@@ -3,7 +3,7 @@
 <script setup>
 import { computed, inject } from "vue";
 import { addDays } from "#/shared/lib/dates.js";
-import { useDropZone } from "#/composables/drag.js";
+import { useDropZone } from "../drag.js";
 
 const view = inject("calendar");
 

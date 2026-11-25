@@ -8,10 +8,10 @@ import { useObsidian } from "#/shared/lib/vueApp.ts";
 import { taskStore, T, findTask } from "#/entities/task/index.js";
 import config from "#/shared/config/index.js";
 import { todayYmd } from "#/shared/lib/dates.js";
-import { CalendarData, calendarTaskInfo } from "#/pages/calendar/index.js";
-import { baseDate, shownDays } from "#/pages/calendar/index.js";
-import { makeActions } from "#/controllers/calendar.js";
-import { dragState } from "#/composables/drag.js";
+import { CalendarData, calendarTaskInfo } from "../model/calendarData.js";
+import { baseDate, shownDays } from "../model/store.js";
+import { makeActions } from "./actions.js";
+import { dragState } from "./drag.js";
 import CalendarTab from "./CalendarTab/index.vue";
 
 defineOptions({ name: "CalendarPage" });

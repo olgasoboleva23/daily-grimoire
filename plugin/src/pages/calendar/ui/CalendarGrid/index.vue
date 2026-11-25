@@ -7,7 +7,7 @@ import { Platform } from "obsidian";
 import WeekGrid from "./WeekGrid.vue";
 import MonthGrid from "./MonthGrid.vue";
 import PhoneMonth from "./PhoneMonth.vue";
-import { dateFor } from "#/pages/calendar/index.js";
+import { dateFor } from "../../model/store.js";
 
 const EMPTY = [".ui-cal__num", ".ui-cal__marks", ".ui-cal__marks *", ".ui-cal__dots",
   ".ui-cal__dots *"].join(", ");

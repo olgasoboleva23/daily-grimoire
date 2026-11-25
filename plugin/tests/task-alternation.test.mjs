@@ -20,7 +20,7 @@ beforeTests(async () => {
   ({ saveTaskEdit } = await import("#/features/edit-task/index.js"));
   ({ saveNewTask } = await import("#/features/new-task/index.js"));
   ({ readTaskEdit } = await import("#/entities/task/index.js"));
-  ({ makeActions } = await import("#/controllers/calendar.js"));
+  ({ makeActions } = await import("#/pages/calendar/ui/actions.js"));
 });
 function setup(text = before) {
   const v = vault({ [MASTER]: text, [TASK_RECORDS]: JSON.stringify({ t1: record }) });

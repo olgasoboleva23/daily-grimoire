@@ -6,9 +6,9 @@ import { vHoldAction } from "#/shared/lib/holdAction.js";
 import UiButton from "#/shared/ui/UiButton/index.vue";
 import GroupCard from "./GroupCard.vue";
 import { TaskText, T, ruleText } from "#/entities/task/index.js";
-import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";
+import TaskCard from "../TaskCard/index.vue";
 import { dm } from "#/shared/lib/dates.js";
-import { byArea } from "#/pages/calendar/index.js";
+import { byArea } from "../../model/panelGroup.js";
 
 const RESUME = "resume: from today, on the first day its rule allows";
 const view = inject("calendar");

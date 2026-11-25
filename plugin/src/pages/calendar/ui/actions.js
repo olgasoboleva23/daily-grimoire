@@ -1,7 +1,7 @@
 // Actions exposed by the calendar's task rows and drag zones.
 import { T, placeTask, reorderTasks, setDue, taskFromPool } from "#/entities/task/index.js";
 import { tick, skipTask, completeOnItsDay } from "#/features/complete-task/index.js";
-import { togglePause, unplanTask } from "#/pages/calendar/index.js";
+import { togglePause, unplanTask } from "./plan.js";
 import { deleteTask } from "#/features/edit-task/index.js";
 
 export function makeActions(ctx) {

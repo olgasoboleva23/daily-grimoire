@@ -6,7 +6,7 @@ import { logPurchase } from "#/features/buy-reward/index.js";
 import { addTask, readTaskEdit, saveRecords, newId, taskStore } from "#/entities/task/index.js";
 import { saveNewTask } from "#/features/new-task/index.js";
 import { saveTaskEdit } from "#/features/edit-task/index.js";
-import { makeActions } from "#/controllers/calendar.js";
+import { makeActions } from "#/pages/calendar/ui/actions.js";
 import { CalendarData } from "#/pages/calendar/model/calendarData.js";
 
 const MASTER = "00 System/Data/Tasks/Master.md", RECORDS = "00 System/Data/Tasks/tasks.json", BUY = "00 System/Data/Purchases.md";

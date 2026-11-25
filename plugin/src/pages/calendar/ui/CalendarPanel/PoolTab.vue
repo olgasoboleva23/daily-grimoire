@@ -4,8 +4,8 @@
 import { computed, inject } from "vue";
 import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
 import GroupCard from "./GroupCard.vue";
-import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";
-import { byArea } from "#/pages/calendar/index.js";
+import TaskCard from "../TaskCard/index.vue";
+import { byArea } from "../../model/panelGroup.js";
 
 const EMPTY_POOL = "New task with «To pool» adds one here";
 const view = inject("calendar");

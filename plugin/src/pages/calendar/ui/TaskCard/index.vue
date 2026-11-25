@@ -6,8 +6,8 @@ import { vHoldAction } from "#/shared/lib/holdAction.js";
 import { computed, inject, ref } from "vue";
 import UiButton from "#/shared/ui/UiButton/index.vue";
 import { TaskText } from "#/entities/task/index.js";
-import TaskButtons from "#/components/pages/calendar/TaskButtons.vue";
-import { useDragSource } from "#/composables/drag.js";
+import TaskButtons from "../TaskButtons.vue";
+import { useDragSource } from "../drag.js";
 import { useSwipe } from "#/shared/lib/swipe.js";
 
 const POOL_EDIT = "edit pool task";

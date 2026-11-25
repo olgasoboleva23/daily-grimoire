@@ -3,9 +3,9 @@
 import { computed, inject } from "vue";
 import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
 import GroupCard from "./GroupCard.vue";
-import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";
+import TaskCard from "../TaskCard/index.vue";
 import { T } from "#/entities/task/index.js";
-import { calendarProjects } from "#/pages/calendar/index.js";
+import { calendarProjects } from "../../model/panelGroup.js";
 
 const EMPTY_PROJECTS = "Projects are kept in projects.json";
 const view = inject("calendar");
