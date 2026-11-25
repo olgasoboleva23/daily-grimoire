@@ -1,11 +1,7 @@
-// The market widget, supplies page and the flows that put products on the shopping list.
-import { Notice } from "obsidian";
+// Load the shopping card and the supplies page from the current list and purchase history.
 import { MARKET_NOTE } from "#/shared/config/index.js";
 import { todayYmd } from "#/shared/lib/dates.js";
-import {
-  addCatalogItem, adding, catOf, groupByCategory, readItems, readMarket, readMarketItem,
-  supplyStats, writeShoppingList,
-} from "#/entities/product/index.js";
+import { catOf, groupByCategory, readMarket, supplyStats } from "#/entities/product/index.js";
 
 export async function loadCelestialMarket() {
   const mkt = await readMarket();
@@ -42,28 +38,4 @@ export async function loadSupplies() {
   };
 
   return { empty: !stats.length, groups: groupByCategory(stats, s => catOf(s.type), row) };
-}
-
-export const addToMarket = (name, type, id = null) => adding(async () => {
-  if (id) {
-    if (!await readMarketItem(id)) throw new Error(`Market record ${id} is missing`);
-  } else {
-    const { items } = await readMarket();
-    id = await addCatalogItem({ name, type }, items, true);
-  }
-
-  return (await writeShoppingList([{ item: id }])).added > 0;
-});
-
-export const productsToList = requests => adding(async () => {
-  if (!requests.length) return { added: 0, joined: 0 };
-  const records = await readItems();
-
-  return writeShoppingList(requests.filter(({ item }) => records[item]?.type === "food"));
-});
-
-// runsLow(name, type, id = null): back on the Celestial Market's list
-export async function runsLow(name, type, id = null) {
-  await addToMarket(name, type, id);
-  new Notice(`✦ ${name} → Celestial Market`);
 }

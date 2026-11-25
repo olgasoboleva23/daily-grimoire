@@ -1,7 +1,7 @@
 <!-- the ＋ by Celestial Market's card title: a new item from the search -->
 <script setup>
 import UiButton from "#/shared/ui/UiButton/index.vue";
-import { addMarketItem } from "#/components/windows/market/addMarketItem.js";
+import { addMarketItem } from "#/features/add-to-list/index.js";
 </script>
 
 <template>

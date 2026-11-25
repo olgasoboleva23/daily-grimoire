@@ -15,7 +15,7 @@ import UiCard from "#/shared/ui/UiCard/index.vue";
 import { askValue, confirm, openWindow } from "#/shared/ui/Window/index.ts";
 import LinkWindow from "#/components/windows/projects/LinkWindow/index.vue";
 import { app } from "#/shared/host/index.js";
-import { deleteProject } from "#/controllers/projects.js";
+import { deleteProject } from "#/pages/projects/index.js";
 import { FILTERS, stageEntries } from "#/store/projects.js";
 import { coverUrl } from "../cover.js";
 import ProjectStatus from "../ProjectStatus/index.vue";

@@ -1,5 +1,6 @@
 // Market catalog writes, shopping list rows and purchase history.
-import { addToMarket, loadCelestialMarket, loadSupplies } from "#/controllers/widgets/market.js";
+import { loadCelestialMarket, loadSupplies } from "#/controllers/widgets/market.js";
+import { addToMarket } from "#/features/add-to-list/operation/addItem.js";
 import {
   addProduct, buyItem, editProduct, readMarketChoices, readMarketItem, removeItem, supplyStats,
 } from "#/entities/product/index.js";

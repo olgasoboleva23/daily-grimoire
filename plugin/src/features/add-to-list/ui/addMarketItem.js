@@ -6,7 +6,7 @@ import { findChoices } from "#/shared/lib/find.js";
 import { askValue } from "#/shared/ui/Window/index.ts";
 import { Search } from "#/shared/ui/Search/index.ts";
 import { catLabel, marketCats, readMarketChoices } from "#/entities/product/index.js";
-import { addToMarket } from "#/controllers/widgets/market.js";
+import { addToMarket } from "../operation/addItem.js";
 
 export async function addMarketItem() {
   const choices = await readMarketChoices();

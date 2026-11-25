@@ -12,7 +12,7 @@ import UiField from "#/shared/ui/UiField/index.vue";
 import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
 import UiFieldList from "#/shared/ui/UiFieldList/index.vue";
 import { useWrite } from "#/shared/ui/Window/index.ts";
-import { productsToList } from "#/controllers/dishes.js";
+import { productsToList } from "#/features/add-to-list/index.js";
 
 // Omit archived products from the cart, keeping unknown ingredient IDs visible in older recipes.
 const props = defineProps({

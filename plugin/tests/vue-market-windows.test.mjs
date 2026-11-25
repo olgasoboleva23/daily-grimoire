@@ -18,7 +18,7 @@ before(async () => {
   product = await import("#/entities/product/index.js");
   ({ MarketItemWindow } = product);
   ({ readMarks } = await import("#/entities/food-log/index.js"));
-  ({ addMarketItem } = await import("#/components/windows/market/addMarketItem.js"));
+  ({ addMarketItem } = await import("#/features/add-to-list/index.js"));
   MarksWindow = (await import("#/components/windows/food/MarksWindow/index.vue")).default;
   windows = testWindows();
 });

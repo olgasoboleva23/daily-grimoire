@@ -4,7 +4,7 @@
 import UiButton from "#/shared/ui/UiButton/index.vue";
 import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
 import UiGroupHeader from "#/shared/ui/UiGroupHeader.vue";
-import { runsLow } from "#/controllers/widgets/market.js";
+import { runsLow } from "#/features/add-to-list/index.js";
 import { readMarks } from "#/entities/food-log/index.js";
 import { openEditItem } from "#/entities/product/index.js";
 
