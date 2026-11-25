@@ -256,7 +256,11 @@ test("the dish window: 🗑 asks Delete dish? with its name; closed it stays, De
       await w.find(".ui-dish__delete").trigger("click");
       await (await windows.next()).submit();
       await tick();
-      assert.deepEqual(Object.keys(JSON.parse(written[DISHES])), ["d1"]);
+      assert.deepEqual(JSON.parse(written[DISHES]).d2, { ...DISH.d2, deleted: true });
+      const recipes = await page();
+      assert.deepEqual(recipes.findAll(".ui-recipes__name").map(n => n.text()), ["🍲 Porridge 📄"]);
+      await recipes.find(".ui-recipes__search").setValue("cake");
+      assert.match(recipes.find(".ui-recipes__none").text(), /Nothing found/);
       assert.equal(windows.all.length, 0);
     } finally { windows.restore(); }
   });

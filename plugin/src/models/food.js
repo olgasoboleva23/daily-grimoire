@@ -1,41 +1,20 @@
 // The food page menu, recent choices and weekly journal rows.
 import { addDays, diffDays } from "#/shared/lib/dates.js";
+import { Dish, ingredientText } from "#/entities/dish/index.js";
 import { byName } from "#/shared/lib/find.js";
 import { inRanges, rangesOf } from "#/shared/lib/ranges.js";
 import { dayNote, eaten } from "#/entities/food-log/index.js";
 
-export function dishList({ items, dishes }) {
-  const products = new Map(items.map(p => [p.id, p]));
-
-  return dishes.map(d => {
-    const marks = new Set();
-    let missing = false;
-    const ingredients = d.ingredients.map(({ item, amount, alt }) => {
-      const product = products.get(item);
-      const alternatives = (Array.isArray(alt) ? alt : []).map(({ item, amount }) => {
-        const replacement = products.get(item);
-
-        if (!replacement) missing = true;
-        return { item, amount, name: replacement?.name ?? item };
-      });
-
-      if (!product) missing = true;
-      for (const tag of product?.marks ?? []) marks.add(tag);
-      return { item, amount, name: product?.name ?? item, alt: alternatives };
-    });
-
-    return { ...d, ingredients, marks: [...marks], missing };
-  }).sort(byName);
-}
-
-function menu(data) {
+function menu(data, includeDeleted = false) {
   const icons = new Map(data.marks.map(m => [m.tag, m.icon]));
-  const entries = [...data.items, ...dishList(data)];
+  const items = includeDeleted ? data.items : data.items.filter(i => !i.deleted);
+  const dishes = includeDeleted ? data.dishes : data.dishes.filter(d => !d.deleted);
+  const entries = [...items, ...Dish.list({ items, dishes })];
 
   return new Map(entries.map(f => [f.id, {
-    id: f.id, kind: f.ingredients ? "dish" : "item", name: f.name,
-    ingredients: f.ingredients?.map(i =>
-      i.alt.length ? `${i.name} / ${i.alt.map(a => a.name).join(" + ")}` : i.name) ?? [],
+    id: f.id, kind: f.ingredients ? "dish" : "item",
+    name: f.deleted ? `${f.name} (deleted)` : f.name,
+    ingredients: f.ingredients?.map(ingredientText) ?? [],
     marks: f.marks,
     icons: f.marks.map(tag => icons.get(tag) ?? "").join(""),
   }]));
@@ -63,7 +42,7 @@ export function foodChoices({ items, dishes, marks, log, today }) {
 // task: { id, name, days: Set of the dates it was done } or null: each row then says `trained`
 // log: log.json's object
 export function foodWeek({ items, dishes, marks, log, journals, courses, days, task = null }) {
-  const byId = menu({ items, dishes, marks });
+  const byId = menu({ items, dishes, marks }, true);
 
   return days.map(date => {
     const foods = eaten(log, date).map(id => byId.get(id) ?? {

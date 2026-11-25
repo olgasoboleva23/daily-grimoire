@@ -16,7 +16,7 @@ import config from "#/shared/config/index.js";
 import { openWindow } from "#/shared/ui/Window/index.ts";
 import { openDishForm } from "#/components/windows/recipes/DishFormWindow/open.js";
 import CartWindow from "#/components/windows/recipes/CartWindow/index.vue";
-import { ingredientText } from "./cart.js";
+import { ingredientText } from "#/entities/dish/index.js";
 import { openDish } from "./DishWindow/open.js";
 
 const props = defineProps({ state: { type: Object, required: true } });

@@ -13,8 +13,9 @@ const courses = async () =>
   Object.entries(await readCourses()).map(([id, rec]) => forFood(id, rec));
 
 export async function loadFood() {
-  const [data, days, journals, taking] =
-    await Promise.all([readFoodCatalog(), readLog(), readJournals(), courses()]);
+  const [data, days, journals, taking] = await Promise.all([
+    readFoodCatalog({ includeDeleted: true }), readLog(), readJournals(), courses(),
+  ]);
 
   const id = data.task ?? null, rec = id && taskStore.records.get(id);
   const done = id ? taskStore.tasks.map(T).filter(t => t.id === id && t.isDone) : [];

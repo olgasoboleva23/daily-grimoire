@@ -232,3 +232,21 @@ test("＋ on a day: the search of products and dishes; one picked is logged, a n
     assert.deepEqual(logged(), ["d1", "m2"]);
   } finally { windows.restore(); }
 });
+
+test("an archived dish keeps its name and marks on eaten days and is omitted from the picker", async t => {
+  vault({
+    [MARKET_RECORDS]: JSON.stringify({ m1: { name: "Свёкла", type: "food", marks: ["m1"] } }),
+    [DISHES]: JSON.stringify({ d1: { name: "Борщ", ingredients: [{ item: "m1" }], deleted: true } }),
+    [FOOD_LOG]: JSON.stringify({ "2026-11-02": { eaten: ["d1"] } }),
+  });
+  const w = mount(FoodPage, { props: { state: { data: await loadFood() } } });
+  const day = w.findAll(".ui-table__row")[0];
+
+  assert.match(day.text(), /Борщ \(deleted\) 🍫/);
+  assert.equal(day.find(".ui-food__count").text(), "1");
+  let choices;
+  t.mock.method(Search, "pick", async (_app, _title, find) => { choices = find(""); });
+  await day.find('[aria-label="add what was eaten"]').trigger("click");
+  await tick();
+  assert.deepEqual(choices.map(c => c.name), ["Свёкла"]);
+});

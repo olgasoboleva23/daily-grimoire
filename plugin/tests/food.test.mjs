@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { dishList, foodChoices, foodWeek } from "#/models/food.js";
+import { foodChoices, foodWeek } from "#/models/food.js";
+import { Dish } from "#/entities/dish/index.js";
 import {
   DEFAULT_MARKS, dayNote, eaten, marksOf, withEaten, withMarks, withNote, withoutEaten, withTask,
 } from "#/entities/food-log/index.js";
@@ -115,7 +116,7 @@ test("food choices show the replacement set; day counts use only the main ingred
   assert.deepEqual(choice.ingredients, [`${items[0].name} / ${items[1].name} + m9`]);
   const [day] = foodWeek({ ...data, days: [date], journals: [], courses: [] });
   assert.deepEqual(day.counts, { m1: 1, m2: 0, m3: 0 });
-  const [gone] = dishList(data);
+  const [gone] = Dish.list(data);
   assert.equal(gone.missing, true);
   assert.deepEqual(gone.ingredients[0],
     { item: "m1", name: items[0].name, amount: "100 g", alt: [

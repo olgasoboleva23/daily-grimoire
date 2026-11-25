@@ -5,7 +5,8 @@
 import { Notice } from "obsidian";
 import config from "#/shared/config/index.js";
 import { openWindow } from "#/shared/ui/Window/index.ts";
-import { readDish, readProducts } from "#/controllers/dishes.js";
+import { readProducts } from "#/controllers/dishes.js";
+import { readDish } from "#/entities/dish/index.js";
 import DishFormWindow from "./index.vue";
 
 export async function openDishForm(dish = null) {

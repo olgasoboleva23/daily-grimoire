@@ -11,7 +11,8 @@ import { openNote, app } from "#/shared/host/index.js";
 import UiWindow from "#/shared/ui/UiWindow/index.vue";
 import { openDishForm } from "#/components/windows/recipes/DishFormWindow/open.js";
 import CartWindow from "#/components/windows/recipes/CartWindow/index.vue";
-import { loadRecipes, removeDish } from "#/controllers/dishes.js";
+import { loadRecipes } from "#/controllers/dishes.js";
+import { removeDish } from "#/entities/dish/index.js";
 
 defineOptions({ inheritAttrs: false });
 const props = defineProps({

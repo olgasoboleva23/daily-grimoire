@@ -7,7 +7,7 @@ import { foodChoices } from "#/models/food.js";
 import { Search } from "#/shared/ui/Search/index.ts";
 import { loadFood } from "#/controllers/food.js";
 import { logEaten } from "#/entities/food-log/index.js";
-import { readDish } from "#/controllers/dishes.js";
+import { readDish } from "#/entities/dish/index.js";
 import {
   openEditItem, openNewProduct,
 } from "#/components/windows/market/MarketItemWindow/open.js";

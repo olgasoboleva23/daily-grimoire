@@ -18,7 +18,7 @@ import {
   openEditItem, pickOrAddProduct,
 } from "#/components/windows/market/MarketItemWindow/open.js";
 import AlternativesWindow from "#/components/windows/recipes/AlternativesWindow/index.vue";
-import { addDish, editDish } from "#/controllers/dishes.js";
+import { addDish, editDish } from "#/entities/dish/index.js";
 import { readMarketItem } from "#/controllers/widgets/market.js";
 import { pickRecipeNote } from "./pickRecipeNote.js";
 

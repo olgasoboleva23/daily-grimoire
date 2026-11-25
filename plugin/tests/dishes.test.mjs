@@ -1,10 +1,8 @@
 // Recipe writes, product lookup and shopping-list writes against an in-memory vault.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import {
-  addDish, editDish, loadRecipes, productsToList, readDish, readProducts,
-  removeDish,
-} from "#/controllers/dishes.js";
+import { loadRecipes, productsToList, readProducts } from "#/controllers/dishes.js";
+import { addDish, editDish, readDish, removeDish } from "#/entities/dish/index.js";
 import {
   addToMarket, editMarketItem, loadCelestialMarket, readMarketItem,
 } from "#/controllers/widgets/market.js";
@@ -60,15 +58,18 @@ test("choices sort mixed food by recent date, distinct log days, then name", asy
   assert.deepEqual(choices().map(c => c.id), ["m2","d1","m1"]);
 });
 
-test("dish writes allocate distinct IDs, reject bad links and reserve logged IDs", async () => {
+test("dish writes allocate distinct IDs, reject bad links and reserve archived IDs", async () => {
   const { files } = fixture();
   delete files[DISHES];
   const ids = await Promise.all([addDish(dish), addDish(dish)]);
   assert.deepEqual(ids, ["d1","d2"]);
   assert.equal(await editDish("d1", { ...dish, link: "gone.md" }), false);
   assert.equal(await addDish({ ...dish, link: "bad.txt" }), null);
-  files[FOOD_LOG] = '{"2026-11-10":{"eaten":["d2"]}}';
+  files[FOOD_LOG] = "unreadable log";
   assert.equal(await removeDish("d2"), true);
+  assert.deepEqual(JSON.parse(files[DISHES]).d2, { ...dish, type: "", deleted: true });
+  assert.equal(await readDish("d2"), null);
+  assert.equal(await editDish("d2", dish), false);
   assert.equal(await addDish(dish), "d3");
 });
 
