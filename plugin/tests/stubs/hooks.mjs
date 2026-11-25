@@ -10,7 +10,7 @@ export const resolve = (spec, ctx, next) =>
 
 export async function load(url, ctx, next) {
   if (url.endsWith(".scss")) {
-    const css = sass.compile(fileURLToPath(url), { loadPaths: [fileURLToPath(new URL("../../src/styles", import.meta.url))] }).css;
+    const css = sass.compile(fileURLToPath(url), { loadPaths: [fileURLToPath(new URL("../../src/shared/styles", import.meta.url))] }).css;
     return { format: "module", source: `export default ${JSON.stringify(css)}`, shortCircuit: true };
   }
   if (!url.endsWith(".vue")) return next(url, ctx);

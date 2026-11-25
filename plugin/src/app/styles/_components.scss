@@ -1,0 +1,64 @@
+// Daily Grimoire styles. The order is the order Obsidian applied the old snippets (by name), then finance (it
+// used to be injected last). A component's own block is its index.scss next to it (components/…);
+// here, the shared look (tokens, mixins, cards' grid, layout, …). Keep the order: rules of the same
+// weight win by order. Partials @use "mixins" by the load path (esbuild.config.mjs: src/shared/styles).
+// Variables: Sass $… in _mixins.scss holds fixed sizes and durations, substituted at build time.
+// CSS var(--ui-…) stays in the output so colours, fonts and decoration can change with the theme
+// without rebuilding (_tokens.scss provides defaults, _themes.scss overrides them).
+// In the tab's sheet (shadow.scss) this whole list is the `components` layer; utilities and tokens are its
+// sublayers, below the blocks. styles.css has no layers: Obsidian's unlayered rules would beat them.
+// Some Sass values combine both, e.g. $border uses a fixed width and var(--ui-border) for its colour.
+@use "utilities";   // layout utilities first: the blocks win over them
+@use "animations";
+@use "assets";
+@use "dashboard-cards";   // card tweaks on the pages, the columns' sparkles
+@use "../../components/uikit/UiCard";   // the widget's card, where the card snippet was
+@use "../../components/pages/dashboard/widgets/market";
+@use "../../components/pages/dashboard/widgets/xp/XpToday";
+@use "../../components/pages/dashboard/widgets/quests";
+@use "layout";
+@use "../../components/pages/dashboard/widgets/pomodoro";
+@use "../../components/pages/shop";
+@use "tasks-minimal";
+@use "tokens";
+@use "themes";
+@use "../../components/pages/dashboard/widgets/xp/LevelToday";
+@use "../../components/pages/dashboard/widgets/goals";
+@use "../../components/pages/dashboard/widgets/xp/LifeAreas";
+@use "../../components/pages/dashboard/widgets/cycle";
+@use "../../components/pages/supplies";
+@use "scroll-cards";
+@use "../../components/pages/dashboard/widgets/weight";
+@use "../../components/pages/dashboard/widgets/savings";
+@use "../../components/pages/calendar/TaskCard";
+@use "../../components/uikit/UiButton";
+@use "../../components/uikit/UiDeleteButton";
+@use "../../components/uikit/UiEmpty";
+@use "../../components/uikit/UiAddForm";
+@use "../../components/uikit/Search";
+@use "syncing";
+@use "nav";
+@use "busy";
+@use "../../components/pages/calendar/CalendarTab";
+@use "../../components/pages/calendar/CalendarMissed";
+@use "../../components/pages/dashboard";
+// was injected by the widget itself, after everything else: last
+@use "../../components/pages/finance" as finance-page;
+@use "tooltip";
+@use "../../components/uikit/UiTable";
+@use "../../components/uikit/UiTabs";
+@use "../../components/uikit/UiNav";
+@use "../../components/uikit/UiDrawer";
+@use "../../components/app";
+@use "../../components/app/PageNavigation";
+@use "../../components/uikit/UiInput";
+@use "../../components/uikit/UiCheckbox";
+@use "../../components/uikit/UiChart";
+@use "../../components/pages/meds/MedsCourse";
+@use "../../components/pages/food";
+@use "../../components/pages/recipes";
+@use "../../components/uikit/UiProgress";
+@use "../../components/pages/projects/ProjectStatus";
+@use "../../components/pages/projects/ProjectList";
+@use "../../components/pages/projects/ProjectPage";
+@use "../../components/pages/dashboard/widgets/finance";

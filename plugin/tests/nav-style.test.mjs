@@ -6,7 +6,7 @@ import * as sass from "sass";
 // the pill open, and a shut pill (--shut) stays folded even with focus inside
 test("UiNav: labels open on :focus-visible, not on any focus, and not when shut", () => {
   const css = sass.compile(new URL("../src/components/uikit/UiNav/index.scss", import.meta.url).pathname,
-    { loadPaths: [new URL("../src/styles", import.meta.url).pathname] }).css;
+    { loadPaths: [new URL("../src/shared/styles", import.meta.url).pathname] }).css;
 
   assert.doesNotMatch(css, /:focus-within/);
   assert.match(css, /\.ui-rail:not\(\.ui-rail--phone, \.ui-rail--shut\):has\(:focus-visible\) \.ui-rail__label/);
@@ -19,7 +19,7 @@ test("UiNav: the selected phone icon gets the gold glow", async () => {
   const { default: Nav } = await import("#/components/uikit/UiNav/index.vue");
   const { default: postcss } = await import("postcss");
   const css = sass.compile(new URL("../src/components/uikit/UiNav/index.scss", import.meta.url).pathname,
-    { loadPaths: [new URL("../src/styles", import.meta.url).pathname] }).css;
+    { loadPaths: [new URL("../src/shared/styles", import.meta.url).pathname] }).css;
   const items = [{ key: "dashboard", text: "Dashboard", icon: "✦" },
     { key: "calendar", text: "Calendar", icon: "🗓" }];
   const nav = mount(Nav, { props: { items, current: "dashboard", phone: true } });

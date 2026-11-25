@@ -8,7 +8,7 @@ import { useTheme } from "./controllers/theme.js";
 import { useTaskStore } from "./store/tasks.js";
 
 // Daily Grimoire: the app tab, the task window and the
-// commands, and the styles (styles.css, built from src/styles/main.scss and the components'
+// commands, and the styles (styles.css, built from src/app/styles/main.scss and the components'
 // index.scss).
 
 export default class UiPlugin extends Plugin {

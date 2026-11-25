@@ -1,4 +1,4 @@
-// Builds the plugin: src/main.ts → main.js, src/styles/main.scss (and the components' index.scss it
+// Builds the plugin: src/main.ts → main.js, src/app/styles/main.scss (and the components' index.scss it
 // uses) → styles.css, plus manifest.json.
 //   npm run build   into dist/
 //   npm run dev     into $WINX_VAULT/.obsidian/plugins/daily-grimoire/ (without it: dist/), again on every save
@@ -15,17 +15,17 @@ const out   = watch && process.env.WINX_VAULT ? resolve(process.env.WINX_VAULT, 
 mkdirSync(out, { recursive: true });
 
 // a release build is minified (the vault syncs it to the phone); the dev one stays readable, with a source map
-// partials @use "mixins" from anywhere: src/styles is on the load path; no BOM (charset: false): Obsidian
+// partials @use "mixins" from anywhere: src/shared/styles is on the load path; no BOM (charset: false): Obsidian
 // pastes the CSS in as text, and the BOM would stick to the first selector, which then matches nothing
-const styles = () => writeFileSync(resolve(out, "styles.css"), sass.compile(resolve(here, "src/styles/main.scss"), {
-  style: watch ? "expanded" : "compressed", loadPaths: [resolve(here, "src/styles")], charset: false,
+const styles = () => writeFileSync(resolve(out, "styles.css"), sass.compile(resolve(here, "src/app/styles/main.scss"), {
+  style: watch ? "expanded" : "compressed", loadPaths: [resolve(here, "src/shared/styles")], charset: false,
 }).css);
 const shadowStyles = {
   name: "shadow-styles",
   setup(build) {
     build.onLoad({ filter: /shadow\.scss$/ }, ({ path }) => {
       const result = sass.compile(path, {
-        style: watch ? "expanded" : "compressed", loadPaths: [resolve(here, "src/styles")], charset: false,
+        style: watch ? "expanded" : "compressed", loadPaths: [resolve(here, "src/shared/styles")], charset: false,
       });
       return { contents: result.css, loader: "text", watchFiles: result.loadedUrls.map(fileURLToPath) };
     });

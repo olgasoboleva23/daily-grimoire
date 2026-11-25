@@ -3,12 +3,12 @@
 const KEBAB = "[a-z0-9]+(?:-[a-z0-9]+)*";
 export default {
   extends: ["stylelint-config-standard-scss"],
-  ignoreFiles: ["dist/**", "src/styles/_assets.scss"],   // generated: the background picture as a data URI
+  ignoreFiles: ["dist/**", "src/app/styles/_assets.scss"],   // generated: the background picture as a data URI
   overrides: [{
-    files: ["src/styles/_tokens.scss", "src/styles/_themes.scss"],
+    files: ["src/shared/styles/_tokens.scss", "src/shared/styles/_themes.scss"],
     rules: { "color-hex-length": "long" },
   }, {
-    files: ["src/components/**/*.scss", "src/styles/_{busy,syncing,scroll-cards,tooltip}.scss"],
+    files: ["src/components/**/*.scss", "src/app/styles/_{busy,syncing,scroll-cards}.scss", "src/shared/styles/_tooltip.scss"],
     rules: { "color-no-hex": true, "color-named": "never", "function-disallowed-list": ["rgb", "rgba"] },
   }, {
     files: ["src/components/pages/dashboard/widgets/xp/LevelToday/index.scss"],

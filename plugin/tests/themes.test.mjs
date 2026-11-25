@@ -65,7 +65,7 @@ test("theme follows loaded/synced settings, late images, reset and plugin unload
 });
 
 test("each theme defines the palette in Winx only and ships its AVIF and heading font", () => {
-  const styles = new URL("../src/styles/", import.meta.url).pathname;
+  const styles = new URL("../src/shared/styles/", import.meta.url).pathname;
   const defaults = postcss.parse(sass.compile(`${styles}_tokens.scss`).css);
   const required = new Set();
   defaults.walkDecls(d => required.add(d.prop));

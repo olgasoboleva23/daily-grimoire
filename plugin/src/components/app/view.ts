@@ -4,7 +4,7 @@ import { useVueApp } from "#/shared/lib/vueApp.ts";
 import { isStep, readState, saved, withParams } from "#/store/router.js";
 import { APP_NAME, pages, UI_VIEW } from "#/shared/config/index.js";
 import UiApp from "./index.vue";
-import styles from "#/styles/shadow.scss";
+import styles from "#/app/styles/shadow.scss";
 
 export { UI_VIEW } from "#/shared/config/index.js";
 
