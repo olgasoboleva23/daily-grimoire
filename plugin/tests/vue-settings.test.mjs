@@ -98,3 +98,24 @@ test("Other → Settings opens the window and closes the drawer", async () => {
     assert.equal(files[CONFIG], undefined);
   } finally { windows.restore(); nav.unmount(); }
 });
+
+test("a saved empty Recipes list allows saving the theme", async t => {
+  const initial = { dishTypes: [] };
+  const { app, files } = vault({ [CONFIG]: JSON.stringify(initial) });
+  applyConfig(initial);
+  t.after(() => applyConfig());
+  const commands = new Map();
+  registerCommands({ app, addCommand: x => commands.set(x.id, x) });
+  const windows = testWindows();
+  t.after(windows.restore);
+  const saving = commands.get("settings").callback();
+  const w = await windows.next();
+
+  await w.wrapper.get('button[title="Gothic"]').trigger("click");
+  await w.submit();
+  const saved = JSON.parse(files[CONFIG]);
+
+  assert.deepEqual(saved.dishTypes, []);
+  assert.equal(saved.theme, "gothic");
+  await saving;
+});

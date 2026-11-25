@@ -473,6 +473,14 @@ test("UiFieldList: an empty list starts with one fresh group; a fixed one has no
     assert.deepEqual(empty.v.areas, [{}]);
     assert.equal(empty.el.querySelectorAll(".ui-field-list__line").length, 2);
 
+    const template = AREAS.replace("<UiFieldList ", "<UiFieldList start-empty ");
+    const optional = draw(template, { areas: [] });
+
+    assert.deepEqual(optional.v.areas, []);
+    optional.el.querySelector("button[title='One more']").click();
+    await vue.nextTick();
+    assert.deepEqual(optional.v.areas, [{}]);
+
     const fixed = `<UiWindow title="t"><UiFieldList v-model="v.d" fixed :columns="[
       { key: 'label', name: 'Difficulty' }, { key: 'xp', name: 'XP', wide: true }]">
       <template #label="{ group }"><span class="ui-field__label">{{ group.label }}</span></template>

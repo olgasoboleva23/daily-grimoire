@@ -117,7 +117,12 @@ const save = () => run(() => {
       </UiField>
     </template>
     <template #tab:Recipes>
-      <UiFieldList v-model="v.dishTypes" name="Dish types" :columns="dishTypes">
+      <UiFieldList
+        v-model="v.dishTypes"
+        name="Dish types"
+        :columns="dishTypes"
+        start-empty
+      >
         <template #key="{ group }">
           <UiFieldText v-model="group.key" placeholder="soup" />
         </template>

@@ -1,7 +1,7 @@
 <!-- A window's list of groups (block ui-field-list): v-model the groups (an array of objects), a
      × each and a + under them (`fresh()`: a new group); `fixed`: neither, the groups as given. One
-     empty group to start when it is not fixed and empty. `name`: a heading row (none: the list
-     is its tab's). With `columns` ({ key, name, title?, narrow?, wide? }) a table: one grid
+     empty group to start when it is not fixed and empty, unless `startEmpty`. `name` is the
+     heading row. With `columns` ({ key, name, title?, narrow?, wide? }) a table: one grid
      (--ui-field-list-cols: a `wide` column shares the width, the others fit what's in them), a
      line of the names (`title`: a checkbox's description, its tip; `narrow`: centred), then a
      line a group, a cell a column through the slot #<key>="{ group, index }"; a text box fills
@@ -14,11 +14,12 @@ const props = defineProps({
   name: { type: String, default: null },
   columns: { type: Array, default: null },
   fixed: { type: Boolean, default: false },
+  startEmpty: { type: Boolean, default: false },
   fresh: { type: Function, default: () => ({}) },
 });
 const groups = defineModel({ type: Array, required: true });
 
-if (!props.fixed && !groups.value.length) groups.value = [props.fresh()];
+if (!props.fixed && !props.startEmpty && !groups.value.length) groups.value = [props.fresh()];
 
 const cols = computed(() => props.columns?.map(c => c.wide ? "minmax(0, 1fr)" : "auto")
   .concat(props.fixed ? [] : "auto").join(" "));
