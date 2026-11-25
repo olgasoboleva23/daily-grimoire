@@ -1,0 +1,10 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "src/main.ts!",
+    "tests/*.test.mjs",
+    "tests/stubs/{register,hooks,obsidian}.mjs",
+    "tests/obsidian/*.{js,mjs}"
+  ],
+  "project": ["src/**/*.{js,ts,vue}!", "tests/**/*.{js,mjs}"]
+}
