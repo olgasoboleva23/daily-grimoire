@@ -244,3 +244,19 @@ test("the Or form edits a copy and can save several products, clear or cancel", 
     return null;
   });
 });
+
+test("the dish form rejects changes made since it was opened", async () => {
+  const { app, files } = fixture();
+  const updated = { ...dish, ingredients: [{ item: "m1", amount: "200 g" }] };
+  const initial = (await loadRecipes()).dishes[0];
+
+  const saved = await askDish(app, initial, async (_app, _title, _rows, { values }) => {
+    await editDish(initial.id, updated);
+    return { ...values, name: "Renamed" };
+  });
+
+  assert.equal(saved, null);
+  const current = JSON.parse(files[DISHES])[initial.id];
+  assert.equal(current.name, dish.name);
+  assert.deepEqual(current.ingredients, updated.ingredients);
+});

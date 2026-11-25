@@ -115,3 +115,9 @@ test("serial runs one job at a time, a failed one doesn't stop the next", async 
     ["fulfilled", "rejected", "fulfilled"]);
   assert.deepEqual(seen, [1, 2, 3]);
 });
+
+test("editJson rejects a valid JSON value that cannot store records by key", async () => {
+  const { files } = vault({ "items.json": "[]" });
+  await assert.rejects(editJson("items.json", items => ({ ...items, m1: {} })), /expected a JSON object/);
+  assert.equal(files["items.json"], "[]");
+});

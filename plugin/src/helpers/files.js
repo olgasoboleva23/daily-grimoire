@@ -96,7 +96,11 @@ export async function editJson(path, fn) {
 
   if (file) {
     await app.vault.process(file, old => {
-      text = json(fn(JSON.parse(old || "{}")));
+      const data = JSON.parse(old || "{}");
+
+      if (!data || typeof data !== "object" || Array.isArray(data))
+        throw new TypeError(`${path}: expected a JSON object`);
+      text = json(fn(data));
       return text ?? old;
     });
   } else {

@@ -4,7 +4,7 @@
 // writes: a dish added / edited (its form: products picked or made, a note picked or made from
 // the recipe template), removed, the selected food products added to the shopping list.
 import { shallowReactive } from "vue";
-import { prepareFuzzySearch } from "obsidian";
+import { Notice, prepareFuzzySearch } from "obsidian";
 import { collection } from "#/helpers/collection.js";
 import { nextId } from "#/helpers/ids.js";
 import { readJson, serial } from "#/helpers/files.js";
@@ -80,12 +80,21 @@ export const addDish = values => write(async () => {
   return id;
 });
 
-export const editDish = (id, values, offeredTypes) => write(() => dishes.update(id, current => {
-  // An unlisted type looks empty in Recipes. Saving other fields keeps its stored key.
-  if (!values.type && current.type && offeredTypes && !offeredTypes.includes(current.type))
-    return record({ ...values, type: current.type });
-  return record(values);
-}));
+export const editDish = (id, values, { before, offeredTypes } = {}) => write(async () => {
+  const saved = await dishes.update(id, current => {
+    if (before && JSON.stringify(current) !== before) return null;
+    // An unlisted type looks empty in Recipes. Saving other fields keeps its stored key.
+    const keepType = !values.type && current.type && offeredTypes
+      && !offeredTypes.includes(current.type);
+    const type = keepType ? current.type : values.type;
+    const next = record({ ...values, type });
+
+    return next && { ...current, ...next };
+  });
+
+  if (!saved && before) new Notice("✦ dish could not be saved. Open it again to edit.");
+  return saved;
+});
 
 export const removeDish = id => write(() => dishes.edit(all => {
   if (!all[id]) return null;
@@ -128,6 +137,15 @@ export async function pickRecipeNote(app, dish = "") {
 }
 
 export async function askDish(app, dish = null, ask = Form.ask.bind(Form)) {
+  const id = dish?.id;
+  const current = id ? (await readJson(DISHES, {}))[id] : dish;
+
+  if (id && !current) {
+    new Notice("✦ that dish is gone");
+    return null;
+  }
+
+  const before = id ? JSON.stringify(current) : undefined;
   const items = new Map((await products()).map(p => [p.id, p.name]));
 
   const named = async id => {
@@ -161,11 +179,11 @@ export async function askDish(app, dish = null, ask = Form.ask.bind(Form)) {
     return values ? values.alt.filter(line => line.item) : null;
   };
 
-  const ingredients = dish?.ingredients?.map(i => ({
+  const ingredients = current?.ingredients?.map(i => ({
     ...i, alt: Array.isArray(i.alt) ? i.alt : [],
   })) ?? [];
   const types = config.dishTypes.map(t => ({ label: t.name, value: t.key }));
-  const values = await ask(app, dish?.id ? "Edit dish" : "New dish", [
+  const values = await ask(app, id ? "Edit dish" : "New dish", [
     { name: "Name", key: "name", text: "Dish name" },
     { name: "Ingredients", key: "ingredients", required: ["item"], list: [
       productRow,
@@ -175,11 +193,14 @@ export async function askDish(app, dish = null, ask = Form.ask.bind(Form)) {
     ] },
     { name: "Type", key: "type", options: [{ label: "—", value: "" }, ...types] },
     { name: "Note", key: "link", pick: v => pickRecipeNote(app, v.name), show: noteName },
-  ], { values: { name: dish?.name ?? "", ingredients,
-    type: dish?.type ?? "", link: dish?.link ?? "" },
+  ], { values: { name: current?.name ?? "", ingredients,
+    type: config.dishTypes.some(t => t.key === current?.type) ? current.type : "",
+    link: current?.link ?? "" },
   required: ["name", "ingredients"], submit: "Save" });
 
   if (!values) return null;
-  if (!dish?.id) return addDish(values);
-  return await editDish(dish.id, values, types.map(t => t.value)) ? dish.id : null;
+  if (!id) return addDish(values);
+  const saved = await editDish(id, values, { before, offeredTypes: types.map(t => t.value) });
+
+  return saved ? id : null;
 }
