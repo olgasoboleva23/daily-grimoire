@@ -9,7 +9,7 @@ import { MarkdownRenderer, Notice } from "obsidian";
 import { confirm, WINDOW } from "#/shared/ui/Window/index.ts";
 import { openNote, app } from "#/shared/host/index.js";
 import UiWindow from "#/shared/ui/UiWindow/index.vue";
-import { openDishForm } from "#/components/windows/recipes/DishFormWindow/open.js";
+import { openDishForm } from "#/features/edit-dish/index.js";
 import { openCart } from "#/features/add-to-list/index.js";
 import { loadRecipes } from "#/controllers/dishes.js";
 import { removeDish } from "#/entities/dish/index.js";

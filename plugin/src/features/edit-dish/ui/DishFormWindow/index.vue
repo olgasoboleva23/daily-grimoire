@@ -16,9 +16,9 @@ import UiFieldList from "#/shared/ui/UiFieldList/index.vue";
 import { filled, groupsFilled, useWrite, openWindow } from "#/shared/ui/Window/index.ts";
 import { readMarks } from "#/entities/food-log/index.js";
 import { openEditItem, pickOrAddProduct, readMarketItem } from "#/entities/product/index.js";
-import AlternativesWindow from "#/components/windows/recipes/AlternativesWindow/index.vue";
+import AlternativesWindow from "../AlternativesWindow/index.vue";
 import { addDish, editDish } from "#/entities/dish/index.js";
-import { pickRecipeNote } from "./pickRecipeNote.js";
+import { noteName, pickRecipeNote } from "../pickRecipeNote.js";
 
 const props = defineProps({
   id: { type: String, default: null },            // edit: its id
@@ -49,8 +49,6 @@ const { busy, run } = useWrite(emit);
 
 const show = id => names.get(id) ?? id;
 const showAlt = alt => alt.map(a => show(a.item)).join(" + ");
-const noteName = path => path.split("/").pop().replace(/\.md$/i, "");
-
 const named = async id => {
   names.set(id, (await readMarketItem(id))?.name ?? id);
   return id;

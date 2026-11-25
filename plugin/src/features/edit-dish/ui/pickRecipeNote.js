@@ -4,6 +4,8 @@ import { Search } from "#/shared/ui/Search/index.ts";
 import { createDoc, KINDS } from "#/entities/doc/index.js";
 import { app } from "#/shared/host/index.js";
 
+export const noteName = path => path.split("/").pop().replace(/\.md$/i, "");
+
 export async function pickRecipeNote(dish = "") {
   const notes = app.vault.getMarkdownFiles();
   const pick = await Search.pick(app, "Choose the recipe note", query => {

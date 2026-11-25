@@ -5,7 +5,7 @@ import { Notice } from "obsidian";
 import { vault } from "./stubs/vault.mjs";
 import config, { DISHES, FOOD_DATA, MARKET, MARKET_RECORDS } from "#/shared/config/index.js";
 
-// The recipe book's windows (components/windows/recipes): the dish form (its ingredients, an
+// The recipe book's windows: the dish form (its ingredients, an
 // ingredient's alternatives in their own window, a product picked or edited in the market's
 // windows), and 🛒 To the shopping list?, through the test frame as their openers do; the
 // searches stubbed. Made-up products only.
@@ -26,7 +26,7 @@ before(async () => {
   window.moment = () => ({ format: () => "2026-11-20" });
   ({ Search } = await import("#/shared/ui/Search/index.ts"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
-  ({ openDishForm } = await import("#/components/windows/recipes/DishFormWindow/open.js"));
+  ({ openDishForm } = await import("#/features/edit-dish/index.js"));
   ({ loadRecipes } = await import("#/controllers/dishes.js"));
   ({ openCart } = await import("#/features/add-to-list/index.js"));
   config.dishTypes = TYPES;

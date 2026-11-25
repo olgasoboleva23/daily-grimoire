@@ -9,7 +9,7 @@ import { productsToList } from "#/features/add-to-list/operation/productsToList.
 import { addToMarket } from "#/features/add-to-list/operation/addItem.js";
 import { loadFood } from "#/controllers/food.js";
 import { Search } from "#/shared/ui/Search/index.ts";
-import { pickRecipeNote } from "#/components/windows/recipes/DishFormWindow/pickRecipeNote.js";
+import { pickRecipeNote } from "#/features/edit-dish/ui/pickRecipeNote.js";
 import { Notice } from "obsidian";
 import { foodChoices, foodWeek } from "#/models/food.js";
 import { DISHES, FOOD_DATA, FOOD_LOG, MARKET_NOTE, MARKET_RECORDS } from "#/shared/config/index.js";

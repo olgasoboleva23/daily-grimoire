@@ -9,7 +9,7 @@ import { loadFood } from "#/controllers/food.js";
 import { logEaten, readMarks } from "#/entities/food-log/index.js";
 import { readDish } from "#/entities/dish/index.js";
 import { openEditItem, openNewProduct } from "#/entities/product/index.js";
-import { openDishForm } from "#/components/windows/recipes/DishFormWindow/open.js";
+import { openDishForm } from "#/features/edit-dish/index.js";
 
 export async function addEaten(date) {
   const choices = foodChoices(await loadFood());

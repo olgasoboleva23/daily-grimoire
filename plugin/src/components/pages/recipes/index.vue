@@ -13,7 +13,7 @@ import UiInput from "#/shared/ui/UiInput/index.vue";
 import UiTable from "#/shared/ui/UiTable/index.vue";
 import UiTabs from "#/shared/ui/UiTabs/index.vue";
 import config from "#/shared/config/index.js";
-import { openDishForm } from "#/components/windows/recipes/DishFormWindow/open.js";
+import { openDishForm } from "#/features/edit-dish/index.js";
 import { openCart } from "#/features/add-to-list/index.js";
 import { ingredientText } from "#/entities/dish/index.js";
 import { openDish } from "./DishWindow/open.js";
