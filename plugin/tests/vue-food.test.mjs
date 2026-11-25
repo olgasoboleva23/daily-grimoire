@@ -5,7 +5,7 @@ import { vault } from "./stubs/vault.mjs";
 import { COURSES, DISHES, FOOD_DATA, FOOD_LOG, JOURNALS, MARKET_RECORDS } from "#/helpers/paths.js";
 import { forFood } from "#/models/course.js";
 
-let mount, FoodPage, loadFood, DEFAULT_MARKS, DishWindow, Search, testWindows;
+let mount, FoodPage, loadFood, DEFAULT_MARKS, Search, testWindows;
 before(async () => {
   GlobalRegistrator.register();
   window.moment = () => ({ format: () => "2026-11-04" });   // a Wednesday
@@ -13,7 +13,6 @@ before(async () => {
   FoodPage = (await import("#/components/pages/food/index.vue")).default;
   ({ loadFood } = await import("#/controllers/food.js"));
   ({ DEFAULT_MARKS } = await import("#/models/food.js"));
-  ({ DishWindow } = await import("#/components/pages/recipes/DishWindow/index.ts"));
   ({ Search } = await import("#/components/uikit/Search/index.ts"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
 });
@@ -149,23 +148,30 @@ test("logEaten appends a serving and keeps the day's note", async () => {
 });
 
 test("the food page: a dish eaten opens its window, a product its Edit item window", async () => {
-  vault({ [MARKET_RECORDS]: JSON.stringify({ m1: { name: "каша с 4 ч", type: "food" } }) });
-  const windows = testWindows(), opened = [], open = DishWindow.prototype.open;
+  vault({
+    [MARKET_RECORDS]: JSON.stringify({ m1: { name: "каша с 4 ч", type: "food" } }),
+    [DISHES]: JSON.stringify({ d1: data().dishes[0] }),
+  });
+  const windows = testWindows();
 
-  DishWindow.prototype.open = function () { opened.push(this.dish); };
   try {
     const w = mount(FoodPage, { props: { state: { data: data() } } });
     const [porridge, , pancakes] = w.findAll(".ui-table__row")[0].findAll(".ui-food__item-name");
 
     await pancakes.trigger("click"); await tick();
+    assert.equal(windows.all.length, 1);
+    const dish = await windows.next();
+    assert.equal(dish.title, "🍲 оладьи");
+    assert.deepEqual(dish.props, { dish: "d1" });
+    await dish.close();
+
     await porridge.trigger("click");
     const edit = await windows.next();
 
     assert.equal(edit.title, "Edit item");
     assert.equal(edit.props.id, "m1");
     await edit.close();
-  } finally { DishWindow.prototype.open = open; windows.restore(); }
-  assert.deepEqual(opened, ["d1"]);
+  } finally { windows.restore(); }
 });
 
 test("the food page: ⚙ opens ✦ Marks with the marks of food.json", async () => {

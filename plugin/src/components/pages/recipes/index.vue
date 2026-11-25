@@ -12,13 +12,12 @@ import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
 import UiInput from "#/components/uikit/UiInput/index.vue";
 import UiTable from "#/components/uikit/UiTable/index.vue";
 import UiTabs from "#/components/uikit/UiTabs/index.vue";
-import { app } from "#/helpers/app.js";
 import config from "#/helpers/config.js";
 import { openWindow } from "#/components/uikit/Window/open.ts";
 import { openDishForm } from "#/components/windows/recipes/DishFormWindow/open.js";
 import CartWindow from "#/components/windows/recipes/CartWindow/index.vue";
 import { ingredientText } from "./cart.js";
-import { openDish } from "./DishWindow/index.ts";
+import { openDish } from "./DishWindow/open.js";
 
 const props = defineProps({ state: { type: Object, required: true } });
 const d = computed(() => props.state.data);
@@ -101,7 +100,7 @@ const edit = id => act(() => openDishForm(dish(id)));
         <span
           v-if="col.key === 'name'"
           class="ui-recipes__name"
-          @click="openDish(app, row.id)"
+          @click="openDish(row.id)"
         >🍲 {{ row.name }}{{ row.link ? " 📄" : "" }}{{ row.missing ? " ⚠" : "" }}</span>
         <span
           v-else-if="col.key === 'ingredients'"

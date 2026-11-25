@@ -1,20 +1,23 @@
-<!-- The journal window's content (block ui-journal; JournalWindow/index.ts opens it): the filter
+<!-- The journal viewer (block ui-journal; open.js opens it): the filter
      (what an entry is about, with counts) and + Entry, then the timeline, newest first: a dot
      each, all alike (a journal, not a progress list), its date and what it is about, the heading,
      the text, the linked note, ✏️ and × -->
 <script setup>
-import { computed, ref } from "vue";
+import { computed, inject, ref } from "vue";
 import { confirm } from "#/components/uikit/ConfirmWindow/confirm.js";
-import { openWindow } from "#/components/uikit/Window/open.ts";
+import { openWindow, WINDOW } from "#/components/uikit/Window/open.ts";
 import JournalEntryWindow from "#/components/windows/projects/JournalEntryWindow/index.vue";
 import UiTabs from "#/components/uikit/UiTabs/index.vue";
+import UiWindow from "#/components/uikit/UiWindow/index.vue";
 import { openNote } from "#/components/app/open.ts";
 import { removeNote } from "#/controllers/journal.js";
 import { journalOf } from "#/models/journal.js";
 import { taskStore } from "#/store/tasks.js";
 
+defineOptions({ inheritAttrs: false });
 const props = defineProps({ project: { type: String, required: true } });
-const emit = defineEmits(["close"]);
+const ctx = inject(WINDOW);
+const title = `🕒 Journal · ${taskStore.projects.get(props.project)?.name ?? ""}`;
 
 const KINDS = [["all", "All"], ["project", "Project"], ["stage", "Stages"], ["task", "Tasks"]];
 const kind = ref("all");
@@ -33,7 +36,7 @@ const noteName = path => path.split("/").pop().replace(/\.md$/i, "");
 
 function open(e, event) {
   openNote(e.link, "", event);
-  emit("close");
+  ctx.close();
 }
 
 // + Entry (no entry) and ✏️ (the entry): the entry's window
@@ -46,30 +49,32 @@ async function remove(e) {
 </script>
 
 <template>
-  <div class="ui-journal">
-    <div class="ui-journal__bar">
-      <UiTabs v-model="kind" :tabs="tabs" />
-      <button class="mod-cta" @click="entryWindow()">+ Entry</button>
+  <UiWindow :title="title" frame-class="ui-journal-window">
+    <div class="ui-journal">
+      <div class="ui-journal__bar">
+        <UiTabs v-model="kind" :tabs="tabs" />
+        <button class="mod-cta" @click="entryWindow()">+ Entry</button>
+      </div>
+      <div v-if="!shown.length" class="ui-journal__empty">No entries yet</div>
+      <ol class="ui-journal__list">
+        <li
+          v-for="e in shown"
+          :key="e.id"
+          :class="['ui-journal__entry', { 'ui-journal__entry--gone': e.gone }]"
+        >
+          <span class="ui-journal__dot" aria-hidden="true" />
+          <div class="ui-journal__meta">{{ when(e.at) }} · {{ e.label }}</div>
+          <div class="ui-journal__heading" dir="auto">{{ e.heading }}</div>
+          <div v-if="e.text" class="ui-journal__text" dir="auto">{{ e.text }}</div>
+          <div class="ui-journal__actions">
+            <button v-if="e.link" class="ui-journal__link" @click="open(e, $event)">
+              📄 {{ noteName(e.link) }}
+            </button>
+            <button class="clickable-icon" title="Edit" @click="entryWindow(e)">✏️</button>
+            <button class="clickable-icon" title="Delete" @click="remove(e)">×</button>
+          </div>
+        </li>
+      </ol>
     </div>
-    <div v-if="!shown.length" class="ui-journal__empty">No entries yet</div>
-    <ol class="ui-journal__list">
-      <li
-        v-for="e in shown"
-        :key="e.id"
-        :class="['ui-journal__entry', { 'ui-journal__entry--gone': e.gone }]"
-      >
-        <span class="ui-journal__dot" aria-hidden="true" />
-        <div class="ui-journal__meta">{{ when(e.at) }} · {{ e.label }}</div>
-        <div class="ui-journal__heading" dir="auto">{{ e.heading }}</div>
-        <div v-if="e.text" class="ui-journal__text" dir="auto">{{ e.text }}</div>
-        <div class="ui-journal__actions">
-          <button v-if="e.link" class="ui-journal__link" @click="open(e, $event)">
-            📄 {{ noteName(e.link) }}
-          </button>
-          <button class="clickable-icon" title="Edit" @click="entryWindow(e)">✏️</button>
-          <button class="clickable-icon" title="Delete" @click="remove(e)">×</button>
-        </div>
-      </li>
-    </ol>
-  </div>
+  </UiWindow>
 </template>

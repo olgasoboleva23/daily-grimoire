@@ -1,6 +1,5 @@
 @use "mixins" as *;
-/* The journal window (JournalWindow/index.ts), block ui-journal on its content; in the document
-   sheet, like Form: Obsidian's window colours for the text, the theme's purple for the timeline */
+/* The journal viewer sits in the document with Obsidian's window colours. */
 $dot: 12px;   // a timeline dot: a mark's size, not a spacing value
 .ui-journal-window { width: min(640px, 100%); }
 .ui-journal {

@@ -14,13 +14,12 @@ import { vTip } from "#/components/uikit/tooltip.js";
 import { addDays, weekOf } from "#/helpers/dates.js";
 import { dayLabel } from "#/models/course.js";
 import { foodWeek } from "#/models/food.js";
-import { app } from "#/helpers/app.js";
 import { pickTrainingTask, removeEaten, setFoodNote } from "#/controllers/food.js";
 import { readMarks } from "#/controllers/widgets/market.js";
 import { openWindow } from "#/components/uikit/Window/open.ts";
 import { addEaten, editEaten } from "#/components/windows/food/eaten.js";
 import MarksWindow from "#/components/windows/food/MarksWindow/index.vue";
-import { openDish } from "#/components/pages/recipes/DishWindow/index.ts";
+import { openDish } from "#/components/pages/recipes/DishWindow/open.js";
 
 const ui = inject("ui", null);
 const openMeds = e => ui ? ui.go("meds", {}, e)
@@ -100,7 +99,7 @@ const act = async (write) => {
                 v-if="f.kind === 'dish'"
                 v-tip="'open the dish'"
                 class="ui-food__item-name"
-                @click="openDish(app, f.id)"
+                @click="openDish(f.id)"
               >🍲 {{ f.name }}{{ f.icons ? ` ${f.icons}` : "" }}</span>
               <span
                 v-else

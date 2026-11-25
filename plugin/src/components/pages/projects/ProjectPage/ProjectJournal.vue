@@ -7,11 +7,10 @@ import { computed } from "vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import UiCard from "#/components/uikit/UiCard/index.vue";
 import { askValue } from "#/components/uikit/FieldWindow/ask.js";
-import { app } from "#/helpers/app.js";
 import { copyFinalPrompt, copyStartPrompt } from "#/controllers/prompts.js";
 import { journalOf } from "#/models/journal.js";
 import { taskStore } from "#/store/tasks.js";
-import { openJournal } from "../JournalWindow/index.ts";
+import { openJournal } from "../JournalWindow/open.js";
 
 const props = defineProps({ project: { type: String, required: true } });
 const entries = computed(() => {
@@ -36,14 +35,14 @@ async function start() {
         kind="chip"
         class="ui-project__journal-open"
         title="Open the journal"
-        @click="openJournal(app, project)"
+        @click="openJournal(project)"
       >🕒 {{ entries.length }}</UiButton>
     </template>
     <div
       v-if="last"
       class="ui-project__journal-last"
       dir="auto"
-      @click="openJournal(app, project)"
+      @click="openJournal(project)"
     >{{ day(last.at) }} · {{ last.heading }}</div>
     <div class="ui-row ui-wrap ui-gap-s">
       <UiButton kind="chip" @click="start">🚀 Start</UiButton>

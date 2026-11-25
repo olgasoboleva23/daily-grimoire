@@ -9,7 +9,7 @@ import { NOTES, PROJECTS } from "#/helpers/paths.js";
 // window with the timeline (newest first, a filter by what an entry is about, + Entry, ✏️, ×)
 const MASTER = "00 System/Data/Tasks/Master.md";
 const RECORDS = "00 System/Data/Tasks/tasks.json";
-let vue, taskStore, notesOf, Journal, Card, testWindows, config, files, app;
+let vue, taskStore, notesOf, openJournal, Card, testWindows, config, files, app;
 
 before(async () => {
   GlobalRegistrator.register();
@@ -18,7 +18,7 @@ before(async () => {
   window.moment = at => ({ format: f => (f === "YYYY-MM-DDTHH:mm" ? "2026-11-20T10:00" : `~${at}`) });
   vue = await import("vue");
   ({ taskStore, notes: notesOf } = await import("#/store/tasks.js"));
-  Journal = (await import("#/components/pages/projects/JournalWindow/index.vue")).default;
+  ({ openJournal } = await import("#/components/pages/projects/JournalWindow/open.js"));
   Card = (await import("#/components/pages/projects/ProjectPage/ProjectJournal.vue")).default;
   ({ testWindows } = await import("./stubs/windows.mjs"));
   config = (await import("#/helpers/config.js")).default;
@@ -64,8 +64,15 @@ const mount = (C, props) => {
 const headings = el => [...el.querySelectorAll(".ui-journal__heading")].map(h => h.textContent);
 const tick = () => new Promise(r => setTimeout(r));
 
-test("the window: the project's entries newest first, a missing title is the target's name", () => {
-  const el = mount(Journal, { project: "p1" });
+async function showJournal(windows, project = "p1") {
+  void openJournal(project);
+  return (await windows.next()).wrapper.element;
+}
+
+test("the window: entries newest first, a missing title is the target's name", async t => {
+  const windows = testWindows();
+  t.after(windows.restore);
+  const el = await showJournal(windows);
 
   assert.deepEqual(headings(el), ["dig", "Beds chosen", "Started"]);
   const meta = [...el.querySelectorAll(".ui-journal__meta")].map(m => m.textContent);
@@ -76,8 +83,10 @@ test("the window: the project's entries newest first, a missing title is the tar
   assert.equal(el.querySelector(".ui-journal__link").textContent.trim(), "📄 soil");
 });
 
-test("the window's filter: what an entry is about, with counts", async () => {
-  const el = mount(Journal, { project: "p1" });
+test("the window's filter: what an entry is about, with counts", async t => {
+  const windows = testWindows();
+  t.after(windows.restore);
+  const el = await showJournal(windows);
   const tabs = [...el.querySelectorAll(".ui-tabs button, .ui-tabs__tab")];
 
   assert.deepEqual(tabs.map(t => t.textContent.trim()),
@@ -87,9 +96,11 @@ test("the window's filter: what an entry is about, with counts", async () => {
   assert.deepEqual(headings(el), ["Beds chosen"]);
 });
 
-test("the window of a project without entries says so", () => {
+test("the window of a project without entries says so", async t => {
   taskStore.putProjects({ ...structuredClone(projects), p3: { name: "Kite", stages: [] } });
-  const el = mount(Journal, { project: "p3" });
+  const windows = testWindows();
+  t.after(windows.restore);
+  const el = await showJournal(windows, "p3");
 
   assert.match(el.querySelector(".ui-journal__empty").textContent, /No entries yet/);
 });
@@ -99,9 +110,8 @@ const entryButton = el => [...el.querySelectorAll("button")].find(b => b.textCon
 
 test("+ Entry: About lists the project, its stages and tasks; the note is owned by the project", async () => {
   const windows = testWindows();
-  const el = mount(Journal, { project: "p1" });
-
   try {
+    const el = await showJournal(windows);
     entryButton(el).click();
     const w = await windows.next();
 
@@ -133,25 +143,24 @@ test("+ Entry: About lists the project, its stages and tasks; the note is owned 
 
 test("+ Entry with nothing written: nothing saved, a Notice says why, the window stays", async () => {
   const windows = testWindows();
-  const el = mount(Journal, { project: "p1" });
   const before = files[NOTES];
 
   try {
+    const el = await showJournal(windows);
     entryButton(el).click();
     const w = await windows.next();
 
     await w.submit();
     assert.equal(files[NOTES], before);
     assert.match(Notice.last, /title, a text or a note/);
-    assert.equal(windows.all.length, 1);
+    assert.equal(windows.all.length, 2);
   } finally { windows.restore(); }
 });
 
 test("✏️ an entry: its fields prefilled, About not asked again, the edit saved", async () => {
   const windows = testWindows();
-  const el = mount(Journal, { project: "p1" });
-
   try {
+    const el = await showJournal(windows);
     el.querySelectorAll(".ui-journal__entry [title=Edit]")[0].click();   // n2, the newest
     const w = await windows.next();
 
@@ -171,7 +180,7 @@ test("✏️ an entry: its fields prefilled, About not asked again, the edit sav
     await when.setValue("2026-11-10T18:30");
     await title.setValue("Dug the beds");
     await w.submit();
-    assert.equal(windows.all.length, 0);
+    assert.equal(windows.all.length, 1);
   } finally { windows.restore(); }
   assert.equal(JSON.parse(files[NOTES]).n2.title, "Dug the beds");
   assert.equal(JSON.parse(files[NOTES]).n2.link, "Notes/soil.md");
@@ -187,6 +196,27 @@ test("the card: the count, the last entry in one line, Start and Final", () => {
   assert.ok(buttons.includes("🚀 Start") && buttons.includes("📝 Final"));
 });
 
+test("both journal openers use the window and its note link closes it", async () => {
+  const windows = testWindows();
+  const opened = [];
+  app.workspace.openLinkText = path => opened.push(path);
+  const el = mount(Card, { project: "p1" });
+  try {
+    for (const selector of [".ui-project__journal-open", ".ui-project__journal-last"]) {
+      el.querySelector(selector).click();
+      assert.equal(windows.all.length, 1);
+      const w = await windows.next();
+
+      assert.equal(w.title, "🕒 Journal · Garden");
+      assert.ok(w.classes.includes("ui-journal-window"));
+      assert.equal(w.wrapper.find(".ui-window__submit").exists(), false);
+      await w.wrapper.get(".ui-journal__link").trigger("click");
+      assert.equal(windows.all.length, 0);
+    }
+    assert.deepEqual(opened, ["Notes/soil.md", "Notes/soil.md"]);
+  } finally { windows.restore(); }
+});
+
 test("the card of a project without entries: no last line, the count 0", async () => {
   taskStore.putProjects({ ...structuredClone(projects), p3: { name: "Kite", stages: [] } });
   const el = mount(Card, { project: "p3" });
@@ -198,10 +228,10 @@ test("the card of a project without entries: no last line, the count 0", async (
 
 test("× an entry asks Delete entry? with its heading; closed it stays, else removed", async () => {
   const windows = testWindows();
-  const el = mount(Journal, { project: "p1" });
-  const remove = i => el.querySelectorAll(".ui-journal__entry [title=Delete]")[i].click();
-
   try {
+    const el = await showJournal(windows);
+    const remove = i => el.querySelectorAll(".ui-journal__entry [title=Delete]")[i].click();
+
     remove(1);
     const w = await windows.next();
 

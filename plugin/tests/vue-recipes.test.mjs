@@ -1,28 +1,33 @@
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
-import { Notice } from "obsidian";
+import { MarkdownRenderer, Notice } from "obsidian";
 import { vault } from "./stubs/vault.mjs";
 import { CONFIG, DISHES, FOOD_DATA, MARKET, MARKET_RECORDS } from "#/helpers/paths.js";
 import config, { applyConfig } from "#/helpers/config.js";
 
 // The recipe book: the page (the dishes, a search, + Dish, 🛒, ✏️) and a dish's window (its
 // ingredients with amounts, the marks, the recipe note's steps drawn below, 🛒 ✏️ 📄 🗑)
-let mount, reactive, RecipesPage, DishView, DishWindow, loadRecipes, Component, testWindows;
+let mount, reactive, RecipesPage, openDish, loadRecipes, testWindows;
 before(async () => {
   GlobalRegistrator.register();
   HTMLElement.prototype.setText = function (t) { this.textContent = t; };
   HTMLElement.prototype.addClass = function (c) { this.classList.add(c); };
   ({ mount } = await import("@vue/test-utils"));
   ({ reactive } = await import("vue"));
-  ({ Component } = await import("obsidian"));
   RecipesPage = (await import("#/components/pages/recipes/index.vue")).default;
-  DishView = (await import("#/components/pages/recipes/DishWindow/index.vue")).default;
-  ({ DishWindow } = await import("#/components/pages/recipes/DishWindow/index.ts"));
+  ({ openDish } = await import("#/components/pages/recipes/DishWindow/open.js"));
   ({ loadRecipes } = await import("#/controllers/dishes.js"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
 });
 const tick = () => new Promise(r => setTimeout(r));
+
+async function showDish(windows, id) {
+  void openDish(id);
+  const w = await windows.next();
+  await tick();
+  return w.wrapper;
+}
 
 // made-up: two products with marks, a cooked dish with its note, an ordered one without
 const MARKS = [{ tag: "m1", icon: "🍫", name: "cocoa" }, { tag: "m2", icon: "🥛", name: "milk" }];
@@ -124,14 +129,20 @@ async function cart(button, answer = l => l) {
 test("the recipes page: a dish's name opens its window; 🛒 asks, then puts its products on the list",
   async () => {
     const { files: written } = files();
-    const opened = [], open = DishWindow.prototype.open;
+    const windows = testWindows();
     const w = await page();
 
-    DishWindow.prototype.open = function () { opened.push(this.dish); };
-    try { await w.findAll(".ui-recipes__name")[1].trigger("click"); } finally {
-      DishWindow.prototype.open = open;
-    }
-    assert.deepEqual(opened, ["d1"]);
+    try {
+      await w.findAll(".ui-recipes__name")[1].trigger("click");
+      await tick();
+      assert.equal(windows.all.length, 1);
+      const [dish] = windows.all;
+      assert.deepEqual(dish.props, { dish: "d1" });
+      assert.equal(dish.title, "🍲 Porridge");
+      assert.ok(dish.classes.includes("ui-dish-window"));
+      assert.equal(dish.wrapper.find(".ui-window__submit").exists(), false);
+      await dish.close();
+    } finally { windows.restore(); }
     const button = w.findAll(".ui-recipes__cart")[1];
 
     assert.deepEqual(await cart(button, null),
@@ -158,39 +169,52 @@ test("🛒: a product on the list already gets the dish's amount; the notice say
   assert.match(Notice.last, /1 → Celestial Market.*1 on the list already/);
 });
 
-test("the dish window: 🛒 asks too, then puts the dish's products on the list", async () => {
+test("the dish window: 🛒 asks too, then puts the dish's products on the list", async t => {
   const { files: written } = files();
-  const w = mount(DishView, { props: { dish: "d2", owner: new Component() } });
+  const windows = testWindows();
+  t.after(windows.restore);
+  const w = await showDish(windows, "d2");
 
-  await tick(); await tick();
   assert.deepEqual(await cart(w.find(".ui-dish__cart")), ["To the shopping list?",
     { dish: "Cake from the café", lines: [{ on: true, name: "cocoa", amount: "" }] }]);
   assert.equal(written[`${MARKET}.md`].trim().split("\n").length, 1);
 });
 
-test("the dish window: the ingredients with amounts, the marks, the note's steps without its properties", async () => {
-  files();
-  const owner = new Component();
-  const w = mount(DishView, { props: { dish: "d1", owner }, attachTo: document.body });
+test("the dish viewer renders the recipe steps with the window's owner", async t => {
+  const { app } = files();
+  const opened = [], windows = testWindows();
+  app.workspace.openLinkText = path => opened.push(path);
+  t.after(windows.restore);
+  let owner;
+  const render = MarkdownRenderer.render;
+  t.mock.method(MarkdownRenderer, "render", async (app, md, el, path, component) => {
+    owner = component;
+    await render(app, md, el, path, component);
+  });
+  const w = await showDish(windows, "d1");
 
-  await tick(); await tick();
   assert.deepEqual(w.findAll(".ui-dish__ingredient").map(i =>
     [i.find(".ui-dish__product").text(), i.find(".ui-dish__amount").exists()
       ? i.find(".ui-dish__amount").text() : ""]), [["oats", "1 cup"], ["milk", ""]]);
   assert.match(w.find(".ui-dish__marks").text(), /🥛 milk/);
   assert.match(w.find(".ui-dish__steps").text(), /boil the milk/);
   assert.doesNotMatch(w.find(".ui-dish__steps").text(), /type: recipe/);
-  w.unmount();
+  assert.equal(owner._loaded, true);
+  await w.get(".ui-dish__note").trigger("click");
+  assert.deepEqual(opened, ["Recipes/Porridge.md"]);
+  assert.equal(windows.all.length, 0);
+  assert.equal(owner._loaded, false);
 });
 
-test("the dish window: an ordered dish has no steps; a gone product is marked", async () => {
+test("the dish window: an ordered dish has no steps; a gone product is marked", async t => {
   vault({
     [MARKET_RECORDS]: JSON.stringify(ITEMS), [FOOD_DATA]: JSON.stringify({ marks: MARKS }),
     [DISHES]: JSON.stringify({ d2: { ...DISH.d2, ingredients: [{ item: "m7", amount: "" }] } }),
   });
-  const w = mount(DishView, { props: { dish: "d2", owner: new Component() } });
+  const windows = testWindows();
+  t.after(windows.restore);
+  const w = await showDish(windows, "d2");
 
-  await tick(); await tick();
   assert.equal(w.find(".ui-dish__steps").exists(), false);
   assert.ok(w.find(".ui-dish__ingredient--gone").exists());
 });
@@ -199,10 +223,9 @@ test("the dish window: 🗑 asks Delete dish? with its name; closed it stays, De
   async () => {
     const { files: written } = files();
     const windows = testWindows();
-    const w = mount(DishView, { props: { dish: "d2", owner: new Component() } });
 
     try {
-      await tick(); await tick();
+      const w = await showDish(windows, "d2");
       await w.find(".ui-dish__delete").trigger("click");
       const no = await windows.next();
 
@@ -210,12 +233,12 @@ test("the dish window: 🗑 asks Delete dish? with its name; closed it stays, De
         lines: [{ name: "Dish", text: "Cake from the café" }] });
       await no.close();
       assert.deepEqual(Object.keys(JSON.parse(written[DISHES])), ["d1", "d2"]);
-      assert.equal(w.emitted("close"), undefined);
+      assert.equal(windows.all.length, 1);
       await w.find(".ui-dish__delete").trigger("click");
       await (await windows.next()).submit();
       await tick();
       assert.deepEqual(Object.keys(JSON.parse(written[DISHES])), ["d1"]);
-      assert.equal(w.emitted("close").length, 1);
+      assert.equal(windows.all.length, 0);
     } finally { windows.restore(); }
   });
 
@@ -291,7 +314,7 @@ test("⚙ Settings saves recipe tabs by key and name, including an empty list", 
 });
 
 test("an alternative of two products: «oats / cocoa + milk» on the page, each with its amount "
-  + "under the main one in the window and in 🛒 (unticked there)", async () => {
+  + "under the main one in the window and in 🛒 (unticked there)", async t => {
   const { files: written } = vault({
     [MARKET_RECORDS]: JSON.stringify(ITEMS), [FOOD_DATA]: JSON.stringify({ marks: MARKS }),
     [DISHES]: JSON.stringify({ d1: { ...DISH.d1, ingredients: [{ item: "m1", amount: "1 cup",
@@ -308,9 +331,10 @@ test("an alternative of two products: «oats / cocoa + milk» on the page, each 
   assert.deepEqual(written[`${MARKET}.md`].trim().split("\n"),
     ["- [ ] m3 [need:: Porridge · 2 tsp]", "- [ ] m2 [need:: Porridge · 1 glass]"]);
 
-  const win = mount(DishView, { props: { dish: "d1", owner: new Component() } });
+  const windows = testWindows();
+  t.after(windows.restore);
+  const win = await showDish(windows, "d1");
 
-  await tick(); await tick();
   assert.deepEqual(win.findAll(".ui-dish__alt").map(a =>
     [a.find(".ui-dish__product").text(), a.find(".ui-dish__amount").text()]),
   [["cocoa", "2 tsp"], ["milk", "1 glass"]]);
@@ -349,7 +373,7 @@ test("✏️ on the page and in the dish window: the form gets each line's alter
       { item: "m1", amount: "1 cup", alt: [{ item: "m3", amount: "2 tsp" }] }] } }),
   });
   const windows = testWindows(), asked = [];
-  const form = async () => {
+  const readPicks = async () => {
     const f = await windows.next();
 
     asked.push(f.wrapper.findAll(".ui-field-pick__button").map(b => b.text()));
@@ -360,12 +384,11 @@ test("✏️ on the page and in the dish window: the form gets each line's alter
     const w = await page();
 
     await w.find("[aria-label='edit the dish']").trigger("click");
-    await form();
-    const win = mount(DishView, { props: { dish: "d1", owner: new Component() } });
+    await readPicks();
+    const win = await showDish(windows, "d1");
 
-    await tick(); await tick();
     await win.find(".ui-dish__edit").trigger("click");
-    await form();
+    await readPicks();
   } finally { windows.restore(); }
   assert.deepEqual(asked, [["oats", "cocoa", "Porridge"], ["oats", "cocoa", "Porridge"]]);
 });
