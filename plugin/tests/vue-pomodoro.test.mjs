@@ -209,3 +209,36 @@ test("reopening the last closed view resumes the same live session", async () =>
   assert.equal(other.find(".ui-pomodoro__time").text(), "24:00");
   other.unmount();
 });
+
+test("⚙ opens Pomodoro & Meditation with the settings; Save resets the clock to the new lengths",
+  async () => {
+    const { testWindows } = await import("./stubs/windows.mjs");
+    const windows = testWindows();
+    const { w, json } = draw();
+    const gear = () => w.findAll("button.ui-pomodoro__gear")
+      .find(b => !b.classes("ui-pomodoro__mode-switch"));
+
+    try {
+      await nextTick();
+      await gear().trigger("click");
+      const no = await windows.next();
+
+      assert.deepEqual(no.props, { settings: { focusMin: 25, breakMin: 5, meditationMin: 10 } });
+      void no.close(); await saved();   // closed: nothing (close's own wait is a mocked timer)
+      assert.deepEqual(json().settings, undefined);
+      await gear().trigger("click");
+      const lengths = await windows.next();
+      const [focus, , meditation] = lengths.wrapper.findAll("input");
+      const submit = lengths.wrapper.find(".ui-window__submit");
+
+      await focus.setValue("30");
+      await meditation.setValue("");
+      assert.equal(submit.element.disabled, true);   // a length missing
+      await meditation.setValue("12");
+      await lengths.wrapper.findAll(".ui-field-choice").at(-1).trigger("click");   // Harp
+      await submit.trigger("click"); await saved(); await nextTick(); await saved();
+      assert.deepEqual(json().settings,
+        { focusMin: 30, breakMin: 5, meditationMin: 12, music: "harp" });
+      assert.equal(w.find(".ui-pomodoro__time").text(), "30:00");
+    } finally { w.unmount(); windows.restore(); }
+  });

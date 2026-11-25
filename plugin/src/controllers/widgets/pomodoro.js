@@ -1,18 +1,16 @@
 // @ts-check
 // The pomodoro's controller: its state in 00 System/Data/pomodoro.json (settings, the current
-// session, the mini row, today's stats); the end-of-session sound, the lengths' window and the
-// save. The shared running session and clock live in widgets/pomodoro.
+// session, the mini row, today's stats); the end-of-session sound, the meditation's music and
+// the save. The shared running session and clock live in widgets/pomodoro.
 import { todayYmd } from "#/helpers/dates.js";
 import { readJson } from "#/helpers/files.js";
 import { AudioEngine, isMuted } from "#/helpers/sounds.js";
-import { Form } from "#/components/uikit/Form/index.ts";
 import { app } from "#/helpers/app.js";
 import { addStats } from "#/models/timer.js";
 import { ASSETS, POMODORO, SOUNDS } from "#/helpers/paths.js";
 
 /** @typedef {import("#/models/timer.js").Timer} Timer */
 /** @typedef {import("#/models/timer.js").PomodoroData} PomodoroData */
-/** @typedef {import("#/models/timer.js").PomodoroSettings} PomodoroSettings */
 
 export const ICON = {
   play: `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`,
@@ -45,11 +43,11 @@ export const ding = rate => sparkle.play({ rate });
 
 export const bell = () => chime.play({ rate: 0.7, gain: 0.35, duration: 3 });
 
-// the meditation's music (00 System/Assets/winx music/meditation-<name>.flac, seamless loops):
-// the one to play now — "<name>|<start>" for a running meditation with music, not muted — or null
+// The music choices shared by the settings window and meditation loop playback.
 /** @type {Record<string, string>} */
-const MUSIC = { pad: "Pad", bells: "Bells", harp: "Harp" };
+export const MUSIC = { pad: "Pad", bells: "Bells", harp: "Harp" };
 
+// "<name>|<start>" for a running meditation with music and sound on, otherwise null.
 /** @param {Timer} timer @param {boolean} muted */
 export const musicKey = (timer, muted = isMuted()) =>
   timer.type === "meditation" && timer.running && MUSIC[timer.settings.music ?? ""] && !muted
@@ -72,24 +70,6 @@ export async function syncMusic(timer) {
     .loop(timer.remaining);
 
   if (music?.key === key) music.handle = handle; else handle?.stop();
-}
-
-/** @param {PomodoroSettings} settings */
-export async function askLengths(settings) {
-  const minutes = ["focusMin", "breakMin", "meditationMin"];
-  const v = await Form.ask(app, "✦ Pomodoro & Meditation", [
-    { name: "Focus", key: "focusMin", text: "minutes", number: true },
-    { name: "Break", key: "breakMin", text: "minutes", number: true },
-    { name: "Meditation", key: "meditationMin", text: "minutes", number: true, divider: true },
-    { name: "Music", key: "music", options: [
-      { label: "—", value: null },
-      ...Object.entries(MUSIC).map(([value, label]) => ({ label, value })),
-    ] },
-  ], { values: settings, required: minutes, submit: "Save" });
-
-  return v && minutes.every(k => Number.isFinite(v[k]) && v[k] > 0)
-    ? { ...settings, focusMin: v.focusMin, breakMin: v.breakMin,
-      meditationMin: v.meditationMin, music: v.music ?? null } : null;
 }
 
 // the save: settings, the current session, mini and today's stats (a finished focus session adds

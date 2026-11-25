@@ -8,10 +8,12 @@ import { computed, ref, watch } from "vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import UiMissing from "#/components/uikit/UiMissing.vue";
 import { confirm } from "#/components/uikit/ConfirmWindow/confirm.js";
+import { openWindow } from "#/components/uikit/Window/open.ts";
+import NewJournalWindow from "#/components/windows/journals/NewJournalWindow/index.vue";
 import { WEIGHT } from "#/helpers/paths.js";
 import { app } from "#/helpers/app.js";
 import { logWeight } from "#/controllers/widgets/weight.js";
-import { addJournal, logBody, trashJournal } from "#/controllers/journals.js";
+import { logBody, trashJournal } from "#/controllers/journals.js";
 import WeightMode from "./WeightMode.vue";
 import BodyLogMode from "./BodyLogMode.vue";
 
@@ -38,11 +40,11 @@ const pick = path => {
   mode.value = "log";
 };
 
-// ＋ a new journal: shown once the card loads it
+// ＋ a new journal in its window: shown once the card loads it
 const newJournal = async () => {
-  const path = await addJournal();
+  const file = await openWindow(NewJournalWindow);
 
-  if (path) pick(path);
+  if (file) pick(file.path);
 };
 
 // 🗑 a journal: asked first, then into the trash (Obsidian's, as set: recoverable)

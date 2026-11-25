@@ -84,7 +84,8 @@ function act(change) {
 
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from "vue";
-import { askLengths } from "#/controllers/widgets/pomodoro.js";
+import { openWindow } from "#/components/uikit/Window/open.ts";
+import PomodoroWindow from "#/components/windows/pomodoro/PomodoroWindow/index.vue";
 import PomodoroMini from "./PomodoroMini.vue";
 import PomodoroRing from "./PomodoroRing.vue";
 
@@ -99,9 +100,9 @@ const switchMode = () => act(t => t.reset(t.type === "meditation" ? "focus" : "m
 const toggle = () => { mini.value = !mini.value; return save(0, "focus", mini.value); };
 
 async function gear() {
-  const lengths = await askLengths(timer.settings);
+  const settings = await openWindow(PomodoroWindow, { settings: timer.settings });
 
-  if (lengths) await act(t => { t.settings = lengths; t.reset(); });
+  if (settings) await act(t => { t.settings = settings; t.reset(); });
 }
 
 onMounted(() => mountSession(saved, current));

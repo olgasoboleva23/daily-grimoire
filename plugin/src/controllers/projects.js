@@ -30,7 +30,8 @@ export const saveProject = (key, patch) => projects.update(key, p => ({ ...p, ..
 const editable = p => [p.name, p.description ?? "", p.cover ?? null, p.showInCalendar !== false];
 const sameEdit = (p, before) =>
   p && JSON.stringify(editable(p)) === JSON.stringify(editable(before));
-const changedProject = () => new Notice("✦ project changed or was deleted; open it again");
+
+export const changedProject = () => new Notice("✦ project changed or was deleted; open it again");
 
 export const readProject = async key => (await readJson(PROJECTS, {}))[key] ?? null;
 

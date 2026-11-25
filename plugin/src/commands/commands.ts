@@ -1,16 +1,19 @@
-import { FuzzySuggestModal, Notice, Platform, Plugin } from "obsidian";
+import { FuzzySuggestModal, Platform, type Plugin, type TFile } from "obsidian";
 import { APP_NAME } from "#/helpers/name.js";
 import { KINDS } from "#/models/kinds.js";
 import { mirrorMobileConfig } from "#/controllers/mobileConfig.js";
-import { Form } from "#/components/uikit/Form/index.ts";
 import { newTask } from "#/controllers/tasks.js";
 import { migrateTasks } from "#/migrations/tasks.js";
 import { openSettings } from "#/controllers/settings.js";
 import { addMarketItem } from "#/controllers/widgets/market.js";
-import { logPurchase } from "#/controllers/widgets/shop.js";
 import { createNote } from "#/controllers/notes.js";
 import { editCourse, newCourse, pickCourse } from "#/controllers/meds.js";
 import { openNewProject } from "#/components/windows/projects/ProjectWindow/open.js";
+import { openWindow } from "#/components/uikit/Window/open.ts";
+import { askValue } from "#/components/uikit/FieldWindow/ask.js";
+import CollectionItemWindow from "#/components/windows/notes/CollectionItemWindow/index.vue";
+import NewJournalWindow from "#/components/windows/journals/NewJournalWindow/index.vue";
+import BuyRewardWindow from "#/components/windows/shop/BuyRewardWindow/index.vue";
 
 
 // The commands in Cmd+P ("Daily Grimoire: …"); each one window, then saved.
@@ -24,18 +27,26 @@ export function registerCommands(plugin: Plugin) {
   // dates
   add("new-task", "New task", async () => void await newTask());
 
-  // a watch / read / game / recipe / work task note (models/kinds.js), in its folder, opened in a
-  // new tab
-  for (const kind of Object.values(KINDS) as any[]) {
+  // a watch / read / game / recipe / work task note or a free journal (models/kinds.js), in its
+  // folder, opened in a new tab: a watch / read / game item and a journal in their windows, a
+  // recipe and a work task asked only their title
+  const ask = async (key: string, kind: any, dir: string) => {
+    if (kind.statuses) return openWindow(CollectionItemWindow, { kind: key, dir });
+    if (key === "journal") return openWindow(NewJournalWindow);
+    const title = await askValue({
+      title: `✦ ${kind.name}`, name: "Title", placeholder: "title", required: true,
+      submit: "Create",
+    });
+
+    return title && createNote(kind, { title }, dir);
+  };
+
+  for (const [key, kind] of Object.entries(KINDS) as [string, any][]) {
     add(kind.id, kind.name, async () => {
-      const { rows, values, required } = kind.form();
-      const v = await Form.ask(app, `✦ ${kind.name}`, rows, { values, required, submit: "Create" });
-
-      if (!v) return;
       const dir = (kind.setting && (await plugin.loadData())?.[kind.setting]) || kind.folder;
-      const file = await createNote(kind, v, dir);
+      const file = await ask(key, kind, dir) as TFile | null;
 
-      await app.workspace.getLeaf("tab").openFile(file);
+      if (file) await app.workspace.getLeaf("tab").openFile(file);
     });
   }
 
@@ -51,15 +62,8 @@ export function registerCommands(plugin: Plugin) {
     if (id) await editCourse(id);
   });
 
-  // a purchase, logged to Purchases.md (the wallet's spent)
-  add("buy-reward", "Buy reward", async () => {
-    const v = await Form.ask(app, "✦ Buy reward", [
-      { name: "Name", key: "name", text: "what you bought" },
-      { name: "Cost", key: "cost", text: "coins", number: true },
-    ], { required: ["name", "cost"], submit: "Buy" });
-
-    if (v && !await logPurchase(v.name, v.cost)) new Notice(`✦ Not enough gold for ${v.name}`);
-  });
+  // a purchase, logged to Purchases.md (the wallet's spent) when the gold covers it
+  add("buy-reward", "Buy reward", async () => void await openWindow(BuyRewardWindow));
 
   // a shopping item in the Celestial Market: one bought before, or a new one with its category
   add("new-market-item", "New market item", addMarketItem);

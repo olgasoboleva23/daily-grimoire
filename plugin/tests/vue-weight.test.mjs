@@ -61,17 +61,30 @@ test("Weight: the journal's pill shows it, a select under it picks another; a le
 });
 
 test("Weight: ＋ after the journal's pill makes a new journal in its window and shows it", async () => {
-  const { Form } = await import("#/components/uikit/Form/index.ts");
-  const ask = Form.ask;
+  const { testWindows } = await import("./stubs/windows.mjs");
+  const windows = testWindows();
   const { files, local } = vault({ [SKIN]: "" });
-
-  Form.ask = async () => ({ title: "Живот", reasons: [{ reason: "🥛 молоко" }], lag: 0 });
   const w = mount(WeightCard, { props: { state: { data } } });
 
-  await w.find(".ui-weight__new").trigger("click"); await new Promise(r => setTimeout(r)); await nextTick();
-  Form.ask = ask;
-  assert.match(files[`${JOURNALS}/Живот.md`], /^---\ntype: journal\nlag: 0\nreasons:\n  - "🥛 молоко"\n---\n/);
-  assert.equal(local["ui-journal"], `${JOURNALS}/Живот.md`);   // picked: shown once the card loads it
+  try {
+    await w.find(".ui-weight__new").trigger("click");
+    const add = await windows.next();
+
+    assert.equal(add.title, "✦ New journal");
+    await add.close();
+    assert.equal(local["ui-journal"], undefined);   // closed: nothing picked
+    await w.find(".ui-weight__new").trigger("click");
+    const again = await windows.next();
+    const [title, reason] = again.wrapper.findAll("input");
+
+    await title.setValue("Живот");
+    await reason.setValue("🥛 молоко");
+    await again.submit();
+    assert.match(files[`${JOURNALS}/Живот.md`],
+      /^---\ntype: journal\nlag: 0\nreasons:\n  - "🥛 молоко"\n---\n/);
+    // picked: shown once the card loads it
+    assert.equal(local["ui-journal"], `${JOURNALS}/Живот.md`);
+  } finally { windows.restore(); }
 });
 
 test("Weight: 🗑 by a journal's list asks first, then puts the journal in the trash; closed: nothing", async () => {

@@ -1,36 +1,17 @@
-// The notes the plugin makes (a command each, "Daily Grimoire: New …"): the window's rows and the
-// note's data.
-//   form() → { rows, values, required } for Form.ask; note(values, today) → { props, body?,
-//   sections } for Note (a note's name is its file's: no title property, no # heading)
+// The notes made by the Daily Grimoire commands ("Daily Grimoire: New …"): their choices (a
+// watch / read / game item's types and statuses, for its window) and their contents.
+// note(values, today) gives Note its properties, body and sections; the file holds the title.
 
 const pairs = list => list.map(([label, value]) => ({ label, value }));
-const titleOnly = () => ({
-  rows: [{ name: "Title", key: "title", text: "title" }], values: {}, required: ["title"],
-});
 
 // watch / read / game: a Collections note, its type or genre, status and rating 1–10 (the
 // _index.base shows stars)
-const item = ({ type, steps, types, statuses, ...rest }) => ({
+const item = ({ type, steps, ...rest }) => ({
   ...rest,
-  form: () => ({
-    rows: [
-      { name: "Title", key: "title", text: "title" },
-      types
-        ? { name: "Type", key: "media_type", options: types }
-        : { name: "Genre", key: "genre", text: "optional" },
-      { name: "Status", key: "status", options: statuses },
-      {
-        name: "Rating", key: "rating",
-        options: Array.from({ length: 10 }, (_, i) => ({ label: String(i + 1), value: i + 1 })),
-      },
-    ],
-    values: { status: statuses[0].value },
-    required: ["title", "status", ...(types ? ["media_type"] : [])],
-  }),
   note: (v, today) => ({
     props: {
       type,
-      ...(types
+      ...(rest.types
         ? { media_type: v.media_type, status: v.status }
         : { status: v.status, genre: v.genre }),
       rating: v.rating, ...(type === "game" ? { hours: null } : {}), created: today, tags: null,
@@ -78,8 +59,7 @@ export const KINDS = {
   }),
   recipe: {
     id: "new-recipe", name: "New recipe", folder: "03 Resources/Collections/Recipes",
-    form: titleOnly,
-    note: v => ({
+    note: () => ({
       props: { type: "recipe", tags: [], source: null, time: null, difficulty: null, rating: null },
       sections: { Steps: "", Notes: "", Variations: "" },
     }),
@@ -88,21 +68,10 @@ export const KINDS = {
   // after a meal its level is looked at on the food page (a rash: the next day)
   journal: {
     id: "new-journal", name: "New journal", folder: "00 System/Data/Journals",
-    form: () => ({
-      rows: [
-        { name: "Title", key: "title", text: "Высыпания" },
-        {
-          name: "Reasons", key: "reasons",
-          list: [{ name: "Reason", key: "reason", text: "🍰 сладкое" }],
-        },
-        { name: "Days after a meal", key: "lag", text: "0", number: true },
-      ],
-      values: { lag: 0 }, required: ["title"],
-    }),
     note: v => ({
       props: {
         type: "journal", lag: Number(v.lag) || 0,
-        reasons: (v.reasons ?? []).map(g => g.reason?.trim()).filter(Boolean),
+        reasons: (v.reasons ?? []).map(reason => reason.trim()).filter(Boolean),
       },
       body: "%% Строки: - YYYY-MM-DD уровень(0–3) причина, причина. Или на дашборде: Weight → "
         + "пилюля журнала. Причины — свойство reasons выше. %%",
@@ -112,7 +81,7 @@ export const KINDS = {
   // the folder, then the title in lower case with underscores ("39_mail_templates")
   work: {
     id: "new-work-task", name: "New work task", folder: "01 Projects/Work/tasks",
-    setting: "workTasks", form: titleOnly,
+    setting: "workTasks",
     file: (v, names) => {
       const last = Math.max(0, ...names.map(n => Number(n.match(/^(\d+)_/)?.[1] || 0)));
 
