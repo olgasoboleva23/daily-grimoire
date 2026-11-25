@@ -1,8 +1,14 @@
+// Settings validation, configuration writes and area moves against an in-memory vault.
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { Notice } from "obsidian";
+import { saveSettings } from "#/controllers/settings.js";
 import config, { applyConfig } from "#/helpers/config.js";
+import { CONFIG, TASK_RECORDS } from "#/helpers/paths.js";
 import { settingsValues, settingsProblem, toConfig, areaMoves } from "#/models/settings.js";
 import { levelInfo } from "#/models/xp.js";
+import { taskStore } from "#/store/tasks.js";
+import { vault } from "./stubs/vault.mjs";
 
 test("level settings reject invalid costs and allow a constant positive cost", () => {
   applyConfig();
@@ -76,6 +82,52 @@ test("a key changed with ☑ moves its tasks' records; without ☑ they stay", (
   const areas = v.areas.map(a => a.key === "base" ? { ...a, key: "home" } : a);
   assert.deepEqual(areaMoves({ ...v, areas }, records), { t1: { area: "home" }, t3: { area: "home" } });
   assert.deepEqual(areaMoves({ ...v, areas: areas.map(a => ({ ...a, apply: false })) }, records), {});
+});
+
+test("saveSettings writes and applies config, moves checked areas and reports the count",
+  async t => {
+    const original = { promptStart: "Saved prompt" };
+    const records = {
+      t1: { name: "Cook", area: "base" },
+      t2: { name: "Clean", area: "base" },
+      t3: { name: "Walk", area: "body" },
+    };
+    const { files } = vault({
+      [CONFIG]: JSON.stringify(original), [TASK_RECORDS]: JSON.stringify(records),
+    });
+    applyConfig(original);
+    taskStore.putRecords(records);
+    t.after(() => { applyConfig(); taskStore.putRecords({}); });
+    const values = settingsValues(config);
+    const areas = values.areas.map(area => {
+      if (area.key === "base") return { ...area, key: "home", apply: true };
+      if (area.key === "body") return { ...area, key: "fitness", apply: false };
+      return area;
+    });
+    const next = { ...values, base: 75, step: 0, areas };
+
+    assert.deepEqual(await saveSettings(next), { moved: 2 });
+    assert.deepEqual(JSON.parse(files[CONFIG]), { ...original, ...toConfig(next) });
+    assert.deepEqual(config.levelCost, { base: 75, step: 0 });
+    assert.equal(config.areaMap.home, "Sanctuary");
+    assert.deepEqual(JSON.parse(files[TASK_RECORDS]), {
+      t1: { ...records.t1, area: "home" }, t2: { ...records.t2, area: "home" }, t3: records.t3,
+    });
+    assert.equal(Notice.last, "✦ Settings saved · 2 tasks moved");
+  });
+
+test("saveSettings reports zero moves when only a setting changes", async t => {
+  const { files } = vault();
+  applyConfig();
+  taskStore.putRecords({});
+  t.after(() => applyConfig());
+
+  assert.deepEqual(await saveSettings({ ...settingsValues(config), theme: "gothic" }), {
+    moved: 0,
+  });
+  assert.equal(JSON.parse(files[CONFIG]).theme, "gothic");
+  assert.equal(config.theme, "gothic");
+  assert.equal(Notice.last, "✦ Settings saved");
 });
 
 test("dish type edits are independent, normalized, validated and saved in display order", () => {

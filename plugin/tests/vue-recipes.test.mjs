@@ -3,12 +3,12 @@ import assert from "node:assert/strict";
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { Notice } from "obsidian";
 import { vault } from "./stubs/vault.mjs";
-import { DISHES, FOOD_DATA, MARKET, MARKET_RECORDS } from "#/helpers/paths.js";
-import config from "#/helpers/config.js";
+import { CONFIG, DISHES, FOOD_DATA, MARKET, MARKET_RECORDS } from "#/helpers/paths.js";
+import config, { applyConfig } from "#/helpers/config.js";
 
 // The recipe book: the page (the dishes, a search, + Dish, 🛒, ✏️) and a dish's window (its
 // ingredients with amounts, the marks, the recipe note's steps drawn below, 🛒 ✏️ 📄 🗑)
-let mount, reactive, RecipesPage, DishView, DishWindow, Form, loadRecipes, Component, testWindows;
+let mount, reactive, RecipesPage, DishView, DishWindow, loadRecipes, Component, testWindows;
 before(async () => {
   GlobalRegistrator.register();
   HTMLElement.prototype.setText = function (t) { this.textContent = t; };
@@ -19,7 +19,6 @@ before(async () => {
   RecipesPage = (await import("#/components/pages/recipes/index.vue")).default;
   DishView = (await import("#/components/pages/recipes/DishWindow/index.vue")).default;
   ({ DishWindow } = await import("#/components/pages/recipes/DishWindow/index.ts"));
-  ({ Form } = await import("#/components/uikit/Form/index.ts"));
   ({ loadRecipes } = await import("#/controllers/dishes.js"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
 });
@@ -256,18 +255,39 @@ test("the recipes page: the tabs are ⚙ Settings' (their names and order); a go
     assert.equal(w.findAll(".ui-recipes__name").length, 2);
   });
 
-test("⚙ Settings: a Recipes tab, a line a page tab (its tag, its name)", async () => {
-  const { settingsWindow } = await import("#/components/uikit/SettingsWindow/index.js");
-  const ask = Form.ask;
-  let rows;
-
-  Form.ask = async (_app, _title, r) => { rows = r; return null; };
-  try { await settingsWindow(config, {}); } finally { Form.ask = ask; }
-  const row = rows.find(r => r.key === "dishTypes");
-
-  assert.equal(row.tab, "Recipes");
-  assert.deepEqual(row.list.map(r => r.key), ["key", "name"]);
-  assert.deepEqual(row.required, ["key", "name"]);
+test("⚙ Settings saves recipe tabs by key and name, including an empty list", async t => {
+  const { openSettings } =
+    await import("#/components/windows/settings/SettingsWindow/open.js");
+  const { files: written } = vault();
+  applyConfig({ dishTypes: [{ key: "main", name: "Mains" }] });
+  t.after(() => applyConfig());
+  const windows = testWindows();
+  try {
+    const saving = openSettings();
+    const w = await windows.next();
+    await w.wrapper.get('button[data-tab="Recipes"]').trigger("click");
+    const pane = w.wrapper.get(".ui-window__pane:not([hidden])");
+    assert.equal(pane.get(".setting-item-name").text(), "Dish types");
+    assert.deepEqual(pane.findAll("input").map(i => i.element.value), ["main", "Mains"]);
+    await pane.get('input[placeholder="Soups"]').setValue("");
+    await w.submit();
+    assert.match(Notice.last, /each dish type needs a key and a name/);
+    assert.equal(written[CONFIG], undefined);
+    await pane.get('input[placeholder="Soups"]').setValue("Main dishes");
+    await w.submit();
+    assert.deepEqual(await saving, { moved: 0 });
+    assert.deepEqual(JSON.parse(written[CONFIG]).dishTypes, [
+      { key: "main", name: "Main dishes" },
+    ]);
+    const savingEmpty = openSettings();
+    const empty = await windows.next();
+    await empty.wrapper.get('button[data-tab="Recipes"]').trigger("click");
+    await empty.wrapper.get('.ui-window__pane:not([hidden]) button[title="Remove"]')
+      .trigger("click");
+    await empty.submit();
+    assert.deepEqual(await savingEmpty, { moved: 0 });
+    assert.deepEqual(JSON.parse(written[CONFIG]).dishTypes, []);
+  } finally { windows.restore(); }
 });
 
 test("an alternative of two products: «oats / cocoa + milk» on the page, each with its amount "

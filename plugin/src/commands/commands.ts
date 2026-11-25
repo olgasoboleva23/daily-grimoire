@@ -4,7 +4,7 @@ import { KINDS } from "#/models/kinds.js";
 import { mirrorMobileConfig } from "#/controllers/mobileConfig.js";
 import { newTask } from "#/components/windows/tasks/TaskWindow/open.js";
 import { migrateTasks } from "#/migrations/tasks.js";
-import { openSettings } from "#/controllers/settings.js";
+import { openSettings } from "#/components/windows/settings/SettingsWindow/open.js";
 import { createNote } from "#/controllers/notes.js";
 import { pickCourse } from "#/controllers/meds.js";
 import { openNewProject } from "#/components/windows/projects/ProjectWindow/open.js";
@@ -74,7 +74,7 @@ export function registerCommands(plugin: Plugin) {
   if (Platform.isMobile) add("update-mobile-config", "Update mobile config", mirrorMobileConfig);
 
   // ⚙ the numbers and areas (config.json); the app tab's drawer opens it too
-  add("settings", "Settings", openSettings);
+  add("settings", "Settings", async () => void await openSettings());
 
   // once: the old emoji Master.md and Pool.md to ids, Dataview fields and tasks.json
   add("migrate-tasks", "Migrate tasks", migrateTasks);

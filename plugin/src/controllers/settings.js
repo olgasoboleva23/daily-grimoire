@@ -1,25 +1,15 @@
-// ⚙ Settings (the app tab's drawer, Daily Grimoire: Settings): the window, then config.json written
-// (the task store reads it back into helpers/config.js and everything draws again) and, for an
-// area whose key changed with ☑ apply, its tasks' records moved to the new key. Values that can't
-// be saved: a notice, nothing written.
+// Saves validated settings to config.json, applies them and moves tasks for checked area changes.
 import { Notice } from "obsidian";
-import config, { applyConfig } from "#/helpers/config.js";
+import { applyConfig } from "#/helpers/config.js";
 import { editJson } from "#/helpers/files.js";
 import { CONFIG } from "#/helpers/paths.js";
 import { taskStore } from "#/store/tasks.js";
 import { saveRecords } from "#/controllers/tasks.js";
-import { settingsWindow } from "#/components/uikit/SettingsWindow/index.js";
-import { areaMoves, settingsProblem, settingsValues, toConfig } from "#/models/settings.js";
+import { areaMoves, toConfig } from "#/models/settings.js";
 
-export async function openSettings() {
-  const v = await settingsWindow(config, settingsValues(config));
-
-  if (!v) return;
-  const problem = settingsProblem(v, taskStore.records, config);
-
-  if (problem) return void new Notice(`✦ Settings not saved: ${problem}`);
-  const json = toConfig(v);
-  const moves = areaMoves(v, taskStore.records);
+export async function saveSettings(values) {
+  const json = toConfig(values);
+  const moves = areaMoves(values, taskStore.records);
   const moved = Object.keys(moves).length;
 
   let merged;
@@ -28,4 +18,5 @@ export async function openSettings() {
   applyConfig(merged);
   if (moved) await saveRecords(moves);
   new Notice(`✦ Settings saved${moved ? ` · ${moved} tasks moved` : ""}`);
+  return { moved };
 }

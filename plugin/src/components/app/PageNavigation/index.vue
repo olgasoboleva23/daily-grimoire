@@ -10,7 +10,7 @@ import UiNav from "#/components/uikit/UiNav/index.vue";
 import UiDrawer from "#/components/uikit/UiDrawer/index.vue";
 import { openUi } from "#/components/app/open.ts";
 import { pages } from "#/components/app/pages.js";
-import { openSettings } from "#/controllers/settings.js";
+import { openSettings } from "#/components/windows/settings/SettingsWindow/open.js";
 import { APP_NAME } from "#/helpers/name.js";
 
 const ui = inject("ui");
