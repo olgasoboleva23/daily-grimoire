@@ -1,5 +1,5 @@
 @use "mixins" as *;
-/* ── Goals (src/widgets/goals/goals.js): a block ui-goal per goal ── */
+/* ── Goals: a block ui-goal per goal ── */
 .ui-goal {
   &__head {
     color: var(--ui-text);

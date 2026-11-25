@@ -1,5 +1,5 @@
 @use "mixins" as *;
-/* ── Savings (src/widgets/savings/savings.js): a jar (block ui-jar) per goal ── */
+/* ── Savings: a jar (block ui-jar) per goal ── */
 .ui-savings {   display: grid; gap: $space-4xl; }
 .ui-jar {
   display: grid; gap: $space-m; color: var(--ui-purple-deep);

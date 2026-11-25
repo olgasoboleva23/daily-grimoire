@@ -1,6 +1,6 @@
 // Dashboard savings widget: its view and the changes that reload it.
 import { SAVINGS } from "#/shared/config/index.js";
-import SavingsJars from "#/components/pages/dashboard/widgets/savings/index.vue";
+import SavingsJars from "./ui/index.vue";
 import { loadSavings } from "./model/store.js";
 
 export const savingsWidget = {

@@ -1,6 +1,6 @@
 @use "mixins" as *;
 
-/* the dashboard's Finance card (FinanceLine.vue), ui-fin__month (an element of the Finance
+/* the dashboard's Finance card, ui-fin__month (an element of the Finance
    page's block ui-fin): this month on one line, the link under it */
 .ui-fin {
   &__month {

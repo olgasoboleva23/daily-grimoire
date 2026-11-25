@@ -1,4 +1,4 @@
-<!-- the cycles: when and how long, and a pill per day (its kind from cycle.js pill()) -->
+<!-- the cycles: when and how long, and a pill per day (its kind from the cycle store) -->
 <script setup>
 defineProps({ rows: { type: Array, required: true } });
 </script>

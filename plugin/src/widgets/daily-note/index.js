@@ -1,5 +1,5 @@
 // Dashboard daily-note widget: its view and the changes that reload it.
-import DailyNoteOpen from "#/components/pages/dashboard/widgets/DailyNoteOpen.vue";
+import DailyNoteOpen from "./ui/DailyNoteOpen.vue";
 import { loadDailyNote } from "./model/store.js";
 
 export const dailyNoteWidget = {

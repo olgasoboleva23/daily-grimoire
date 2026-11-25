@@ -15,7 +15,7 @@
 @use "../../shared/ui/UiCard";   // the widget's card, where the card snippet was
 @use "../../components/pages/dashboard/widgets/market";
 @use "../../components/pages/dashboard/widgets/xp/XpToday";
-@use "../../components/pages/dashboard/widgets/quests";
+@use "../../widgets/quests/ui" as quests;
 @use "layout";
 @use "../../components/pages/dashboard/widgets/pomodoro";
 @use "../../components/pages/shop";
@@ -23,13 +23,13 @@
 @use "tokens";
 @use "themes";
 @use "../../components/pages/dashboard/widgets/xp/LevelToday";
-@use "../../components/pages/dashboard/widgets/goals";
+@use "../../widgets/goals/ui" as goals;
 @use "../../components/pages/dashboard/widgets/xp/LifeAreas";
-@use "../../components/pages/dashboard/widgets/cycle";
+@use "../../widgets/cycle/ui" as cycle;
 @use "../../components/pages/supplies";
 @use "scroll-cards";
 @use "../../components/pages/dashboard/widgets/weight";
-@use "../../components/pages/dashboard/widgets/savings";
+@use "../../widgets/savings/ui" as savings;
 @use "../../components/pages/calendar/TaskCard";
 @use "../../shared/ui/UiButton";
 @use "../../shared/ui/UiDeleteButton";
@@ -61,4 +61,4 @@
 @use "../../components/pages/projects/ProjectStatus";
 @use "../../components/pages/projects/ProjectList";
 @use "../../components/pages/projects/ProjectPage";
-@use "../../components/pages/dashboard/widgets/finance";
+@use "../../widgets/finance/ui" as finance;
