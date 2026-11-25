@@ -2,7 +2,7 @@
 import { computed, ref, watch } from "vue";
 import { Platform } from "obsidian";
 import config, { themeLabels, DATA, POMODORO } from "#/shared/config/index.js";
-import { taskStore } from "#/store/tasks.js";
+import { taskStore } from "#/entities/task/index.js";
 import { app } from "#/shared/host/index.js";
 import { useObsidian } from "#/shared/lib/vueApp.ts";
 import { useBusy, useNewDay } from "#/shared/lib/use.js";

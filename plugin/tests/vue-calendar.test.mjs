@@ -70,7 +70,7 @@ const box = (el, text) => [...el.querySelectorAll(".ui-cal__task--open")].find(r
 
 test("CalendarPage: cached while hidden, refreshed on return; subscriptions end on close", async () => {
   const Calendar = (await import("#/components/pages/calendar/index.vue")).default;
-  const { taskStore } = await import("#/store/tasks.js");
+  const { taskStore } = await import("#/entities/task/index.js");
   const { mount } = await import("@vue/test-utils");
   const shown = vue.ref(true);
   const st = vue.reactive({ ...state.readState(undefined), area: null, picked: null });
@@ -393,7 +393,7 @@ test("phone: pool actions add an open copy today; Missed actions complete on the
 });
 
 test("Projects tab: a GroupCard per project with open tasks (a Done one too), a stage title over them, finished tasks hidden", async () => {
-  const { taskStore } = await import("#/store/tasks.js");
+  const { taskStore } = await import("#/entities/task/index.js");
   const { MASTER } = await import("#/shared/config/index.js");
   taskStore.put(MASTER, [
     "- [ ] t1 [due:: 2026-11-10]", "- [x] t2 [completion:: 2026-11-01]", "- [ ] t3", "- [ ] t4",
@@ -427,7 +427,7 @@ test("Projects tab: a GroupCard per project with open tasks (a Done one too), a 
 });
 
 test("Projects tab: no projects at first, then one with an open task shows its stage", async () => {
-  const { taskStore } = await import("#/store/tasks.js");
+  const { taskStore } = await import("#/entities/task/index.js");
   const { MASTER } = await import("#/shared/config/index.js");
   projectStore.putProjects({});
   const { el } = mount({ tab: "projects" });
@@ -441,7 +441,7 @@ test("Projects tab: no projects at first, then one with an open task shows its s
 });
 
 test("Projects tab: two stages with one name both show", async () => {
-  const { taskStore } = await import("#/store/tasks.js");
+  const { taskStore } = await import("#/entities/task/index.js");
   const { MASTER } = await import("#/shared/config/index.js");
   taskStore.put(MASTER, "- [ ] t1\n- [ ] t2");
   taskStore.putRecords({ t1: { name: "one" }, t2: { name: "two" } });

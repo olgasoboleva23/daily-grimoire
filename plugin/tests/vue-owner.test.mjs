@@ -176,7 +176,7 @@ test("watches: a widget reloads for a change in its own files only", async () =>
 });
 
 test("watches: the task files reload it from the plugin's store, at once, not through Dataview", async () => {
-  const { taskStore } = await import("#/store/tasks.js");
+  const { taskStore } = await import("#/entities/task/index.js");
   const s = slow(), el = document.body.appendChild(document.createElement("div"));
   const host = new VueHost(el, { view: View(), load: s.load, watches: ["00 System/Data/Tasks/"] });
   host.load();

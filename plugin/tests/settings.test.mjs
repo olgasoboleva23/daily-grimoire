@@ -6,7 +6,7 @@ import { saveSettings } from "#/controllers/settings.js";
 import config, { applyConfig, CONFIG, TASK_RECORDS } from "#/shared/config/index.js";
 import { settingsValues, settingsProblem, toConfig, areaRenames } from "#/models/settings.js";
 import { levelInfo } from "#/models/xp.js";
-import { taskStore } from "#/store/tasks.js";
+import { taskStore } from "#/entities/task/index.js";
 import { vault } from "./stubs/vault.mjs";
 
 test("level settings reject invalid costs and allow a constant positive cost", () => {

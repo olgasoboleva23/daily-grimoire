@@ -1,7 +1,7 @@
 // One synced choice; only Winx containers inherit its palette (styles/_themes.scss).
 import { watch } from "vue";
 import config, { THEMES, THEME_IMAGES } from "#/shared/config/index.js";
-import { taskStore } from "#/store/tasks.js";
+import { taskStore } from "#/entities/task/index.js";
 import { useFileChanges } from "#/shared/lib/use.js";
 
 export function useTheme(plugin) {

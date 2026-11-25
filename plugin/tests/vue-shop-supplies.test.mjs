@@ -8,7 +8,7 @@ import { Notice } from "obsidian";
 let mount, h, defineComponent, ShopWidget, SuppliesWidget, taskStore, testWindows;
 before(async () => {
   window.moment = () => ({ format: () => "2026-11-05" });
-  ({ taskStore } = await import("#/store/tasks.js"));
+  ({ taskStore } = await import("#/entities/task/index.js"));
   ({ mount } = await import("@vue/test-utils"));
   ({ h, defineComponent } = await import("vue"));
   ShopWidget = (await import("#/components/pages/shop/index.vue")).default;

@@ -3,13 +3,10 @@ import assert from "node:assert/strict";
 import { Notice } from "obsidian";
 import { setApp } from "#/shared/host/index.js";
 import { logPurchase } from "#/controllers/widgets/shop.js";
-import {
-  addTask, readTaskEdit, saveNewTask, saveRecords, saveTaskEdit,
-} from "#/controllers/tasks.js";
-import { newId } from "#/entities/task/index.js";
+import { addTask, readTaskEdit, saveNewTask, saveTaskEdit } from "#/controllers/tasks.js";
+import { saveRecords, newId, taskStore } from "#/entities/task/index.js";
 import { makeActions } from "#/controllers/calendar.js";
 import { CalendarData } from "#/models/calendarData.js";
-import { taskStore } from "#/store/tasks.js";
 
 const MASTER = "00 System/Data/Tasks/Master.md", RECORDS = "00 System/Data/Tasks/tasks.json", BUY = "00 System/Data/Purchases.md";
 const later = () => new Promise(r => setTimeout(r, 5));

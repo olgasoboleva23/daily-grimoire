@@ -7,9 +7,8 @@ import UiButton from "#/shared/ui/UiButton/index.vue";
 import GroupCard from "./GroupCard.vue";
 import TaskText from "#/components/pages/calendar/TaskText.vue";
 import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";
-import { T } from "#/entities/task/index.js";
+import { T, ruleText } from "#/entities/task/index.js";
 import { dm } from "#/shared/lib/dates.js";
-import { ruleText } from "#/entities/task/index.js";
 import { byArea } from "#/helpers/panelGroups.js";
 
 const RESUME = "resume: from today, on the first day its rule allows";

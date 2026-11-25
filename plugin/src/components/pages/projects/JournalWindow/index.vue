@@ -3,7 +3,7 @@
      each, all alike (a journal, not a progress list), its date and what it is about, the heading,
      the text, the linked note, ✏️ and × -->
 <script setup>
-import { noteStore } from "#/pages/projects/index.js";
+import { noteStore, removeNote } from "#/pages/projects/index.js";
 import { projectStore } from "#/entities/project/index.js";
 import { computed, inject, ref } from "vue";
 import { confirm, openWindow, WINDOW } from "#/shared/ui/Window/index.ts";
@@ -11,9 +11,8 @@ import JournalEntryWindow from "#/components/windows/projects/JournalEntryWindow
 import UiTabs from "#/shared/ui/UiTabs/index.vue";
 import UiWindow from "#/shared/ui/UiWindow/index.vue";
 import { openNote } from "#/shared/host/index.js";
-import { removeNote } from "#/pages/projects/index.js";
 import { journalOf } from "#/models/journal.js";
-import { taskStore } from "#/store/tasks.js";
+import { taskStore } from "#/entities/task/index.js";
 
 defineOptions({ inheritAttrs: false });
 const props = defineProps({ project: { type: String, required: true } });

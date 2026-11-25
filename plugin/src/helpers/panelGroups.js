@@ -1,7 +1,6 @@
 // The panel's cards grouped by area, shared by its tabs
-import { T } from "#/entities/task/index.js";
+import { T, taskStore } from "#/entities/task/index.js";
 import { computed } from "vue";
-import { taskStore } from "#/store/tasks.js";
 import { openProjects, projectStore } from "#/entities/project/index.js";
 
 export const calendarProjects = computed(() => {

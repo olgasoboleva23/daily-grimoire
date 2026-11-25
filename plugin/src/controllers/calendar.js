@@ -1,12 +1,8 @@
 // The writes of the calendar. Every edit goes through editTaskLine* (the line found again by its
 // text); most come with an undo notice. A 🔁 task ticked goes through the Tasks plugin, so it gets
 // its next copy.
-import { Task } from "#/entities/task/index.js";
-import { T, canReorder } from "#/entities/task/index.js";
-import {
-  addTask, deleteTaskLine, editTaskLine, editTaskLineWithUndo,
-  saveRecords, tickTask,
-} from "./tasks.js";
+import { Task, T, canReorder, saveRecords } from "#/entities/task/index.js";
+import { addTask, deleteTaskLine, editTaskLine, editTaskLineWithUndo, tickTask } from "./tasks.js";
 
 export function makeActions(ctx) {
   const { today, TASKS } = ctx;

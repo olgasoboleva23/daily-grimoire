@@ -3,7 +3,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Notice } from "obsidian";
 import { vault } from "./stubs/vault.mjs";
-import { taskStore } from "#/store/tasks.js";
+import { taskStore } from "#/entities/task/index.js";
 import { PROJECTS } from "#/shared/config/index.js";
 import {
   createProject, saveProject, addStage, addTaskToStage, newProject, editProject, readStage, addLink, removeLink, readProject, renameStage,

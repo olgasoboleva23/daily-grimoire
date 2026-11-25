@@ -11,7 +11,7 @@ before(async () => {
   ({ mount } = await import("@vue/test-utils"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
   ({ registerCommands } = await import("#/commands/commands.ts"));
-  ({ taskStore } = await import("#/store/tasks.js"));
+  ({ taskStore } = await import("#/entities/task/index.js"));
   PageNavigation = (await import("#/components/app/PageNavigation/index.vue")).default;
 });
 

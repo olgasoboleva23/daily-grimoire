@@ -4,8 +4,7 @@
 // widgets/quests/.
 import config from "#/shared/config/index.js";
 import { pageDay, ymd } from "#/shared/lib/dates.js";
-import { T, taskKey, daytimeMark, daytimeRank } from "#/entities/task/index.js";
-import { taskStore } from "#/store/tasks.js";
+import { T, taskKey, daytimeMark, daytimeRank, taskStore } from "#/entities/task/index.js";
 
 export async function loadQuests({ dv }) {
   const day = ymd(pageDay(dv)), order = config.areas.map(a => a.key);

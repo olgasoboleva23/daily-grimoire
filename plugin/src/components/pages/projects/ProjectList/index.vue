@@ -3,7 +3,7 @@
      progress (none without tasks) and next task (the first open one of the first stage not
      complete), its box ticks it; a click elsewhere on the card opens the project -->
 <script setup>
-import { projectStore, stageTasks } from "#/entities/project/index.js";
+import { projectStore, stageTasks, openNewProject } from "#/entities/project/index.js";
 import { computed, inject } from "vue";
 import UiButton from "#/shared/ui/UiButton/index.vue";
 import UiCard from "#/shared/ui/UiCard/index.vue";
@@ -12,7 +12,6 @@ import UiProgress from "#/shared/ui/UiProgress/index.vue";
 import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
 import UiTabs from "#/shared/ui/UiTabs/index.vue";
 import { openWindow } from "#/shared/ui/Window/index.ts";
-import { openNewProject } from "#/entities/project/index.js";
 import PromptsWindow from "#/components/windows/projects/PromptsWindow/index.vue";
 import { app, tasksApi } from "#/shared/host/index.js";
 import { tickTask } from "#/controllers/tasks.js";

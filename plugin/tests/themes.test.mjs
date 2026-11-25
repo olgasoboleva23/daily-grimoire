@@ -9,7 +9,8 @@ import postcss from "postcss";
 import config, { applyConfig, THEMES, CONFIG, THEME_IMAGES } from "#/shared/config/index.js";
 import { settingsValues, toConfig } from "#/models/settings.js";
 import { useTheme } from "#/controllers/theme.js";
-import { useTaskStore, taskStore } from "#/store/tasks.js";
+import { useTaskStore } from "#/app/tasksSync.js";
+import { taskStore } from "#/entities/task/index.js";
 import { setApp } from "#/shared/host/index.js";
 import { chartColor } from "#/shared/lib/chart.js";
 

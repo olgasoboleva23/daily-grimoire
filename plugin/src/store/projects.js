@@ -3,8 +3,7 @@
 
 import { computed } from "vue";
 import { stageIndex } from "#/entities/project/index.js";
-import { T } from "#/entities/task/index.js";
-import { taskStore } from "#/store/tasks.js";
+import { T, taskStore } from "#/entities/task/index.js";
 
 export const stageEntries = computed(() => {
   void taskStore.version.value;

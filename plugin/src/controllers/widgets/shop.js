@@ -9,8 +9,7 @@ import {
 } from "#/entities/shop/index.js";
 import { Notice } from "obsidian";
 import { todayYmd } from "#/shared/lib/dates.js";
-import { earned } from "#/entities/task/index.js";
-import { taskStore } from "#/store/tasks.js";
+import { earned, taskStore } from "#/entities/task/index.js";
 import { AudioEngine } from "#/shared/lib/sounds.js";
 
 export async function loadShop({ dv }) {

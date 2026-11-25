@@ -1,10 +1,10 @@
-import { Task } from "#/entities/task/index.js";
+import { Task, taskStore, records } from "#/entities/task/index.js";
 import { projectStore, stageIndex, stageTasks } from "#/entities/project/index.js";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { parseNote } from "#/shared/lib/noteLines.js";
 import { setApp } from "#/shared/host/index.js";
-import { taskStore, useTaskStore, records } from "#/store/tasks.js";
+import { useTaskStore } from "#/app/tasksSync.js";
 
 const P = "00 System/Data/Tasks/Master.md", J = "00 System/Data/Tasks/tasks.json";
 
@@ -273,4 +273,21 @@ test("a tasks.json with a null record leaves the records and the store as they w
   assert.equal(taskStore.records.get("t1").name, "a");
   taskStore.put(P, "- [ ] t1");
   assert.equal(taskStore.tasks.length, 1);
+});
+
+test("a journal edit refreshes the journal alone and an invalid record leaves it intact", async () => {
+  const { NOTES } = await import("#/shared/config/index.js");
+  const { noteStore } = await import("#/pages/projects/index.js");
+  const entry = { title: "Seeds", target: { kind: "project", id: "p1" } };
+  const { files, fire } = vault({ [NOTES]: "{}" });
+  useTaskStore(plugin()); await settle();
+  const taskVersion = taskStore.version.value, projectVersion = projectStore.version.value;
+  const journalVersion = noteStore.version.value;
+  files[NOTES] = JSON.stringify({ n1: entry }); fire("modify", NOTES); await settle();
+  assert.deepEqual(noteStore.notes.get("n1"), entry);
+  assert.ok(noteStore.version.value > journalVersion);
+  assert.equal(taskStore.version.value, taskVersion);
+  assert.equal(projectStore.version.value, projectVersion);
+  assert.throws(() => noteStore.putNotes({ n1: null }));
+  assert.deepEqual(noteStore.notes.get("n1"), entry);
 });

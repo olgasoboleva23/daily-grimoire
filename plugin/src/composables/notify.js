@@ -4,8 +4,7 @@ import { useDataviewChanges, useNewDay, useWhenIndexed } from "#/shared/lib/use.
 import { todayYmd } from "#/shared/lib/dates.js";
 import { readGoals, reminders, dayCounts } from "#/entities/goal/index.js";
 import { GOALS, TASKS } from "#/shared/config/index.js";
-import { T } from "#/entities/task/index.js";
-import { taskStore } from "#/store/tasks.js";
+import { T, taskStore } from "#/entities/task/index.js";
 
 // by name at run time, desktop only: a require("electron") in main.js would stop the phone loading
 // it

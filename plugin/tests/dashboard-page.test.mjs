@@ -47,7 +47,7 @@ test("a dashboard date restored by Back / Forward is drawn", async () => {
 
 test("the open dashboard changes its market title when the theme changes", async () => {
   const { applyConfig } = await import("#/shared/config/index.js");
-  const { taskStore } = await import("#/store/tasks.js");
+  const { taskStore } = await import("#/entities/task/index.js");
   const { wrapper } = page();
   const marketTitle = () => wrapper.findAllComponents({ name: "UiWidget" })
     .map(w => w.props("definition").card?.title).filter(Boolean).at(-1);

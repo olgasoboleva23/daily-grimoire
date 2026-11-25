@@ -14,7 +14,7 @@ import UiFieldPick from "#/shared/ui/UiFieldPick/index.vue";
 import { filled, useWrite } from "#/shared/ui/Window/index.ts";
 import { app } from "#/shared/host/index.js";
 import { addNote, editNote } from "#/pages/projects/index.js";
-import { taskStore } from "#/store/tasks.js";
+import { taskStore } from "#/entities/task/index.js";
 
 const props = defineProps({
   project: { type: String, required: true },

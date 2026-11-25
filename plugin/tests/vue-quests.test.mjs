@@ -11,7 +11,7 @@ const tick = () => new Promise(r => setTimeout(r));
 
 before(async () => {
   window.moment = () => ({ format: () => "2026-11-09" });
-  ({ taskStore } = await import("#/store/tasks.js"));
+  ({ taskStore } = await import("#/entities/task/index.js"));
   ({ mount } = await import("@vue/test-utils"));
   QuestsCard = (await import("#/components/pages/dashboard/widgets/quests/index.vue")).default;
   ({ loadQuests } = await import("#/controllers/widgets/quests.js"));

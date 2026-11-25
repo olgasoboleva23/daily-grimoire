@@ -4,7 +4,7 @@ import { projectStore } from "#/entities/project/index.js";
 import { Notice } from "obsidian";
 import config, { CONFIG } from "#/shared/config/index.js";
 import { editJson } from "#/shared/vault/index.js";
-import { taskStore } from "#/store/tasks.js";
+import { taskStore } from "#/entities/task/index.js";
 import { journalOf } from "#/models/journal.js";
 
 export function fillStart(template, project, entries, input) {

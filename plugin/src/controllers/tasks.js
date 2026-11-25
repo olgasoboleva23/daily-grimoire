@@ -1,14 +1,14 @@
 // Reads and writes task edits, keeping metadata in tasks.json and native Tasks lines in
 // Master.md. Pool items have a record only. Calendar writes can return an undo action.
 import { Notice } from "obsidian";
-import { edit, editLine, serial, undoLines } from "#/shared/vault/index.js";
+import { editLine, serial, undoLines } from "#/shared/vault/index.js";
 import { tasksApi, app } from "#/shared/host/index.js";
 import {
-  Task, VariantProblem, newId, nextVariantAfter, recordOf, variantsProblem,
+  Task, VariantProblem, newId, nextVariantAfter, recordOf, variantsProblem, masterText,
+  prependLine, recordsFromDisk, removePrependedLine, saveRecords,
 } from "#/entities/task/index.js";
 import { parseNote } from "#/shared/lib/noteLines.js";
-import { MASTER, TASK_RECORDS } from "#/shared/config/index.js";
-import { records as recordsStore } from "#/store/tasks.js";
+import { MASTER } from "#/shared/config/index.js";
 
 // One write at a time, including its queue change and undo; dialogs do not hold the queue.
 const writeTask = serial();
@@ -99,20 +99,6 @@ async function changeTaskLine(t, fn, patch = {}, expected = null) {
   });
 }
 
-// Merge a patch into tasks.json ({ id: fields } merges into the record), one write; an optional
-// snapshot rejects stale modal edits. The file is made when missing.
-// Between devices, Remotely Save still uses last writer wins.
-export const saveRecords = (patch, expected = null) => recordsStore.edit(all => {
-  if (expected && Object.entries(expected).some(([id, rec]) =>
-    JSON.stringify(all[id]) !== JSON.stringify(rec))) {
-    new Notice("✦ task record changed, try again");
-    return null;
-  }
-
-  for (const [id, p] of Object.entries(patch)) all[id] = { ...all[id], ...p };
-  return all;
-});
-
 // Keep the raw line and record as they were before either window opens.
 export async function readTaskEdit(t) {
   const original = Task.of(t), id = original.id;
@@ -167,29 +153,12 @@ export async function saveTaskEdit(t, { record, line }, pick, edited) {
 // two saves at once never get one id.
 export const saveNewTask = (...args) => writeTask(() => saveNew(...args));
 
-// a note's text from disk ("" when it's missing)
-const fromDisk = async path => {
-  const file = app.vault.getFileByPath(path);
-
-  return file ? app.vault.read(file) : "";
-};
-
-// tasks.json parsed ({} when missing); null and a notice when it isn't valid JSON
-async function recordsFromDisk() {
-  try {
-    return JSON.parse(await fromDisk(TASK_RECORDS) || "{}");
-  } catch {
-    new Notice("✦ tasks.json isn't valid JSON — task not saved");
-    return null;
-  }
-}
-
 async function saveNew(name, pick, result, oldId = null) {
   const parsed = await recordsFromDisk();
 
   if (!parsed) return;
   const records = new Map(Object.entries(parsed));
-  const tasks = parseNote(MASTER, await fromDisk(MASTER)).filter(i => i.status !== null);
+  const tasks = parseNote(MASTER, await masterText()).filter(i => i.status !== null);
   const final = Task.unnamed(result, "t0").name || name;
   const same = id => Task.nameKey(records.get(id)?.name ?? "") === Task.nameKey(final);
   const old = same(oldId) ? oldId : [...records.keys()].find(same) ?? null;
@@ -217,9 +186,7 @@ async function saveNew(name, pick, result, oldId = null) {
 
   if (variant !== null) patch.currVariant = variant;
   if (!await addTask(back.line)) return false;
-  const prefix = `${back.line}\n`;
-  const rollback = () => edit(MASTER, text =>
-    text.startsWith(prefix) ? text.slice(prefix.length) : text);
+  const rollback = () => removePrependedLine(back.line);
 
   try {
     if (await saveRecords({ [id]: patch }, { [id]: records.get(id) })) return id;
@@ -260,17 +227,8 @@ export async function deleteTaskLine(t) {
   undoNotice(t, "🗑", () => saveRecords({ [t.id]: { pool: true } }));
 }
 
-// a new task: the line on top of Master.md (false and a notice when Master.md is missing: nothing
-// written); one place for the New task command and the calendar's pool drop
-export async function addTask(line) {
-  if (!app.vault.getFileByPath(MASTER)) {
-    new Notice(`✦ ${MASTER} not found — task not saved`);
-    return false;
-  }
-
-  await edit(MASTER, c => line + "\n" + c);
-  return true;
-}
+// A new task is a native line at the top of Master.md.
+export const addTask = line => prependLine(line);
 
 // Tick (or untick) a task through the Tasks plugin, so a 🔁 one gets its next copy
 export const tickTask = t =>

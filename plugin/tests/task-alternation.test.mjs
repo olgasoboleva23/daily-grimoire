@@ -15,7 +15,7 @@ const next = `- [ ] t1 ${rule} [due:: 2026-11-13]`;
 const completed = `${next}\n${done}`;
 let taskStore, tickTask, readTaskEdit, saveTaskEdit, saveNewTask, makeActions;
 beforeTests(async () => {
-  ({ taskStore } = await import("#/store/tasks.js"));
+  ({ taskStore } = await import("#/entities/task/index.js"));
   ({ tickTask, readTaskEdit, saveTaskEdit, saveNewTask } = await import("#/controllers/tasks.js"));
   ({ makeActions } = await import("#/controllers/calendar.js"));
 });

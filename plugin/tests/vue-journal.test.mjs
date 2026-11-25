@@ -17,7 +17,7 @@ before(async () => {
   HTMLElement.prototype.addClass = function (c) { this.classList.add(c); };
   window.moment = at => ({ format: f => (f === "YYYY-MM-DDTHH:mm" ? "2026-11-20T10:00" : `~${at}`) });
   vue = await import("vue");
-  ({ taskStore } = await import("#/store/tasks.js"));
+  ({ taskStore } = await import("#/entities/task/index.js"));
   ({ noteStore } = await import("#/pages/projects/index.js"));
   ({ openJournal } = await import("#/components/pages/projects/JournalWindow/open.js"));
   Card = (await import("#/components/pages/projects/ProjectPage/ProjectJournal.vue")).default;

@@ -4,8 +4,7 @@ import { todayYmd } from "#/shared/lib/dates.js";
 import { readFoodCatalog } from "./dishes.js";
 import { readJournals } from "#/entities/weight/index.js";
 import { forFood, readCourses } from "#/entities/course/index.js";
-import { T } from "#/entities/task/index.js";
-import { taskStore } from "#/store/tasks.js";
+import { T, taskStore } from "#/entities/task/index.js";
 
 // the medication courses (courses.json): when they run, their medicines, and by day the codes
 // with a ✅

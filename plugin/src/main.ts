@@ -5,7 +5,7 @@ import { registerCommands } from "./commands/commands.ts";
 import { useNotify } from "./composables/notify.js";
 import { installSounds } from "#/shared/lib/sounds.js";
 import { useTheme } from "./controllers/theme.js";
-import { useTaskStore } from "./store/tasks.js";
+import { useTaskStore } from "./app/tasksSync.js";
 
 // Daily Grimoire: the app tab, the task window and the
 // commands, and the styles (styles.css, built from src/app/styles/main.scss and the components'
@@ -14,7 +14,7 @@ import { useTaskStore } from "./store/tasks.js";
 export default class UiPlugin extends Plugin {
   async onload() {
     setApp(this.app);
-    useTaskStore(this);   // the tasks, read by the plugin itself (store/tasks.js)
+    useTaskStore(this);   // the tasks, read by the plugin itself (app/tasksSync.js)
     useTheme(this);
     installSounds(this);
     registerCommands(this);

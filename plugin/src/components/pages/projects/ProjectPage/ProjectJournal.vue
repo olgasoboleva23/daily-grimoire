@@ -11,7 +11,7 @@ import UiCard from "#/shared/ui/UiCard/index.vue";
 import { askValue } from "#/shared/ui/Window/index.ts";
 import { copyFinalPrompt, copyStartPrompt } from "#/controllers/prompts.js";
 import { journalOf } from "#/models/journal.js";
-import { taskStore } from "#/store/tasks.js";
+import { taskStore } from "#/entities/task/index.js";
 import { openJournal } from "../JournalWindow/open.js";
 
 const props = defineProps({ project: { type: String, required: true } });

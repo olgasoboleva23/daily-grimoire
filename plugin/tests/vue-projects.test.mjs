@@ -19,7 +19,7 @@ before(async () => {
   config = (await import("#/shared/config/index.js")).default;
   ({ PROMPT_VARIABLES } = await import("#/controllers/prompts.js"));
   ({ Search } = await import("#/shared/ui/Search/index.ts"));
-  ({ taskStore } = await import("#/store/tasks.js"));
+  ({ taskStore } = await import("#/entities/task/index.js"));
   Projects = (await import("#/components/pages/projects/index.vue")).default;
 });
 

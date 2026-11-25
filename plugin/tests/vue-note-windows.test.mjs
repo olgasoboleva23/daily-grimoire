@@ -16,7 +16,7 @@ before(async () => {
   ({ testWindows } = await import("./stubs/windows.mjs"));
   const docs = await import("#/entities/doc/index.js");
   KINDS = docs.KINDS;
-  ({ taskStore } = await import("#/store/tasks.js"));
+  ({ taskStore } = await import("#/entities/task/index.js"));
   ({ registerCommands } = await import("#/commands/commands.ts"));
   const load = async name => (await import(`#/components/windows/${name}/index.vue`)).default;
   win = {

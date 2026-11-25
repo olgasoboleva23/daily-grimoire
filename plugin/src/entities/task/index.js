@@ -16,3 +16,9 @@ export { ruleText, projectRepeats } from "./model/repeat.js";
 export { Task, historyOf, T, taskKey, findTask, newId } from "./model/task.js";
 
 export { VariantProblem, variantNames, nextVariantAfter } from "./model/variant.js";
+
+export { taskStore } from "./model/store.js";
+
+export { records, recordsFromDisk, saveRecords } from "./model/repository/tasks.js";
+
+export { masterText, prependLine, removePrependedLine } from "./model/repository/master.js";

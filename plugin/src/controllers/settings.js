@@ -2,7 +2,7 @@
 import { Notice } from "obsidian";
 import { applyConfig, saveConfig } from "#/shared/config/index.js";
 import { serial } from "#/shared/vault/index.js";
-import { records } from "#/store/tasks.js";
+import { records } from "#/entities/task/index.js";
 import { areaRenames, toConfig } from "#/models/settings.js";
 
 const save = serial();

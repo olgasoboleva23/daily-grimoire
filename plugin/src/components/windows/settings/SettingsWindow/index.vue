@@ -11,7 +11,7 @@ import { filled, groupsFilled, useWrite } from "#/shared/ui/Window/index.ts";
 import { saveSettings } from "#/controllers/settings.js";
 import config, { THEMES } from "#/shared/config/index.js";
 import { settingsProblem } from "#/models/settings.js";
-import { taskStore } from "#/store/tasks.js";
+import { taskStore } from "#/entities/task/index.js";
 
 const props = defineProps({ values: { type: Object, required: true } });
 const emit = defineEmits(["done"]);

@@ -12,7 +12,7 @@ import {
   useDataviewChanges, useFileChanges, useRedraw, useTabDate, useWhenIndexed,
 } from "#/shared/lib/use.js";
 import { app, blockDv } from "#/shared/host/index.js";
-import { taskStore } from "#/store/tasks.js";
+import { taskStore } from "#/entities/task/index.js";
 import { TASKS } from "#/shared/config/index.js";
 import UiCard from "#/shared/ui/UiCard/index.vue";
 import UiFailed from "#/shared/ui/UiFailed.vue";

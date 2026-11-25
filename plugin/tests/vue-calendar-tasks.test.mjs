@@ -61,7 +61,7 @@ test("TaskCard: a panel card, its meta line, its buttons (a pool item: add to to
 test("the calendar pencil opens Edit task, then passes the named line to Tasks", async () => {
   const { testWindows } = await import("./stubs/windows.mjs");
   const { flushPromises } = await import("@vue/test-utils");
-  const { taskStore } = await import("#/store/tasks.js");
+  const { taskStore } = await import("#/entities/task/index.js");
   const { makeActions } = await import("#/controllers/calendar.js");
   const line = "- [ ] t1 [due:: 2026-11-11]";
   const records = { t1: { name: "Walk", area: "body" } };
