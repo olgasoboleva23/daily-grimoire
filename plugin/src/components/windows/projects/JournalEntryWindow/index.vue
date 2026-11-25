@@ -13,7 +13,7 @@ import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
 import UiFieldPick from "#/shared/ui/UiFieldPick/index.vue";
 import { filled, useWrite } from "#/shared/ui/Window/index.ts";
 import { app } from "#/shared/host/index.js";
-import { addNote, editNote } from "#/controllers/journal.js";
+import { addNote, editNote } from "#/pages/projects/index.js";
 import { taskStore } from "#/store/tasks.js";
 
 const props = defineProps({

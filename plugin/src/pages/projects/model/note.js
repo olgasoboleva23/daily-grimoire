@@ -1,6 +1,6 @@
 // Writes project journal entries.
 import { Notice } from "obsidian";
-import { notes } from "#/store/tasks.js";
+import { notes } from "./repository/notes.js";
 import { serial, validNoteLink } from "#/shared/vault/index.js";
 
 const write = serial();
@@ -35,3 +35,23 @@ export function removeNote(id) {
     return all;
   }));
 }
+
+// Project deletion removes only entries owned by that project.
+export const removeOwned = key => write(() => notes.edit(all => {
+  const owned = Object.entries(all)
+    .filter(([, n]) => n.owner?.kind === "project" && n.owner.id === key);
+
+  if (!owned.length) return null;
+  for (const [id] of owned) delete all[id];
+  return all;
+}));
+
+// A deleted stage's entries remain in the journal and point back to its project.
+export const retarget = (stageId, key) => write(() => notes.edit(all => {
+  const related = Object.values(all)
+    .filter(n => n.target.kind === "stage" && n.target.id === stageId);
+
+  if (!related.length) return null;
+  for (const n of related) n.target = { kind: "project", id: key };
+  return all;
+}));

@@ -3,6 +3,7 @@
      interviewer, with the project's context and the task asked for first) and 📝 Final (the
      archivist's summary) -->
 <script setup>
+import { noteStore } from "#/pages/projects/index.js";
 import { projectStore } from "#/entities/project/index.js";
 import { computed } from "vue";
 import UiButton from "#/shared/ui/UiButton/index.vue";
@@ -16,9 +17,10 @@ import { openJournal } from "../JournalWindow/open.js";
 const props = defineProps({ project: { type: String, required: true } });
 const entries = computed(() => {
   void taskStore.version.value;
+  void noteStore.version.value;
   void projectStore.version.value;
   return journalOf(props.project,
-    { projects: projectStore.projects, notes: taskStore.notes, tasks: taskStore.records });
+    { projects: projectStore.projects, notes: noteStore.notes, tasks: taskStore.records });
 });
 const last = computed(() => entries.value[0]);
 const day = at => window.moment(at).format("D MMM");

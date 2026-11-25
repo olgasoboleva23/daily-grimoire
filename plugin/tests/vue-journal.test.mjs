@@ -10,14 +10,15 @@ import { NOTES, PROJECTS } from "#/shared/config/index.js";
 // window with the timeline (newest first, a filter by what an entry is about, + Entry, ✏️, ×)
 const MASTER = "00 System/Data/Tasks/Master.md";
 const RECORDS = "00 System/Data/Tasks/tasks.json";
-let vue, taskStore, notesOf, openJournal, Card, testWindows, config, files, app;
+let vue, taskStore, noteStore, openJournal, Card, testWindows, config, files, app;
 
 before(async () => {
   HTMLElement.prototype.setText = function (t) { this.textContent = t; };
   HTMLElement.prototype.addClass = function (c) { this.classList.add(c); };
   window.moment = at => ({ format: f => (f === "YYYY-MM-DDTHH:mm" ? "2026-11-20T10:00" : `~${at}`) });
   vue = await import("vue");
-  ({ taskStore, notes: notesOf } = await import("#/store/tasks.js"));
+  ({ taskStore } = await import("#/store/tasks.js"));
+  ({ noteStore } = await import("#/pages/projects/index.js"));
   ({ openJournal } = await import("#/components/pages/projects/JournalWindow/open.js"));
   Card = (await import("#/components/pages/projects/ProjectPage/ProjectJournal.vue")).default;
   ({ testWindows } = await import("./stubs/windows.mjs"));
@@ -51,8 +52,7 @@ beforeEach(() => {
   taskStore.put(MASTER, "- [ ] t1\n- [ ] t2");
   taskStore.putRecords(records);
   projectStore.putProjects(structuredClone(projects));
-  notesOf.load(structuredClone(notes));
-  taskStore.version.value++;
+  noteStore.putNotes(structuredClone(notes));
 });
 
 const mount = (C, props) => {

@@ -3,7 +3,7 @@ import { Notice } from "obsidian";
 import { app as vaultApp } from "#/shared/host/index.js";
 import { MASTER } from "#/shared/config/index.js";
 import { edit } from "#/shared/vault/index.js";
-import { notes } from "#/store/tasks.js";
+import { removeOwned, retarget } from "#/pages/projects/index.js";
 import { removeProjectRecord, removeStageRecord } from "#/entities/project/index.js";
 import { parseNote } from "#/shared/lib/noteLines.js";
 import { Task } from "#/entities/task/index.js";
@@ -14,14 +14,7 @@ export async function deleteProject(key, before, trash = f => vaultApp.fileManag
   const removed = await removeProjectRecord(key, before);
 
   if (!removed) return false;
-  await notes.edit(all => {
-    const owned = Object.entries(all)
-      .filter(([, n]) => n.owner?.kind === "project" && n.owner.id === key);
-
-    if (!owned.length) return null;
-    for (const [id] of owned) delete all[id];
-    return all;
-  });
+  await removeOwned(key);
   const file = removed.unusedCover && vaultApp.vault.getFileByPath(removed.unusedCover);
 
   if (file) await trash(file);
@@ -34,14 +27,7 @@ export async function deleteStage(key, index, before, { deleteTasks }) {
   if (!exclusive) return false;
   const stageId = before.id;
 
-  await notes.edit(all => {
-    const related = Object.values(all)
-      .filter(n => n.target.kind === "stage" && n.target.id === stageId);
-
-    if (!related.length) return null;
-    for (const n of related) n.target = { kind: "project", id: key };
-    return all;
-  });
+  await retarget(stageId, key);
   if (exclusive.size) {
     try {
       await edit(MASTER, text => {

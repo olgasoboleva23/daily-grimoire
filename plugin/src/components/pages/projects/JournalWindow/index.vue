@@ -3,6 +3,7 @@
      each, all alike (a journal, not a progress list), its date and what it is about, the heading,
      the text, the linked note, ✏️ and × -->
 <script setup>
+import { noteStore } from "#/pages/projects/index.js";
 import { projectStore } from "#/entities/project/index.js";
 import { computed, inject, ref } from "vue";
 import { confirm, openWindow, WINDOW } from "#/shared/ui/Window/index.ts";
@@ -10,7 +11,7 @@ import JournalEntryWindow from "#/components/windows/projects/JournalEntryWindow
 import UiTabs from "#/shared/ui/UiTabs/index.vue";
 import UiWindow from "#/shared/ui/UiWindow/index.vue";
 import { openNote } from "#/shared/host/index.js";
-import { removeNote } from "#/controllers/journal.js";
+import { removeNote } from "#/pages/projects/index.js";
 import { journalOf } from "#/models/journal.js";
 import { taskStore } from "#/store/tasks.js";
 
@@ -23,9 +24,10 @@ const KINDS = [["all", "All"], ["project", "Project"], ["stage", "Stages"], ["ta
 const kind = ref("all");
 const entries = computed(() => {
   void taskStore.version.value;
+  void noteStore.version.value;
   void projectStore.version.value;
   return journalOf(props.project,
-    { projects: projectStore.projects, notes: taskStore.notes, tasks: taskStore.records });
+    { projects: projectStore.projects, notes: noteStore.notes, tasks: taskStore.records });
 });
 const of = k => entries.value.filter(e => k === "all" || e.target.kind === k);
 const tabs = computed(() =>

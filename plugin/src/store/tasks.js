@@ -17,6 +17,7 @@ import {
 } from "#/shared/config/index.js";
 import { parseNote } from "#/shared/lib/noteLines.js";
 import { Task } from "#/entities/task/index.js";
+import { noteStore } from "#/pages/projects/index.js";
 import { projectStore, projects } from "#/entities/project/index.js";
 import { collection } from "#/shared/vault/index.js";
 
@@ -24,8 +25,7 @@ let items = [];   // Master.md's items
 
 export const records = collection(TASK_RECORDS);
 
-export const notes = collection(NOTES);
-const jsonOf = path => [records, projects, notes].find(c => c.path === path);
+const jsonOf = path => [records, projects].find(c => c.path === path);
 const PATHS = [MASTER, TASK_RECORDS, PROJECTS, NOTES, CONFIG];
 const refresh = () => {
   const recs = records.records;
@@ -51,7 +51,6 @@ const loadJson = (c, json) => {
 export const taskStore = {
   tasks: [], pool: [], ready: false, version: ref(0),
   get records() { return records.records; },
-  get notes() { return notes.records; },
   // the note's items set from its text (a test's, or a write the plugin just made)
   put(path, text) { items = parseNote(path, text); refresh(); },
   // the records set from tasks.json's object
@@ -60,7 +59,8 @@ export const taskStore = {
     reads.delete(path);
     const c = jsonOf(path);
 
-    if (c) loadJson(c, {});
+    if (path === NOTES) noteStore.putNotes({});
+    else if (c) loadJson(c, {});
     else if (path === CONFIG) { applyConfig(); refresh(); }
     else { items = []; refresh(); }
   },
@@ -89,7 +89,8 @@ const take = (path, text) => {
   try {
     const c = jsonOf(path);
 
-    if (c) loadJson(c, JSON.parse(text));
+    if (path === NOTES) noteStore.putNotes(JSON.parse(text));
+    else if (c) loadJson(c, JSON.parse(text));
     else { applyConfig(JSON.parse(text)); refresh(); }
   } catch (e) {
     console.error(`${APP_NAME}: ${path} isn't JSON, it's left as it was`, e);
