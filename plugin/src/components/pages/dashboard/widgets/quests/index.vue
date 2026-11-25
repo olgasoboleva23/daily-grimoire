@@ -3,7 +3,7 @@
 <script setup>
 import UiCheckbox from "#/shared/ui/UiCheckbox/index.vue";
 import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
-import { tickTask } from "#/controllers/tasks.js";
+import { tick } from "#/features/complete-task/index.js";
 
 defineProps({ state: { type: Object, required: true } });
 </script>
@@ -23,7 +23,7 @@ defineProps({ state: { type: Object, required: true } });
       <UiCheckbox
         :mark="r.done ? '✅' : '☐'"
         size="s"
-        @tick="tickTask(r.t)"
+        @tick="tick(r.t)"
       />
       <span class="ui-quests__label">{{ r.label }}</span>
     </div>

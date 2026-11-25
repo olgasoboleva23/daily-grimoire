@@ -14,7 +14,7 @@ import UiTabs from "#/shared/ui/UiTabs/index.vue";
 import { openWindow } from "#/shared/ui/Window/index.ts";
 import PromptsWindow from "#/components/windows/projects/PromptsWindow/index.vue";
 import { app, tasksApi } from "#/shared/host/index.js";
-import { tickTask } from "#/controllers/tasks.js";
+import { tick } from "#/features/complete-task/index.js";
 import { T } from "#/entities/task/index.js";
 import { FILTERS, stageEntries } from "#/store/projects.js";
 import { coverUrl } from "../cover.js";
@@ -81,7 +81,7 @@ const canTick = computed(() => { void projects.version.value; return !!tasksApi(
         <div v-if="p.description" class="ui-projects__description">{{ p.description }}</div>
         <UiProgress v-if="p.total" :value="p.done" :max="p.total" />
         <div v-if="p.next" class="ui-projects__next ui-row ui-gap-s" @click.stop>
-          <UiCheckbox :static="!canTick" @tick="tickTask(p.next.t)" />
+          <UiCheckbox :static="!canTick" @tick="tick(p.next.t)" />
           <span class="ui-projects__next-text">{{ p.next.text }}</span>
         </div>
       </UiCard>

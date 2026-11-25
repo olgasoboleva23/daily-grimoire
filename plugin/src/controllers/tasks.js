@@ -1,6 +1,5 @@
 // Task editor and calendar operations compose the task entity's stale-checked actions.
 import { Notice } from "obsidian";
-import { tasksApi } from "#/shared/host/index.js";
 import { parseNote } from "#/shared/lib/noteLines.js";
 import { MASTER } from "#/shared/config/index.js";
 import { undoNotice } from "#/shared/ui/undoNotice.js";
@@ -82,23 +81,15 @@ async function saveNew(name, pick, result, oldId = null) {
   }
 }
 
-// Change a task's line like editTaskLine (fn may return several lines, or null to delete), then
-// show a notice "<mark> <task>  undo" for 8 s; undo puts the old line back if the new lines are
-// still there (once).
-export const editTaskLineWithUndo = async (t, fn, mark) => {
-  const undo = await editTaskLine(t, fn);
-
-  if (undo) undoNotice(`${mark} ${Task.of(t).text.slice(0, 40)}`, undo);
-};
-
 // 🗑: the line deleted; a pool item (no line) taken out of the pool, its record and history kept
 // (an undefined field is left out of the JSON)
 export async function deleteTaskLine(t) {
-  if (!t.pool) return editTaskLineWithUndo(t, () => null, "🗑");
-  await saveRecords({ [t.id]: { pool: undefined } });
-  undoNotice(`🗑 ${Task.of(t).text.slice(0, 40)}`, () => saveRecords({ [t.id]: { pool: true } }));
-}
+  if (!t.pool) {
+    const undo = await editTaskLine(t, () => null);
 
-// Tick (or untick) a task through the Tasks plugin, so a 🔁 one gets its next copy
-export const tickTask = t =>
-  editTaskLineWithUndo(t, line => tasksApi().executeToggleTaskDoneCommand(line, t.path), "✓");
+    return undoNotice("🗑", Task.of(t).text, undo);
+  }
+
+  await saveRecords({ [t.id]: { pool: undefined } });
+  undoNotice("🗑", Task.of(t).text, () => saveRecords({ [t.id]: { pool: true } }));
+}

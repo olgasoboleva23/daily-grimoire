@@ -13,10 +13,11 @@ const before = `- [ ] t1 ${rule} [due:: 2026-11-11]`;
 const done = `- [x] t1 ${rule} [due:: 2026-11-11] [completion:: 2026-11-11]`;
 const next = `- [ ] t1 ${rule} [due:: 2026-11-13]`;
 const completed = `${next}\n${done}`;
-let taskStore, tickTask, readTaskEdit, saveTaskEdit, saveNewTask, makeActions;
+let taskStore, tick, readTaskEdit, saveTaskEdit, saveNewTask, makeActions;
 beforeTests(async () => {
   ({ taskStore } = await import("#/entities/task/index.js"));
-  ({ tickTask, saveTaskEdit, saveNewTask } = await import("#/controllers/tasks.js"));
+  ({ tick } = await import("#/features/complete-task/index.js"));
+  ({ saveTaskEdit, saveNewTask } = await import("#/controllers/tasks.js"));
   ({ readTaskEdit } = await import("#/entities/task/index.js"));
   ({ makeActions } = await import("#/controllers/calendar.js"));
 });
@@ -60,7 +61,7 @@ test("Skip, reopening and date edits preserve the queue", async () => {
 
 test("Tick preserves native Tasks output and changes the queue; undo restores both once", async () => {
   const v = setup();
-  await tickTask(v.task);
+  await tick(v.task);
   assert.equal(v.files[MASTER], completed);
   assert.equal(rec(v).currVariant, "Arms");
   const undo = Notice.last.querySelector("button").onclick;
@@ -71,13 +72,13 @@ test("Tick preserves native Tasks output and changes the queue; undo restores bo
 
 test("Later log edits or queue edits prevent undo from changing either file", async () => {
   let v = setup();
-  await tickTask(v.task);
+  await tick(v.task);
   let undo = Notice.last.querySelector("button").onclick;
   v.files[MASTER] = completed.replace("2026-11-13", "2026-11-16");
   await undo();
   assert.equal(v.files[MASTER], completed.replace("2026-11-13", "2026-11-16"));
   assert.equal(rec(v).currVariant, "Arms");
-  v = setup(); await tickTask(v.task);
+  v = setup(); await tick(v.task);
   undo = Notice.last.querySelector("button").onclick;
   update(v, { currVariant: "Core" });
   await undo();
@@ -87,10 +88,10 @@ test("Later log edits or queue edits prevent undo from changing either file", as
 
 test("Record failure rolls back completion; failed undo restores completion and can be retried", async () => {
   let v = setup(); failRecordsOnce(v);
-  await assert.rejects(() => tickTask(v.task), /disk/);
+  await assert.rejects(() => tick(v.task), /disk/);
   assert.equal(v.files[MASTER], before);
   assert.equal(rec(v).currVariant, "Core");
-  v = setup(); await tickTask(v.task);
+  v = setup(); await tick(v.task);
   const undo = Notice.last.querySelector("button").onclick;
   failRecordsOnce(v);
   await assert.rejects(() => undo(), /disk/);
@@ -108,10 +109,10 @@ test("A log write failure and two simultaneous clicks cannot advance the queue t
     if (file.path === MASTER) throw new Error("log disk");
     return process(file, fn);
   };
-  await assert.rejects(() => tickTask(v.task), /log disk/);
+  await assert.rejects(() => tick(v.task), /log disk/);
   assert.equal(rec(v).currVariant, "Core");
   v = setup();
-  await Promise.all([tickTask(v.task), tickTask(v.task)]);
+  await Promise.all([tick(v.task), tick(v.task)]);
   assert.equal(v.files[MASTER], completed);
   assert.equal(rec(v).currVariant, "Arms");
 });
@@ -125,12 +126,12 @@ test("Backdated calendar completion keeps Wednesday and advances the same JSON q
 
 test("Another open occurrence or stale completion cannot start an extra chain", async () => {
   let v = setup(`${before}\n${next}`);
-  await tickTask(v.task);
+  await tick(v.task);
   assert.match(Notice.last, /another open copy/);
   assert.equal(v.files[MASTER], `${before}\n${next}`);
   assert.equal(rec(v).currVariant, "Core");
   v = setup(); v.files[MASTER] = done;
-  await tickTask(v.task);
+  await tick(v.task);
   assert.equal(v.files[MASTER], done);
   assert.equal(rec(v).currVariant, "Core");
 });
@@ -138,7 +139,7 @@ test("Another open occurrence or stale completion cannot start an extra chain", 
 test("A tasks.json that isn't valid JSON: a tick says so and writes nothing", async () => {
   const v = setup();
   v.files[TASK_RECORDS] = "broken";
-  await tickTask(v.task);
+  await tick(v.task);
   assert.match(Notice.last, /tasks\.json isn't valid JSON/);
   assert.equal(v.files[MASTER], before);
 });
@@ -294,7 +295,7 @@ test("A record changed during the log write wins and the pending completion is r
     await process(file, fn);
     if (file.path === MASTER && first) { first = false; update(v, { currVariant: "Arms", sticker: "new.webp" }); }
   };
-  await tickTask(v.task);
+  await tick(v.task);
   assert.equal(v.files[MASTER], before);
   assert.equal(rec(v).currVariant, "Arms");
   assert.equal(rec(v).sticker, "new.webp");

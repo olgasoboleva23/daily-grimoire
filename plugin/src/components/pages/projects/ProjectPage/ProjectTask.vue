@@ -11,7 +11,7 @@ import { app, tasksApi } from "#/shared/host/index.js";
 import config from "#/shared/config/index.js";
 import { addDays, todayYmd } from "#/shared/lib/dates.js";
 import { editTask } from "#/components/windows/tasks/TaskWindow/open.js";
-import { tickTask } from "#/controllers/tasks.js";
+import { tick } from "#/features/complete-task/index.js";
 
 const props = defineProps({
   entry: { type: Object, required: true },   // stageTasks': { id, t, done }
@@ -37,7 +37,7 @@ function dateMenu(e) {
     :style="{ '--area': info.color ?? undefined }"
   >
     <UiCheckbox v-if="entry.done" mark="✅" static />
-    <UiCheckbox v-else :static="!canTick" @tick="tickTask(entry.t)" />
+    <UiCheckbox v-else :static="!canTick" @tick="tick(entry.t)" />
     <span class="ui-project__task-text ui-grow"><TaskText :task="info" /></span>
     <template v-if="!entry.done">
       <UiButton title="edit" @click="editTask(entry.t)">
