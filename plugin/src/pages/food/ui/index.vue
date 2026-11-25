@@ -13,12 +13,12 @@ import { openUi } from "#/shared/host/index.js";
 import { vTip } from "#/shared/ui/tooltip.js";
 import { addDays, weekOf } from "#/shared/lib/dates.js";
 import { dayLabel } from "#/entities/course/index.js";
-import { foodWeek } from "#/pages/food/model/week.js";
-import { readMarks, removeEaten, setFoodNote, setTrainingTask } from "#/entities/food-log/index.js";
-import { pickTask } from "#/entities/task/index.js";
+import { foodWeek } from "../model/week.js";
+import { readMarks, removeEaten, setFoodNote } from "#/entities/food-log/index.js";
+import { pickTrainingTask } from "./pickTrainingTask.js";
 import { openWindow } from "#/shared/ui/Window/index.ts";
-import { addEaten, editEaten } from "#/components/windows/food/eaten.js";
-import MarksWindow from "#/components/windows/food/MarksWindow/index.vue";
+import { addEaten, editEaten } from "./eaten.js";
+import MarksWindow from "./MarksWindow/index.vue";
 import { openDish } from "#/widgets/dish-window/index.js";
 
 const ui = inject("ui", null);
@@ -52,14 +52,6 @@ const columns = computed(() => [
 ]);
 
 const editMarks = async () => openWindow(MarksWindow, { marks: await readMarks() });
-
-async function pickTrainingTask() {
-  const pick = await pickTask();
-
-  if (!pick) return;
-  if (pick.isNew) return void new Notice("✦ pick a task you already have");
-  await setTrainingTask(pick.id);
-}
 
 // a write: a failure said (the page draws again from the files when one works)
 const act = async (write) => {

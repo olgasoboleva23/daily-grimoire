@@ -11,8 +11,8 @@ before(async () => {
   ({ taskStore } = await import("#/entities/task/index.js"));
   ({ mount } = await import("@vue/test-utils"));
   ({ h, defineComponent } = await import("vue"));
-  ShopWidget = (await import("#/components/pages/shop/index.vue")).default;
-  SuppliesWidget = (await import("#/components/pages/supplies/index.vue")).default;
+  ShopWidget = (await import("#/pages/shop/ui/index.vue")).default;
+  SuppliesWidget = (await import("#/pages/supplies/ui/index.vue")).default;
   ({ testWindows } = await import("./stubs/windows.mjs"));
 });
 // the view inside a stand-in for its card's body, the host's retry provided

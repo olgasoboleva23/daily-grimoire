@@ -9,7 +9,7 @@ before(async () => {
   window.moment = () => ({ format: () => "2026-11-08" });
   ({ mount } = await import("@vue/test-utils"));
   ({ reactive } = await import("vue"));
-  MedsPage = (await import("#/components/pages/meds/index.vue")).default;
+  MedsPage = (await import("#/pages/meds/ui/index.vue")).default;
   ({ loadMeds } = await import("#/pages/meds/model/store.js"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
   ({ Notice } = await import("obsidian"));

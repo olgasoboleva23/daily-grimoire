@@ -26,7 +26,7 @@ before(async () => {
   ({ openUi } = await import("#/shared/host/index.js"));
   vue = await import("vue");
   const views = {
-    dashboard: (await import("#/components/pages/dashboard/index.vue")).default,
+    dashboard: (await import("#/pages/dashboard/index.js")).default,
     calendar: (await import("#/pages/calendar/index.js")).default,
     projects: (await import("#/pages/projects/index.js")).default,
   };

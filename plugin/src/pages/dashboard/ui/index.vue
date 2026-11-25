@@ -7,7 +7,7 @@ import { app } from "#/shared/host/index.js";
 import { useObsidian } from "#/shared/lib/vueApp.ts";
 import { useBusy, useNewDay } from "#/shared/lib/use.js";
 import { todayYmd } from "#/shared/lib/dates.js";
-import { blocks } from "#/controllers/blocks.js";
+import { cards } from "../model/cards.js";
 import Widget from "#/shared/ui/UiWidget.vue";
 import UiCard from "#/shared/ui/UiCard/index.vue";
 import DashboardDate from "./DashboardDate.vue";
@@ -55,18 +55,18 @@ const columns = computed(() => {
             @go="go"
           />
         </div>
-        <Widget :definition="blocks.dailyNote" />
+        <Widget :definition="cards.dailyNote" />
       </div>
       <div class="ui-dash__columns">
         <div v-for="(column, i) in columns" :key="i" class="ui-dash__column">
           <Widget
             v-for="[key, title, meta] in column"
             :key="key"
-            :definition="{ ...blocks[key], card: { title, meta: meta ? [meta] : [] } }"
+            :definition="{ ...cards[key], card: { title, meta: meta ? [meta] : [] } }"
           />
           <UiCard v-if="i === 2" title="Finance" class="ui-dash__finance">
-            <Widget :definition="blocks.financeMonth" />
-            <Widget :definition="blocks.savings" />
+            <Widget :definition="cards.financeMonth" />
+            <Widget :definition="cards.savings" />
           </UiCard>
         </div>
       </div>

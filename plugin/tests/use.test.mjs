@@ -137,10 +137,10 @@ test("openNote outside an app tab: an app page's note opens as a note", () => {
 });
 
 test("Recipes follows the currently linked notes on indexing, rename and deletion", async () => {
-  const { blocks } = await import("#/controllers/blocks.js");
+  const { default: recipes } = await import("#/pages/recipes/index.js");
   const c = component(), dish = { link: "Menu/A.md" };
   let draws = 0;
-  const linked = path => blocks.recipes.watchesNote({ dishes: [dish] }, path);
+  const linked = path => recipes.watchesNote({ dishes: [dish] }, path);
   useFileChanges(c, () => draws++, linked, true);
   c.events.changed[0]({ path: "Daily.md" });
   c.events.changed[0]({ path: dish.link });

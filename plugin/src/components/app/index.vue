@@ -5,13 +5,9 @@ import config, { pages } from "#/shared/config/index.js";
 import { taskStore } from "#/entities/task/index.js";
 import PageNavigation from "./PageNavigation/index.vue";
 import Widget from "#/shared/ui/UiWidget.vue";
-import { blocks } from "#/controllers/blocks.js";
-import Dashboard from "#/components/pages/dashboard/index.vue";
-import Calendar from "#/pages/calendar/index.js";
-import Projects from "#/pages/projects/index.js";
+import { pageMap } from "#/app/pageMap.js";
 
 const ui = inject("ui"), phone = Platform.isMobile;
-const views = { dashboard: Dashboard, calendar: Calendar, projects: Projects };
 const theme = computed(() => (taskStore.version.value, config.theme));
 const page = computed(() => pages[ui.state.page]);
 watch(() => ui.state.page, async () => {
@@ -29,7 +25,7 @@ watch(() => ui.state.page, async () => {
     <div class="ui-view__pages">
       <KeepAlive :include="['CalendarPage', 'DashboardPage']">
         <component
-          :is="views[ui.state.page]"
+          :is="pageMap[ui.state.page]"
           v-if="!page.widget"
           :key="ui.state.page"
           :state="ui.state[ui.state.page]"
@@ -43,7 +39,7 @@ watch(() => ui.state.page, async () => {
         <h2>{{ page.title }}</h2>
         <Widget
           :definition="{
-            ...blocks[page.widget], note: page.note,
+            ...pageMap[ui.state.page], note: page.note,
             card: page.card ? { meta: ['hero'] } : undefined,
           }"
         />

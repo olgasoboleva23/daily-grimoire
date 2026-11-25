@@ -4,7 +4,7 @@ import {
 } from "#/shared/config/index.js";
 import { taskStore } from "#/entities/task/index.js";
 import { loadFood } from "./model/store.js";
-import View from "#/components/pages/food/index.vue";
+import View from "./ui/index.vue";
 
 export default {
   view: View, load: loadFood, stores: [taskStore.version],

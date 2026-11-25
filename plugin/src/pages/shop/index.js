@@ -2,7 +2,7 @@
 import { PURCHASES, SHOP } from "#/shared/config/index.js";
 import { taskStore } from "#/entities/task/index.js";
 import { loadShop } from "./model/store.js";
-import View from "#/components/pages/shop/index.vue";
+import View from "./ui/index.vue";
 
 export default {
   view: View, load: loadShop, bodyClass: "ui-shop",

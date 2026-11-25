@@ -18,7 +18,7 @@
 @use "../../widgets/quests/ui" as quests;
 @use "layout";
 @use "../../widgets/pomodoro/ui" as pomodoro;
-@use "../../components/pages/shop";
+@use "../../pages/shop/ui" as shop;
 @use "tasks-minimal";
 @use "tokens";
 @use "themes";
@@ -26,7 +26,7 @@
 @use "../../widgets/goals/ui" as goals;
 @use "../../widgets/xp/ui/LifeAreas";
 @use "../../widgets/cycle/ui" as cycle;
-@use "../../components/pages/supplies";
+@use "../../pages/supplies/ui" as supplies;
 @use "scroll-cards";
 @use "../../widgets/weight/ui" as weight;
 @use "../../widgets/savings/ui" as savings;
@@ -41,9 +41,9 @@
 @use "busy";
 @use "../../pages/calendar/ui/CalendarTab";
 @use "../../pages/calendar/ui/CalendarMissed";
-@use "../../components/pages/dashboard";
+@use "../../pages/dashboard/ui" as dashboard;
 // was injected by the widget itself, after everything else: last
-@use "../../components/pages/finance" as finance-page;
+@use "../../pages/finance/ui" as finance-page;
 @use "tooltip";
 @use "../../shared/ui/UiTable";
 @use "../../shared/ui/UiTabs";
@@ -54,9 +54,9 @@
 @use "../../shared/ui/UiInput";
 @use "../../shared/ui/UiCheckbox";
 @use "../../shared/ui/UiChart";
-@use "../../components/pages/meds/MedsCourse";
-@use "../../components/pages/food";
-@use "../../components/pages/recipes";
+@use "../../pages/meds/ui/MedsCourse";
+@use "../../pages/food/ui" as food;
+@use "../../pages/recipes/ui" as recipes;
 @use "../../shared/ui/UiProgress";
 @use "../../pages/projects/ui/ProjectStatus";
 @use "../../pages/projects/ui/ProjectList";

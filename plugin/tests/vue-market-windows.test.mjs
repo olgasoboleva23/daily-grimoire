@@ -19,7 +19,7 @@ before(async () => {
   ({ MarketItemWindow } = product);
   ({ readMarks } = await import("#/entities/food-log/index.js"));
   ({ addMarketItem } = await import("#/features/add-to-list/index.js"));
-  MarksWindow = (await import("#/components/windows/food/MarksWindow/index.vue")).default;
+  MarksWindow = (await import("#/pages/food/ui/MarksWindow/index.vue")).default;
   windows = testWindows();
 });
 after(() => windows.restore());
