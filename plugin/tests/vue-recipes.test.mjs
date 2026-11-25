@@ -302,8 +302,7 @@ test("the recipes page: the tabs are ⚙ Settings' (their names and order); a go
   });
 
 test("⚙ Settings saves recipe tabs by key and name, including an empty list", async t => {
-  const { openSettings } =
-    await import("#/components/windows/settings/SettingsWindow/open.js");
+  const { openSettings } = await import("#/features/save-settings/index.js");
   const { files: written } = vault();
   applyConfig({ dishTypes: [{ key: "main", name: "Mains" }] });
   t.after(() => applyConfig());

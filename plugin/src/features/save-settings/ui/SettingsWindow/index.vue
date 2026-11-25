@@ -8,9 +8,8 @@ import UiFieldList from "#/shared/ui/UiFieldList/index.vue";
 import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
 import UiWindow from "#/shared/ui/UiWindow/index.vue";
 import { filled, groupsFilled, useWrite } from "#/shared/ui/Window/index.ts";
-import { saveSettings } from "#/controllers/settings.js";
 import config, { THEMES } from "#/shared/config/index.js";
-import { settingsProblem } from "#/models/settings.js";
+import { saveSettings, settingsProblem } from "../../operation/saveSettings.js";
 import { taskStore } from "#/entities/task/index.js";
 
 const props = defineProps({ values: { type: Object, required: true } });

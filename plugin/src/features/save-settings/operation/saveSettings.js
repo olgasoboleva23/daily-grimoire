@@ -1,7 +1,10 @@
-// The ⚙ Settings window's values and config.json (pure; tests/settings.test.mjs): the window shows
-// the config as it is now, its values go back as config.json, a few of them can't be saved, and a
-// renamed area's key (☑ "apply") moves its tasks' records with it.
-import { areaKeyProblem, configProblem, dishType } from "#/shared/config/index.js";
+// Convert and validate settings form values, save them and move tasks for checked area changes.
+import { Notice } from "obsidian";
+import { records } from "#/entities/task/index.js";
+import {
+  applyConfig, areaKeyProblem, configProblem, dishType, saveConfig,
+} from "#/shared/config/index.js";
+import { serial } from "#/shared/vault/index.js";
 
 const AREA = ["key", "icon", "title", "name", "color"];
 const pick = a => Object.fromEntries(AREA.map(k => [k, a[k] ?? null]));
@@ -51,6 +54,63 @@ export function settingsProblem(v, records, config) {
 }
 
 // Area keys that changed with ☑ Apply, from their old keys to the new ones.
-export const areaRenames = v =>
+export const areaMoves = v =>
   new Map(v.areas.filter(a => a.apply && a.was && a.was !== a.key.trim())
     .map(a => [a.was, a.key.trim()]));
+
+const save = serial();
+
+// Revert only the area changes this save made, keeping other edits to the tasks.
+function restoreAreas(moves) {
+  return records.edit(tasks => {
+    let restored = false;
+
+    for (const [id, { from, to }] of moves) {
+      if (tasks[id]?.area !== to) continue;
+      tasks[id].area = from;
+      restored = true;
+    }
+
+    return restored ? tasks : null;
+  });
+}
+
+export function saveSettings(values) {
+  const json = toConfig(values);
+  const areas = areaMoves(values);
+
+  return save(async () => {
+    const moves = new Map();
+
+    if (areas.size) await records.edit(tasks => {
+      for (const [id, task] of Object.entries(tasks)) {
+        const from = task?.area, to = areas.get(from);
+
+        if (!to) continue;
+        moves.set(id, { from, to });
+        task.area = to;
+      }
+
+      return moves.size ? tasks : null;
+    });
+    let merged;
+
+    try {
+      merged = await saveConfig(json);
+    } catch (error) {
+      try {
+        if (moves.size) await restoreAreas(moves);
+      } catch (restoreError) {
+        throw new AggregateError([error, restoreError], "Could not save settings or restore areas");
+      }
+
+      throw error;
+    }
+
+    applyConfig(merged);
+    const moved = moves.size;
+
+    new Notice(`✦ Settings saved${moved ? ` · ${moved} tasks moved` : ""}`);
+    return { moved };
+  });
+}

@@ -2,9 +2,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Notice } from "obsidian";
-import { saveSettings } from "#/controllers/settings.js";
 import config, { applyConfig, CONFIG, TASK_RECORDS } from "#/shared/config/index.js";
-import { settingsValues, settingsProblem, toConfig, areaRenames } from "#/models/settings.js";
+import { saveSettings, settingsValues, settingsProblem, toConfig, areaMoves } from "#/features/save-settings/index.js";
 import { levelInfo } from "#/models/xp.js";
 import { taskStore } from "#/entities/task/index.js";
 import { vault } from "./stubs/vault.mjs";
@@ -79,8 +78,8 @@ test("the area renames include only changed keys with Apply", () => {
   applyConfig({});
   const v = settingsValues(config);
   const areas = v.areas.map(a => a.key === "base" ? { ...a, key: "home" } : a);
-  assert.deepEqual(areaRenames({ ...v, areas }), new Map([["base", "home"]]));
-  assert.equal(areaRenames({ ...v, areas: areas.map(a => ({ ...a, apply: false })) }).size, 0);
+  assert.deepEqual(areaMoves({ ...v, areas }), new Map([["base", "home"]]));
+  assert.equal(areaMoves({ ...v, areas: areas.map(a => ({ ...a, apply: false })) }).size, 0);
 });
 
 test("saveSettings writes and applies config, moves checked areas and reports the count",

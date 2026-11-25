@@ -4,14 +4,14 @@ import { CollectionItemWindow, createDoc, KINDS, NewJournalWindow } from "#/enti
 import { mirrorMobileConfig } from "#/controllers/mobileConfig.js";
 import { newTask } from "#/features/new-task/index.js";
 import { migrateTasks } from "#/migrations/tasks.js";
-import { openSettings } from "#/components/windows/settings/SettingsWindow/open.js";
+import { openSettings } from "#/features/save-settings/index.js";
 import { openNewProject } from "#/entities/project/index.js";
 import { addMarketItem } from "#/features/add-to-list/index.js";
 import {
   openEditCourse, openNewCourse, pickCourse,
 } from "#/entities/course/index.js";
 import { openWindow, askValue } from "#/shared/ui/Window/index.ts";
-import BuyRewardWindow from "#/components/windows/shop/BuyRewardWindow/index.vue";
+import { BuyRewardWindow } from "#/features/buy-reward/index.js";
 
 
 // The commands in Cmd+P ("Daily Grimoire: …"); each one window, then saved.

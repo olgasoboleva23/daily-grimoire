@@ -2,7 +2,7 @@
      greyed out -->
 <script setup>
 import { inject } from "vue";
-import { buy as logBuy } from "#/controllers/widgets/shop.js";
+import { buy as logBuy } from "#/features/buy-reward/index.js";
 
 defineProps({ state: { type: Object, required: true } });
 // drawn again at once: the host's load (the balance), as before

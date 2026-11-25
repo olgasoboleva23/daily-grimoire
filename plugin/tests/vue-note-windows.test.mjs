@@ -6,8 +6,7 @@ import { vault } from "./stubs/vault.mjs";
 import { PURCHASES } from "#/shared/config/index.js";
 
 // The Cmd+P windows of new notes, journals, the shop and the pomodoro's lengths
-// (entities/doc/ui and components/windows/{shop,pomodoro}), opened through the test frame as their
-// openers do, and the commands that open them. Made-up titles only.
+// opened through the test frame as their openers do, and the commands that open them.
 const MASTER = "00 System/Data/Tasks/Master.md";
 let openWindow, testWindows, KINDS, taskStore, registerCommands, windows, win;
 before(async () => {
@@ -18,12 +17,11 @@ before(async () => {
   KINDS = docs.KINDS;
   ({ taskStore } = await import("#/entities/task/index.js"));
   ({ registerCommands } = await import("#/commands/commands.ts"));
-  const load = async name => (await import(`#/components/windows/${name}/index.vue`)).default;
   win = {
     item: docs.CollectionItemWindow,
     journal: docs.NewJournalWindow,
-    buy: await load("shop/BuyRewardWindow"),
-    pomodoro: await load("pomodoro/PomodoroWindow"),
+    buy: (await import("#/features/buy-reward/index.js")).BuyRewardWindow,
+    pomodoro: (await import("#/components/windows/pomodoro/PomodoroWindow/index.vue")).default,
   };
   windows = testWindows();
 });

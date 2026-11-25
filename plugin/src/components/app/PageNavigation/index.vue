@@ -10,7 +10,7 @@ import UiNav from "#/shared/ui/UiNav/index.vue";
 import UiDrawer from "#/shared/ui/UiDrawer/index.vue";
 import { openUi } from "#/shared/host/index.js";
 import { pages, APP_NAME } from "#/shared/config/index.js";
-import { openSettings } from "#/components/windows/settings/SettingsWindow/open.js";
+import { openSettings } from "#/features/save-settings/index.js";
 
 const ui = inject("ui");
 const phone = Platform.isMobile;

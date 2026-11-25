@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Notice } from "obsidian";
 import { setApp } from "#/shared/host/index.js";
-import { logPurchase } from "#/controllers/widgets/shop.js";
+import { logPurchase } from "#/features/buy-reward/index.js";
 import { addTask, readTaskEdit, saveRecords, newId, taskStore } from "#/entities/task/index.js";
 import { saveNewTask } from "#/features/new-task/index.js";
 import { saveTaskEdit } from "#/features/edit-task/index.js";
