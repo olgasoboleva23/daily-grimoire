@@ -5,7 +5,7 @@
 import { vHoldAction } from "#/shared/lib/holdAction.js";
 import { computed, inject, ref } from "vue";
 import UiButton from "#/shared/ui/UiButton/index.vue";
-import TaskText from "#/components/pages/calendar/TaskText.vue";
+import { TaskText } from "#/entities/task/index.js";
 import TaskButtons from "#/components/pages/calendar/TaskButtons.vue";
 import { useDragSource } from "#/composables/drag.js";
 import { useSwipe } from "#/shared/lib/swipe.js";

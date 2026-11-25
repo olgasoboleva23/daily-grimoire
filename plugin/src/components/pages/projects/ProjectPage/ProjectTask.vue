@@ -6,13 +6,12 @@ import { computed, ref } from "vue";
 import { Menu } from "obsidian";
 import UiButton from "#/shared/ui/UiButton/index.vue";
 import UiCheckbox from "#/shared/ui/UiCheckbox/index.vue";
-import TaskText from "#/components/pages/calendar/TaskText.vue";
+import { TaskText, setDue, taskInfo } from "#/entities/task/index.js";
 import { app, tasksApi } from "#/shared/host/index.js";
 import config from "#/shared/config/index.js";
 import { addDays, todayYmd } from "#/shared/lib/dates.js";
 import { editTask } from "#/components/windows/tasks/TaskWindow/open.js";
 import { tickTask } from "#/controllers/tasks.js";
-import { setDue, taskInfo } from "#/entities/task/index.js";
 
 const props = defineProps({
   entry: { type: Object, required: true },   // stageTasks': { id, t, done }

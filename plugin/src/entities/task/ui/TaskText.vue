@@ -2,7 +2,7 @@
      icon in front) -->
 <script setup>
 import { vTip } from "#/shared/ui/tooltip.js";
-import { daytimeMark } from "#/entities/task/index.js";
+import { daytimeMark } from "../model/daytime.js";
 import { computed } from "vue";
 
 const props = defineProps({

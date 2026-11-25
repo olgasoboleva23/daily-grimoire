@@ -5,9 +5,8 @@ import { computed, inject } from "vue";
 import { vHoldAction } from "#/shared/lib/holdAction.js";
 import UiButton from "#/shared/ui/UiButton/index.vue";
 import GroupCard from "./GroupCard.vue";
-import TaskText from "#/components/pages/calendar/TaskText.vue";
+import { TaskText, T, ruleText } from "#/entities/task/index.js";
 import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";
-import { T, ruleText } from "#/entities/task/index.js";
 import { dm } from "#/shared/lib/dates.js";
 import { byArea } from "#/helpers/panelGroups.js";
 

@@ -10,7 +10,8 @@ before(async () => {
   ({ mount } = await import("@vue/test-utils"));
   // a component is <Name>.vue, or <Name>/index.vue when it has its own styles
   const load = async n => (await import(`../src/components/pages/calendar/${n}`)).default;
-  [TaskText, TaskRow, TaskCard] = await Promise.all(["TaskText.vue", "TaskRow.vue", "TaskCard/index.vue"].map(load));
+  ({ TaskText } = await import("#/entities/task/index.js"));
+  [TaskRow, TaskCard] = await Promise.all(["TaskRow.vue", "TaskCard/index.vue"].map(load));
 });
 const info = over => ({ key: "k7", area: "body", difficulty: "medium", text: "walk <fast>", label: "🌺 walk <fast>",
   sticker: "app://x/levi.png", canSkip: false, ...over });

@@ -4,7 +4,9 @@ import { Search } from "#/shared/ui/Search/index.ts";
 import config from "#/shared/config/index.js";
 import { dm } from "#/shared/lib/dates.js";
 import { findChoices } from "#/shared/lib/find.js";
-import { Task, taskChoices, taskStore } from "#/entities/task/index.js";
+import { Task } from "../model/task.js";
+import { taskChoices } from "../model/choice.js";
+import { taskStore } from "../model/store.js";
 import { app } from "#/shared/host/index.js";
 
 export function pickTask() {

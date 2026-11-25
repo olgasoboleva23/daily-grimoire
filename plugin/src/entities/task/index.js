@@ -15,7 +15,7 @@ export { ruleText, projectRepeats } from "./model/repeat.js";
 
 export { Task, historyOf, T, taskKey, findTask, newId } from "./model/task.js";
 
-export { VariantProblem, variantNames, nextVariantAfter } from "./model/variant.js";
+export { VariantProblem, nextVariantAfter } from "./model/variant.js";
 
 export { taskStore } from "./model/store.js";
 
@@ -28,3 +28,9 @@ export {
 } from "./model/lineChange.js";
 
 export { placeTask, setDue, taskFromPool } from "./model/schedule.js";
+
+export { default as TaskText } from "./ui/TaskText.vue";
+
+export { default as TaskWindow } from "./ui/TaskWindow/index.vue";
+
+export { pickTask } from "./ui/pickTask.js";

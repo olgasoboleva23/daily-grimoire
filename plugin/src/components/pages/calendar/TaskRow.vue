@@ -11,7 +11,7 @@ import { vHoldAction } from "#/shared/lib/holdAction.js";
 import { vTip } from "#/shared/ui/tooltip.js";
 import { computed, inject, ref } from "vue";
 import UiButton from "#/shared/ui/UiButton/index.vue";
-import TaskText from "./TaskText.vue";
+import { TaskText } from "#/entities/task/index.js";
 import TaskButtons from "./TaskButtons.vue";
 import { useDragSource, useReorder } from "#/composables/drag.js";
 import { useSwipe } from "#/shared/lib/swipe.js";
