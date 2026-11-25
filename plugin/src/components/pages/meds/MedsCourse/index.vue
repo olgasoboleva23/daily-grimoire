@@ -13,8 +13,7 @@ import UiCard from "#/shared/ui/UiCard/index.vue";
 import UiCheckbox from "#/shared/ui/UiCheckbox/index.vue";
 import UiInput from "#/shared/ui/UiInput/index.vue";
 import UiTable from "#/shared/ui/UiTable/index.vue";
-import { TIMES, next } from "#/models/course.js";
-import { setDayNote, tickMeds } from "#/controllers/meds.js";
+import { markDose, next, setDayNote, TIMES } from "#/entities/course/index.js";
 import { openEditCourse } from "#/components/windows/meds/CourseWindow/open.js";
 import { playMark } from "#/shared/lib/sounds.js";
 
@@ -66,7 +65,7 @@ const toggle = (r, col) => {
   const was = r.marks[col], key = props.course.columns[col].key;
 
   mark(r, col, next(was));
-  return write(() => tickMeds(props.id, r.date, key, r.marks[col]), () => mark(r, col, was));
+  return write(() => markDose(props.id, r.date, key, r.marks[col]), () => mark(r, col, was));
 };
 
 // the day's note, typed into the last column

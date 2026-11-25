@@ -12,7 +12,7 @@ import UiTable from "#/shared/ui/UiTable/index.vue";
 import { openUi } from "#/shared/host/index.js";
 import { vTip } from "#/shared/ui/tooltip.js";
 import { addDays, weekOf } from "#/shared/lib/dates.js";
-import { dayLabel } from "#/models/course.js";
+import { dayLabel } from "#/entities/course/index.js";
 import { foodWeek } from "#/models/food.js";
 import { pickTask } from "#/components/uikit/TaskSearch/index.js";
 import { removeEaten, setFoodNote, setTrainingTask } from "#/controllers/food.js";

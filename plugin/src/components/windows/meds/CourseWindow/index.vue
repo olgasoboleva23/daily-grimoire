@@ -13,8 +13,7 @@ import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
 import UiFieldChoice from "#/shared/ui/UiFieldChoice/index.vue";
 import UiFieldList from "#/shared/ui/UiFieldList/index.vue";
 import { groupsFilled, useWrite } from "#/shared/ui/Window/index.ts";
-import { courseProblem } from "#/models/course.js";
-import { createCourse, saveCourse } from "#/controllers/meds.js";
+import { courseProblem, createCourse, saveCourse } from "#/entities/course/index.js";
 
 const props = defineProps({
   id: { type: String, default: null },          // edit: its id

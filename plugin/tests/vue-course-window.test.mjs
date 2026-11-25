@@ -20,7 +20,7 @@ before(async () => {
   ({ testWindows } = await import("./stubs/windows.mjs"));
   flows = await import("#/components/windows/meds/CourseWindow/open.js");
   ({ registerCommands } = await import("#/commands/commands.ts"));
-  ({ columns } = await import("#/models/course.js"));
+  ({ columns } = await import("#/entities/course/index.js"));
   windows = testWindows();
 });
 after(() => windows.restore());

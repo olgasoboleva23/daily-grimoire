@@ -3,7 +3,7 @@ import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { vault } from "./stubs/vault.mjs";
 import { COURSES, DISHES, FOOD_DATA, FOOD_LOG, JOURNALS, MARKET_RECORDS } from "#/shared/config/index.js";
-import { forFood } from "#/models/course.js";
+import { forFood } from "#/entities/course/index.js";
 
 let mount, FoodPage, loadFood, DEFAULT_MARKS, Search, testWindows;
 before(async () => {

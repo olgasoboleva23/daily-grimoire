@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import {
   columns, courseData, courseList, courseOf, courseProblem, dayLabel, edited, forFood,
   formValues, intake, next, withDayNote, withMark,
-} from "#/models/course.js";
+} from "#/entities/course/index.js";
 
 test("a mark goes round ☐ → ✅ → ❌ → ☐; a day's label in Russian", () => {
   assert.deepEqual(["☐", "✅", "❌"].map(next), ["✅", "❌", "☐"]);

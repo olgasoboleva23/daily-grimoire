@@ -7,10 +7,10 @@ import {
 } from "#/models/food.js";
 import { readFoodCatalog } from "./dishes.js";
 import { readJournals } from "#/entities/weight/index.js";
-import { forFood } from "#/models/course.js";
+import { forFood, readCourses } from "#/entities/course/index.js";
 import { T } from "#/models/calendarData.js";
 import { taskStore } from "#/store/tasks.js";
-import { COURSES, FOOD_DATA, FOOD_LOG } from "#/shared/config/index.js";
+import { FOOD_DATA, FOOD_LOG } from "#/shared/config/index.js";
 
 // food.json (the marks and the training task) and log.json (the days): each write one
 // edit of its file
@@ -19,7 +19,7 @@ const food = collection(FOOD_DATA), log = collection(FOOD_LOG);
 // the medication courses (courses.json): when they run, their medicines, and by day the codes
 // with a ✅
 const courses = async () =>
-  Object.entries(await readJson(COURSES, {})).map(([id, rec]) => forFood(id, rec));
+  Object.entries(await readCourses()).map(([id, rec]) => forFood(id, rec));
 
 export async function loadFood() {
   const [data, days, journals, taking] =

@@ -2,12 +2,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { vault } from "./stubs/vault.mjs";
+import { loadMeds } from "#/controllers/meds.js";
 import {
-  createCourse, loadMeds, readCourse, saveCourse, setDayNote, tickMeds,
-} from "#/controllers/meds.js";
+  createCourse, formValues, markDose, readCourse, saveCourse, setDayNote,
+} from "#/entities/course/index.js";
 import { Search } from "#/shared/ui/Search/index.ts";
 import { pickCourse } from "#/components/windows/meds/CourseWindow/open.js";
-import { formValues } from "#/models/course.js";
 import { COURSES } from "#/shared/config/index.js";
 import { Notice } from "obsidian";
 
@@ -33,20 +33,20 @@ const REC = {
 const stored = recs => vault({ [COURSES]: JSON.stringify(recs, null, 2) });
 const read = files => JSON.parse(files[COURSES]);
 
-test("tickMeds and setDayNote save the day's data and keep the medicines", async () => {
+test("markDose and setDayNote save the day's data and keep the medicines", async () => {
   const { files } = stored({ c1: REC });
 
-  assert.equal(await tickMeds("c1", "2026-11-08", "АЕ", "✅"), true);
+  assert.equal(await markDose("c1", "2026-11-08", "АЕ", "✅"), true);
   assert.equal(read(files).c1.marks["2026-11-08"].АЕ, "✅");
   assert.deepEqual(read(files).c1.meds, REC.meds);
   await setDayNote("c1", "2026-11-08", "");
   assert.equal("2026-11-08" in read(files).c1.dayNotes, false);
 });
 
-test("tickMeds: a courses.json that isn't JSON rejects, its text untouched", async () => {
+test("markDose: a courses.json that isn't JSON rejects, its text untouched", async () => {
   const { files } = vault({ [COURSES]: "{ broken" });
 
-  await assert.rejects(tickMeds("c1", "2026-11-08", "АЕ", "✅"));
+  await assert.rejects(markDose("c1", "2026-11-08", "АЕ", "✅"));
   assert.equal(files[COURSES], "{ broken");
 });
 
@@ -94,7 +94,7 @@ test("saveCourse preserves marks and day notes added since reading the course", 
   const values = formValues(await readCourse("c1"));
   const before = JSON.stringify(values);
 
-  await tickMeds("c1", "2026-11-08", "МГ🌙", "✅");
+  await markDose("c1", "2026-11-08", "МГ🌙", "✅");
   await setDayNote("c1", "2026-11-08", "новая заметка дня");
   const next = { ...values, notes: "новая заметка курса" };
   assert.equal(await saveCourse("c1", next, before), "saved");

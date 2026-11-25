@@ -1,78 +1,14 @@
-// A medication course: a record of courses.json ({ start, meds, notes, marks: { date: { key:
-// mark } }, dayNotes: { date: text } }, a key a medicine's code and its time of day) and what is
-// derived from it: the columns, a row per day (☐ a due key with no mark, blank past a medicine's
-// days), today's doses by time of day, the counts, the Приём lines, the window's values;
-// a mark or a day's note set (a new record). Pure (tests/course.test.mjs).
+// Course records, intake schedules, daily marks and changes to the medication course.
+import { Notice } from "obsidian";
+import { addDays, todayYmd } from "#/shared/lib/dates.js";
+import { formatRanges, inRanges, lastDay, rangesOf } from "#/shared/lib/ranges.js";
+import { dayLabel, TIMES } from "./mark.js";
 import {
-  formatRanges, inRanges, lastDay, MAX_DAY, parseRanges, rangesOf, rangesProblem,
-} from "#/shared/lib/ranges.js";
-import { addDays, weekday } from "#/shared/lib/dates.js";
+  labelsOf, MEAL_TEXT, medicine, nameOf, normal, TIME_KEYS, timesOf, WHEN,
+} from "./medicine.js";
+import { courses, readCourses } from "./repository/courses.js";
 
-const MARKS = ["☐", "✅", "❌"];
-
-export const next = mark => MARKS[(MARKS.indexOf(mark) + 1) % MARKS.length];
-
-export const TIMES = { "☀️": "☀️ утро", "🌤": "🌤 днём", "🌙": "🌙 на ночь", "": "в любое время" };
-const MONTHS = ["янв", "фев", "мар", "апр", "мая", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
-const DAYS = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
-
-export const dayLabel = date =>
-  `${+date.slice(8, 10)} ${MONTHS[+date.slice(5, 7) - 1]}, ${DAYS[weekday(date) - 1]}`;
-
-// the medicines of a course, a group each in the window: the name, the dose ("30 капель"; none:
-// the words from the first number of the name), times (morning / day / evening, a dose each;
-// none: once at any time), the meal (before | after | sleep | any), days
-const WHEN = { morning: ["☀️"], day: ["🌤"], evening: ["🌙"] };
-const TIME_KEYS = ["morning", "day", "evening"];
-const timesOf = (times = []) => times.flatMap(t => WHEN[t] ?? []);
-const MEAL_TEXT = { before: "перед едой", after: "после еды", sleep: "перед сном" };
 const MEALS = [...Object.values(MEAL_TEXT), ""];
-
-// a name as typed may carry the dose ("Мастодинон 30 капель"): the words before its first number
-const parts = typed => {
-  const words = typed.trim().split(/\s+/), at = words.findIndex(w => /^\d/.test(w));
-
-  return at < 0 ? [words.join(" "), ""] : [words.slice(0, at).join(" "), words.slice(at).join(" ")];
-};
-
-const nameOf = typed => parts(typed)[0];
-
-// A unique code per medicine; stored codes keep marks connected through renames and reordering.
-const withCodes = groups => {
-  const taken = new Set(groups.map(g => g.code).filter(Boolean));
-
-  return groups.map(g => {
-    if (g.code) return g;
-    const n = nameOf(g.name).toUpperCase().replace(/[^\p{L}\p{N}]/gu, "");
-    const tries = [...n.slice(1)].map(c => n[0] + c)
-      .concat(Array.from({ length: 9 }, (_, i) => n.slice(0, 2) + (i + 2)));
-    const code = tries.find(c => !taken.has(c)) ?? n.slice(0, 2);
-
-    taken.add(code);
-    return { ...g, code };
-  });
-};
-
-// Visible abbreviations follow current names; stored codes remain the keys of the history.
-const labelsOf = meds => new Map(withCodes(meds.map(({ name }) => ({ name })))
-  .map((m, i) => [meds[i].code, m.code]));
-
-const medicine = g => {
-  const [name, dose] = parts(g.name);
-
-  return {
-    name, dose: g.dose?.trim() || dose, times: timesOf(g.times),
-    meal: MEAL_TEXT[g.meal] ?? "", ranges: rangesOf(g), code: g.code,
-  };
-};
-
-// the medicines as the record keeps them: as typed, a code each
-const normal = meds => withCodes(meds).map(g => ({
-  name: g.name, code: g.code, dose: g.dose ?? "", times: TIME_KEYS.filter(t => g[t]),
-  meal: g.meal ?? "any",
-  ranges: typeof g.ranges === "string" || Array.isArray(g.ranges)
-    ? parseRanges(g.ranges) : rangesOf(g),
-}));
 
 export const courseOf = (v, today) => ({
   start: v.start?.trim() || today, meds: normal(v.meds), notes: v.notes?.trim() ?? "",
@@ -206,15 +142,34 @@ export const courseList = (json, today) => {
     .sort((a, b) => b.running - a.running || b.start.localeCompare(a.start));
 };
 
-// the window's problem with the days of a medicine, else null
-export const courseProblem = v => {
-  for (const g of v.meds ?? []) {
-    const bad = rangesProblem(g.ranges);
+export const markDose = (id, date, key, mark) =>
+  courses.update(id, r => withMark(r, date, key, mark));
 
-    if (bad) {
-      return `days of «${g.name}»: can't read «${bad}» (like 1-30, 45-60, 70; up to ${MAX_DAY})`;
-    }
+export const setDayNote = (id, date, text) => courses.update(id, r => withDayNote(r, date, text));
+
+export const createCourse = values => courses.add(courseOf(values, todayYmd()), "c");
+
+const courseGone = () => new Notice("✦ that course is gone");
+
+// before is JSON.stringify(formValues(record)); intake marks and day notes aren't part of it.
+export async function saveCourse(id, values, before) {
+  let changed = false;
+  const saved = await courses.update(id, r => {
+    changed = JSON.stringify(formValues(r)) !== before;
+    return changed ? null : edited(r, values);
+  });
+
+  if (changed) {
+    new Notice("✦ the course changed meanwhile: open its window again");
+    return "changed";
   }
 
-  return null;
-};
+  if (!saved) {
+    courseGone();
+    return "gone";
+  }
+
+  return "saved";
+}
+
+export const readCourseList = async () => courseList(await readCourses(), todayYmd());

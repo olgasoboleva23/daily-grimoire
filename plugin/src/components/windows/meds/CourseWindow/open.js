@@ -6,8 +6,7 @@ import { Notice } from "obsidian";
 import { openWindow } from "#/shared/ui/Window/index.ts";
 import { Search } from "#/shared/ui/Search/index.ts";
 import { openUi, app } from "#/shared/host/index.js";
-import { readCourse, readCourseList } from "#/controllers/meds.js";
-import { formValues } from "#/models/course.js";
+import { formValues, readCourse, readCourseList } from "#/entities/course/index.js";
 import CourseWindow from "./index.vue";
 
 export async function openNewCourse() {

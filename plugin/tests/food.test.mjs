@@ -4,7 +4,7 @@ import {
   DEFAULT_MARKS, dayNote, dishList, eaten, foodChoices, foodWeek, marksOf, withEaten,
   withMarks, withNote, withoutEaten, withTask,
 } from "#/models/food.js";
-import { forFood } from "#/models/course.js";
+import { forFood } from "#/entities/course/index.js";
 
 const MARKS = [{ tag: "m1", icon: "🍫", name: "какао" }];
 const FOOD = {
