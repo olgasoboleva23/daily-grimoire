@@ -1,5 +1,5 @@
 import { Platform, Plugin } from "obsidian";
-import { UI_VIEW, UiView } from "../components/app/view.ts";
+import { UI_VIEW, UiView } from "./tab/view.ts";
 import { openUi, setApp } from "#/shared/host/index.js";
 import { registerCommands } from "./commands.ts";
 import { useNotify } from "./notify.js";

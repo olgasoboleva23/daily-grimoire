@@ -8,7 +8,7 @@ export default {
     files: ["src/shared/styles/_tokens.scss", "src/shared/styles/_themes.scss"],
     rules: { "color-hex-length": "long" },
   }, {
-    files: ["src/components/**/*.scss", "src/widgets/**/*.scss", "src/pages/**/*.scss", "src/shared/ui/**/*.scss", "src/app/styles/_{busy,syncing,scroll-cards}.scss", "src/shared/styles/_tooltip.scss"],
+    files: ["src/app/tab/**/*.scss", "src/widgets/**/*.scss", "src/pages/**/*.scss", "src/shared/ui/**/*.scss", "src/app/styles/_{busy,syncing,scroll-cards}.scss", "src/shared/styles/_tooltip.scss"],
     rules: { "color-no-hex": true, "color-named": "never", "function-disallowed-list": ["rgb", "rgba"] },
   }, {
     files: ["src/widgets/xp/ui/LevelToday/index.scss"],

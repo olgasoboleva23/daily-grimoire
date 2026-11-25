@@ -1,10 +1,10 @@
 import { ItemView, Keymap, Notice, Platform, type ViewStateResult } from "obsidian";
 import { reactive, watch } from "vue";
 import { useVueApp } from "#/shared/lib/vueApp.ts";
-import { isStep, readState, saved, withParams } from "#/app/model/router.js";
+import { isStep, readState, saved, withParams } from "../model/router.js";
 import { APP_NAME, pages, UI_VIEW } from "#/shared/config/index.js";
 import UiApp from "./index.vue";
-import styles from "#/app/styles/shadow.scss";
+import styles from "../styles/shadow.scss";
 
 export { UI_VIEW } from "#/shared/config/index.js";
 

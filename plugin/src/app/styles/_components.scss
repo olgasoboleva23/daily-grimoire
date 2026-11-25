@@ -49,8 +49,8 @@
 @use "../../shared/ui/UiTabs";
 @use "../../shared/ui/UiNav";
 @use "../../shared/ui/UiDrawer";
-@use "../../components/app";
-@use "../../components/app/PageNavigation";
+@use "../tab";
+@use "../tab/PageNavigation";
 @use "../../shared/ui/UiInput";
 @use "../../shared/ui/UiCheckbox";
 @use "../../shared/ui/UiChart";

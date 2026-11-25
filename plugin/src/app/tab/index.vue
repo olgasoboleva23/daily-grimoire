@@ -5,7 +5,7 @@ import config, { pages } from "#/shared/config/index.js";
 import { taskStore } from "#/entities/task/index.js";
 import PageNavigation from "./PageNavigation/index.vue";
 import Widget from "#/shared/ui/UiWidget.vue";
-import { pageMap } from "#/app/pageMap.js";
+import { pageMap } from "../pageMap.js";
 
 const ui = inject("ui"), phone = Platform.isMobile;
 const theme = computed(() => (taskStore.version.value, config.theme));

@@ -37,7 +37,7 @@ test("UiNoteLink: a short link to an app page's note switches the page in place"
   const { setApp } = await import("#/shared/host/index.js");
   const went = [], opened = [];
   const tab = { go: (...a) => went.push(a) };
-  const { UiView } = await import("#/components/app/view.ts");
+  const { UiView } = await import("#/app/tab/view.ts");
   const front = Object.assign(Object.create(UiView.prototype), tab);
 
   setApp({

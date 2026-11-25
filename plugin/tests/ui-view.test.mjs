@@ -22,7 +22,7 @@ before(async () => {
     show() { this.style.display = ""; },
     isShown() { return this.style.display !== "none"; },
   });
-  ({ UiView } = await import("#/components/app/view.ts"));
+  ({ UiView } = await import("#/app/tab/view.ts"));
   ({ openUi } = await import("#/shared/host/index.js"));
   vue = await import("vue");
   const views = {
@@ -251,7 +251,7 @@ test("openUi: the newest app tab, else one new pinned tab", async () => {
 
 test("the drawer: Projects, Finance, Shop, Supplies, Medication, Food, Recipes, then ⚙ Settings; ↗ opens a tab", async () => {
   const { mount } = await import("@vue/test-utils");
-  const PageNavigation = (await import("#/components/app/PageNavigation/index.vue")).default;
+  const PageNavigation = (await import("#/app/tab/PageNavigation/index.vue")).default;
   const w = workspace([]);
   const went = [];
   const shell = mount(PageNavigation, { global: { provide: { ui: {

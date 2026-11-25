@@ -12,7 +12,7 @@ before(async () => {
   ({ testWindows } = await import("./stubs/windows.mjs"));
   ({ registerCommands } = await import("#/app/commands.ts"));
   ({ taskStore } = await import("#/entities/task/index.js"));
-  PageNavigation = (await import("#/components/app/PageNavigation/index.vue")).default;
+  PageNavigation = (await import("#/app/tab/PageNavigation/index.vue")).default;
 });
 
 test("Settings command shows five tabs, requires numbers and keeps invalid values for editing",
