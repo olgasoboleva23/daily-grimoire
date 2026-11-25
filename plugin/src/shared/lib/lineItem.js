@@ -1,6 +1,6 @@
 // A line of a plugin log in the Tasks plugin's Dataview format and its record: the line holds the
 // checkbox, the id (its first word) and Tasks' fields, the record (a JSON entry by that id) the
-// rest. What a task (models/task.js) and a market item (entities/product) share; each names its
+// rest. What the task and product entities share; each names its
 // id's letter (static ID). No Obsidian globals.
 export const FIELD = /\[(\w+):: ([^\]]*)\]/g;
 const SPACED = new RegExp(`\\s*${FIELD.source}`, "g");   // a field with the spaces before it

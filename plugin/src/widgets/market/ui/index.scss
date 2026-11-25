@@ -109,7 +109,7 @@
   100% { opacity: 0; scale: 1.4; }
 }
 
-/* Category pill (src/uikit/groupHeader.js, block ui-group-header): the market widget and the Supplies page */
+/* Category pill for the market widget and the Supplies page (shared/ui/UiGroupHeader.vue) */
 .ui-group-header {
   @include row;
   gap: $space-m;

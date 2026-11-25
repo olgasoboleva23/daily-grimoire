@@ -18,7 +18,7 @@
   }
 }
 
-/* Progress bar shimmer — used by .ui-level__progress-fill (widgets/_level.scss) */
+/* Progress bar shimmer — used by .ui-level__progress-fill (widgets/xp/ui/LevelToday/index.scss) */
 @keyframes ui-shimmer {
   0% {
     background-position: 200% 0;
@@ -28,7 +28,7 @@
   }
 }
 
-/* Icon glow pulse — used by .ui-level__icon (widgets/_level.scss) */
+/* Icon glow pulse — used by .ui-level__icon (widgets/xp/ui/LevelToday/index.scss) */
 @keyframes pulse-glow {
   0%,
   100% {

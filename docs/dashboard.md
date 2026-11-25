@@ -2,7 +2,7 @@
 
 # 🖥 Dashboard
 
-The dashboard is a page of the [Daily Grimoire tab](#the-daily-grimoire-tab) (below). At the top: the day it shows (‹ › and **today**; no date set means today, and it moves on at midnight), and **✦ Open** for that day's daily note. After a change to the tasks or the data the tab dims with a pink ✦ until the cards have redrawn. Its layout is `plugin/src/components/pages/dashboard/index.vue`: Vue cards inside the tab’s single Vue application. The dashboard and calendar stay mounted when switching pages; closing the tab disposes both.
+The dashboard is a page of the [Daily Grimoire tab](#the-daily-grimoire-tab) (below). At the top: the day it shows (‹ › and **today**; no date set means today, and it moves on at midnight), and **✦ Open** for that day's daily note. After a change to the tasks or the data the tab dims with a pink ✦ until the cards have redrawn. Its layout is `plugin/src/pages/dashboard/ui/index.vue`: Vue cards inside the tab’s single Vue application. The dashboard and calendar stay mounted when switching pages; closing the tab disposes both.
 
 ![Dashboard](images/dashboard.webp)
 
@@ -21,7 +21,7 @@ The dashboard is a page of the [Daily Grimoire tab](#the-daily-grimoire-tab) (be
 
 ## The Daily Grimoire tab
 
-One tab holds all of Daily Grimoire. The ✨ icon on the left or **Daily Grimoire: Open** (Cmd+P) opens it, pinned, or reveals it if it is already open. Inside it are the pages **Dashboard**, **Calendar**, **Projects**, **Finance**, **Shop**, **Supplies**, **Medication** and **Food**; the tab remembers the page you were on. Every page is a Vue component of the tab; the notes `Finance`, `Shop` and `Supplies` are only data (or a link target: see Links).
+One tab holds all of Daily Grimoire. The ✨ icon on the left or **Daily Grimoire: Open** (Cmd+P) opens it, pinned, or reveals it if it is already open. Inside it are the pages **Dashboard**, **Calendar**, **Projects**, **Finance**, **Shop**, **Supplies**, **Medication**, **Food** and **Recipes**; the tab remembers the page you were on. Every page is a Vue component of the tab; the notes `Finance`, `Shop` and `Supplies` are only data (or a link target: see Links).
 
 - **Desktop:** a floating pill at the top: ✦ Dashboard, 🗓 Calendar, ⋯ Other. The labels show on hover, and the pill collapses after a click. **⋯ Other** opens a drawer from the left with every page, one row each; the ↗ on a row opens that page in a new tab, and **⚙ Settings** (XP, gold, areas, XP Today, the level cost) is the last row.
 - **Phone:** a bottom bar of three (the same three) and a sheet for the rest.
@@ -92,4 +92,4 @@ A goal is a recurring task whose record in `tasks.json` has `"goal": "<key>"`, t
 
 ## 📝 Daily Note
 
-Notes (free text) and an XP Log. Made by **✦ Open** on the dashboard for the selected day (its layout: `daily` in `plugin/src/models/kinds.js`).
+Notes (free text) and an XP Log. Made by **✦ Open** on the dashboard for the selected day (its layout: `daily` in `plugin/src/entities/doc/model/kind.js`).

@@ -1,5 +1,5 @@
 // v-tip="text": Obsidian's tooltip on hover (setTooltip: drawn on the body, so nothing clips
-// it), in the Winx look (styles/_tooltip.scss: .tooltip.ui-tooltip): blue over the pink paper;
+// it). The Winx tooltip (shared/styles/_tooltip.scss) is blue over the pink paper.
 // v-tip.pink for a blue place (Missed, today); v-tip:bottom puts it below. The value may be
 // { text, pink, placement } when a component decides (UiButton). Nothing for an empty text;
 // it comes after 100 ms (Obsidian's own is slower at first).

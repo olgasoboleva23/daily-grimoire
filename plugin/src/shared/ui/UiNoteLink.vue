@@ -1,4 +1,4 @@
-<!-- a button that opens a note (a pill by default, as uikit/noteLink.js): from the note the
+<!-- a button that opens a note (a pill by default): from the note the
      block is in -->
 <script setup>
 import { inject } from "vue";

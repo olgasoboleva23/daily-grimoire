@@ -1,5 +1,5 @@
-// Builds the plugin: src/app/main.ts → main.js, src/app/styles/main.scss (and the components' index.scss it
-// uses) → styles.css, plus manifest.json.
+// Build src/app/main.ts into main.js, including the tab sheet from src/app/styles/shadow.scss.
+// Compile src/app/styles/main.scss to styles.css and copy manifest.json alongside it.
 //   npm run build   into dist/
 //   npm run dev     into $WINX_VAULT/.obsidian/plugins/daily-grimoire/ (without it: dist/), again on every save
 import esbuild from "esbuild";

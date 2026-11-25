@@ -1,5 +1,5 @@
 @use "mixins" as *;
-/* Search (src/uikit/search.ts), block ui-search: a category over its first row, the name, the note on the right */
+/* Search (shared/ui/Search/index.ts), block ui-search: a category over its first row, the name, the note on the right */
 .ui-search {
   &__group {
     margin: (-$space-xs) 0 $space-xs;

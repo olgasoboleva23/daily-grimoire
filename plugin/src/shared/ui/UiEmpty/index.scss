@@ -1,5 +1,5 @@
 @use "mixins" as *;
-/* Empty / Missing (src/uikit/empty.js) */
+/* UiEmpty and UiMissing messages */
 // a list with nothing in it, a widget whose note isn't there; --error: a widget that couldn't draw (Failed), ↻ retry after it
 .ui-empty {
   padding-block: $space-3xl;

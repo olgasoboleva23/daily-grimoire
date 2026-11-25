@@ -1,5 +1,5 @@
 @use "mixins" as *;
-/* Obsidian's tooltip with the ui-tooltip class (uikit/tooltip.js, v-tip): the sky over the pink
+/* Obsidian's tooltip with the ui-tooltip class (shared/ui/tooltip.js, v-tip): the sky over the pink
    paper, the pink paper (--pink) over a blue place; the arrow in the same colour */
 .tooltip.ui-tooltip {
   padding: $space-s $space-xl;

@@ -27,7 +27,7 @@ Copy the plugin and what it reads:
 | the plugins from the table below | Community plugins (or copy `.obsidian/plugins/<name>/` from here) |
 | `00 System/Data/` (`Tasks/Master.md`, `Tasks/tasks.json`, `Goals.md`, the widgets' notes), `00 System/Assets/` | the same paths: the pages read them there |
 
-The paths the plugin reads are in `plugin/src/helpers/paths.js` (and constants at the top of the controllers, `plugin/src/controllers/*.js`); the areas, difficulties and levels in `plugin/src/helpers/config.js`.
+The plugin data paths are in `plugin/src/shared/config/paths.js`. The default areas, difficulties and levels are in `plugin/src/shared/config/config.js`.
 
 ## Keeping your vault in sync with this repo
 
