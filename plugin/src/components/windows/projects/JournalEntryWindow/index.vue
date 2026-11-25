@@ -5,7 +5,7 @@
      note): a notice, the window stays. Resolves true once addNote / editNote wrote -->
 <script setup>
 import { computed, reactive } from "vue";
-import { Notice } from "obsidian";
+import { FuzzySuggestModal, Notice } from "obsidian";
 import UiWindow from "#/components/uikit/UiWindow/index.vue";
 import UiField from "#/components/uikit/UiField/index.vue";
 import UiFieldText from "#/components/uikit/UiFieldText/index.vue";
@@ -13,7 +13,7 @@ import UiFieldPick from "#/components/uikit/UiFieldPick/index.vue";
 import { filled } from "#/components/uikit/UiWindow/ready.js";
 import { useWrite } from "#/components/uikit/UiWindow/write.js";
 import { app } from "#/helpers/app.js";
-import { addNote, editNote, pickNotePath } from "#/controllers/journal.js";
+import { addNote, editNote } from "#/controllers/journal.js";
 import { taskStore } from "#/store/tasks.js";
 
 const props = defineProps({
@@ -44,6 +44,19 @@ const v = reactive(entry
   : { about: `project:${props.project}`, title: "", text: "", link: "" });
 const ready = computed(() => !entry || filled(v.at));
 const { busy, run } = useWrite(emit);
+
+function pickNotePath() {
+  return new Promise(resolve => {
+    class Picker extends FuzzySuggestModal {
+      getItems() { return app.vault.getMarkdownFiles(); }
+      getItemText(file) { return file.path; }
+      onChooseItem(file) { resolve(file.path); }
+      onClose() { super.onClose(); queueMicrotask(() => resolve(null)); }
+    }
+
+    new Picker(app).open();
+  });
+}
 
 const save = () => run(async () => {
   if (!v.title?.trim() && !v.text?.trim() && !v.link)
@@ -77,7 +90,7 @@ const save = () => run(async () => {
       <UiFieldText v-model="v.text" type="lines" placeholder="what came out of it" />
     </UiField>
     <UiField name="Note">
-      <UiFieldPick v-model="v.link" :pick="() => pickNotePath(app)" />
+      <UiFieldPick v-model="v.link" :pick="pickNotePath" />
     </UiField>
     <UiField v-if="entry" name="When">
       <UiFieldText v-model="v.at" placeholder="YYYY-MM-DDTHH:mm" />

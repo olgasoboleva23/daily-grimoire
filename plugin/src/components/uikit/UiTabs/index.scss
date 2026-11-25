@@ -20,6 +20,6 @@
     flex-wrap: nowrap; overflow-x: auto;
     button.ui-tabs__tab { white-space: nowrap; flex: none; }
   }
-  // in an Obsidian window (a Form's tabs): the theme's text colour, so it reads on a dark one too
+  // In an Obsidian window, use the theme's text colour so it reads on dark backgrounds.
   .modal & button#{&}__tab { color: var(--text-normal); }
 }

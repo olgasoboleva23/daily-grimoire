@@ -1,4 +1,5 @@
-import { FuzzySuggestModal, Notice } from "obsidian";
+// Validates linked notes and writes project journal entries.
+import { Notice } from "obsidian";
 import { app } from "#/helpers/app.js";
 import { notes } from "#/store/tasks.js";
 import { serial } from "#/helpers/files.js";
@@ -38,17 +39,4 @@ export function removeNote(id) {
     delete all[id];
     return all;
   }));
-}
-
-export function pickNotePath(app) {
-  return new Promise(resolve => {
-    class Picker extends FuzzySuggestModal {
-      getItems() { return app.vault.getMarkdownFiles(); }
-      getItemText(file) { return file.path; }
-      onChooseItem(file) { resolve(file.path); }
-      onClose() { super.onClose(); queueMicrotask(() => resolve(null)); }
-    }
-
-    new Picker(app).open();
-  });
 }

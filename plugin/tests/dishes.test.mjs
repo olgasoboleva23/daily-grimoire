@@ -2,7 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  addDish, editDish, loadRecipes, pickRecipeNote, productsToList, readDish, readProducts,
+  addDish, editDish, loadRecipes, productsToList, readDish, readProducts,
   removeDish,
 } from "#/controllers/dishes.js";
 import {
@@ -10,6 +10,7 @@ import {
 } from "#/controllers/widgets/market.js";
 import { loadFood } from "#/controllers/food.js";
 import { Search } from "#/components/uikit/Search/index.ts";
+import { pickRecipeNote } from "#/components/windows/recipes/DishFormWindow/pickRecipeNote.js";
 import { Notice } from "obsidian";
 import { foodChoices, foodWeek } from "#/models/food.js";
 import { DISHES, FOOD_DATA, FOOD_LOG, MARKET_NOTE, MARKET_RECORDS } from "#/helpers/paths.js";
@@ -129,7 +130,7 @@ test("a new dish stores product IDs and the selected note path", async () => {
 
 test("a recipe note can be created from the dish title and linked to the dish",
   async t => {
-    const { app, files } = fixture();
+    const { files } = fixture();
     files["Old.md"] = "x";
     const seen = [];
     t.mock.method(Search, "pick", async (_app, _title, choices) => {
@@ -139,7 +140,7 @@ test("a recipe note can be created from the dish title and linked to the dish",
       return choices("")[0];
     });
 
-    const link = await pickRecipeNote(app, "Stew");
+    const link = await pickRecipeNote("Stew");
     const id = await addDish({ ...dish, name: "Stew", link });
     const path = `${KINDS.recipe.folder}/Stew.md`;
 

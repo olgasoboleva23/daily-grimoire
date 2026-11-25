@@ -6,10 +6,11 @@ import { newTask } from "#/components/windows/tasks/TaskWindow/open.js";
 import { migrateTasks } from "#/migrations/tasks.js";
 import { openSettings } from "#/components/windows/settings/SettingsWindow/open.js";
 import { createNote } from "#/controllers/notes.js";
-import { pickCourse } from "#/controllers/meds.js";
 import { openNewProject } from "#/components/windows/projects/ProjectWindow/open.js";
 import { addMarketItem } from "#/components/windows/market/MarketItemWindow/open.js";
-import { openEditCourse, openNewCourse } from "#/components/windows/meds/CourseWindow/open.js";
+import {
+  openEditCourse, openNewCourse, pickCourse,
+} from "#/components/windows/meds/CourseWindow/open.js";
 import { openWindow } from "#/components/uikit/Window/open.ts";
 import { askValue } from "#/components/uikit/FieldWindow/ask.js";
 import CollectionItemWindow from "#/components/windows/notes/CollectionItemWindow/index.vue";
@@ -31,7 +32,7 @@ export function registerCommands(plugin: Plugin) {
   // a watch / read / game / recipe / work task note or a free journal (models/kinds.js), in its
   // folder, opened in a new tab: a watch / read / game item and a journal in their windows, a
   // recipe and a work task asked only their title
-  const ask = async (key: string, kind: any, dir: string) => {
+  const newNote = async (key: string, kind: any, dir: string) => {
     if (kind.statuses) return openWindow(CollectionItemWindow, { kind: key, dir });
     if (key === "journal") return openWindow(NewJournalWindow);
     const title = await askValue({
@@ -45,7 +46,7 @@ export function registerCommands(plugin: Plugin) {
   for (const [key, kind] of Object.entries(KINDS) as [string, any][]) {
     add(kind.id, kind.name, async () => {
       const dir = (kind.setting && (await plugin.loadData())?.[kind.setting]) || kind.folder;
-      const file = await ask(key, kind, dir) as TFile | null;
+      const file = await newNote(key, kind, dir) as TFile | null;
 
       if (file) await app.workspace.getLeaf("tab").openFile(file);
     });

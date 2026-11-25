@@ -3,8 +3,8 @@
      ones keep their values), the fields without a tab (default slot), then the button (#footer:
      something next to it; no `submit`: no button row, the viewers). The button and the frame's
      Enter emit `submit` only when `ready` and not `busy` (greyed out otherwise). The first shown
-     text box (UiFieldText) takes the focus. No element of its own: the frame's content holds the
-     fields as Form's did; the fields' looks are theirs (UiField*) -->
+     text box (UiFieldText) takes the focus. The frame's content holds the fields directly;
+     field styling lives with each component (UiField*) -->
 <script setup>
 import { inject, provide, ref, watchEffect } from "vue";
 import UiTabs from "#/components/uikit/UiTabs/index.vue";

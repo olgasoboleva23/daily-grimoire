@@ -10,8 +10,6 @@ import { readFoodCatalog } from "./dishes.js";
 import { readJournals } from "#/controllers/journals.js";
 import { forFood } from "#/models/course.js";
 import { T } from "#/models/calendarData.js";
-import { Notice } from "obsidian";
-import { pickTask } from "#/components/uikit/TaskSearch/index.js";
 import { taskStore } from "#/store/tasks.js";
 import { COURSES, FOOD_DATA, FOOD_LOG } from "#/helpers/paths.js";
 
@@ -54,11 +52,4 @@ export const saveMarks = marks => food.edit(data => {
   return withMarks(data, next);
 });
 
-// 🏋 the training task: a past one from the search (its id goes to food.json), not a new name
-export async function pickTrainingTask() {
-  const pick = await pickTask();
-
-  if (!pick) return;
-  if (pick.isNew) return void new Notice("✦ pick a task you already have");
-  await food.edit(d => withTask(d, pick.id));
-}
+export const setTrainingTask = id => food.edit(d => withTask(d, id));

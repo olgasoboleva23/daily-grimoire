@@ -1,7 +1,7 @@
 // Reads the food catalog and saves dishes with product IDs, amounts and an optional recipe link.
 // Display names and marks come from the market rather than the stored dish.
 import { shallowReactive } from "vue";
-import { Notice, prepareFuzzySearch } from "obsidian";
+import { Notice } from "obsidian";
 import { collection } from "#/helpers/collection.js";
 import { nextId } from "#/helpers/ids.js";
 import { readJson, serial } from "#/helpers/files.js";
@@ -9,10 +9,7 @@ import { DISHES, FOOD_DATA, FOOD_LOG, MARKET_RECORDS } from "#/helpers/paths.js"
 import config from "#/helpers/config.js";
 import { dishList, marksOf } from "#/models/food.js";
 import { validNoteLink } from "./journal.js";
-import { createNote } from "./notes.js";
-import { KINDS } from "#/models/kinds.js";
 import { productsToList } from "./widgets/market.js";
-import { Search } from "#/components/uikit/Search/index.ts";
 
 export { productsToList };
 // The open Recipes page computes its tabs from this array; applyConfig updates it in place.
@@ -102,21 +99,3 @@ export const removeDish = id => write(() => dishes.edit(all => {
   delete all[id];
   return all;
 }));
-
-// a dish's recipe note: any note, or first a new one from the recipe template (New recipe's,
-// in its folder) named as typed, else after the dish
-export async function pickRecipeNote(app, dish = "") {
-  const notes = app.vault.getMarkdownFiles();
-  const pick = await Search.pick(app, "Choose the recipe note", query => {
-    const q = query.trim(), name = q || dish.trim();
-    const make = name ? [{ name, isNew: true }] : [];
-
-    if (!q) return [...make, ...notes];
-    const match = prepareFuzzySearch(q);
-
-    return [...make, ...notes.filter(f => match(f.path))];
-  }, (f, el) => el.createSpan({ text: f.isNew ? `+ new recipe note: ${f.name}` : f.path }));
-
-  if (!pick?.isNew) return pick?.path ?? null;
-  return (await createNote(KINDS.recipe, { title: pick.name }, KINDS.recipe.folder)).path;
-}

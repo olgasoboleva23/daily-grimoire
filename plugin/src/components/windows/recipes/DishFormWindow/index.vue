@@ -20,9 +20,9 @@ import {
   openEditItem, pickOrAddProduct,
 } from "#/components/windows/market/MarketItemWindow/open.js";
 import AlternativesWindow from "#/components/windows/recipes/AlternativesWindow/index.vue";
-import { app } from "#/helpers/app.js";
-import { addDish, editDish, pickRecipeNote } from "#/controllers/dishes.js";
+import { addDish, editDish } from "#/controllers/dishes.js";
 import { readMarketItem } from "#/controllers/widgets/market.js";
+import { pickRecipeNote } from "./pickRecipeNote.js";
 
 const props = defineProps({
   id: { type: String, default: null },            // edit: its id
@@ -116,7 +116,7 @@ const save = () => run(async () => {
       <UiFieldChoice v-model="v.type" :choices="TYPES" />
     </UiField>
     <UiField name="Note">
-      <UiFieldPick v-model="v.link" :pick="() => pickRecipeNote(app, v.name)" :show="noteName" />
+      <UiFieldPick v-model="v.link" :pick="() => pickRecipeNote(v.name)" :show="noteName" />
     </UiField>
   </UiWindow>
 </template>

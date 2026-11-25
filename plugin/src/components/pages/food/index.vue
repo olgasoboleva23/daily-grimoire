@@ -14,7 +14,8 @@ import { vTip } from "#/components/uikit/tooltip.js";
 import { addDays, weekOf } from "#/helpers/dates.js";
 import { dayLabel } from "#/models/course.js";
 import { foodWeek } from "#/models/food.js";
-import { pickTrainingTask, removeEaten, setFoodNote } from "#/controllers/food.js";
+import { pickTask } from "#/components/uikit/TaskSearch/index.js";
+import { removeEaten, setFoodNote, setTrainingTask } from "#/controllers/food.js";
 import { readMarks } from "#/controllers/widgets/market.js";
 import { openWindow } from "#/components/uikit/Window/open.ts";
 import { addEaten, editEaten } from "#/components/windows/food/eaten.js";
@@ -52,6 +53,14 @@ const columns = computed(() => [
 ]);
 
 const editMarks = async () => openWindow(MarksWindow, { marks: await readMarks() });
+
+async function pickTrainingTask() {
+  const pick = await pickTask();
+
+  if (!pick) return;
+  if (pick.isNew) return void new Notice("✦ pick a task you already have");
+  await setTrainingTask(pick.id);
+}
 
 // a write: a failure said (the page draws again from the files when one works)
 const act = async (write) => {

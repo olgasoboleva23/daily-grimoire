@@ -1,7 +1,7 @@
 <!-- A window's field row (block ui-field): Obsidian's setting row, its name on the left, its
      control (the slot: UiFieldText, UiFieldChoice, UiFieldPick, a native checkbox or select) on
      the right. `toggle`: a checkbox's row (Obsidian's mod-toggle, the narrow control), with its
-     `description` under the name ("": an empty line, as Form's check rows had); `text`: a label
+     `description` under the name ("": an empty line); `text`: a label
      row, the text shown selectable, its line breaks kept, instead of a control. Its look:
      index.scss -->
 <script setup>

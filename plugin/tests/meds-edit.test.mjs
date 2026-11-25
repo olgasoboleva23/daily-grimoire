@@ -3,8 +3,10 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { vault } from "./stubs/vault.mjs";
 import {
-  createCourse, loadMeds, pickCourse, readCourse, saveCourse, setDayNote, tickMeds,
+  createCourse, loadMeds, readCourse, saveCourse, setDayNote, tickMeds,
 } from "#/controllers/meds.js";
+import { Search } from "#/components/uikit/Search/index.ts";
+import { pickCourse } from "#/components/windows/meds/CourseWindow/open.js";
 import { formValues } from "#/models/course.js";
 import { COURSES } from "#/helpers/paths.js";
 import { Notice } from "obsidian";
@@ -117,18 +119,22 @@ test("createCourse returns a new ID and writes the course with today's default s
   assert.deepEqual(read(files).c1, REC);
 });
 
-test("pickCourse: none: a notice; one: its id; more: the picker's", async () => {
+test("pickCourse opens the search only when there are several courses", async t => {
   vault();
   assert.equal(await pickCourse(), null);
   assert.equal(Notice.last, "✦ no medication course yet");
   let calls = 0;
-  const pick = async list => { calls++; return list[1].id; };
+  t.mock.method(Search, "pick", async (_app, title, choices) => {
+    assert.equal(title, "Which course…");
+    calls++;
+    return choices("")[1];
+  });
 
   stored({ c1: REC });
-  assert.equal(await pickCourse(pick), "c1");
+  assert.equal(await pickCourse(), "c1");
   assert.equal(calls, 0);
   stored({ c1: REC, c2: { ...REC, start: "2026-10-01" } });
-  assert.equal(await pickCourse(pick), "c2");
+  assert.equal(await pickCourse(), "c2");
   assert.equal(calls, 1);
 });
 
