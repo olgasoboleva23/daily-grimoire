@@ -3,6 +3,7 @@
      progress (none without tasks) and next task (the first open one of the first stage not
      complete), its box ticks it; a click elsewhere on the card opens the project -->
 <script setup>
+import { projectStore, stageTasks } from "#/entities/project/index.js";
 import { computed, inject } from "vue";
 import UiButton from "#/shared/ui/UiButton/index.vue";
 import UiCard from "#/shared/ui/UiCard/index.vue";
@@ -16,8 +17,7 @@ import PromptsWindow from "#/components/windows/projects/PromptsWindow/index.vue
 import { app, tasksApi } from "#/shared/host/index.js";
 import { tickTask } from "#/controllers/tasks.js";
 import { T } from "#/models/calendarData.js";
-import { stageTasks, taskStore } from "#/store/tasks.js";
-import { FILTERS } from "#/store/projects.js";
+import { FILTERS, stageEntries } from "#/store/projects.js";
 import { coverUrl } from "../cover.js";
 import ProjectStatus from "../ProjectStatus/index.vue";
 
@@ -28,8 +28,8 @@ const label = s => `${s[0].toUpperCase()}${s.slice(1)}`;
 // every project as its card shows it (read again when the tasks or projects change)
 const all = computed(() => {
   void projects.version.value;
-  return [...taskStore.projects].map(([key, p]) => {
-    const entries = (p.stages ?? []).flatMap(stageTasks);
+  return [...projectStore.projects].map(([key, p]) => {
+    const entries = (p.stages ?? []).flatMap(s => stageTasks(s, stageEntries.value));
     const next = entries.find(e => !e.done);
 
     return {

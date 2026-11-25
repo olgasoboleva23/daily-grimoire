@@ -3,6 +3,7 @@
      adds one) | the Journal (ProjectJournal), Links (+ link, × removes), Result and Notes,
      each with Edit (a one-field window). One column on the phone -->
 <script setup>
+import { projectStore, stageTasks } from "#/entities/project/index.js";
 import { computed, inject, ref } from "vue";
 import { Menu } from "obsidian";
 import UiAddForm from "#/shared/ui/UiAddForm/index.vue";
@@ -13,11 +14,9 @@ import { askValue, confirm, openWindow } from "#/shared/ui/Window/index.ts";
 import { openEditProject } from "#/components/windows/projects/ProjectWindow/open.js";
 import LinkWindow from "#/components/windows/projects/LinkWindow/index.vue";
 import { app } from "#/shared/host/index.js";
-import {
-  addStage, saveProject, deleteProject, readProject, removeLink,
-} from "#/controllers/projects.js";
-import { stageTasks, taskStore } from "#/store/tasks.js";
-import { FILTERS } from "#/store/projects.js";
+import { addStage, saveProject, readProject, removeLink } from "#/entities/project/index.js";
+import { deleteProject } from "#/controllers/projects.js";
+import { FILTERS, stageEntries } from "#/store/projects.js";
 import { coverUrl } from "../cover.js";
 import ProjectStatus from "../ProjectStatus/index.vue";
 import ProjectJournal from "./ProjectJournal.vue";
@@ -31,8 +30,9 @@ const SIDE = [{ key: "result", name: "Result" }, { key: "notes", name: "Notes" }
 // the project and its stages' tasks (read again when the tasks or projects change)
 const page = computed(() => {
   void projects.version.value;
-  const p = taskStore.projects.get(state.open);
-  const stages = (p.stages ?? []).map(s => ({ name: s.name, entries: stageTasks(s) }));
+  const p = projectStore.projects.get(state.open);
+  const stages = (p.stages ?? [])
+    .map(s => ({ name: s.name, entries: stageTasks(s, stageEntries.value) }));
   const entries = stages.flatMap(s => s.entries);
 
   return {

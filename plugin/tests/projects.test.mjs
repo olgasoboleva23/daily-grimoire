@@ -6,10 +6,9 @@ import { vault } from "./stubs/vault.mjs";
 import { taskStore } from "#/store/tasks.js";
 import { PROJECTS } from "#/shared/config/index.js";
 import {
-  createProject, saveProject, addStage, addTaskToStage, toCalendar,
-  newProject, editProject, readStage, deleteStage, addLink, removeLink, deleteProject, readProject,
-  renameStage,
-} from "#/controllers/projects.js";
+  createProject, saveProject, addStage, addTaskToStage, newProject, editProject, readStage, addLink, removeLink, readProject, renameStage,
+} from "#/entities/project/index.js";
+import { toCalendar, deleteStage, deleteProject } from "#/controllers/projects.js";
 
 const MASTER = "00 System/Data/Tasks/Master.md";
 const RECORDS = "00 System/Data/Tasks/tasks.json";

@@ -10,7 +10,7 @@ import UiField from "#/shared/ui/UiField/index.vue";
 import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
 import UiFieldChoice from "#/shared/ui/UiFieldChoice/index.vue";
 import { filled, useWrite } from "#/shared/ui/Window/index.ts";
-import { editProject, newProject } from "#/controllers/projects.js";
+import { editProject, newProject, STATUSES } from "#/entities/project/index.js";
 
 const props = defineProps({
   project: { type: String, default: null },   // edit: its key
@@ -18,8 +18,6 @@ const props = defineProps({
 });
 const emit = defineEmits(["done"]);
 
-const STATUSES = ["idea", "active", "paused", "done"]
-  .map(s => ({ label: `${s[0].toUpperCase()}${s.slice(1)}`, value: s }));
 const editing = !!props.project;
 const v = reactive(editing
   ? { name: props.before.name, description: props.before.description ?? "", cover: null,

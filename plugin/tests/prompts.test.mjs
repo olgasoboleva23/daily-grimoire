@@ -1,4 +1,5 @@
 // Filling and saving the shared project prompts with made-up data.
+import { projectStore } from "#/entities/project/index.js";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Notice } from "obsidian";
@@ -6,7 +7,6 @@ import {
   copyStartPrompt, fillStart, PROMPT_VARIABLES, savePrompts,
 } from "#/controllers/prompts.js";
 import config, { CONFIG } from "#/shared/config/index.js";
-import { taskStore } from "#/store/tasks.js";
 import { vault } from "./stubs/vault.mjs";
 
 test("literal project text and an empty journal in a Start prompt", () => {
@@ -44,11 +44,11 @@ test("copyStartPrompt copies the filled template with the supplied task", async 
   Object.defineProperty(navigator, "clipboard", {
     configurable: true, value: { writeText: async text => values.push(text) },
   });
-  taskStore.putProjects({ p1: { name: "Garden", result: "A plan" } });
+  projectStore.putProjects({ p1: { name: "Garden", result: "A plan" } });
   config.promptStart = "{Project_Name}\n{Project_Result}\n{Current_Task_Or_Input}";
   t.after(() => {
     config.promptStart = start;
-    taskStore.putProjects({});
+    projectStore.putProjects({});
     if (own) Object.defineProperty(navigator, "clipboard", own);
     else delete navigator.clipboard;
   });

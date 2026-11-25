@@ -5,14 +5,13 @@ import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
 import GroupCard from "./GroupCard.vue";
 import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";
 import { T } from "#/models/calendarData.js";
-import { taskStore } from "#/store/tasks.js";
-import { openProjects } from "#/helpers/panelGroups.js";
+import { calendarProjects } from "#/helpers/panelGroups.js";
 
 const EMPTY_PROJECTS = "Projects are kept in projects.json";
 const view = inject("calendar");
 
 // the store's version keeps the computed tracked while there are no projects yet
-const projects = computed(() => (void taskStore.version.value, openProjects()).map(p => ({
+const projects = computed(() => calendarProjects.value.map(p => ({
   ...p,
   stages: p.stages.map(s => ({
     name: s.name,

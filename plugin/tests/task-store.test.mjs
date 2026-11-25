@@ -1,8 +1,10 @@
+import { Task } from "#/models/task.js";
+import { projectStore, stageIndex, stageTasks } from "#/entities/project/index.js";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { parseNote } from "#/shared/lib/noteLines.js";
 import { setApp } from "#/shared/host/index.js";
-import { taskStore, useTaskStore, stageTasks, records } from "#/store/tasks.js";
+import { taskStore, useTaskStore, records } from "#/store/tasks.js";
 
 const P = "00 System/Data/Tasks/Master.md", J = "00 System/Data/Tasks/tasks.json";
 
@@ -203,21 +205,21 @@ test("the store reads projects.json: projects in file order, inProject holds eve
     }),
   });
   useTaskStore(plugin()); await settle();
-  assert.deepEqual([...taskStore.projects.keys()], ["p1", "p2"]);
-  assert.deepEqual(taskStore.inProject, new Set(["t1", "t2", "t3"]));
+  assert.deepEqual([...projectStore.projects.keys()], ["p1", "p2"]);
+  assert.deepEqual(projectStore.inProject, new Set(["t1", "t2", "t3"]));
 });
 
 test("stageTasks: an open line is open, a done line with no open line is done, a skipped-only or missing id is left out", () => {
   vault({});
   taskStore.put(P, "- [ ] t1\n- [x] t2\n- [-] t3");
-  const got = stageTasks({ name: "A", tasks: ["t1", "t2", "t3", "t9"] });
+  const got = stageTasks({ name: "A", tasks: ["t1", "t2", "t3", "t9"] }, stageIndex(taskStore.tasks.map(Task.of)));
   assert.deepEqual(got.map(s => [s.id, s.done]), [["t1", false], ["t2", true]]);
 });
 
 test("stageTasks: a done 🔁 copy and its open next copy: open", () => {
   vault({});
   taskStore.put(P, "- [x] t4 [repeat:: every day when done] ✅ 2026-11-10\n- [ ] t4 [repeat:: every day when done] [due:: 2026-11-12]");
-  const got = stageTasks({ name: "A", tasks: ["t4", "t4"] });
+  const got = stageTasks({ name: "A", tasks: ["t4", "t4"] }, stageIndex(taskStore.tasks.map(Task.of)));
   assert.equal(got.length, 1);
   assert.equal(got[0].done, false);
   assert.equal(got[0].t.status, " ");
@@ -230,19 +232,19 @@ test("projects.json that isn't JSON leaves the projects as they were; a deleted 
   console.error = () => {};
   files[PJ] = "{ half"; fire("modify", PJ); await settle();
   console.error = error;
-  assert.deepEqual([...taskStore.projects.keys()], ["p"]);
-  assert.deepEqual(taskStore.inProject, new Set(["t1"]));
+  assert.deepEqual([...projectStore.projects.keys()], ["p"]);
+  assert.deepEqual(projectStore.inProject, new Set(["t1"]));
   delete files[PJ]; fire("delete", PJ); await settle();
-  assert.equal(taskStore.projects.size, 0);
-  assert.equal(taskStore.inProject.size, 0);
+  assert.equal(projectStore.projects.size, 0);
+  assert.equal(projectStore.inProject.size, 0);
 });
 
 test("a project without stages, or a stage without tasks: no throw, projects and inProject agree", () => {
   vault({});
-  taskStore.putProjects({ p1: { name: "x" }, p2: { name: "y", stages: [{ name: "A" }, { name: "B", tasks: ["t1"] }] } });
-  assert.deepEqual([...taskStore.projects.keys()], ["p1", "p2"]);
-  assert.deepEqual(taskStore.inProject, new Set(["t1"]));
-  assert.deepEqual(stageTasks({ name: "A" }), []);
+  projectStore.putProjects({ p1: { name: "x" }, p2: { name: "y", stages: [{ name: "A" }, { name: "B", tasks: ["t1"] }] } });
+  assert.deepEqual([...projectStore.projects.keys()], ["p1", "p2"]);
+  assert.deepEqual(projectStore.inProject, new Set(["t1"]));
+  assert.deepEqual(stageTasks({ name: "A" }, new Map()), []);
 });
 
 test("the store's records are the collection's current Map", () => {
@@ -255,11 +257,11 @@ test("the store's records are the collection's current Map", () => {
 
 test("a projects.json that throws while read leaves the projects and the store as they were", () => {
   vault({});
-  taskStore.putProjects({ p1: { stages: [{ tasks: ["t1"] }] } });
-  assert.throws(() => taskStore.putProjects({ p1: null }));
-  assert.ok(taskStore.projects.has("p1"));
-  assert.ok(taskStore.projects.get("p1"));
-  assert.ok(taskStore.inProject.has("t1"));
+  projectStore.putProjects({ p1: { stages: [{ tasks: ["t1"] }] } });
+  assert.throws(() => projectStore.putProjects({ p1: null }));
+  assert.ok(projectStore.projects.has("p1"));
+  assert.ok(projectStore.projects.get("p1"));
+  assert.ok(projectStore.inProject.has("t1"));
   taskStore.put(P, "- [ ] t1");
   assert.equal(taskStore.tasks.length, 1);
 });

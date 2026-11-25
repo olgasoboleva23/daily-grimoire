@@ -1,4 +1,5 @@
 <script setup>
+import { projectStore } from "#/entities/project/index.js";
 import { Notice } from "obsidian";
 import { computed, markRaw, onActivated, provide, ref, watch } from "vue";
 import { useLater, useNewDay, useRedraw } from "#/shared/lib/use.js";
@@ -19,7 +20,7 @@ const state = props.state, owner = useObsidian(), root = ref(null), version = re
 const data = computed(() => { void version.value; return markRaw(build()); });
 const { redraw, catchUp } = useRedraw(owner,
   () => !!root.value?.isConnected && root.value.isShown(), () => { version.value++; });
-owner.register(watch(taskStore.version, redraw));
+owner.register(watch([taskStore.version, projectStore.version], redraw));
 useNewDay(owner, redraw);
 onActivated(catchUp);
 const view = {
@@ -44,7 +45,7 @@ function build() {
   const data = (area) => new CalendarData({
     tasks: area ? tasks.filter((t) => T(t).area === area) : tasks,
     poolLines: area ? poolLines.filter((l) => l.rec.area === area) : poolLines,
-    days, today, areaOrder: Object.keys(config.areaIcons), inProject: taskStore.inProject,
+    days, today, areaOrder: Object.keys(config.areaIcons), inProject: projectStore.inProject,
   });
   const ctx = {
     state, today, days, base: baseDate(state, today), view: state.view,

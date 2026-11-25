@@ -1,4 +1,5 @@
 import "./stubs/dom.mjs";
+import { projectStore } from "#/entities/project/index.js";
 import { test, before, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 import { Notice } from "obsidian";
@@ -49,7 +50,7 @@ beforeEach(() => {
   }));
   taskStore.put(MASTER, "- [ ] t1\n- [ ] t2");
   taskStore.putRecords(records);
-  taskStore.putProjects(structuredClone(projects));
+  projectStore.putProjects(structuredClone(projects));
   notesOf.load(structuredClone(notes));
   taskStore.version.value++;
 });
@@ -96,7 +97,7 @@ test("the window's filter: what an entry is about, with counts", async t => {
 });
 
 test("the window of a project without entries says so", async t => {
-  taskStore.putProjects({ ...structuredClone(projects), p3: { name: "Kite", stages: [] } });
+  projectStore.putProjects({ ...structuredClone(projects), p3: { name: "Kite", stages: [] } });
   const windows = testWindows();
   t.after(windows.restore);
   const el = await showJournal(windows, "p3");
@@ -235,7 +236,7 @@ test("both journal openers use the window and its note link closes it", async ()
 });
 
 test("the card of a project without entries: no last line, the count 0", async () => {
-  taskStore.putProjects({ ...structuredClone(projects), p3: { name: "Kite", stages: [] } });
+  projectStore.putProjects({ ...structuredClone(projects), p3: { name: "Kite", stages: [] } });
   const el = mount(Card, { project: "p3" });
 
   await tick();

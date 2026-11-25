@@ -7,7 +7,7 @@ import UiWindow from "#/shared/ui/UiWindow/index.vue";
 import UiField from "#/shared/ui/UiField/index.vue";
 import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
 import { filled, useWrite } from "#/shared/ui/Window/index.ts";
-import { addLink } from "#/controllers/projects.js";
+import { addLink } from "#/entities/project/index.js";
 
 const props = defineProps({ project: { type: String, required: true } });
 const emit = defineEmits(["done"]);

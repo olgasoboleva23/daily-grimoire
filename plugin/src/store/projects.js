@@ -1,6 +1,16 @@
 // The Projects tab's state: what Obsidian saves with the workspace layout and gives back after a
 // restart. `open` null = the list; a project's key = its page. `filter`: the list's status tab.
 
+import { computed } from "vue";
+import { stageIndex } from "#/entities/project/index.js";
+import { T } from "#/models/calendarData.js";
+import { taskStore } from "#/store/tasks.js";
+
+export const stageEntries = computed(() => {
+  void taskStore.version.value;
+  return stageIndex(taskStore.tasks.map(T));
+});
+
 export const DEFAULT = Object.freeze({ open: null, filter: "all" });
 
 export const FILTERS = ["all", "idea", "active", "paused", "done"];

@@ -1,4 +1,5 @@
 import "./stubs/dom.mjs";
+import { projectStore } from "#/entities/project/index.js";
 import { test, before, mock } from "node:test";
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
@@ -398,7 +399,7 @@ test("Projects tab: a GroupCard per project with open tasks (a Done one too), a 
   ].join("\n"));
   taskStore.putRecords({ t1: { name: "pick venue" }, t2: { name: "book flights" },
     t3: { name: "pack bags" }, t4: { name: "old chore" } });
-  taskStore.putProjects({
+  projectStore.putProjects({
     trip: { name: "Trip", status: "active", stages: [{ name: "Plan", tasks: ["t1", "t2"] },
       { name: "Go", tasks: ["t3"] }, { name: "Back", tasks: ["t2"] }] },
     old: { name: "Old", status: "done", stages: [{ name: "All", tasks: ["t4"] }] },
@@ -414,28 +415,28 @@ test("Projects tab: a GroupCard per project with open tasks (a Done one too), a 
   assert.doesNotMatch(panel.textContent, /book flights/);
   assert.match(el.querySelector(".ui-tabs__tab--on").textContent, /^Projects · 3$/);
   assert.equal(st.tab, "projects");
-  taskStore.putProjects(Object.fromEntries([...taskStore.projects].map(([key, p]) =>
+  projectStore.putProjects(Object.fromEntries([...projectStore.projects].map(([key, p]) =>
     [key, { ...p, showInCalendar: key !== "trip" }])));
   await vue.nextTick();
   assert.doesNotMatch(panel.textContent, /pick venue/);
   assert.match(el.querySelector(".ui-tabs__tab--on").textContent, /^Projects · 1$/);
   const day = mount({ date: "2026-11-10" }, {}, { tasks: taskStore.tasks, poolLines: [] });
   assert.match(day.el.querySelector(".ui-cal__task--open").textContent, /pick venue/);
-  taskStore.put(MASTER, ""); taskStore.putRecords({}); taskStore.putProjects({});
+  taskStore.put(MASTER, ""); taskStore.putRecords({}); projectStore.putProjects({});
 });
 
 test("Projects tab: no projects at first, then one with an open task shows its stage", async () => {
   const { taskStore } = await import("#/store/tasks.js");
   const { MASTER } = await import("#/shared/config/index.js");
-  taskStore.putProjects({});
+  projectStore.putProjects({});
   const { el } = mount({ tab: "projects" });
   assert.equal(el.querySelector(".ui-cal__stage"), null);
   taskStore.put(MASTER, "- [ ] t1");
   taskStore.putRecords({ t1: { name: "pick venue" } });
-  taskStore.putProjects({ trip: { name: "Trip", status: "active", stages: [{ name: "Plan", tasks: ["t1"] }] } });
+  projectStore.putProjects({ trip: { name: "Trip", status: "active", stages: [{ name: "Plan", tasks: ["t1"] }] } });
   await vue.nextTick();
   assert.equal(el.querySelector(".ui-cal__stage").textContent, "Plan");
-  taskStore.put(MASTER, ""); taskStore.putRecords({}); taskStore.putProjects({});
+  taskStore.put(MASTER, ""); taskStore.putRecords({}); projectStore.putProjects({});
 });
 
 test("Projects tab: two stages with one name both show", async () => {
@@ -443,8 +444,8 @@ test("Projects tab: two stages with one name both show", async () => {
   const { MASTER } = await import("#/shared/config/index.js");
   taskStore.put(MASTER, "- [ ] t1\n- [ ] t2");
   taskStore.putRecords({ t1: { name: "one" }, t2: { name: "two" } });
-  taskStore.putProjects({ x: { name: "X", status: "active", stages: [{ name: "S", tasks: ["t1"] }, { name: "S", tasks: ["t2"] }] } });
+  projectStore.putProjects({ x: { name: "X", status: "active", stages: [{ name: "S", tasks: ["t1"] }, { name: "S", tasks: ["t2"] }] } });
   const { el } = mount({ tab: "projects" });
   assert.deepEqual([...el.querySelectorAll(".ui-cal__stage")].map(g => g.textContent), ["S", "S"]);
-  taskStore.put(MASTER, ""); taskStore.putRecords({}); taskStore.putProjects({});
+  taskStore.put(MASTER, ""); taskStore.putRecords({}); projectStore.putProjects({});
 });

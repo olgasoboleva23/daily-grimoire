@@ -4,6 +4,7 @@
      entry belongs to the project it is added in (its owner). Nothing written (no title, text or
      note): a notice, the window stays. Resolves true once addNote / editNote wrote -->
 <script setup>
+import { projectStore } from "#/entities/project/index.js";
 import { computed, reactive } from "vue";
 import { FuzzySuggestModal, Notice } from "obsidian";
 import UiWindow from "#/shared/ui/UiWindow/index.vue";
@@ -23,7 +24,7 @@ const emit = defineEmits(["done"]);
 
 // the project, its stages, their tasks: { label, value: "kind:id" }
 function about(key) {
-  const p = taskStore.projects.get(key);
+  const p = projectStore.projects.get(key);
   const stages = p?.stages ?? [];
   const name = id => taskStore.records.get(id)?.name ?? id;
 

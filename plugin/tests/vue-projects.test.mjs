@@ -1,4 +1,5 @@
 import "./stubs/dom.mjs";
+import { projectStore } from "#/entities/project/index.js";
 import { test, before, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 import { Menu, Notice } from "obsidian";
@@ -40,7 +41,7 @@ beforeEach(() => {
   app.vault.getResourcePath = f => `app://x/${f.path}`;
   taskStore.put(MASTER, master);
   taskStore.putRecords(records);
-  taskStore.putProjects(projects);
+  projectStore.putProjects(projects);
 });
 
 function mount(over = {}) {
@@ -97,7 +98,7 @@ test("No cover: a block with the word project; a cover: its picture", () => {
 });
 
 test("a project page: stage buttons, the Links card with its links", () => {
-  taskStore.putProjects({ p1: { name: "Garden", status: "active", cover: null,
+  projectStore.putProjects({ p1: { name: "Garden", status: "active", cover: null,
     links: [{ title: "Seeds", url: "https://example.com/s" }], stages: [{ name: "A", tasks: [] }] } });
   const el = mount({ open: "p1" }).el;
   assert.ok(el.querySelector(".ui-project__stage [aria-label=rename]"));
@@ -143,7 +144,7 @@ test("An open key in the store shows its page; one that isn't shows the list", (
 });
 
 test("No projects: UiEmpty 'No projects yet'", () => {
-  taskStore.putProjects({});
+  projectStore.putProjects({});
   const { el } = mount();
   assert.equal(el.querySelector(".ui-empty").textContent, "✦ No projects yet");
 });
@@ -151,7 +152,7 @@ test("No projects: UiEmpty 'No projects yet'", () => {
 test("A filter that matches nothing shows UiEmpty 'No <status> projects'", () => {
   const { el } = mount({ filter: "paused" });
   assert.equal(el.querySelector(".ui-empty"), null);
-  taskStore.putProjects({ p3: { name: "Poem", status: "idea", stages: [] } });
+  projectStore.putProjects({ p3: { name: "Poem", status: "idea", stages: [] } });
   const none = mount({ filter: "paused" }).el;
   assert.equal(none.querySelector(".ui-empty").textContent, "✦ No paused projects");
   assert.deepEqual(names(none), []);
@@ -308,7 +309,7 @@ test("Edit of a project removed while its window is open writes nothing, no thro
     const { el } = mount({ open: "p1" });
     button(el.querySelector(".ui-project__notes"), "Edit").click();
     const w = await windows.next();
-    taskStore.putProjects({}); files[PROJECTS] = "{}";
+    projectStore.putProjects({}); files[PROJECTS] = "{}";
     await w.wrapper.find("textarea").setValue("late");
     await w.submit();
     await new Promise(r => setTimeout(r, 30));
@@ -359,7 +360,7 @@ test("Delete project? names the project and what is kept; closed it stays, else 
     await until(() => view.state.open === null);
     assert.equal(view.state.open, null);
     assert.equal(saved(), undefined);
-    taskStore.putProjects(JSON.parse(files[PROJECTS]));
+    projectStore.putProjects(JSON.parse(files[PROJECTS]));
     await vue.nextTick();
     assert.deepEqual(names(el), ["Shed", "Poem", "Kite"]);
   } finally { windows.restore(); }

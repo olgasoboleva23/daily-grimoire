@@ -10,26 +10,23 @@
 // deleted or renamed is read again on Obsidian's own event, at once (Dataview's index comes a
 // second later, and only once it's built), so everything drawn from the tasks draws again. The
 // folder's other files (backups) are not read.
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { app } from "#/shared/host/index.js";
 import {
   APP_NAME, applyConfig, CONFIG, MASTER, NOTES, PROJECTS, TASK_RECORDS,
 } from "#/shared/config/index.js";
 import { parseNote } from "#/shared/lib/noteLines.js";
 import { Task } from "#/models/task.js";
+import { projectStore, projects } from "#/entities/project/index.js";
 import { collection } from "#/shared/vault/index.js";
 
 let items = [];   // Master.md's items
 
-export const records = collection(TASK_RECORDS), projects = collection(PROJECTS);
+export const records = collection(TASK_RECORDS);
 
 export const notes = collection(NOTES);
 const jsonOf = path => [records, projects, notes].find(c => c.path === path);
 const PATHS = [MASTER, TASK_RECORDS, PROJECTS, NOTES, CONFIG];
-// the ids on the stages of projects.json's object (throws on a bad project, before anything is set)
-const idsOf = json => new Set(Object.values(json)
-  .flatMap(p => (p.stages ?? []).flatMap(s => s.tasks ?? [])));
-
 const refresh = () => {
   const recs = records.records;
   const rec = i => recs.get(new Task(`- ${i.text}`).id) ?? null;
@@ -45,24 +42,20 @@ const refresh = () => {
 const loadJson = (c, json) => {
   if (Object.values(json).includes(null)) throw new TypeError("a null record");
 
-  const ids = c === projects && idsOf(json);
+  if (c === projects) return projectStore.putProjects(json);
 
   c.load(json);
-  if (ids) taskStore.inProject = ids;
   refresh();
 };
 
 export const taskStore = {
-  tasks: [], pool: [], inProject: new Set(), ready: false, version: ref(0),
+  tasks: [], pool: [], ready: false, version: ref(0),
   get records() { return records.records; },
   get notes() { return notes.records; },
-  get projects() { return projects.records; },
   // the note's items set from its text (a test's, or a write the plugin just made)
   put(path, text) { items = parseNote(path, text); refresh(); },
   // the records set from tasks.json's object
   putRecords(json) { loadJson(records, json); },
-  // the projects set from projects.json's object
-  putProjects(json) { loadJson(projects, json); },
   drop(path) {
     reads.delete(path);
     const c = jsonOf(path);
@@ -74,30 +67,6 @@ export const taskStore = {
 };
 
 const ours = path => PATHS.includes(path);
-
-// Build one index for all stages. An open line takes precedence over a done line.
-const stageEntries = computed(() => {
-  void taskStore.version.value;
-  const lines = new Map();
-
-  for (const t of taskStore.tasks) {
-    const task = Task.of(t), id = task.id;
-
-    if (!id || !(task.isOpen || task.isDone)) continue;
-    if (!lines.has(id) || (task.isOpen && lines.get(id).done)) {
-      lines.set(id, { id, t, done: task.isDone });
-    }
-  }
-
-  return lines;
-});
-
-// A stage's tasks, each once, in the stage's order.
-export function stageTasks(stage) {
-  const lines = stageEntries.value;
-
-  return [...new Set(stage.tasks ?? [])].map(id => lines.get(id)).filter(Boolean);
-}
 
 const reads = new Map();   // path → its last read's number: an older read, or one of a note dropped
                            // since, is not put

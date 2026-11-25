@@ -1,4 +1,5 @@
 // Fill, copy and save the shared project prompts. Export the Start prompt's variable help.
+import { projectStore } from "#/entities/project/index.js";
 import { Notice } from "obsidian";
 import config, { CONFIG } from "#/shared/config/index.js";
 import { editJson } from "#/shared/vault/index.js";
@@ -27,10 +28,10 @@ async function copy(text) {
 }
 
 export async function copyStartPrompt(projectKey, task) {
-  const project = taskStore.projects.get(projectKey);
+  const project = projectStore.projects.get(projectKey);
 
   if (!project) return;
-  const entries = journalOf(projectKey, { projects: taskStore.projects, tasks: taskStore.records,
+  const entries = journalOf(projectKey, { projects: projectStore.projects, tasks: taskStore.records,
     notes: taskStore.notes });
 
   await copy(fillStart(config.promptStart, project, entries, task ?? ""));
