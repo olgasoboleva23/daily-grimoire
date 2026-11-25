@@ -5,7 +5,7 @@
 // a mark or a day's note set (a new record). Pure (tests/course.test.mjs).
 import { addDays, weekday } from "#/helpers/dates.js";
 
-export const MARKS = ["☐", "✅", "❌"];
+const MARKS = ["☐", "✅", "❌"];
 
 export const next = mark => MARKS[(MARKS.indexOf(mark) + 1) % MARKS.length];
 
@@ -33,10 +33,10 @@ const parts = typed => {
   return at < 0 ? [words.join(" "), ""] : [words.slice(0, at).join(" "), words.slice(at).join(" ")];
 };
 
-export const nameOf = typed => parts(typed)[0];
+const nameOf = typed => parts(typed)[0];
 
 // A unique code per medicine; stored codes keep marks connected through renames and reordering.
-export const withCodes = groups => {
+const withCodes = groups => {
   const taken = new Set(groups.map(g => g.code).filter(Boolean));
 
   return groups.map(g => {
@@ -55,7 +55,7 @@ export const withCodes = groups => {
 const labelsOf = meds => new Map(withCodes(meds.map(({ name }) => ({ name })))
   .map((m, i) => [meds[i].code, m.code]));
 
-export const medicine = g => {
+const medicine = g => {
   const [name, dose] = parts(g.name);
 
   return {
@@ -133,11 +133,11 @@ export const columns = meds => {
   });
 };
 
-export const courseDays = rec => Math.max(...columns(rec.meds).map(c => c.days));
+const courseDays = rec => Math.max(...columns(rec.meds).map(c => c.days));
 
-export const courseName = rec => rec.meds.map(m => nameOf(m.name)).join(", ");
+const courseName = rec => rec.meds.map(m => nameOf(m.name)).join(", ");
 
-export const isRunning = (rec, today) =>
+const isRunning = (rec, today) =>
   rec.start <= today && today < addDays(rec.start, courseDays(rec));
 
 // the day by its anchors (a time of day, a meal): what to take then, the doses
@@ -286,7 +286,7 @@ export const parseRanges = input => {
   return merged.length ? merged : DEFAULT_RANGES;
 };
 
-export const formatRanges = ranges =>
+const formatRanges = ranges =>
   ranges.map(r => (r.from === r.to ? `${r.from}` : `${r.from}-${r.to}`)).join(", ");
 
 export const inRanges = (ranges, day) => ranges.some(r => day >= r.from && day <= r.to);

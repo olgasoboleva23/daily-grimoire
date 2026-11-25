@@ -211,7 +211,7 @@ export async function askDeleteStage(app, key, index, name, ask = (...a) => Form
 }
 
 // web links of a project: [{ title, url }], none in the older projects
-export const isWebUrl = u => /^https?:\/\/\S+$/i.test(u);
+const isWebUrl = u => /^https?:\/\/\S+$/i.test(u);
 
 export async function askAddLink(app, key, ask = (...a) => Form.ask(...a)) {
   const v = await ask(app, "✦ New link", [

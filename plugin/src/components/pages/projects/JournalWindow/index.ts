@@ -6,7 +6,7 @@ import { taskStore } from "#/store/tasks.js";
 
 // A project's journal in an Obsidian window (like Form): the timeline, its filter and + Entry,
 // drawn by index.vue; its look: index.scss (block ui-journal). Opening a linked note closes it.
-export class JournalWindow extends Modal {
+class JournalWindow extends Modal {
   private owner = new Component();   // the window's Vue app unmounts with it
   private project: string;
 

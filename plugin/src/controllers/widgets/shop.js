@@ -14,7 +14,7 @@ import { taskStore } from "#/store/tasks.js";
 import { AudioEngine } from "#/helpers/sounds.js";
 import { app } from "#/helpers/app.js";
 
-export function earned() {
+function earned() {
   let gold = 0;
 
   for (const t of taskStore.tasks.map(T)) {
@@ -27,9 +27,9 @@ export function earned() {
 // a purchase's cost: the line's last field ("… | 1984 | 20" costs 20; 2,5 or 1 000 too)
 const cost = text => amount(text.split("|").at(-1)) ?? 0;
 
-export const spent = lines => [...lines].reduce((a, l) => a + cost(l), 0);
+const spent = lines => [...lines].reduce((a, l) => a + cost(l), 0);
 
-export const balance = dv =>
+const balance = dv =>
   earned() - spent([...dv.pages(`"${PURCHASES}"`).file.lists].map(l => l.text));
 
 export async function loadShop({ dv }) {

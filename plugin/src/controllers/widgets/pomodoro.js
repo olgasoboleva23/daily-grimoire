@@ -27,7 +27,7 @@ export const ICON = {
 };
 
 /** @returns {Promise<PomodoroData>} */
-export const load = () => readJson(POMODORO, {});
+const load = () => readJson(POMODORO, {});
 
 // the saved settings, mini and stats, and today's session (another day's starts over)
 export async function loadPomodoro() {
@@ -48,7 +48,7 @@ export const bell = () => chime.play({ rate: 0.7, gain: 0.35, duration: 3 });
 // the meditation's music (00 System/Assets/winx music/meditation-<name>.flac, seamless loops):
 // the one to play now — "<name>|<start>" for a running meditation with music, not muted — or null
 /** @type {Record<string, string>} */
-export const MUSIC = { pad: "Pad", bells: "Bells", harp: "Harp" };
+const MUSIC = { pad: "Pad", bells: "Bells", harp: "Harp" };
 
 /** @param {Timer} timer @param {boolean} muted */
 export const musicKey = (timer, muted = isMuted()) =>
