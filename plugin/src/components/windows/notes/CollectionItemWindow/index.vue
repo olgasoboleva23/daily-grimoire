@@ -1,7 +1,7 @@
 <!-- ✦ New watch item / New read item / New game (the commands of the same names): Title, a Type
      (watch, read) or a Genre (game), the Status (its first lit), a Rating 1–10 (optional: rated
      later). Create greyed until a title, a status and a type. Resolves the new note's file
-     (createNote, in `dir`); the command opens it -->
+     (createDoc, in `dir`); the command opens it -->
 <script setup>
 import { computed, reactive } from "vue";
 import UiWindow from "#/shared/ui/UiWindow/index.vue";
@@ -9,8 +9,7 @@ import UiField from "#/shared/ui/UiField/index.vue";
 import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
 import UiFieldChoice from "#/shared/ui/UiFieldChoice/index.vue";
 import { filled, useWrite } from "#/shared/ui/Window/index.ts";
-import { createNote } from "#/controllers/notes.js";
-import { KINDS } from "#/models/kinds.js";
+import { createDoc, KINDS } from "#/entities/doc/index.js";
 
 const props = defineProps({
   kind: { type: String, required: true },   // watch, read, game
@@ -34,7 +33,7 @@ const { busy, run } = useWrite(emit);
     submit="Create"
     :ready="ready"
     :busy="busy"
-    @submit="run(() => createNote(kind, v, props.dir))"
+    @submit="run(() => createDoc(kind, v, props.dir))"
   >
     <UiField name="Title">
       <UiFieldText v-model="v.title" placeholder="title" />

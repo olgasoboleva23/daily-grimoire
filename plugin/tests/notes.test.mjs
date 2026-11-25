@@ -1,15 +1,13 @@
 // Note contents, collection choices and journal creation in an in-memory vault.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { Note, notePath } from "#/models/note.js";
-import { KINDS, daily } from "#/models/kinds.js";
-import { createJournal } from "#/controllers/journals.js";
+import { Doc, docPath, createDoc, KINDS, daily } from "#/entities/doc/index.js";
 import { vault } from "./stubs/vault.mjs";
 
-const make = (kind, v, today = "2026-10-29") => new Note(KINDS[kind].note(v, today)).text;
+const make = (kind, v, today = "2026-10-29") => new Doc(KINDS[kind].note(v, today)).text;
 
 test("a note from data: properties, a title when given, the sections", () => {
-  const note = new Note({
+  const note = new Doc({
     props: { type: "x", name: 'The "Tea" Shop', n: 7, empty: null, tags: [], list: ["a", "b"] },
     title: "T", sections: { One: "", Two: "- [ ] go" },
   });
@@ -70,9 +68,9 @@ test("a recipe and a work task: their properties and sections", () => {
 
 test("note paths sanitize titles and add numbers when a name is taken", () => {
   const taken = new Set(["03 Resources/Collections/Readlist/Moon Tales.md"]);
-  assert.equal(notePath(KINDS.read.folder, "Moon: Tales?", p => taken.has(p)),
+  assert.equal(docPath(KINDS.read.folder, "Moon: Tales?", p => taken.has(p)),
     "03 Resources/Collections/Readlist/Moon Tales 1.md");
-  assert.equal(notePath(KINDS.watch.folder, "  ", () => false),
+  assert.equal(docPath(KINDS.watch.folder, "  ", () => false),
     "03 Resources/Collections/Watchlist/Untitled.md");
 });
 
@@ -122,7 +120,7 @@ test("collection types and statuses: the windows' choices, the first status the 
 });
 
 test("a daily note: its date, the day as the title, Notes and the XP log", () => {
-  assert.equal(new Note(daily("2026-11-02", "Monday, November 2")).text, `---
+  assert.equal(new Doc(daily.note({ date: "2026-11-02", title: "Monday, November 2" })).text, `---
 date: 2026-11-02
 ---
 
@@ -136,7 +134,7 @@ date: 2026-11-02
 });
 
 test("YAML strings are quoted when they could be read as another type", () => {
-  const text = new Note({
+  const text = new Doc({
     props: { a: "true", b: "null", c: "123", d: "no", e: 5, f: "Tea 2" }, title: "T",
   }).text;
   assert.match(text, /^a: "true"$/m);
@@ -145,7 +143,7 @@ test("YAML strings are quoted when they could be read as another type", () => {
   assert.match(text, /^d: "no"$/m);
   assert.match(text, /^e: 5$/m);
   assert.match(text, /^f: Tea 2$/m);
-  const more = new Note({ props: { a: "0x10", b: "1e3", c: "2026-11-02", d: "y" } }).text;
+  const more = new Doc({ props: { a: "0x10", b: "1e3", c: "2026-11-02", d: "y" } }).text;
   assert.match(more, /^a: "0x10"$/m);
   assert.match(more, /^b: "1e3"$/m);
   assert.match(more, /^c: 2026-11-02$/m);   // a date stays a date
@@ -159,10 +157,10 @@ test("work task filenames use the next number and the lowercased title", () => {
   assert.equal(KINDS.work.file({ title: "First" }, []), "1_first");
 });
 
-test("createJournal returns the note file with cleaned reasons and a numeric lag", async () => {
+test("createDoc returns the note file with cleaned reasons and a numeric lag", async () => {
   globalThis.window = { moment: () => ({ format: () => "2026-11-20" }) };
   const { files } = vault();
-  const file = await createJournal({
+  const file = await createDoc(KINDS.journal, {
     title: "Test journal", reasons: ["  Mint ", "", "  ", " Tea"], lag: 2,
   });
 

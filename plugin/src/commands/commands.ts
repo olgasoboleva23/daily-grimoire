@@ -1,11 +1,10 @@
 import { FuzzySuggestModal, Platform, type Plugin, type TFile } from "obsidian";
 import { APP_NAME } from "#/shared/config/index.js";
-import { KINDS } from "#/models/kinds.js";
+import { createDoc, KINDS } from "#/entities/doc/index.js";
 import { mirrorMobileConfig } from "#/controllers/mobileConfig.js";
 import { newTask } from "#/components/windows/tasks/TaskWindow/open.js";
 import { migrateTasks } from "#/migrations/tasks.js";
 import { openSettings } from "#/components/windows/settings/SettingsWindow/open.js";
-import { createNote } from "#/controllers/notes.js";
 import { openNewProject } from "#/components/windows/projects/ProjectWindow/open.js";
 import { addMarketItem } from "#/components/windows/market/MarketItemWindow/open.js";
 import {
@@ -28,7 +27,7 @@ export function registerCommands(plugin: Plugin) {
   // dates
   add("new-task", "New task", async () => void await newTask());
 
-  // a watch / read / game / recipe / work task note or a free journal (models/kinds.js), in its
+  // a watch / read / game / recipe / work task note or a free journal, in its
   // folder, opened in a new tab: a watch / read / game item and a journal in their windows, a
   // recipe and a work task asked only their title
   const newNote = async (key: string, kind: any, dir: string) => {
@@ -39,7 +38,7 @@ export function registerCommands(plugin: Plugin) {
       submit: "Create",
     });
 
-    return title && createNote(kind, { title }, dir);
+    return title && createDoc(kind, { title }, dir);
   };
 
   for (const [key, kind] of Object.entries(KINDS) as [string, any][]) {

@@ -14,7 +14,7 @@ import { pickRecipeNote } from "#/components/windows/recipes/DishFormWindow/pick
 import { Notice } from "obsidian";
 import { foodChoices, foodWeek } from "#/models/food.js";
 import { DISHES, FOOD_DATA, FOOD_LOG, MARKET_NOTE, MARKET_RECORDS } from "#/shared/config/index.js";
-import { KINDS } from "#/models/kinds.js";
+import { KINDS } from "#/entities/doc/index.js";
 import { vault } from "./stubs/vault.mjs";
 
 globalThis.window = { moment: () => ({ format: () => "2026-11-20" }) };

@@ -14,7 +14,7 @@ before(async () => {
   window.moment = () => ({ format: () => "2026-11-20" });
   ({ openWindow } = await import("#/shared/ui/Window/index.ts"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
-  ({ KINDS } = await import("#/models/kinds.js"));
+  ({ KINDS } = await import("#/entities/doc/index.js"));
   ({ taskStore } = await import("#/store/tasks.js"));
   ({ registerCommands } = await import("#/commands/commands.ts"));
   const load = async name => (await import(`#/components/windows/${name}/index.vue`)).default;

@@ -1,9 +1,8 @@
 // Picks a Markdown note or creates one from the recipe template for the dish.
 import { prepareFuzzySearch } from "obsidian";
 import { Search } from "#/shared/ui/Search/index.ts";
-import { createNote } from "#/controllers/notes.js";
+import { createDoc, KINDS } from "#/entities/doc/index.js";
 import { app } from "#/shared/host/index.js";
-import { KINDS } from "#/models/kinds.js";
 
 export async function pickRecipeNote(dish = "") {
   const notes = app.vault.getMarkdownFiles();
@@ -18,5 +17,5 @@ export async function pickRecipeNote(dish = "") {
   }, (f, el) => el.createSpan({ text: f.isNew ? `+ new recipe note: ${f.name}` : f.path }));
 
   if (!pick?.isNew) return pick?.path ?? null;
-  return (await createNote(KINDS.recipe, { title: pick.name }, KINDS.recipe.folder)).path;
+  return (await createDoc(KINDS.recipe, { title: pick.name })).path;
 }

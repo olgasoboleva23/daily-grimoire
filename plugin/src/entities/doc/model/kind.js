@@ -1,6 +1,6 @@
 // The notes made by the Daily Grimoire commands ("Daily Grimoire: New …"): their choices (a
 // watch / read / game item's types and statuses, for its window) and their contents.
-// note(values, today) gives Note its properties, body and sections; the file holds the title.
+// note(values, today) gives Doc its properties, body and sections; the file holds the title.
 
 const pairs = list => list.map(([label, value]) => ({ label, value }));
 
@@ -101,6 +101,9 @@ export const KINDS = {
 };
 
 // a daily note (the dashboard's ✦ Open makes it): the day's date, "Monday, November 2" as the title
-export const daily = (date, title) => ({
-  props: { date }, title, sections: { "📝 Notes": "", "🎯 XP Log": "-" },
-});
+export const daily = {
+  link: (folder, { date }) => folder ? `${folder}/${date}` : date,
+  note: ({ date, title }) => ({
+    props: { date }, title, sections: { "📝 Notes": "", "🎯 XP Log": "-" },
+  }),
+};

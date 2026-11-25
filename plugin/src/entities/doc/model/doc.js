@@ -1,7 +1,10 @@
 // A note the plugin makes, from plain data: its properties (YAML), a # title (only the daily note
 // has one: its name is the date; the rest are named by their file, shown by Obsidian's inline
 // title), a body and its ## sections.
-//   new Note({ props: { type: "recipe", tags: [] }, sections: { Steps: "", Notes: "" } }).text
+//   new Doc({ props: { type: "recipe", tags: [] }, sections: { Steps: "", Notes: "" } }).text
+import { todayYmd } from "#/shared/lib/dates.js";
+import { docExists, fileNames, writeDoc } from "./repository/docs.js";
+
 // written as is; anything else in "quotes"
 const PLAIN = /^[\p{L}\p{N}][\p{L}\p{N} _.,!?()&'-]*$/u;
 // bare only when YAML can read it as nothing but text: a word first (not true / no / null…),
@@ -15,7 +18,7 @@ const prop = (k, v) =>
     : `${k}: []`)
   : `${k}: ${value(v)}`;
 
-export class Note {
+export class Doc {
   constructor({ props = {}, title = null, body = "", sections = {} }) {
     Object.assign(this, { props, title, body, sections });
   }
@@ -34,10 +37,19 @@ export class Note {
 }
 
 // in the folder, without characters a file name can't have; " 1", " 2"… when taken (`exists(path)`)
-export function notePath(folder, title, exists) {
+export function docPath(folder, title, exists) {
   const name = title.replace(/[\\/:*?"<>|#^[\]]/g, "").trim() || "Untitled";
   let path = `${folder}/${name}.md`;
 
   for (let i = 1; exists(path); i++) path = `${folder}/${name} ${i}.md`;
   return path;
+}
+
+// Create a dated daily note at its fixed path, or the next free file for a command's template.
+export async function createDoc(kind, values, dir = kind.folder) {
+  const doc = new Doc(kind.note(values, todayYmd()));
+  const name = kind.file ? kind.file(values, fileNames(dir)) : values.title;
+  const path = kind.link ? `${kind.link(dir, values)}.md` : docPath(dir, name, docExists);
+
+  return writeDoc(dir, path, doc.text);
 }
