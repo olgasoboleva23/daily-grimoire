@@ -26,7 +26,10 @@ const WEEKDAYS_EN = ["monday", "tuesday", "wednesday", "thursday", "friday", "sa
 const RULE = /^every (?:(\d+) )?(day|week|month|year)s?(?: on (.+?))?(?: when done)?$/i;
 
 export const projectRepeats = (rule, from, until) => {
-  const m = rule.trim().match(RULE);
+  const text = rule.trim();
+  const weekly = /^every weekday(?: when done)?$/i.test(text)
+    ? "every week on Monday, Tuesday, Wednesday, Thursday, Friday" : text;
+  const m = weekly.match(RULE);
 
   if (!m) return [];
   const n = +(m[1] ?? 1), unit = m[2].toLowerCase(), on = m[3]?.toLowerCase() ?? "";

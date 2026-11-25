@@ -130,3 +130,8 @@ test("MP by the day of the cycle: period 1, after it 3, the fertile days and ovu
   assert.equal(mpLine(on(12)), "MP 4/4 · ovulation");
   assert.equal(mpTable(on(7)), "day 1–6 · period · MP 1\nday 7–10 · follicular · MP 3\nday 11–17 · ovulation · MP 4\nday 18–25 · luteal · MP 3\nday 26–30 · pre-period · MP 2");
 });
+
+test("weekday repeats skip Saturday and Sunday", () => {
+  assert.deepEqual(projectRepeats("every weekday", "2026-11-26", "2026-12-01"),
+    ["2026-11-27", "2026-11-30", "2026-12-01"]);
+});
