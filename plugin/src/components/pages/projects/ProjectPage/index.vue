@@ -11,7 +11,7 @@ import UiProgress from "#/shared/ui/UiProgress/index.vue";
 import UiButton from "#/shared/ui/UiButton/index.vue";
 import UiCard from "#/shared/ui/UiCard/index.vue";
 import { askValue, confirm, openWindow } from "#/shared/ui/Window/index.ts";
-import { openEditProject } from "#/components/windows/projects/ProjectWindow/open.js";
+import { openEditProject } from "#/entities/project/index.js";
 import LinkWindow from "#/components/windows/projects/LinkWindow/index.vue";
 import { app } from "#/shared/host/index.js";
 import { addStage, saveProject, readProject, removeLink } from "#/entities/project/index.js";

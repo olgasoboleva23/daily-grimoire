@@ -10,7 +10,7 @@ import UiField from "#/shared/ui/UiField/index.vue";
 import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
 import UiFieldChoice from "#/shared/ui/UiFieldChoice/index.vue";
 import { filled, useWrite } from "#/shared/ui/Window/index.ts";
-import { editProject, newProject, STATUSES } from "#/entities/project/index.js";
+import { editProject, newProject, STATUSES } from "../../model/project.js";
 
 const props = defineProps({
   project: { type: String, default: null },   // edit: its key

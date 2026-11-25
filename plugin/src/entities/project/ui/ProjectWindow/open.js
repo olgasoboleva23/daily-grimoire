@@ -3,7 +3,8 @@
 // now, so one changed meanwhile is not overwritten. Resolve to what the window gives, null closed.
 import { openWindow } from "#/shared/ui/Window/index.ts";
 import { openUi } from "#/shared/host/index.js";
-import { changedProject, readProject } from "#/entities/project/index.js";
+import { changedProject } from "../../model/project.js";
+import { readProject } from "../../model/repository/projects.js";
 import ProjectWindow from "./index.vue";
 
 export async function openNewProject() {

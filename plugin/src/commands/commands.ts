@@ -5,7 +5,7 @@ import { mirrorMobileConfig } from "#/controllers/mobileConfig.js";
 import { newTask } from "#/components/windows/tasks/TaskWindow/open.js";
 import { migrateTasks } from "#/migrations/tasks.js";
 import { openSettings } from "#/components/windows/settings/SettingsWindow/open.js";
-import { openNewProject } from "#/components/windows/projects/ProjectWindow/open.js";
+import { openNewProject } from "#/entities/project/index.js";
 import { addMarketItem } from "#/components/windows/market/MarketItemWindow/open.js";
 import {
   openEditCourse, openNewCourse, pickCourse,

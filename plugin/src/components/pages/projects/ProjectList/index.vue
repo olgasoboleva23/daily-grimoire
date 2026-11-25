@@ -12,7 +12,7 @@ import UiProgress from "#/shared/ui/UiProgress/index.vue";
 import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
 import UiTabs from "#/shared/ui/UiTabs/index.vue";
 import { openWindow } from "#/shared/ui/Window/index.ts";
-import { openNewProject } from "#/components/windows/projects/ProjectWindow/open.js";
+import { openNewProject } from "#/entities/project/index.js";
 import PromptsWindow from "#/components/windows/projects/PromptsWindow/index.vue";
 import { app, tasksApi } from "#/shared/host/index.js";
 import { tickTask } from "#/controllers/tasks.js";

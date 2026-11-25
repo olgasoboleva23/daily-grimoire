@@ -8,3 +8,5 @@ export {
   renameStage, addLink, removeLink, addStage, addTaskToStage, stageIndex,
   stageTasks, openProjects, removeProjectRecord, removeStageRecord,
 } from "./model/project.js";
+
+export { openEditProject, openNewProject } from "./ui/ProjectWindow/open.js";
