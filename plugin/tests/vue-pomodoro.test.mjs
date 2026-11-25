@@ -4,7 +4,7 @@ import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { vault } from "./stubs/vault.mjs";
 import { POMODORO } from "#/helpers/paths.js";
 
-let mount, nextTick, PomodoroTimer, Timer;
+let mount, nextTick, PomodoroTimer;
 const NOW = 1_800_000_000_000;
 before(async () => {
   GlobalRegistrator.register();
@@ -13,13 +13,11 @@ before(async () => {
   ({ mount } = await import("@vue/test-utils"));
   ({ nextTick } = await import("vue"));
   PomodoroTimer = (await import("#/components/pages/dashboard/widgets/pomodoro/index.vue")).default;
-  ({ Timer } = await import("#/models/timer.js"));
 });
 after(() => mock.timers.reset());
 
 // a 25/5 pomodoro on a pomodoro.json in memory: json() is what the saves wrote
 const draw = (saved = { settings: { focusMin: 25, breakMin: 5 } }) => {
-  new Timer().stop();   // no running session left over from another test
   const { files, io } = vault({ [POMODORO]: "{}" });
   const json = () => JSON.parse(files[POMODORO]);
   return { w: mount(PomodoroTimer, { props: { state: { data: { saved, current: null } } } }), json, io };
@@ -132,7 +130,6 @@ test("unmounted: the clock stops ticking (no more timers)", async () => {
 test("a save that fails: a finished session says its minutes weren't saved; a click's goes to the app", async () => {
   const { Notice } = await import("obsidian");
   const quiet = mock.method(console, "error", () => {});
-  new Timer().stop();
   const errors = [];
   const { io } = vault({ [POMODORO]: "{}" });
   const w = mount(PomodoroTimer, {
@@ -198,4 +195,17 @@ test("two pomodoros at once: ⏸, ↺, ⏭ and ▶ in one show in the other at o
   assert.deepEqual([json().stats.sessions - sessions, json().stats.minutes - minutes], [1, 25]);
   assert.deepEqual([w, other].map(x => x.find(".ui-pomodoro__session").text()), ["Session 2", "Session 2"]);
   w.unmount(); other.unmount();
+});
+
+
+test("reopening the last closed view resumes the same live session", async () => {
+  const { w, json } = draw();
+  await w.find(".ui-pomodoro__btn--play").trigger("click"); await saved();
+  w.unmount();
+  mock.timers.tick(60_000);
+  const other = mount(PomodoroTimer,
+    { props: { state: { data: { saved: json(), current: json().current } } } });
+  await nextTick();
+  assert.equal(other.find(".ui-pomodoro__time").text(), "24:00");
+  other.unmount();
 });

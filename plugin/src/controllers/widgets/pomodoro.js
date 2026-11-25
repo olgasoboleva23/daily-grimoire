@@ -1,8 +1,7 @@
 // @ts-check
 // The pomodoro's controller: its state in 00 System/Data/pomodoro.json (settings, the current
 // session, the mini row, today's stats); the end-of-session sound, the lengths' window and the
-// save. The markup and the ticking: widgets/pomodoro (a running session lives on in
-// models/timer.js through a remount; the ticking stops when the block goes).
+// save. The shared running session and clock live in widgets/pomodoro.
 import { todayYmd } from "#/helpers/dates.js";
 import { readJson } from "#/helpers/files.js";
 import { AudioEngine, isMuted } from "#/helpers/sounds.js";
@@ -109,7 +108,8 @@ export function save({ settings, current, mini }, min = 0, kind = "focus") {
 
     try {
       const data = addStats(await load(), 0, todayYmd());
-      Object.assign(data, { settings, current, mini });
+      Object.assign(data, { settings, current });
+      if (mini !== undefined) data.mini = mini;
       for (const s of sessions) addStats(data, s.min, todayYmd(), s.kind);
       await app.vault.adapter.write(POMODORO, JSON.stringify(data, null, 2));
     } catch (e) {

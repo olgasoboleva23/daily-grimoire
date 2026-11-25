@@ -19,18 +19,6 @@ const DEFAULTS = { focusMin: 25, breakMin: 5, meditationMin: 10 };
 /** @type {Record<SessionType, "focusMin" | "breakMin" | "meditationMin">} */
 const LENGTH = { focus: "focusMin", break: "breakMin", meditation: "meditationMin" };
 
-// the running session: { sessionType, sessions, baseElapsed, startedAt }, in memory only (gone
-// after a restart or a reload); shared by every pomodoro shown (two tabs)
-/** @type {{ sessionType: SessionType, sessions: number, baseElapsed: number,
- *  startedAt: number } | null} */
-let live = null;
-// the pomodoros shown: each hears the changes another makes (on mount; off on unmount)
-/** @type {Set<(t: Timer) => void>} */
-const listeners = new Set();
-
-/** @param {(t: Timer) => void} fn */
-export function listen(fn) { listeners.add(fn); return () => listeners.delete(fn); }
-
 // focus or break and its time: a stopped session counts `elapsed` (ms), a running one also the time
 // since `start`
 export class Timer {
@@ -46,11 +34,6 @@ export class Timer {
     this.sessions = current?.sessions ?? 0;
     this.elapsed  = current?.elapsed ?? 0;
     this.start    = 0;
-    // picked up after a redraw
-    if (live?.sessionType === this.type) {
-      this.elapsed = live.baseElapsed;
-      this.start = live.startedAt;
-    }
   }
   get running()   { return this.start > 0; }
   get duration()  { return this.settings[LENGTH[this.type]] * 60_000; }
@@ -83,24 +66,11 @@ export class Timer {
   play() {
     if (this.running) return;
     this.start = this.now();
-    live = {
-      sessionType: this.type, sessions: this.sessions, baseElapsed: this.elapsed,
-      startedAt: this.start,
-    };
-  }
-  // tell the other pomodoros shown: they take this one's session, running or not
-  share() { for (const fn of listeners) fn(this); }
-  // another's session: its mode, stars, clock and lengths
-  /** @param {Timer} t */
-  take(t) {
-    Object.assign(this, {
-      type: t.type, sessions: t.sessions, elapsed: t.elapsed, start: t.start, settings: t.settings,
-    });
   }
   pause() { if (!this.running) return; this.elapsed += this.now() - this.start; this.stop(); }
   // a session of `type` from zero, stopped
   reset(type = this.type) { this.type = type; this.elapsed = 0; this.stop(); }
-  stop()  { this.start = 0; live = null; }
+  stop()  { this.start = 0; }
   // the session ended: a focus counts, then the other kind from zero (stopped); true when it
   // was a focus. A meditation starts over, stopped, and counts no star
   next() {
