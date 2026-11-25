@@ -28,7 +28,7 @@ before(async () => {
   ({ testWindows } = await import("./stubs/windows.mjs"));
   ({ openDishForm } = await import("#/components/windows/recipes/DishFormWindow/open.js"));
   ({ loadRecipes } = await import("#/controllers/dishes.js"));
-  ({ openCart } = await import("#/components/windows/recipes/CartWindow/open.js"));
+  ({ openCart } = await import("#/features/add-to-list/index.js"));
   config.dishTypes = TYPES;
   windows = testWindows();
 });

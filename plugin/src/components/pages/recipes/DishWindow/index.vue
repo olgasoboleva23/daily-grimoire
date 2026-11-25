@@ -10,7 +10,7 @@ import { confirm, WINDOW } from "#/shared/ui/Window/index.ts";
 import { openNote, app } from "#/shared/host/index.js";
 import UiWindow from "#/shared/ui/UiWindow/index.vue";
 import { openDishForm } from "#/components/windows/recipes/DishFormWindow/open.js";
-import { openCart } from "#/components/windows/recipes/CartWindow/open.js";
+import { openCart } from "#/features/add-to-list/index.js";
 import { loadRecipes } from "#/controllers/dishes.js";
 import { removeDish } from "#/entities/dish/index.js";
 

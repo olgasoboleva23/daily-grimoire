@@ -6,7 +6,7 @@ import { ref } from "vue";
 import UiWindow from "#/shared/ui/UiWindow/index.vue";
 import UiField from "#/shared/ui/UiField/index.vue";
 import { useWrite } from "#/shared/ui/Window/index.ts";
-import { deleteStage } from "#/pages/projects/index.js";
+import { deleteStage } from "../../operation/deleteStage.js";
 
 const props = defineProps({
   project: { type: String, required: true },

@@ -8,7 +8,8 @@ import { PROJECTS } from "#/shared/config/index.js";
 import {
   createProject, saveProject, addStage, addTaskToStage, newProject, editProject, readStage, addLink, removeLink, readProject, renameStage,
 } from "#/entities/project/index.js";
-import { deleteStage, deleteProject } from "#/pages/projects/index.js";
+import { deleteStage } from "#/pages/projects/operation/deleteStage.js";
+import { deleteProject } from "#/pages/projects/operation/deleteProject.js";
 
 const MASTER = "00 System/Data/Tasks/Master.md";
 const RECORDS = "00 System/Data/Tasks/tasks.json";

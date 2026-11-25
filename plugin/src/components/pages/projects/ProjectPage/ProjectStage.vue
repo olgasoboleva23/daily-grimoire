@@ -6,8 +6,8 @@ import { computed, ref } from "vue";
 import UiButton from "#/shared/ui/UiButton/index.vue";
 import UiCard from "#/shared/ui/UiCard/index.vue";
 import { askValue, openWindow } from "#/shared/ui/Window/index.ts";
-import DeleteStageWindow from "#/components/windows/projects/DeleteStageWindow/index.vue";
 import { newTask } from "#/features/new-task/index.js";
+import { DeleteStageWindow } from "#/pages/projects/index.js";
 import { addTaskToStage, readStage, renameStage } from "#/entities/project/index.js";
 import ProjectTask from "./ProjectTask.vue";
 

@@ -5,7 +5,7 @@ import { loadRecipes } from "#/controllers/dishes.js";
 import { editProduct, foodProducts, readMarketItem } from "#/entities/product/index.js";
 import { addDish, editDish, readDish, removeDish } from "#/entities/dish/index.js";
 import { loadCelestialMarket } from "#/controllers/widgets/market.js";
-import { productsToList } from "#/features/add-to-list/index.js";
+import { productsToList } from "#/features/add-to-list/operation/productsToList.js";
 import { addToMarket } from "#/features/add-to-list/operation/addItem.js";
 import { loadFood } from "#/controllers/food.js";
 import { Search } from "#/shared/ui/Search/index.ts";

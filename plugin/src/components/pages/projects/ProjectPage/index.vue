@@ -4,7 +4,7 @@
      each with Edit (a one-field window). One column on the phone -->
 <script setup>
 import {
-  projectStore, stageTasks, openEditProject, addStage, saveProject, readProject, removeLink,
+  projectStore, stageTasks, openEditProject, addStage, saveProject, removeLink,
 } from "#/entities/project/index.js";
 import { computed, inject, ref } from "vue";
 import { Menu } from "obsidian";
@@ -12,10 +12,10 @@ import UiAddForm from "#/shared/ui/UiAddForm/index.vue";
 import UiProgress from "#/shared/ui/UiProgress/index.vue";
 import UiButton from "#/shared/ui/UiButton/index.vue";
 import UiCard from "#/shared/ui/UiCard/index.vue";
-import { askValue, confirm, openWindow } from "#/shared/ui/Window/index.ts";
+import { askValue, openWindow } from "#/shared/ui/Window/index.ts";
 import LinkWindow from "#/components/windows/projects/LinkWindow/index.vue";
 import { app } from "#/shared/host/index.js";
-import { deleteProject } from "#/pages/projects/index.js";
+import { confirmDeleteProject } from "#/pages/projects/index.js";
 import { FILTERS, stageEntries } from "#/store/projects.js";
 import { coverUrl } from "../cover.js";
 import ProjectStatus from "../ProjectStatus/index.vue";
@@ -69,18 +69,10 @@ async function newStage(name) {
   stageName.value = "";
 }
 
-// asked with the project as it is on disk; one changed meanwhile is not deleted (deleteProject)
 async function remove() {
   const key = page.value.key;
-  const before = await readProject(key);
 
-  if (!before) return;
-  const kept = "Journal entries are deleted. Tasks, calendar and history stay."
-    + (before.cover ? " The cover goes to the trash." : "");
-  const yes = await confirm("Delete project?",
-    [{ name: "Project", text: before.name }, { name: "Kept", text: kept }]);
-
-  if (yes && await deleteProject(key, before) && state.open === key) projects.open(null);
+  if (await confirmDeleteProject(key) && state.open === key) projects.open(null);
 }
 </script>
 
