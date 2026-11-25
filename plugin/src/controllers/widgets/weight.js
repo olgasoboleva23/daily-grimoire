@@ -7,7 +7,7 @@ import { addDays, dm, todayYmd } from "#/helpers/dates.js";
 import { WeightLog } from "#/models/weightLog.js";
 import { readJournals } from "#/controllers/journals.js";
 import { cycleLog } from "./cycle.js";
-import { chartColor, chartScale } from "#/helpers/chart.js";
+import { chartColor, chartScale } from "#/shared/lib/chart.js";
 import { edit } from "#/helpers/files.js";
 import { amount } from "#/helpers/format.js";
 import { WEIGHT } from "#/helpers/paths.js";

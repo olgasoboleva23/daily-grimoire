@@ -9,13 +9,14 @@
     "build": "node esbuild.config.mjs",
     "dev": "node esbuild.config.mjs --watch",
     "check": "vue-tsc",
-    "lint": "eslint src && stylelint \"src/**/*.scss\" && npm run knip -- --no-exit-code",
+    "lint": "eslint src && stylelint \"src/**/*.scss\" && npm run knip -- --no-exit-code && steiger ./src",
     "test": "node --test --experimental-strip-types --import ./tests/stubs/register.mjs tests/*.test.mjs",
     "knip": "knip"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
     "@eslint/json": "^0.14.0",
+    "@feature-sliced/steiger-plugin": "0.8.2",
     "@happy-dom/global-registrator": "^21.0.4",
     "@vue/test-utils": "^2.5.1",
     "esbuild": "^0.28.2",
@@ -25,6 +26,7 @@
     "knip": "^6.48.0",
     "obsidian": "^1.14.4",
     "sass": "^1.107.0",
+    "steiger": "0.10.0",
     "stylelint": "^17.16.0",
     "stylelint-config-standard-scss": "^17.0.0",
     "typescript": "^6.0.3",

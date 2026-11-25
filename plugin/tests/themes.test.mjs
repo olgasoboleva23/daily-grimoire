@@ -11,7 +11,7 @@ import { useTheme } from "#/controllers/theme.js";
 import { useTaskStore, taskStore } from "#/store/tasks.js";
 import { setApp } from "#/helpers/app.js";
 import { CONFIG, THEME_IMAGES } from "#/helpers/paths.js";
-import { chartColor } from "#/helpers/chart.js";
+import { chartColor } from "#/shared/lib/chart.js";
 
 GlobalRegistrator.register();
 after(() => { applyConfig(); GlobalRegistrator.unregister(); });

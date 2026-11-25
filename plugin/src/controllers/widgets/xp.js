@@ -10,7 +10,7 @@ import { taskStore } from "#/store/tasks.js";
 import { levelInfo, taskXp, xpLegend } from "#/models/xp.js";
 import { mana, mpLine, mpTable, vitals } from "#/models/vitals.js";
 import { cycleLog } from "./cycle.js";
-import { chartColor, chartScale } from "#/helpers/chart.js";
+import { chartColor, chartScale } from "#/shared/lib/chart.js";
 
 export async function loadLevelToday({ dv }) {
   const { xpMap } = config;

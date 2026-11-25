@@ -9,7 +9,8 @@
     "skipLibCheck": true,
     "noEmit": true,
     "lib": ["DOM", "ES2022"],
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "paths": { "#/*": ["./src/*"] }
   },
   "include": ["src"]
 }
