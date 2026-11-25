@@ -10,7 +10,7 @@ let mount, testWindows, registerCommands, taskStore, PageNavigation;
 before(async () => {
   ({ mount } = await import("@vue/test-utils"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
-  ({ registerCommands } = await import("#/commands/commands.ts"));
+  ({ registerCommands } = await import("#/app/commands.ts"));
   ({ taskStore } = await import("#/entities/task/index.js"));
   PageNavigation = (await import("#/components/app/PageNavigation/index.vue")).default;
 });

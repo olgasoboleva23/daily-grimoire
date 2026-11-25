@@ -2,7 +2,7 @@
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "entry": [
     "steiger.config.js",
-    "src/main.ts!",
+    "src/app/main.ts!",
     "tests/*.test.mjs",
     "tests/stubs/{register,hooks,obsidian,windows}.mjs",
     "tests/obsidian/*.{js,mjs}"

@@ -19,7 +19,7 @@ before(async () => {
   window.moment = () => ({ format: () => "2026-11-08" });
   ({ testWindows } = await import("./stubs/windows.mjs"));
   flows = await import("#/entities/course/index.js");
-  ({ registerCommands } = await import("#/commands/commands.ts"));
+  ({ registerCommands } = await import("#/app/commands.ts"));
   ({ columns } = await import("#/entities/course/index.js"));
   windows = testWindows();
 });

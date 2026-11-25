@@ -8,7 +8,7 @@ import * as sass from "sass";
 import postcss from "postcss";
 import config, { applyConfig, THEMES, CONFIG, THEME_IMAGES } from "#/shared/config/index.js";
 import { settingsValues, toConfig } from "#/features/save-settings/index.js";
-import { useTheme } from "#/controllers/theme.js";
+import { useTheme } from "#/app/theme.js";
 import { useTaskStore } from "#/app/tasksSync.js";
 import { taskStore } from "#/entities/task/index.js";
 import { setApp } from "#/shared/host/index.js";

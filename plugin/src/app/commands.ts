@@ -1,9 +1,9 @@
 import { FuzzySuggestModal, Platform, type Plugin, type TFile } from "obsidian";
 import { APP_NAME } from "#/shared/config/index.js";
 import { CollectionItemWindow, createDoc, KINDS, NewJournalWindow } from "#/entities/doc/index.js";
-import { mirrorMobileConfig } from "#/controllers/mobileConfig.js";
+import { mirrorMobileConfig } from "./mobileConfig.js";
 import { newTask } from "#/features/new-task/index.js";
-import { migrateTasks } from "#/migrations/tasks.js";
+import { migrateTasks } from "./migrateTasks.js";
 import { openSettings } from "#/features/save-settings/index.js";
 import { openNewProject } from "#/entities/project/index.js";
 import { addMarketItem } from "#/features/add-to-list/index.js";

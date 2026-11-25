@@ -16,7 +16,7 @@ before(async () => {
   const docs = await import("#/entities/doc/index.js");
   KINDS = docs.KINDS;
   ({ taskStore } = await import("#/entities/task/index.js"));
-  ({ registerCommands } = await import("#/commands/commands.ts"));
+  ({ registerCommands } = await import("#/app/commands.ts"));
   win = {
     item: docs.CollectionItemWindow,
     journal: docs.NewJournalWindow,

@@ -1,4 +1,4 @@
-// Builds the plugin: src/main.ts → main.js, src/app/styles/main.scss (and the components' index.scss it
+// Builds the plugin: src/app/main.ts → main.js, src/app/styles/main.scss (and the components' index.scss it
 // uses) → styles.css, plus manifest.json.
 //   npm run build   into dist/
 //   npm run dev     into $WINX_VAULT/.obsidian/plugins/daily-grimoire/ (without it: dist/), again on every save
@@ -45,7 +45,7 @@ const extras = {
 };
 
 const ctx = await esbuild.context({
-  entryPoints: [resolve(here, "src/main.ts")],
+  entryPoints: [resolve(here, "src/app/main.ts")],
   outfile: resolve(out, "main.js"),
   bundle: true,
   format: "cjs",

@@ -1,11 +1,11 @@
 import { Platform, Plugin } from "obsidian";
-import { UI_VIEW, UiView } from "./components/app/view.ts";
+import { UI_VIEW, UiView } from "../components/app/view.ts";
 import { openUi, setApp } from "#/shared/host/index.js";
-import { registerCommands } from "./commands/commands.ts";
-import { useNotify } from "./composables/notify.js";
+import { registerCommands } from "./commands.ts";
+import { useNotify } from "./notify.js";
 import { installSounds } from "#/shared/lib/sounds.js";
-import { useTheme } from "./controllers/theme.js";
-import { useTaskStore } from "./app/tasksSync.js";
+import { useTheme } from "./theme.js";
+import { useTaskStore } from "./tasksSync.js";
 
 // Daily Grimoire: the app tab, the task window and the
 // commands, and the styles (styles.css, built from src/app/styles/main.scss and the components'
