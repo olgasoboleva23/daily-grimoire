@@ -219,6 +219,27 @@ test("the dish window: an ordered dish has no steps; a gone product is marked", 
   assert.ok(w.find(".ui-dish__ingredient--gone").exists());
 });
 
+test("a dish reopened during note loading draws the current note", async t => {
+  const { app } = files();
+  const windows = testWindows();
+  t.after(windows.restore);
+  let finish;
+  const pending = new Promise(resolve => { finish = resolve; });
+  t.mock.method(app.vault, "cachedRead", () => pending);
+  const closed = openDish("d1");
+  const first = await windows.next();
+  await tick();
+  assert.equal(app.vault.cachedRead.mock.callCount(), 1);
+  await first.close();
+  await closed;
+  app.vault.cachedRead.mock.restore();
+
+  const next = await showDish(windows, "d1");
+  finish("Old read");
+  await tick();
+  assert.match(next.get(".ui-dish__steps").text(), /boil the milk/);
+});
+
 test("the dish window: 🗑 asks Delete dish? with its name; closed it stays, Delete deletes, closes",
   async () => {
     const { files: written } = files();

@@ -34,15 +34,20 @@ async function load() {
 }
 
 // the recipe note, its properties cut off, drawn as Obsidian draws a note
-async function draw() {
-  await nextTick();
-  const file = d.value?.link && app.vault.getFileByPath(d.value.link);
+async function draw(link, _previous, onCleanup) {
+  let cancelled = false;
 
-  if (!steps.value || !file) return;
+  onCleanup(() => { cancelled = true; });
+  await nextTick();
+  const target = steps.value;
+  const file = link && app.vault.getFileByPath(link);
+
+  if (cancelled || !target || !file) return;
   const text = (await app.vault.cachedRead(file)).replace(/^---\n[\s\S]*?\n---\n/, "");
 
-  steps.value.replaceChildren();
-  await MarkdownRenderer.render(app, text, steps.value, file.path, ctx.owner);
+  if (cancelled) return;
+  target.replaceChildren();
+  await MarkdownRenderer.render(app, text, target, file.path, ctx.owner);
 }
 
 onMounted(load);
