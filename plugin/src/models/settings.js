@@ -72,11 +72,7 @@ export function settingsProblem(v, records, config) {
   return null;
 }
 
-// the records to change for the areas whose key changed with ☑ apply: { id: { area: new key } }
-export function areaMoves(v, records) {
-  const to = new Map(v.areas.filter(a => a.apply && a.was && a.was !== a.key.trim())
+// Area keys that changed with ☑ Apply, from their old keys to the new ones.
+export const areaRenames = v =>
+  new Map(v.areas.filter(a => a.apply && a.was && a.was !== a.key.trim())
     .map(a => [a.was, a.key.trim()]));
-
-  return Object.fromEntries([...records].filter(([, r]) => to.has(r.area))
-    .map(([id, r]) => [id, { area: to.get(r.area) }]));
-}

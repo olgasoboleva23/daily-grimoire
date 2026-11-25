@@ -5,7 +5,7 @@ import { Notice } from "obsidian";
 import { saveSettings } from "#/controllers/settings.js";
 import config, { applyConfig } from "#/helpers/config.js";
 import { CONFIG, TASK_RECORDS } from "#/helpers/paths.js";
-import { settingsValues, settingsProblem, toConfig, areaMoves } from "#/models/settings.js";
+import { settingsValues, settingsProblem, toConfig, areaRenames } from "#/models/settings.js";
 import { levelInfo } from "#/models/xp.js";
 import { taskStore } from "#/store/tasks.js";
 import { vault } from "./stubs/vault.mjs";
@@ -76,12 +76,12 @@ test("what the window can't save: an area with tasks taken off, a bad or doubled
   assert.match(settingsProblem({ ...v, glow: 5 }, records, config), /SPARK.*GLOW.*AURA/);
 });
 
-test("a key changed with ☑ moves its tasks' records; without ☑ they stay", () => {
+test("the area renames include only changed keys with Apply", () => {
   applyConfig({});
-  const v = settingsValues(config), records = new Map([["t1", { area: "base" }], ["t2", { area: "body" }], ["t3", { area: "base" }]]);
+  const v = settingsValues(config);
   const areas = v.areas.map(a => a.key === "base" ? { ...a, key: "home" } : a);
-  assert.deepEqual(areaMoves({ ...v, areas }, records), { t1: { area: "home" }, t3: { area: "home" } });
-  assert.deepEqual(areaMoves({ ...v, areas: areas.map(a => ({ ...a, apply: false })) }, records), {});
+  assert.deepEqual(areaRenames({ ...v, areas }), new Map([["base", "home"]]));
+  assert.equal(areaRenames({ ...v, areas: areas.map(a => ({ ...a, apply: false })) }).size, 0);
 });
 
 test("saveSettings writes and applies config, moves checked areas and reports the count",
@@ -128,6 +128,63 @@ test("saveSettings reports zero moves when only a setting changes", async t => {
   assert.equal(JSON.parse(files[CONFIG]).theme, "gothic");
   assert.equal(config.theme, "gothic");
   assert.equal(Notice.last, "✦ Settings saved");
+});
+
+test("a failed task move leaves settings and task areas intact, then can be retried", async t => {
+  applyConfig();
+  const records = { t1: { name: "Sweep", area: "base" }, t2: { name: "Walk", area: "body" } };
+  const original = { promptStart: "Original" };
+  const { app, files } = vault({
+    [CONFIG]: JSON.stringify(original), [TASK_RECORDS]: JSON.stringify(records),
+  });
+  taskStore.putRecords(records);
+  t.after(() => { applyConfig(); taskStore.putRecords({}); });
+  const process = app.vault.process;
+  let fail = true;
+  app.vault.process = async (file, fn) => {
+    if (fail && file.path === TASK_RECORDS) throw new Error("task write failed");
+    return process(file, fn);
+  };
+  const values = settingsValues(config);
+  values.areas.find(area => area.was === "base").key = "home";
+
+  await assert.rejects(saveSettings(values), /task write failed/);
+  assert.deepEqual(JSON.parse(files[CONFIG]), original);
+  assert.deepEqual(JSON.parse(files[TASK_RECORDS]), records);
+  assert.equal(config.areaMap.base, "Sanctuary");
+
+  fail = false;
+  assert.deepEqual(await saveSettings(values), { moved: 1 });
+  assert.equal(JSON.parse(files[TASK_RECORDS]).t1.area, "home");
+  assert.equal(config.areaMap.home, "Sanctuary");
+});
+
+test("a failed config write restores moved areas and preserves task edits", async t => {
+  applyConfig();
+  const records = { t1: { name: "Sweep", area: "base" } };
+  const { app, files } = vault({
+    [CONFIG]: "{}", [TASK_RECORDS]: JSON.stringify(records),
+  });
+  taskStore.putRecords(records);
+  t.after(() => { applyConfig(); taskStore.putRecords({}); });
+  const process = app.vault.process;
+  let pendingArea;
+  app.vault.process = async (file, fn) => {
+    if (file.path !== CONFIG) return process(file, fn);
+    const tasks = JSON.parse(files[TASK_RECORDS]);
+    pendingArea = tasks.t1.area;
+    tasks.t1.name = "Dust";
+    files[TASK_RECORDS] = JSON.stringify(tasks);
+    throw new Error("config write failed");
+  };
+  const values = settingsValues(config);
+  values.areas.find(area => area.was === "base").key = "home";
+
+  await assert.rejects(saveSettings(values), /config write failed/);
+  assert.equal(pendingArea, "home");
+  assert.equal(files[CONFIG], "{}");
+  assert.deepEqual(JSON.parse(files[TASK_RECORDS]).t1, { name: "Dust", area: "base" });
+  assert.equal(config.areaMap.base, "Sanctuary");
 });
 
 test("dish type edits are independent, normalized, validated and saved in display order", () => {
