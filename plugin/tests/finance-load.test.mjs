@@ -1,7 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { vault } from "./stubs/vault.mjs";
-import { loadFinance, loadFinanceLine } from "#/controllers/widgets/finance.js";
+import { loadFinance } from "#/controllers/widgets/finance.js";
+import { financeWidget } from "#/widgets/finance/index.js";
 import { LEDGER } from "#/shared/config/index.js";
 
 const row = (d, sum) => `| ${d} | 10:00 | ${sum} | Food | shop |`;
@@ -26,11 +27,11 @@ test("Finance: a month's note is read again only when it changed, the widgets sh
   });
 
   await loadFinance({ app });
-  await loadFinanceLine({ app });
+  await financeWidget.load({ app });
   assert.deepEqual(reads, [a, b]);
   files[b] = head + row("2026-10-02", "-250");
   mtimes[b] = 2;
-  const line = await loadFinanceLine({ app });
+  const line = await financeWidget.load({ app });
   assert.deepEqual(reads, [a, b, b]);
   assert.match(line.spent, /250/);
 });

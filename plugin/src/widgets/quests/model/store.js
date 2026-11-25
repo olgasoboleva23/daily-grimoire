@@ -1,7 +1,4 @@
-// The Quests card's controller: the tab's day as two lists of rows { key, label, done, t }: the
-// tasks due that day and still open (by time of day, area, name),
-// then the ones done that day. The markup:
-// widgets/quests/.
+// The selected day’s open and completed tasks, in the order shown on the Quests card.
 import config from "#/shared/config/index.js";
 import { pageDay, ymd } from "#/shared/lib/dates.js";
 import { T, taskKey, daytimeMark, daytimeRank, taskStore } from "#/entities/task/index.js";

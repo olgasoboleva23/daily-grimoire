@@ -10,7 +10,7 @@ const da = a => Object.assign(a, { map: f => da(Array.prototype.map.call(a, f)),
 const dataview = { page: () => ({ file: { lists: da([{ text: "- start:: 2026-11-02" }]) }, period: 8 }) };
 before(async () => {
   ({ mount } = await import("@vue/test-utils"));
-  CycleWidget = (await import("#/components/pages/dashboard/widgets/cycle/index.vue")).default;
+  CycleWidget = (await import("#/widgets/cycle/index.js")).cycleWidget.view;
 });
 
 const data = {

@@ -6,7 +6,7 @@ import { vault } from "./stubs/vault.mjs";
 let mount, DailyNoteOpen;
 before(async () => {
   ({ mount } = await import("@vue/test-utils"));
-  DailyNoteOpen = (await import("#/components/pages/dashboard/widgets/DailyNoteOpen.vue")).default;
+  DailyNoteOpen = (await import("#/widgets/daily-note/index.js")).dailyNoteWidget.view;
 });
 
 test("Daily note: ✦ Open for the page's date opens its note; no date, no button", async () => {
@@ -23,7 +23,7 @@ test("Daily note: ✦ Open for the page's date opens its note; no date, no butto
 });
 
 test("openDaily from a app tab opens the note in a new tab", async () => {
-  const { openDaily } = await import("#/controllers/widgets/dailyNote.js");
+  const { openDaily } = await import("#/widgets/daily-note/index.js");
   const { UiView } = await import("#/components/app/view.ts");
   const { app } = vault({ "2026-11-04.md": "" });
   const opened = [];

@@ -1,8 +1,4 @@
-// The cycle's controller: what the card shows and its writes. The day of the cycle on the page's
-// date, the next start forecast; the current cycle and the 3 before it as rows of day pills (the
-// period, the fertile window, the ovulation), or the last 10 cycles' lengths and period lengths as
-// columns with their average. Writes: "started today / ended yesterday" in Cycle.md. The markup:
-// widgets/cycle (folded by default: a click on the head toggles it, kept per device).
+// Cycle day, forecast and recent periods shown in the dashboard card.
 import { mana, mpLine, mpTable, readCycle } from "#/entities/cycle/index.js";
 import { dm, pageDay, ymd } from "#/shared/lib/dates.js";
 

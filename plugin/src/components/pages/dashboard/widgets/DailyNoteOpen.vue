@@ -3,7 +3,7 @@
 import { ref } from "vue";
 import { isMuted, toggleMute } from "#/shared/lib/sounds.js";
 import UiButton from "#/shared/ui/UiButton/index.vue";
-import { openDaily } from "#/controllers/widgets/dailyNote.js";
+import { openDaily } from "#/widgets/daily-note/index.js";
 
 defineProps({ state: { type: Object, required: true } });
 const muted = ref(isMuted());

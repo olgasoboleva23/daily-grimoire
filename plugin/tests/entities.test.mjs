@@ -6,7 +6,7 @@ import { Goal, reminders } from "#/entities/goal/index.js";
 import { CycleLog } from "#/entities/cycle/index.js";
 import { WeightLog, BodyLog } from "#/entities/weight/index.js";
 import { MarketItem, catLabel, historyOf, openKeys } from "#/entities/product/index.js";
-import { paydays, SavingsJar } from "#/models/savingsJar.js";
+import { paydays, SavingsJar } from "#/widgets/savings/index.js";
 
 // 2026-10-19 is a Monday
 const w = Goal.parse("name:: Stretching\n  key:: stretch\n  days:: пн, ср, пт\n  min:: 10 minutes\n  plan:: if...");

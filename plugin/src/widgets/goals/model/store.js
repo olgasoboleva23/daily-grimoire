@@ -1,6 +1,4 @@
-// The goals' controller: per goal "X of Y this week", Mon–Sun dots, the minimum version, and how
-// often it was done. A missed goal task stays on its day (the calendar's Missed? lists it). The
-// markup: widgets/goals.
+// Weekly progress and recent completions for each goal on the dashboard.
 import { dm, pageDay, todayYmd, weekOf, ymd } from "#/shared/lib/dates.js";
 import { readGoals } from "#/entities/goal/index.js";
 import { GOALS } from "#/shared/config/index.js";

@@ -13,8 +13,7 @@ before(async () => {
   window.moment = () => ({ format: () => "2026-11-09" });
   ({ taskStore } = await import("#/entities/task/index.js"));
   ({ mount } = await import("@vue/test-utils"));
-  QuestsCard = (await import("#/components/pages/dashboard/widgets/quests/index.vue")).default;
-  ({ loadQuests } = await import("#/controllers/widgets/quests.js"));
+  ({ view: QuestsCard, load: loadQuests } = (await import("#/widgets/quests/index.js")).questsWidget);
 });
 
 const NOTE = [

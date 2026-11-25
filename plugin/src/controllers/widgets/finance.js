@@ -1,13 +1,9 @@
-// The finance controller: monthly notes under the configured LEDGER path —
-// a month's totals, categories against their budgets, a 6-month trend and the latest operations;
-// ◀ ▶ step through the months. The data (00 System/Data/Finance) stays in the vault. The markup:
-// pages/finance (the Finance page; its styles also hold the dashboard card's
-// ui-fin__month block), widgets/finance/index.vue (the dashboard's card).
+// Monthly totals, categories, budgets, trends and recent activity on the Finance page.
 import { dm } from "#/shared/lib/dates.js";
 import { money } from "#/shared/lib/format.js";
 import { LEDGER } from "#/shared/config/index.js";
 import {
-  loadLedger, MONTHS, MONTHS_SHORT, monthReport, summarize,
+  loadLedger, MONTHS, MONTHS_SHORT, monthReport,
 } from "#/entities/ledger/index.js";
 
 // palette cycled across categories, in ui token order
@@ -65,19 +61,5 @@ function category(name, value, max, color, budget) {
       : money(value),
     width: Math.max((budget ? Math.min(value / budget, 1) : value / (max || 1)) * 100, 1.5),
     fill: over ? "var(--ui-pink-deep)" : `var(${color})`,
-  };
-}
-
-// The dashboard's Finance card: this month's (else the latest's) spent and income on one line
-export async function loadFinanceLine({ app }) {
-  const { ledger, months, start } = await loadLedger(app);
-
-  if (!months.length) return { empty: true };
-  const { spent, income } = summarize(ledger[start]);
-
-  return {
-    month: MONTHS[Number(start.split("-")[1]) - 1],
-    spent: money(spent),
-    income: money(income),
   };
 }

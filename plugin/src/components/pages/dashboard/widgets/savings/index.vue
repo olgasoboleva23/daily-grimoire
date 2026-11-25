@@ -4,7 +4,7 @@
 import UiButton from "#/shared/ui/UiButton/index.vue";
 import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
 import { askValue } from "#/shared/ui/Window/index.ts";
-import { deposit, paydaySum } from "#/controllers/widgets/savings.js";
+import { deposit, paydaySum } from "#/widgets/savings/index.js";
 
 defineProps({ state: { type: Object, required: true } });
 

@@ -2,19 +2,14 @@
 // .vue imports them from its controller.
 import { taskStore } from "#/entities/task/index.js";
 import { loadLevelToday, loadLifeAreas, loadXpToday } from "#/controllers/widgets/xp.js";
-import { loadQuests } from "#/controllers/widgets/quests.js";
 import { loadShop } from "#/controllers/widgets/shop.js";
 import { loadCelestialMarket, loadSupplies } from "#/controllers/widgets/market.js";
-import { loadGoals } from "#/controllers/widgets/goals.js";
-import { loadSavings } from "#/controllers/widgets/savings.js";
-import { loadCycle } from "#/controllers/widgets/cycle.js";
-import { loadFinance, loadFinanceLine } from "#/controllers/widgets/finance.js";
+import { loadFinance } from "#/controllers/widgets/finance.js";
 import { loadWeight } from "#/controllers/widgets/weight.js";
 import {
-  COURSES, CYCLE, DISHES, FOOD_DATA, FOOD_LOG, GOALS, JOURNALS, LEDGER, MARKET_NOTE, MARKET_RECORDS,
-  CONFIG, PURCHASES, RULES, SAVINGS, SHOP, WEIGHT,
+  COURSES, CYCLE, DISHES, FOOD_DATA, FOOD_LOG, JOURNALS, LEDGER, MARKET_NOTE, MARKET_RECORDS,
+  CONFIG, PURCHASES, RULES, SHOP, WEIGHT,
 } from "#/shared/config/index.js";
-import { loadDailyNote } from "#/controllers/widgets/dailyNote.js";
 import { loadPomodoro } from "#/controllers/widgets/pomodoro.js";
 import { loadMeds } from "#/controllers/meds.js";
 import { loadRecipes } from "#/controllers/dishes.js";
@@ -23,18 +18,18 @@ import { loadFood } from "#/controllers/food.js";
 import XpToday from "#/components/pages/dashboard/widgets/xp/XpToday/index.vue";
 import LevelToday from "#/components/pages/dashboard/widgets/xp/LevelToday/index.vue";
 import LifeAreas from "#/components/pages/dashboard/widgets/xp/LifeAreas/index.vue";
-import QuestsCard from "#/components/pages/dashboard/widgets/quests/index.vue";
+import { questsWidget } from "#/widgets/quests/index.js";
 import ShopWidget from "#/components/pages/shop/index.vue";
 import SuppliesWidget from "#/components/pages/supplies/index.vue";
 import CelestialMarket from "#/components/pages/dashboard/widgets/market/index.vue";
 import CelestialMarketAdd from "#/components/pages/dashboard/widgets/market/CelestialMarketAdd.vue";
-import GoalsWidget from "#/components/pages/dashboard/widgets/goals/index.vue";
-import SavingsJars from "#/components/pages/dashboard/widgets/savings/index.vue";
-import CycleWidget from "#/components/pages/dashboard/widgets/cycle/index.vue";
+import { goalsWidget } from "#/widgets/goals/index.js";
+import { savingsWidget } from "#/widgets/savings/index.js";
+import { cycleWidget } from "#/widgets/cycle/index.js";
 import FinanceMonths from "#/components/pages/finance/index.vue";
-import FinanceLine from "#/components/pages/dashboard/widgets/finance/index.vue";
+import { financeWidget } from "#/widgets/finance/index.js";
 import WeightCard from "#/components/pages/dashboard/widgets/weight/index.vue";
-import DailyNoteOpen from "#/components/pages/dashboard/widgets/DailyNoteOpen.vue";
+import { dailyNoteWidget } from "#/widgets/daily-note/index.js";
 import PomodoroTimer from "#/components/pages/dashboard/widgets/pomodoro/index.vue";
 // the Vue pages: components/pages/<page>/
 import MedsPage from "#/components/pages/meds/index.vue";
@@ -49,7 +44,7 @@ const LEDGER_FILES = `${LEDGER}/`;
 
 export const blocks = {
   xpToday: { dataview: [], view: XpToday, load: loadXpToday, stores: [taskStore.version] },
-  quests: { dataview: [], view: QuestsCard, load: loadQuests, stores: [taskStore.version] },
+  quests: questsWidget,
   levelToday: {
     view: LevelToday, load: loadLevelToday, dataview: [CYCLE],
     stores: [taskStore.version], watches: [CYCLE],
@@ -61,20 +56,17 @@ export const blocks = {
     stores: [taskStore.version], watches: [`${SHOP}.md`, `${PURCHASES}.md`],
   },
   supplies: { view: SuppliesWidget, load: loadSupplies, watches: [MARKET_NOTE, MARKET_RECORDS] },
-  goals: {
-    view: GoalsWidget, load: loadGoals, dataview: [`${GOALS}.md`],
-    watches: [`${GOALS}.md`], stores: [taskStore.version],
-  },
-  savings: { view: SavingsJars, load: loadSavings, watches: [`${SAVINGS}/`] },
-  cycle: { dataview: [CYCLE], view: CycleWidget, load: loadCycle, watches: [CYCLE] },
+  goals: goalsWidget,
+  savings: savingsWidget,
+  cycle: cycleWidget,
   finance: { view: FinanceMonths, load: loadFinance, watches: [LEDGER_FILES, RULES] },
-  financeMonth: { view: FinanceLine, load: loadFinanceLine, watches: [LEDGER_FILES, RULES] },
+  financeMonth: financeWidget,
   // a reload keeps the typed picks
   weight: {
     view: WeightCard, load: loadWeight, dataview: [CYCLE], watches: [WEIGHT, `${JOURNALS}/`, CYCLE],
   },
   // the tab's date only (useTabDate)
-  dailyNote: { dataview: [], view: DailyNoteOpen, load: loadDailyNote, watches: [] },
+  dailyNote: dailyNoteWidget,
   pomodoro: { view: PomodoroTimer, load: loadPomodoro, follows: false },
   celestialMarket: {
     view: CelestialMarket,

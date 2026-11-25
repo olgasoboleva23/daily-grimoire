@@ -7,8 +7,8 @@ let mount, SavingsJars, deposit, paydaySum, testWindows;
 before(async () => {
   globalThis.window.moment = () => ({ format: () => "2026-10-30" });
   ({ mount } = await import("@vue/test-utils"));
-  SavingsJars = (await import("#/components/pages/dashboard/widgets/savings/index.vue")).default;
-  ({ deposit, paydaySum } = await import("#/controllers/widgets/savings.js"));
+  SavingsJars = (await import("#/widgets/savings/index.js")).savingsWidget.view;
+  ({ deposit, paydaySum } = await import("#/widgets/savings/index.js"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
 });
 const jar = {
