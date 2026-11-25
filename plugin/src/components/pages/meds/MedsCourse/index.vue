@@ -13,8 +13,7 @@ import UiCard from "#/shared/ui/UiCard/index.vue";
 import UiCheckbox from "#/shared/ui/UiCheckbox/index.vue";
 import UiInput from "#/shared/ui/UiInput/index.vue";
 import UiTable from "#/shared/ui/UiTable/index.vue";
-import { markDose, next, setDayNote, TIMES } from "#/entities/course/index.js";
-import { openEditCourse } from "#/components/windows/meds/CourseWindow/open.js";
+import { markDose, next, openEditCourse, setDayNote, TIMES } from "#/entities/course/index.js";
 import { playMark } from "#/shared/lib/sounds.js";
 
 const props = defineProps({

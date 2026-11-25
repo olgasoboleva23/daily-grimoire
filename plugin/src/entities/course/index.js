@@ -9,3 +9,7 @@ export {
   columns, courseData, courseList, courseOf, createCourse, edited, forFood, formValues, intake,
   markDose, readCourseList, saveCourse, setDayNote, withDayNote, withMark,
 } from "./model/course.js";
+
+export { openNewCourse, openEditCourse } from "./ui/CourseWindow/open.js";
+
+export { pickCourse } from "./ui/pickCourse.js";

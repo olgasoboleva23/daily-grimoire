@@ -5,7 +5,7 @@ import { Notice } from "obsidian";
 import { vault } from "./stubs/vault.mjs";
 import { COURSES } from "#/shared/config/index.js";
 
-// A medication course's window (components/windows/meds/CourseWindow), new and edit, through the
+// A medication course's window (entities/course/ui/CourseWindow), new and edit, through the
 // test frame as its openers do (the commands, the course's ✎): its stacked medicines, days that
 // don't read keep it open, the course saved. Made-up medicines only.
 const REC = {
@@ -18,7 +18,7 @@ let testWindows, windows, flows, registerCommands, columns;
 before(async () => {
   window.moment = () => ({ format: () => "2026-11-08" });
   ({ testWindows } = await import("./stubs/windows.mjs"));
-  flows = await import("#/components/windows/meds/CourseWindow/open.js");
+  flows = await import("#/entities/course/index.js");
   ({ registerCommands } = await import("#/commands/commands.ts"));
   ({ columns } = await import("#/entities/course/index.js"));
   windows = testWindows();

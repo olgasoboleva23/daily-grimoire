@@ -10,7 +10,7 @@ import { openNewProject } from "#/components/windows/projects/ProjectWindow/open
 import { addMarketItem } from "#/components/windows/market/MarketItemWindow/open.js";
 import {
   openEditCourse, openNewCourse, pickCourse,
-} from "#/components/windows/meds/CourseWindow/open.js";
+} from "#/entities/course/index.js";
 import { openWindow, askValue } from "#/shared/ui/Window/index.ts";
 import CollectionItemWindow from "#/components/windows/notes/CollectionItemWindow/index.vue";
 import NewJournalWindow from "#/components/windows/journals/NewJournalWindow/index.vue";

@@ -4,10 +4,9 @@ import assert from "node:assert/strict";
 import { vault } from "./stubs/vault.mjs";
 import { loadMeds } from "#/controllers/meds.js";
 import {
-  createCourse, formValues, markDose, readCourse, saveCourse, setDayNote,
+  createCourse, formValues, markDose, pickCourse, readCourse, saveCourse, setDayNote,
 } from "#/entities/course/index.js";
 import { Search } from "#/shared/ui/Search/index.ts";
-import { pickCourse } from "#/components/windows/meds/CourseWindow/open.js";
 import { COURSES } from "#/shared/config/index.js";
 import { Notice } from "obsidian";
 
