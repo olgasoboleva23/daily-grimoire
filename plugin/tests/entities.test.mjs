@@ -4,8 +4,7 @@ import { Task } from "#/models/task.js";
 import { weekOf } from "#/shared/lib/dates.js";
 import { Goal, reminders } from "#/entities/goal/index.js";
 import { CycleLog } from "#/entities/cycle/index.js";
-import { WeightLog } from "#/models/weightLog.js";
-import { BodyLog } from "#/models/bodyLog.js";
+import { WeightLog, BodyLog } from "#/entities/weight/index.js";
 import { MarketItem, catLabel, historyOf, openKeys } from "#/models/market.js";
 import { paydays, SavingsJar } from "#/models/savingsJar.js";
 

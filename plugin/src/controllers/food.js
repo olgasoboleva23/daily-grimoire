@@ -6,7 +6,7 @@ import {
   marksOf, withEaten, withMarks, withNote, withoutEaten, withTask,
 } from "#/models/food.js";
 import { readFoodCatalog } from "./dishes.js";
-import { readJournals } from "#/controllers/journals.js";
+import { readJournals } from "#/entities/weight/index.js";
 import { forFood } from "#/models/course.js";
 import { T } from "#/models/calendarData.js";
 import { taskStore } from "#/store/tasks.js";

@@ -1,24 +1,13 @@
-// The weight card's controller: what it shows and its writes. Weight: a line chart of the last 30
+// The weight card's controller: what it shows. Weight: a line chart of the last 30
 // days, the last value, the change vs a week ago; the free journals (a note each in JOURNALS: its
 // name the file's, its `reasons` and `lag` its properties): a level 0–3 and today's reasons, bars
-// for 30 days (the reasons in the tooltip) over the cycle's period days. Writes: today's weight in
-// Weight.md (a journal's: controllers/journals.js). The markup: widgets/weight.
+// for 30 days (the reasons in the tooltip) over the cycle's period days.
 import { addDays, dm, todayYmd } from "#/shared/lib/dates.js";
-import { WeightLog } from "#/models/weightLog.js";
-import { readJournals } from "#/controllers/journals.js";
+import { WeightLog, readWeight, readJournals } from "#/entities/weight/index.js";
 import { readCycle } from "#/entities/cycle/index.js";
 import { chartColor, chartScale } from "#/shared/lib/chart.js";
-import { edit } from "#/shared/vault/index.js";
-import { amount } from "#/shared/lib/format.js";
-import { WEIGHT } from "#/shared/config/index.js";
 
 const DAYS = 30;
-
-const read = async (app, path) => {
-  const file = app.vault.getFileByPath(path);
-
-  return file ? app.vault.cachedRead(file) : null;
-};
 
 // the weight's line over the 30 days, scaled to the values there are (null: none, no chart)
 function weightChart(days, vals) {
@@ -81,7 +70,7 @@ function logChart(days, entries, period) {
 export async function loadWeight({ dv, app }) {
   const today = todayYmd();
   const days = Array.from({ length: DAYS }, (_, i) => addDays(today, i - DAYS + 1));
-  const weightText = await read(app, WEIGHT);
+  const weightText = await readWeight(app);
   let weight = { missing: true };
 
   if (weightText !== null) {
@@ -103,13 +92,4 @@ export async function loadWeight({ dv, app }) {
   }));
 
   return { weight, logs };
-}
-
-// today's weight from what was typed; false when it isn't a weight
-export async function logWeight(typed) {
-  const kg = amount(typed);
-
-  if (!kg || kg <= 0) return false;
-  await edit(WEIGHT, c => new WeightLog(c).set(todayYmd(), kg));
-  return true;
 }

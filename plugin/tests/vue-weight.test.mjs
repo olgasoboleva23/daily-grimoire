@@ -151,7 +151,7 @@ test("Weight: what's typed while the save writes stays in the field; the saved o
 });
 
 test("trashJournal sends only the selected journal to Obsidian's trash", async () => {
-  const { trashJournal } = await import("#/controllers/journals.js");
+  const { trashJournal } = await import("#/entities/weight/index.js");
   const { files } = vault({ [SKIN]: "- 2026-11-05 1\n", [GUT]: "- 2026-11-05 2\n" });
 
   await trashJournal(SKIN);

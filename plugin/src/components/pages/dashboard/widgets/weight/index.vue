@@ -11,8 +11,7 @@ import { confirm, openWindow } from "#/shared/ui/Window/index.ts";
 import NewJournalWindow from "#/components/windows/journals/NewJournalWindow/index.vue";
 import { WEIGHT } from "#/shared/config/index.js";
 import { app } from "#/shared/host/index.js";
-import { logWeight } from "#/controllers/widgets/weight.js";
-import { logBody, trashJournal } from "#/controllers/journals.js";
+import { logWeight, logBody, trashJournal } from "#/entities/weight/index.js";
 import WeightMode from "./WeightMode.vue";
 import BodyLogMode from "./BodyLogMode.vue";
 

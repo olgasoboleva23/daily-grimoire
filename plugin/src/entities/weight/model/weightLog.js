@@ -1,6 +1,8 @@
 // The weight log: "- YYYY-MM-DD 70.5" lines in Weight.md, comma decimals accepted (tested by
 // tests/entities.test.mjs).
 import { AMOUNT, amount } from "#/shared/lib/format.js";
+import { todayYmd } from "#/shared/lib/dates.js";
+import { editWeight } from "./repository/weight.js";
 
 const WEIGHT_LINE = new RegExp(`^- (\\d{4}-\\d{2}-\\d{2}) (${AMOUNT.source})$`);
 
@@ -22,4 +24,13 @@ export class WeightLog {
     if (i >= 0) lines[i] = line; else lines.push(line);
     return lines.join("\n") + "\n";
   }
+}
+
+// today's weight from what was typed; false when it isn't a weight
+export async function logWeight(typed) {
+  const kg = amount(typed);
+
+  if (!kg || kg <= 0) return false;
+  await editWeight(c => new WeightLog(c).set(todayYmd(), kg));
+  return true;
 }
