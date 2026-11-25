@@ -25,8 +25,12 @@ before(async () => {
   ({ UiView } = await import("#/components/app/view.ts"));
   ({ openUi } = await import("#/shared/host/index.js"));
   vue = await import("vue");
-  for (const key of ["dashboard", "calendar", "projects"]) {
-    const Page = (await import(`../src/components/pages/${key}/index.vue`)).default;
+  const views = {
+    dashboard: (await import("#/components/pages/dashboard/index.vue")).default,
+    calendar: (await import("#/pages/calendar/index.js")).default,
+    projects: (await import("#/pages/projects/index.js")).default,
+  };
+  for (const [key, Page] of Object.entries(views)) {
     Page.setup = () => {
       made.push(key);
       vue.onUnmounted(() => unloaded.push(key));

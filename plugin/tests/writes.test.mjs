@@ -7,7 +7,7 @@ import { addTask, readTaskEdit, saveRecords, newId, taskStore } from "#/entities
 import { saveNewTask } from "#/features/new-task/index.js";
 import { saveTaskEdit } from "#/features/edit-task/index.js";
 import { makeActions } from "#/controllers/calendar.js";
-import { CalendarData } from "#/models/calendarData.js";
+import { CalendarData } from "#/pages/calendar/model/calendarData.js";
 
 const MASTER = "00 System/Data/Tasks/Master.md", RECORDS = "00 System/Data/Tasks/tasks.json", BUY = "00 System/Data/Purchases.md";
 const later = () => new Promise(r => setTimeout(r, 5));

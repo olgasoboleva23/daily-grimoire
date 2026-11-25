@@ -8,3 +8,13 @@ export { addNote, editNote, removeNote } from "./model/note.js";
 export { confirmDeleteProject } from "./ui/confirmDeleteProject.js";
 
 export { default as DeleteStageWindow } from "./ui/DeleteStageWindow/index.vue";
+
+export { default } from "#/components/pages/projects/index.vue";
+
+export { FILTERS, readState, stageEntries } from "./model/store.js";
+
+export { coverUrl } from "./model/cover.js";
+
+export { journalOf } from "./model/journal.js";
+
+export { fillStart, PROMPT_VARIABLES } from "./model/prompt.js";

@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { vault } from "./stubs/vault.mjs";
-import { loadFinance } from "#/controllers/widgets/finance.js";
+import { loadFinance } from "#/pages/finance/model/store.js";
 import { financeWidget } from "#/widgets/finance/index.js";
 import { LEDGER } from "#/shared/config/index.js";
 

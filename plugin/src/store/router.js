@@ -1,9 +1,9 @@
 // The single app tab's state: the page shown and each page's own state. Obsidian saves it with
 // the layout; `saved` is what goes in, `readState` makes a whole state of whatever comes back.
 
-import { readState as readCalendar, SAVED as CALENDAR_SAVED } from "#/store/calendar.js";
-import { readState as readProjects } from "#/store/projects.js";
-import { readState as readRecipes } from "#/store/recipes.js";
+import { readState as readCalendar, SAVED as CALENDAR_SAVED } from "#/pages/calendar/index.js";
+import { readState as readProjects } from "#/pages/projects/index.js";
+import { readState as readRecipes } from "#/pages/recipes/index.js";
 import { pages } from "#/shared/config/index.js";
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;

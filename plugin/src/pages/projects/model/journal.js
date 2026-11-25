@@ -1,3 +1,4 @@
+// Project journal entries in display order, with their current target labels.
 export function journalOf(key, { projects, notes, tasks }) {
   const project = projects.get(key);
   const stages = project?.stages ?? [];
@@ -27,6 +28,6 @@ export function journalOf(key, { projects, notes, tasks }) {
       label: label || missing, gone: !name });
   }
 
-  return entries.sort((a, b) => b.at.localeCompare(a.at) 
+  return entries.sort((a, b) => b.at.localeCompare(a.at)
     || Number(b.id.slice(1)) - Number(a.id.slice(1)));
 }

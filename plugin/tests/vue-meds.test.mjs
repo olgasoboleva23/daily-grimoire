@@ -10,7 +10,7 @@ before(async () => {
   ({ mount } = await import("@vue/test-utils"));
   ({ reactive } = await import("vue"));
   MedsPage = (await import("#/components/pages/meds/index.vue")).default;
-  ({ loadMeds } = await import("#/controllers/meds.js"));
+  ({ loadMeds } = await import("#/pages/meds/model/store.js"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
   ({ Notice } = await import("obsidian"));
 });

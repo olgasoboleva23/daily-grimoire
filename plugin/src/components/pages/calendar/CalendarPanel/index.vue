@@ -10,7 +10,7 @@ import AheadTab from "./AheadTab.vue";
 import ProjectsTab from "./ProjectsTab.vue";
 import PoolTab from "./PoolTab.vue";
 import RegularsTab from "./RegularsTab.vue";
-import { SHOWN } from "#/helpers/panelGroups.js";
+import { SHOWN } from "#/pages/calendar/index.js";
 import { useDropZone } from "#/composables/drag.js";
 
 const view = inject("calendar");

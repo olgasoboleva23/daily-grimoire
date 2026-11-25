@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { DEFAULT, readState, baseDate, shownDays, dateFor } from "#/store/calendar.js";
+import { DEFAULT, readState, baseDate, shownDays, dateFor } from "#/pages/calendar/model/store.js";
 
 test("no or broken saved state gives the defaults", () => {
   assert.deepEqual(readState(undefined), DEFAULT);
@@ -41,7 +41,7 @@ test("the Projects tab is a known tab", () => {
 });
 
 test("the Projects tab's state: a key and a known filter, else the defaults", async () => {
-  const projects = await import("#/store/projects.js");
+  const projects = await import("#/pages/projects/model/store.js");
   assert.deepEqual(projects.readState(undefined), projects.DEFAULT);
   assert.deepEqual(projects.readState({ open: 5, filter: "x" }), projects.DEFAULT);
   assert.deepEqual(projects.readState({ open: "p2", filter: "paused" }), { open: "p2", filter: "paused" });

@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { foodChoices, foodWeek } from "#/models/food.js";
+import { foodChoices } from "#/pages/food/model/menu.js";
+import { foodWeek } from "#/pages/food/model/week.js";
 import { Dish } from "#/entities/dish/index.js";
 import {
   DEFAULT_MARKS, dayNote, eaten, marksOf, withEaten, withMarks, withNote, withoutEaten, withTask,

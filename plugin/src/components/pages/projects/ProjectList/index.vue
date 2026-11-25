@@ -16,8 +16,8 @@ import PromptsWindow from "#/components/windows/projects/PromptsWindow/index.vue
 import { app, tasksApi } from "#/shared/host/index.js";
 import { tick } from "#/features/complete-task/index.js";
 import { T } from "#/entities/task/index.js";
-import { FILTERS, stageEntries } from "#/store/projects.js";
-import { coverUrl } from "../cover.js";
+import { FILTERS, stageEntries } from "#/pages/projects/index.js";
+import { coverUrl } from "#/pages/projects/index.js";
 import ProjectStatus from "../ProjectStatus/index.vue";
 
 const projects = inject("projects");

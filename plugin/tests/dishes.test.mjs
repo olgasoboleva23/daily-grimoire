@@ -7,11 +7,12 @@ import { addDish, editDish, readDish, removeDish } from "#/entities/dish/index.j
 import { loadCelestialMarket } from "#/widgets/market/model/store.js";
 import { productsToList } from "#/features/add-to-list/operation/productsToList.js";
 import { addToMarket } from "#/features/add-to-list/operation/addItem.js";
-import { loadFood } from "#/controllers/food.js";
+import { loadFood } from "#/pages/food/model/store.js";
 import { Search } from "#/shared/ui/Search/index.ts";
 import { pickRecipeNote } from "#/features/edit-dish/ui/pickRecipeNote.js";
 import { Notice } from "obsidian";
-import { foodChoices, foodWeek } from "#/models/food.js";
+import { foodChoices } from "#/pages/food/model/menu.js";
+import { foodWeek } from "#/pages/food/model/week.js";
 import { DISHES, FOOD_DATA, FOOD_LOG, MARKET_NOTE, MARKET_RECORDS } from "#/shared/config/index.js";
 import { KINDS } from "#/entities/doc/index.js";
 import { vault } from "./stubs/vault.mjs";

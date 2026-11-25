@@ -3,7 +3,7 @@
 import { computed, inject } from "vue";
 import GroupCard from "./GroupCard.vue";
 import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";
-import { SHOWN, byArea } from "#/helpers/panelGroups.js";
+import { SHOWN, byArea } from "#/pages/calendar/index.js";
 
 const view = inject("calendar");
 

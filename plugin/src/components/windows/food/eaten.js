@@ -3,9 +3,9 @@
 // day. An eaten one's name: its own window (a product: Edit item; a dish: its form).
 import { prepareFuzzySearch } from "obsidian";
 import { app } from "#/shared/host/index.js";
-import { foodChoices } from "#/models/food.js";
+import { foodChoices } from "#/pages/food/model/menu.js";
 import { Search } from "#/shared/ui/Search/index.ts";
-import { loadFood } from "#/controllers/food.js";
+import { loadFood } from "#/pages/food/model/store.js";
 import { logEaten, readMarks } from "#/entities/food-log/index.js";
 import { readDish } from "#/entities/dish/index.js";
 import { openEditItem, openNewProduct } from "#/entities/product/index.js";

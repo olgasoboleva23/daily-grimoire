@@ -23,9 +23,9 @@ before(async () => {
   });
   vue = await import("vue");
   Tab = (await import("#/components/pages/calendar/CalendarTab/index.vue")).default;
-  data = await import("#/models/calendarData.js");
+  data = await import("#/pages/calendar/model/calendarData.js");
   actions = await import("#/controllers/calendar.js");
-  state = await import("#/store/calendar.js");
+  state = await import("#/pages/calendar/model/store.js");
   ({ useLater } = await import("#/shared/lib/use.js"));
   ({ dragState } = await import("#/composables/drag.js"));
   ({ Component } = await import("obsidian"));

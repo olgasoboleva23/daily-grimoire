@@ -13,7 +13,7 @@ import { openUi } from "#/shared/host/index.js";
 import { vTip } from "#/shared/ui/tooltip.js";
 import { addDays, weekOf } from "#/shared/lib/dates.js";
 import { dayLabel } from "#/entities/course/index.js";
-import { foodWeek } from "#/models/food.js";
+import { foodWeek } from "#/pages/food/model/week.js";
 import { readMarks, removeEaten, setFoodNote, setTrainingTask } from "#/entities/food-log/index.js";
 import { pickTask } from "#/entities/task/index.js";
 import { openWindow } from "#/shared/ui/Window/index.ts";

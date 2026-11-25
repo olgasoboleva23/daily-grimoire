@@ -8,7 +8,7 @@ import GroupCard from "./GroupCard.vue";
 import { TaskText, T, ruleText } from "#/entities/task/index.js";
 import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";
 import { dm } from "#/shared/lib/dates.js";
-import { byArea } from "#/helpers/panelGroups.js";
+import { byArea } from "#/pages/calendar/index.js";
 
 const RESUME = "resume: from today, on the first day its rule allows";
 const view = inject("calendar");

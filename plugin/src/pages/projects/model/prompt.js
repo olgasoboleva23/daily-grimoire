@@ -1,0 +1,23 @@
+// Variables and substitutions for the project session prompt.
+export function fillStart(template, project, entries, input) {
+  const journal = entries.slice(0, 3).map(e =>
+    `${e.at.slice(0, 10)} · ${e.heading} — ${e.text}`.replace(/\s*\n\s*/g, " ")).join("\n");
+  const fields = { Project_Name: project.name, Project_Result: project.result ?? "",
+    Project_Notes: project.notes ?? "", Last_3_Journal_Entries: journal,
+    Current_Task_Or_Input: input };
+
+  return template.split("\n").filter(l => journal || l.trim() !== "{Last_3_Journal_Entries}")
+    .join("\n")
+    .replace(/\{(\w+)\}/g, (match, key) => Object.hasOwn(fields, key) ? fields[key] : match);
+}
+
+// the Start prompt's variables and what each becomes (fillStart fills them; listed when editing)
+const VARIABLES = [
+  ["Project_Name", "название проекта"],
+  ["Project_Result", "Result проекта (к чему идём)"],
+  ["Project_Notes", "Notes проекта (начальные условия)"],
+  ["Last_3_Journal_Entries", "три последние записи журнала; нет записей — строка убирается"],
+  ["Current_Task_Or_Input", "задача на сессию, спрашивается перед копированием"],
+];
+
+export const PROMPT_VARIABLES = VARIABLES.map(([name, what]) => `{${name}} — ${what}`).join("\n");

@@ -11,7 +11,7 @@ import JournalEntryWindow from "#/components/windows/projects/JournalEntryWindow
 import UiTabs from "#/shared/ui/UiTabs/index.vue";
 import UiWindow from "#/shared/ui/UiWindow/index.vue";
 import { openNote } from "#/shared/host/index.js";
-import { journalOf } from "#/models/journal.js";
+import { journalOf } from "#/pages/projects/index.js";
 import { taskStore } from "#/entities/task/index.js";
 
 defineOptions({ inheritAttrs: false });

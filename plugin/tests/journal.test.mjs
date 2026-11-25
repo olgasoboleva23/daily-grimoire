@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { journalOf } from "#/models/journal.js";
+import { journalOf } from "#/pages/projects/model/journal.js";
 import { addNote } from "#/pages/projects/index.js";
 import { vault } from "./stubs/vault.mjs";
 

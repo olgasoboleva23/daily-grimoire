@@ -10,7 +10,7 @@ before(async () => {
   window.moment = () => ({ format: () => "2026-11-04" });   // a Wednesday
   ({ mount } = await import("@vue/test-utils"));
   FoodPage = (await import("#/components/pages/food/index.vue")).default;
-  ({ loadFood } = await import("#/controllers/food.js"));
+  ({ loadFood } = await import("#/pages/food/model/store.js"));
   ({ DEFAULT_MARKS } = await import("#/entities/food-log/index.js"));
   ({ Search } = await import("#/shared/ui/Search/index.ts"));
   ({ testWindows } = await import("./stubs/windows.mjs"));

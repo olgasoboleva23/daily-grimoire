@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { weekOf } from "#/shared/lib/dates.js";
 import { T, canReorder } from "#/entities/task/index.js";
-import { CalendarData } from "#/models/calendarData.js";
+import { CalendarData } from "#/pages/calendar/model/calendarData.js";
 import { idTask } from "./stubs/idTask.mjs";
 
 // the store's tasks: { status, text, path, line, rec }, from a readable spec (idTask)
@@ -188,7 +188,7 @@ test("a day's parts: a task whose record has after: <id> stands right under the 
 });
 
 test("calendarTaskInfo: what a part shows of a task — its key, area, text, label, its sticker as an image, whether it can be skipped; once per draw", async () => {
-  const { calendarTaskInfo } = await import("#/models/calendarData.js");
+  const { calendarTaskInfo } = await import("#/pages/calendar/model/calendarData.js");
   const t = { ...idTask("#⭐easy #area/body stretch ![[fist.webp|28]] [repeat:: every day] [due:: 2026-11-03]"), status: " ", path: "Tasks/Master.md", line: 4 };
   let lookups = 0;
   const app = {
@@ -249,7 +249,7 @@ test("a day's one-offs go morning, none, evening, then by order; the 🔁 box ke
 });
 
 test("calendarTaskInfo: a one-off's time is shown, a 🔁 task's is left to its box heading", async () => {
-  const { calendarTaskInfo } = await import("#/models/calendarData.js");
+  const { calendarTaskInfo } = await import("#/pages/calendar/model/calendarData.js");
   const app = { metadataCache: { getFirstLinkpathDest: () => null }, vault: {} };
   const ctx = { infos: new Map(), config: { areaIcons: {}, areaColors: {} }, actions: { canSkip: () => false } };
   assert.equal(calendarTaskInfo(task(" ", "tea #time/evening [due:: 2026-10-28]"), ctx, app).daytime, "evening");

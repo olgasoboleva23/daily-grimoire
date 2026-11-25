@@ -7,7 +7,7 @@ import GroupCard from "./GroupCard.vue";
 import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";
 import { T } from "#/entities/task/index.js";
 import { diffDays } from "#/shared/lib/dates.js";
-import { areaTitle } from "#/helpers/panelGroups.js";
+import { areaTitle } from "#/pages/calendar/index.js";
 
 const M = d => window.moment(d);
 const view = inject("calendar");

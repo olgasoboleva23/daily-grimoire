@@ -2,7 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { vault } from "./stubs/vault.mjs";
-import { loadMeds } from "#/controllers/meds.js";
+import { loadMeds } from "#/pages/meds/model/store.js";
 import {
   createCourse, formValues, markDose, pickCourse, readCourse, saveCourse, setDayNote,
 } from "#/entities/course/index.js";

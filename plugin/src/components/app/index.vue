@@ -7,8 +7,8 @@ import PageNavigation from "./PageNavigation/index.vue";
 import Widget from "#/shared/ui/UiWidget.vue";
 import { blocks } from "#/controllers/blocks.js";
 import Dashboard from "#/components/pages/dashboard/index.vue";
-import Calendar from "#/components/pages/calendar/index.vue";
-import Projects from "#/components/pages/projects/index.vue";
+import Calendar from "#/pages/calendar/index.js";
+import Projects from "#/pages/projects/index.js";
 
 const ui = inject("ui"), phone = Platform.isMobile;
 const views = { dashboard: Dashboard, calendar: Calendar, projects: Projects };

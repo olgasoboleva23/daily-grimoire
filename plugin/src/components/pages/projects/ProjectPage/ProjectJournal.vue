@@ -10,7 +10,7 @@ import UiButton from "#/shared/ui/UiButton/index.vue";
 import UiCard from "#/shared/ui/UiCard/index.vue";
 import { askValue } from "#/shared/ui/Window/index.ts";
 import { copyFinalPrompt, copyStartPrompt } from "#/controllers/prompts.js";
-import { journalOf } from "#/models/journal.js";
+import { journalOf } from "#/pages/projects/index.js";
 import { taskStore } from "#/entities/task/index.js";
 import { openJournal } from "../JournalWindow/open.js";
 

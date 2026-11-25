@@ -5,7 +5,7 @@ import { computed, inject } from "vue";
 import { Platform } from "obsidian";
 import UiButton from "#/shared/ui/UiButton/index.vue";
 import { T } from "#/entities/task/index.js";
-import { goTo } from "#/store/calendar.js";
+import { goTo } from "#/pages/calendar/index.js";
 import { addDays, addMonths } from "#/shared/lib/dates.js";
 
 const M = d => window.moment(d);

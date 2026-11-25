@@ -1,23 +1,10 @@
-// Fill, copy and save the shared project prompts. Export the Start prompt's variable help.
-import { noteStore } from "#/pages/projects/index.js";
+// Copy and save the project session prompts.
+import { fillStart, journalOf, noteStore } from "#/pages/projects/index.js";
 import { projectStore } from "#/entities/project/index.js";
 import { Notice } from "obsidian";
 import config, { CONFIG } from "#/shared/config/index.js";
 import { editJson } from "#/shared/vault/index.js";
 import { taskStore } from "#/entities/task/index.js";
-import { journalOf } from "#/models/journal.js";
-
-export function fillStart(template, project, entries, input) {
-  const journal = entries.slice(0, 3).map(e =>
-    `${e.at.slice(0, 10)} · ${e.heading} — ${e.text}`.replace(/\s*\n\s*/g, " ")).join("\n");
-  const fields = { Project_Name: project.name, Project_Result: project.result ?? "",
-    Project_Notes: project.notes ?? "", Last_3_Journal_Entries: journal,
-    Current_Task_Or_Input: input };
-
-  return template.split("\n").filter(l => journal || l.trim() !== "{Last_3_Journal_Entries}")
-    .join("\n")
-    .replace(/\{(\w+)\}/g, (match, key) => Object.hasOwn(fields, key) ? fields[key] : match);
-}
 
 async function copy(text) {
   try {
@@ -39,17 +26,6 @@ export async function copyStartPrompt(projectKey, task) {
 }
 
 export const copyFinalPrompt = () => copy(config.promptFinal);
-
-// the Start prompt's variables and what each becomes (fillStart fills them; listed when editing)
-const VARIABLES = [
-  ["Project_Name", "название проекта"],
-  ["Project_Result", "Result проекта (к чему идём)"],
-  ["Project_Notes", "Notes проекта (начальные условия)"],
-  ["Last_3_Journal_Entries", "три последние записи журнала; нет записей — строка убирается"],
-  ["Current_Task_Or_Input", "задача на сессию, спрашивается перед копированием"],
-];
-
-export const PROMPT_VARIABLES = VARIABLES.map(([name, what]) => `{${name}} — ${what}`).join("\n");
 
 export async function savePrompts({ promptStart, promptFinal }) {
   const patch = { promptStart: promptStart.trim(), promptFinal: promptFinal.trim() };
