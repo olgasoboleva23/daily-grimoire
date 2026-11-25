@@ -4,7 +4,7 @@ import { Platform } from "obsidian";
 import config, { pages } from "#/shared/config/index.js";
 import { taskStore } from "#/entities/task/index.js";
 import PageNavigation from "./PageNavigation/index.vue";
-import Widget from "#/components/UiWidget.vue";
+import Widget from "#/shared/ui/UiWidget.vue";
 import { blocks } from "#/controllers/blocks.js";
 import Dashboard from "#/components/pages/dashboard/index.vue";
 import Calendar from "#/components/pages/calendar/index.vue";

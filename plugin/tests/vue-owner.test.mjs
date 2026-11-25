@@ -17,7 +17,7 @@ before(async () => {
   setApp({ workspace: bus, metadataCache: bus, vault: bus, plugins: { plugins: { dataview: { api: { index: { initialized: true } } } } } });
   const { Component } = await import("obsidian");
   const { useVueApp } = await import("#/shared/lib/vueApp.ts");
-  const { default: Widget } = await import("#/components/UiWidget.vue");
+  const { default: Widget } = await import("#/shared/ui/UiWidget.vue");
   // what a page does: UiWidget on an element, owned by an Obsidian component
   VueHost = class extends Component {
     constructor(el, definition) { super(); Object.assign(this, { el, definition }); }
@@ -178,7 +178,7 @@ test("watches: a widget reloads for a change in its own files only", async () =>
 test("watches: the task files reload it from the plugin's store, at once, not through Dataview", async () => {
   const { taskStore } = await import("#/entities/task/index.js");
   const s = slow(), el = document.body.appendChild(document.createElement("div"));
-  const host = new VueHost(el, { view: View(), load: s.load, watches: ["00 System/Data/Tasks/"] });
+  const host = new VueHost(el, { view: View(), load: s.load, stores: [taskStore.version] });
   host.load();
   s.loads[0].ok({ n: 1 }); await settle();
   bus.fire("dataview:metadata-change", "update", { path: "00 System/Data/Tasks/Master.md" });

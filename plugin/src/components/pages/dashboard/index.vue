@@ -8,7 +8,7 @@ import { useObsidian } from "#/shared/lib/vueApp.ts";
 import { useBusy, useNewDay } from "#/shared/lib/use.js";
 import { todayYmd } from "#/shared/lib/dates.js";
 import { blocks } from "#/controllers/blocks.js";
-import Widget from "#/components/UiWidget.vue";
+import Widget from "#/shared/ui/UiWidget.vue";
 import UiCard from "#/shared/ui/UiCard/index.vue";
 import DashboardDate from "./DashboardDate.vue";
 

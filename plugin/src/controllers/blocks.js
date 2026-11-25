@@ -1,5 +1,6 @@
 // The pages' widgets by name (each a .vue drawn by UiWidget). A widget's writes aren't here: its
 // .vue imports them from its controller.
+import { taskStore } from "#/entities/task/index.js";
 import { loadLevelToday, loadLifeAreas, loadXpToday } from "#/controllers/widgets/xp.js";
 import { loadQuests } from "#/controllers/widgets/quests.js";
 import { loadShop } from "#/controllers/widgets/shop.js";
@@ -11,7 +12,7 @@ import { loadFinance, loadFinanceLine } from "#/controllers/widgets/finance.js";
 import { loadWeight } from "#/controllers/widgets/weight.js";
 import {
   COURSES, CYCLE, DISHES, FOOD_DATA, FOOD_LOG, GOALS, JOURNALS, LEDGER, MARKET_NOTE, MARKET_RECORDS,
-  CONFIG, PURCHASES, RULES, SAVINGS, SHOP, TASKS, WEIGHT,
+  CONFIG, PURCHASES, RULES, SAVINGS, SHOP, WEIGHT,
 } from "#/shared/config/index.js";
 import { loadDailyNote } from "#/controllers/widgets/dailyNote.js";
 import { loadPomodoro } from "#/controllers/widgets/pomodoro.js";
@@ -44,24 +45,25 @@ import FoodPage from "#/components/pages/food/index.vue";
 // card's title, bodyClass: a class on the card's body, watches: the files it reads (a folder:
 // ending in /): only their changes load it again (any other note's doesn't), follows: false to
 // load once, dataview: the paths read through Dataview (including [] for its date API) }
-const TASK_FILES = `${TASKS}/`, LEDGER_FILES = `${LEDGER}/`;
+const LEDGER_FILES = `${LEDGER}/`;
 
 export const blocks = {
-  xpToday: { dataview: [], view: XpToday, load: loadXpToday, watches: [TASK_FILES] },
-  quests: { dataview: [], view: QuestsCard, load: loadQuests, watches: [TASK_FILES] },
+  xpToday: { dataview: [], view: XpToday, load: loadXpToday, stores: [taskStore.version] },
+  quests: { dataview: [], view: QuestsCard, load: loadQuests, stores: [taskStore.version] },
   levelToday: {
-    view: LevelToday, load: loadLevelToday, dataview: [CYCLE], watches: [TASK_FILES, CYCLE],
+    view: LevelToday, load: loadLevelToday, dataview: [CYCLE],
+    stores: [taskStore.version], watches: [CYCLE],
   },
-  lifeAreas: { dataview: [], view: LifeAreas, load: loadLifeAreas, watches: [TASK_FILES] },
+  lifeAreas: { dataview: [], view: LifeAreas, load: loadLifeAreas, stores: [taskStore.version] },
   shop: {
     view: ShopWidget, load: loadShop, bodyClass: "ui-shop",
     dataview: [`${SHOP}.md`, `${PURCHASES}.md`],
-    watches: [TASK_FILES, `${SHOP}.md`, `${PURCHASES}.md`],
+    stores: [taskStore.version], watches: [`${SHOP}.md`, `${PURCHASES}.md`],
   },
   supplies: { view: SuppliesWidget, load: loadSupplies, watches: [MARKET_NOTE, MARKET_RECORDS] },
   goals: {
     view: GoalsWidget, load: loadGoals, dataview: [`${GOALS}.md`],
-    watches: [`${GOALS}.md`, TASK_FILES],
+    watches: [`${GOALS}.md`], stores: [taskStore.version],
   },
   savings: { view: SavingsJars, load: loadSavings, watches: [`${SAVINGS}/`] },
   cycle: { dataview: [CYCLE], view: CycleWidget, load: loadCycle, watches: [CYCLE] },
@@ -89,6 +91,7 @@ export const blocks = {
   // the food journal from JSON
   food: {
     view: FoodPage, load: loadFood,
-    watches: [FOOD_DATA, FOOD_LOG, DISHES, MARKET_RECORDS, COURSES, `${JOURNALS}/`, TASK_FILES],
+    watches: [FOOD_DATA, FOOD_LOG, DISHES, MARKET_RECORDS, COURSES, `${JOURNALS}/`],
+    stores: [taskStore.version],
   },
 };

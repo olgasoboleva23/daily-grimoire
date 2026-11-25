@@ -12,8 +12,6 @@ import {
   useDataviewChanges, useFileChanges, useRedraw, useTabDate, useWhenIndexed,
 } from "#/shared/lib/use.js";
 import { app, blockDv } from "#/shared/host/index.js";
-import { taskStore } from "#/entities/task/index.js";
-import { TASKS } from "#/shared/config/index.js";
 import UiCard from "#/shared/ui/UiCard/index.vue";
 import UiFailed from "#/shared/ui/UiFailed.vue";
 
@@ -63,10 +61,10 @@ onMounted(() => {
 
   catchUp = redraws.catchUp;
   owner.registerEvent(app.workspace.on("ui:theme", redraw));
-  const taskFiles = `${TASKS}/`, dataview = def.dataview;
-  const native = def.watches?.filter(path => path !== taskFiles && !dataview?.includes(path));
+  const dataview = def.dataview;
+  const native = def.watches?.filter(path => !dataview?.includes(path));
 
-  if (def.watches?.includes(taskFiles)) owner.register(watch(taskStore.version, redraw));
+  if (def.stores?.length) owner.register(watch(def.stores, redraw));
   if (native?.length || def.watchesNote) useFileChanges(owner, redraw, path =>
     native?.some(w => w.endsWith("/") ? path.startsWith(w) : path === w)
       || def.watchesNote?.(state.data, path), true);
