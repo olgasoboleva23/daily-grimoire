@@ -6,7 +6,7 @@ import { newTask } from "#/components/windows/tasks/TaskWindow/open.js";
 import { migrateTasks } from "#/migrations/tasks.js";
 import { openSettings } from "#/components/windows/settings/SettingsWindow/open.js";
 import { openNewProject } from "#/entities/project/index.js";
-import { addMarketItem } from "#/components/windows/market/MarketItemWindow/open.js";
+import { addMarketItem } from "#/components/windows/market/addMarketItem.js";
 import {
   openEditCourse, openNewCourse, pickCourse,
 } from "#/entities/course/index.js";

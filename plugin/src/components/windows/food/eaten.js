@@ -6,11 +6,9 @@ import { app } from "#/shared/host/index.js";
 import { foodChoices } from "#/models/food.js";
 import { Search } from "#/shared/ui/Search/index.ts";
 import { loadFood } from "#/controllers/food.js";
-import { logEaten } from "#/entities/food-log/index.js";
+import { logEaten, readMarks } from "#/entities/food-log/index.js";
 import { readDish } from "#/entities/dish/index.js";
-import {
-  openEditItem, openNewProduct,
-} from "#/components/windows/market/MarketItemWindow/open.js";
+import { openEditItem, openNewProduct } from "#/entities/product/index.js";
 import { openDishForm } from "#/components/windows/recipes/DishFormWindow/open.js";
 
 export async function addEaten(date) {
@@ -32,13 +30,13 @@ export async function addEaten(date) {
   if (!pick) return;
   let id = pick.id;
 
-  if (pick.create === "product") id = await openNewProduct(pick.name);
+  if (pick.create === "product") id = await openNewProduct(pick.name, readMarks);
   if (pick.create === "dish") id = await openDishForm({ name: pick.name });
   if (id) await logEaten(date, id);
 }
 
 export async function editEaten(id) {
-  if (id.startsWith("m")) return openEditItem(id);
+  if (id.startsWith("m")) return openEditItem(id, readMarks);
   const dish = await readDish(id);
 
   if (dish) return openDishForm({ ...dish, id });

@@ -16,8 +16,8 @@ import UiButton from "#/shared/ui/UiButton/index.vue";
 import UiDeleteButton from "#/shared/ui/UiDeleteButton/index.vue";
 import { vTip } from "#/shared/ui/tooltip.js";
 import { MARKET } from "#/shared/config/index.js";
-import { buyItem, removeItem } from "#/entities/product/index.js";
-import { openEditItem } from "#/components/windows/market/MarketItemWindow/open.js";
+import { buyItem, openEditItem, removeItem } from "#/entities/product/index.js";
+import { readMarks } from "#/entities/food-log/index.js";
 
 const props = defineProps({ state: { type: Object, required: true } });
 const ui = inject("ui", null);
@@ -91,7 +91,7 @@ watch(() => props.state.data.groups, groups => {
             class="ui-market__del"
             @delete="removeItem(r)"
           />
-          <UiButton v-if="r.id" title="edit item" @click="openEditItem(r.id)">
+          <UiButton v-if="r.id" title="edit item" @click="openEditItem(r.id, readMarks)">
             <span class="ui-pencil">✎</span>
           </UiButton>
           <UiButton

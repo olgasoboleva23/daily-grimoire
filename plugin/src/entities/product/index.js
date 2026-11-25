@@ -12,3 +12,9 @@ export { historyOf, marketChoices, openKeys, supplyStats } from "./model/history
 export { adding, addCatalogItem, readItems, readMarketItem } from "./model/repository/items.js";
 
 export { writeShoppingList } from "./model/shoppingList.js";
+
+export { default as MarketItemWindow } from "./ui/MarketItemWindow/index.vue";
+
+export { openEditItem, openNewProduct } from "./ui/MarketItemWindow/open.js";
+
+export { pickOrAddProduct } from "./ui/pickProduct.js";

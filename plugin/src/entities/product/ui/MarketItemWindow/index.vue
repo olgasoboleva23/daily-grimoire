@@ -11,7 +11,8 @@ import UiField from "#/shared/ui/UiField/index.vue";
 import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
 import UiFieldChoice from "#/shared/ui/UiFieldChoice/index.vue";
 import { filled, useWrite } from "#/shared/ui/Window/index.ts";
-import { addProduct, editProduct, marketCats } from "#/entities/product/index.js";
+import { marketCats } from "../../model/category.js";
+import { addProduct, editProduct } from "../../model/product.js";
 
 const props = defineProps({
   name: { type: String, default: "" },        // new: the name typed in the search

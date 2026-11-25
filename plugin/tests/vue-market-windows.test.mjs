@@ -5,19 +5,20 @@ import { Notice } from "obsidian";
 import { vault } from "./stubs/vault.mjs";
 import { FOOD_DATA, MARKET_NOTE, MARKET_RECORDS } from "#/shared/config/index.js";
 
-// The market's and food's windows (components/windows/{market,food}): a product's window, new or
+// The product and food mark windows: a product's window, new or
 // edit, the marks, and the flows that open them (＋ on the market, the product search), through
 // the test frame as their openers do; the searches stubbed. Made-up products only.
 const MARKS = [{ tag: "m1", icon: "🍫", name: "cocoa" }, { tag: "m2", icon: "🥛", name: "milk" }];
-let Search, testWindows, windows, flows, MarketItemWindow, MarksWindow, openWindow;
+let Search, testWindows, windows, product, addMarketItem, readMarks, MarketItemWindow, MarksWindow, openWindow;
 before(async () => {
   window.moment = () => ({ format: () => "2026-11-20" });
   ({ Search } = await import("#/shared/ui/Search/index.ts"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
   ({ openWindow } = await import("#/shared/ui/Window/index.ts"));
-  flows = await import("#/components/windows/market/MarketItemWindow/open.js");
-  MarketItemWindow = (await import("#/components/windows/market/MarketItemWindow/index.vue"))
-    .default;
+  product = await import("#/entities/product/index.js");
+  ({ MarketItemWindow } = product);
+  ({ readMarks } = await import("#/entities/food-log/index.js"));
+  ({ addMarketItem } = await import("#/components/windows/market/addMarketItem.js"));
   MarksWindow = (await import("#/components/windows/food/MarksWindow/index.vue")).default;
   windows = testWindows();
 });
@@ -37,7 +38,7 @@ const food = (records = {}) => vault({
 test("New product: Name prefilled, a check per mark (an empty description each); Add needs a name",
   async () => {
     const { files } = food({ m4: { name: "Soap", type: "home" } });
-    const running = flows.openNewProduct("Oat milk");
+    const running = product.openNewProduct("Oat milk", readMarks);
     const w = await windows.next();
 
     assert.equal(w.title, "New product");
@@ -63,7 +64,7 @@ test("New product: Name prefilled, a check per mark (an empty description each);
 test("Edit item (food): Name, Category lit, the marks checked; Save writes against `before`",
   async () => {
     const { files } = food({ m1: { name: "Tea", type: "food", marks: ["m1"] } });
-    const running = flows.openEditItem("m1");
+    const running = product.openEditItem("m1", readMarks);
     const w = await windows.next();
 
     assert.equal(w.title, "Edit item");
@@ -86,7 +87,7 @@ test("Edit item (food): Name, Category lit, the marks checked; Save writes again
 
 test("Edit item (not food): no marks; changed meanwhile: a notice, it stays", async () => {
   const { files } = food({ m3: { name: "Soap", type: "home" } });
-  const running = flows.openEditItem("m3");
+  const running = product.openEditItem("m3", readMarks);
   const w = await windows.next();
 
   assert.deepEqual(names(w), ["Name", "Category"]);
@@ -101,7 +102,7 @@ test("Edit item (not food): no marks; changed meanwhile: a notice, it stays", as
 
 test("Edit item: a gone item says so, no window", async () => {
   food({});
-  assert.equal(await flows.openEditItem("m9"), undefined);
+  assert.equal(await product.openEditItem("m9", readMarks), undefined);
   assert.equal(Notice.last, "Item no longer exists");
   assert.equal(windows.all.length, 0);
 });
@@ -140,7 +141,7 @@ test("＋ on the market: a new item asks its Category, then joins the list", asy
     assert.equal(title, "Find or add an item…");
     return find("Kite string").at(-1);
   });
-  const running = flows.addMarketItem();
+  const running = addMarketItem();
   const w = await windows.next();
 
   assert.equal(w.title, "✦ Kite string");
@@ -167,9 +168,9 @@ test("＋ on the market: one bought before joins at once; one on the list: a not
 
     return find("").find(c => c.name === name);
   });
-  await flows.addMarketItem();
+  await addMarketItem();
   assert.equal(files[MARKET_NOTE], "- [x] m1 [completion:: 2026-11-01]\n- [ ] m2\n- [ ] m1\n");
-  await flows.addMarketItem();
+  await addMarketItem();
   assert.equal(Notice.last, "✦ Salt is on the list already");
   assert.equal(windows.all.length, 0);
 });
@@ -190,11 +191,11 @@ test("the product search: a product picked; + new opens New product with the typ
     };
 
     t.mock.method(Search, "pick", search(""));
-    assert.equal(await flows.pickOrAddProduct(), "m1");
+    assert.equal(await product.pickOrAddProduct(readMarks), "m1");
     assert.deepEqual(shown.splice(0), ["Peas"]);   // the food products only
 
     t.mock.method(Search, "pick", search("Bean"));
-    const running = flows.pickOrAddProduct();
+    const running = product.pickOrAddProduct(readMarks);
     const w = await windows.next();
 
     assert.deepEqual(shown, ["+ new product: Bean"]);

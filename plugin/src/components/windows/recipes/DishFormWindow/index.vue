@@ -14,12 +14,10 @@ import UiFieldChoice from "#/shared/ui/UiFieldChoice/index.vue";
 import UiFieldPick from "#/shared/ui/UiFieldPick/index.vue";
 import UiFieldList from "#/shared/ui/UiFieldList/index.vue";
 import { filled, groupsFilled, useWrite, openWindow } from "#/shared/ui/Window/index.ts";
-import {
-  openEditItem, pickOrAddProduct,
-} from "#/components/windows/market/MarketItemWindow/open.js";
+import { readMarks } from "#/entities/food-log/index.js";
+import { openEditItem, pickOrAddProduct, readMarketItem } from "#/entities/product/index.js";
 import AlternativesWindow from "#/components/windows/recipes/AlternativesWindow/index.vue";
 import { addDish, editDish } from "#/entities/dish/index.js";
-import { readMarketItem } from "#/entities/product/index.js";
 import { pickRecipeNote } from "./pickRecipeNote.js";
 
 const props = defineProps({
@@ -62,11 +60,11 @@ const named = async id => {
 // product search
 async function product(line) {
   if (line.item) {
-    await openEditItem(line.item);
+    await openEditItem(line.item, readMarks);
     return named(line.item);
   }
 
-  const id = await pickOrAddProduct();
+  const id = await pickOrAddProduct(readMarks);
 
   return id && !names.has(id) ? named(id) : id;
 }
