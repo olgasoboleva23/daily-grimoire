@@ -3,8 +3,9 @@ import { projectStore } from "#/entities/project/index.js";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Notice } from "obsidian";
-import { copyStartPrompt, savePrompts } from "#/controllers/prompts.js";
-import { fillStart, PROMPT_VARIABLES } from "#/pages/projects/index.js";
+import { copyStartPrompt } from "#/pages/projects/ui/prompt.js";
+import { savePrompts } from "#/pages/projects/ui/PromptsWindow/save.js";
+import { fillStart, PROMPT_VARIABLES } from "#/pages/projects/model/prompt.js";
 import config, { CONFIG } from "#/shared/config/index.js";
 import { vault } from "./stubs/vault.mjs";
 

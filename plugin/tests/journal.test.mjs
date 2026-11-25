@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { journalOf } from "#/pages/projects/model/journal.js";
-import { addNote } from "#/pages/projects/index.js";
+import { addNote } from "#/pages/projects/model/note.js";
 import { vault } from "./stubs/vault.mjs";
 
 test("journal ownership survives a missing target and distinguishes shared tasks", () => {

@@ -3,14 +3,14 @@
      interviewer, with the project's context and the task asked for first) and 📝 Final (the
      archivist's summary) -->
 <script setup>
-import { noteStore } from "#/pages/projects/index.js";
+import { noteStore } from "../../model/store.js";
 import { projectStore } from "#/entities/project/index.js";
 import { computed } from "vue";
 import UiButton from "#/shared/ui/UiButton/index.vue";
 import UiCard from "#/shared/ui/UiCard/index.vue";
 import { askValue } from "#/shared/ui/Window/index.ts";
-import { copyFinalPrompt, copyStartPrompt } from "#/controllers/prompts.js";
-import { journalOf } from "#/pages/projects/index.js";
+import { copyFinalPrompt, copyStartPrompt } from "../prompt.js";
+import { journalOf } from "../../model/journal.js";
 import { taskStore } from "#/entities/task/index.js";
 import { openJournal } from "../JournalWindow/open.js";
 

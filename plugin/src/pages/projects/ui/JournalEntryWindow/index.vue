@@ -6,14 +6,14 @@
 <script setup>
 import { projectStore } from "#/entities/project/index.js";
 import { computed, reactive } from "vue";
-import { FuzzySuggestModal, Notice } from "obsidian";
+import { Notice } from "obsidian";
 import UiWindow from "#/shared/ui/UiWindow/index.vue";
 import UiField from "#/shared/ui/UiField/index.vue";
 import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
 import UiFieldPick from "#/shared/ui/UiFieldPick/index.vue";
 import { filled, useWrite } from "#/shared/ui/Window/index.ts";
-import { app } from "#/shared/host/index.js";
-import { addNote, editNote } from "#/pages/projects/index.js";
+import { pickNotePath } from "../pickNotePath.js";
+import { addNote, editNote } from "../../model/note.js";
 import { taskStore } from "#/entities/task/index.js";
 
 const props = defineProps({
@@ -47,19 +47,6 @@ const v = reactive(before
   : { about: `project:${props.project}`, title: "", text: "", link: "" });
 const ready = computed(() => !entry || filled(v.at));
 const { busy, run } = useWrite(emit);
-
-function pickNotePath() {
-  return new Promise(resolve => {
-    class Picker extends FuzzySuggestModal {
-      getItems() { return app.vault.getMarkdownFiles(); }
-      getItemText(file) { return file.path; }
-      onChooseItem(file) { resolve(file.path); }
-      onClose() { super.onClose(); queueMicrotask(() => resolve(null)); }
-    }
-
-    new Picker(app).open();
-  });
-}
 
 const save = () => run(async () => {
   if (!v.title?.trim() && !v.text?.trim() && !v.link)

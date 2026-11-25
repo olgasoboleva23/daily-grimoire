@@ -12,12 +12,12 @@ import UiProgress from "#/shared/ui/UiProgress/index.vue";
 import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
 import UiTabs from "#/shared/ui/UiTabs/index.vue";
 import { openWindow } from "#/shared/ui/Window/index.ts";
-import PromptsWindow from "#/components/windows/projects/PromptsWindow/index.vue";
+import PromptsWindow from "../PromptsWindow/index.vue";
 import { app, tasksApi } from "#/shared/host/index.js";
 import { tick } from "#/features/complete-task/index.js";
 import { T } from "#/entities/task/index.js";
-import { FILTERS, stageEntries } from "#/pages/projects/index.js";
-import { coverUrl } from "#/pages/projects/index.js";
+import { FILTERS, stageEntries } from "../../model/store.js";
+import { coverUrl } from "../../model/cover.js";
 import ProjectStatus from "../ProjectStatus/index.vue";
 
 const projects = inject("projects");

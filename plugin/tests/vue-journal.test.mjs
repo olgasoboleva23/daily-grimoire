@@ -19,8 +19,8 @@ before(async () => {
   vue = await import("vue");
   ({ taskStore } = await import("#/entities/task/index.js"));
   ({ noteStore } = await import("#/pages/projects/index.js"));
-  ({ openJournal } = await import("#/components/pages/projects/JournalWindow/open.js"));
-  Card = (await import("#/components/pages/projects/ProjectPage/ProjectJournal.vue")).default;
+  ({ openJournal } = await import("#/pages/projects/ui/JournalWindow/open.js"));
+  Card = (await import("#/pages/projects/ui/ProjectPage/ProjectJournal.vue")).default;
   ({ testWindows } = await import("./stubs/windows.mjs"));
   config = (await import("#/shared/config/index.js")).default;
 });

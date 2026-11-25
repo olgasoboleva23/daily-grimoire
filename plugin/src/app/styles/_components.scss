@@ -58,7 +58,7 @@
 @use "../../components/pages/food";
 @use "../../components/pages/recipes";
 @use "../../shared/ui/UiProgress";
-@use "../../components/pages/projects/ProjectStatus";
-@use "../../components/pages/projects/ProjectList";
-@use "../../components/pages/projects/ProjectPage";
+@use "../../pages/projects/ui/ProjectStatus";
+@use "../../pages/projects/ui/ProjectList";
+@use "../../pages/projects/ui/ProjectPage";
 @use "../../widgets/finance/ui" as finance;

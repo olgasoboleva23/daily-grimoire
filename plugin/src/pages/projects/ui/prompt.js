@@ -1,10 +1,11 @@
-// Copy and save the project session prompts.
-import { fillStart, journalOf, noteStore } from "#/pages/projects/index.js";
-import { projectStore } from "#/entities/project/index.js";
+// Copy a project's filled session prompt or the final prompt to the clipboard.
 import { Notice } from "obsidian";
-import config, { CONFIG } from "#/shared/config/index.js";
-import { editJson } from "#/shared/vault/index.js";
+import config from "#/shared/config/index.js";
+import { projectStore } from "#/entities/project/index.js";
 import { taskStore } from "#/entities/task/index.js";
+import { noteStore } from "../model/store.js";
+import { fillStart } from "../model/prompt.js";
+import { journalOf } from "../model/journal.js";
 
 async function copy(text) {
   try {
@@ -26,10 +27,3 @@ export async function copyStartPrompt(projectKey, task) {
 }
 
 export const copyFinalPrompt = () => copy(config.promptFinal);
-
-export async function savePrompts({ promptStart, promptFinal }) {
-  const patch = { promptStart: promptStart.trim(), promptFinal: promptFinal.trim() };
-
-  await editJson(CONFIG, current => ({ ...current, ...patch }));
-  Object.assign(config, patch);
-}

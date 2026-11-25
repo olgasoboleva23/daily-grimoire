@@ -20,7 +20,7 @@ before(async () => {
   ({ PROMPT_VARIABLES } = await import("#/pages/projects/model/prompt.js"));
   ({ Search } = await import("#/shared/ui/Search/index.ts"));
   ({ taskStore } = await import("#/entities/task/index.js"));
-  Projects = (await import("#/components/pages/projects/index.vue")).default;
+  Projects = (await import("#/pages/projects/ui/index.vue")).default;
 });
 
 // made-up projects: Garden (3 of 8 done, its first stage complete), Shed (no stages), Poem, Kite
@@ -366,7 +366,7 @@ test("Delete project? names the project and what is kept; closed it stays, else 
   } finally { windows.restore(); }
 });
 
-// the projects' windows (components/windows/projects/), opened from their buttons, answered
+// the projects' windows (pages/projects/ui/), opened from their buttons, answered
 // through the test frame
 const fieldNames = w => w.wrapper.findAll(".setting-item-name").map(n => n.text());
 const submitButton = w => w.wrapper.find(".ui-window__submit");
