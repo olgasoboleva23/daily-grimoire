@@ -10,7 +10,7 @@ import { TaskText, setDue, taskInfo } from "#/entities/task/index.js";
 import { app, tasksApi } from "#/shared/host/index.js";
 import config from "#/shared/config/index.js";
 import { addDays, todayYmd } from "#/shared/lib/dates.js";
-import { editTask } from "#/components/windows/tasks/TaskWindow/open.js";
+import { editTask } from "#/features/edit-task/index.js";
 import { tick } from "#/features/complete-task/index.js";
 
 const props = defineProps({

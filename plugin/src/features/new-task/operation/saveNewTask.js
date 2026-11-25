@@ -1,30 +1,11 @@
-// Task editor and calendar operations compose the task entity's stale-checked actions.
+// Create a task record and its native line together, with stale checks and rollback.
 import { Notice } from "obsidian";
-import { parseNote } from "#/shared/lib/noteLines.js";
 import { MASTER } from "#/shared/config/index.js";
-import { undoNotice } from "#/shared/ui/undoNotice.js";
+import { parseNote } from "#/shared/lib/noteLines.js";
 import {
-  Task, VariantProblem, addTask, changeTaskLine, editTaskLine, masterText, newId, nextVariantAfter,
-  recordOf, recordsFromDisk, removePrependedLine, saveRecords, variantsProblem, writeTask,
+  Task, VariantProblem, addTask, masterText, newId, nextVariantAfter, recordOf, recordsFromDisk,
+  removePrependedLine, saveRecords, variantsProblem, writeTask,
 } from "#/entities/task/index.js";
-
-export async function saveTaskEdit(t, { record, line }, pick, edited) {
-  if (!t.pool && !edited) return;
-  const id = Task.of(t).id;
-  const patch = recordOf(pick);
-
-  if ("pool" in pick) patch.pool = pick.pool || undefined;
-  if (t.pool) {
-    if (pick.name) patch.name = pick.name;
-    await writeTask(() => saveRecords({ [id]: patch }, { [id]: record }));
-    return;
-  }
-
-  const back = Task.unnamed(edited, id);
-
-  patch.name = back.name || new Task(line, t, record ?? t.rec).name;
-  await writeTask(() => changeTaskLine(t, () => back.line, patch, { line, record }));
-}
 
 // A new task from the New task command: `name` (a past task's, or a typed one), the window's
 // picks, the Tasks dialog's result line. The name is the dialog's (its words may have been changed
@@ -79,17 +60,4 @@ async function saveNew(name, pick, result, oldId = null) {
     await rollback();
     throw error;
   }
-}
-
-// 🗑: the line deleted; a pool item (no line) taken out of the pool, its record and history kept
-// (an undefined field is left out of the JSON)
-export async function deleteTaskLine(t) {
-  if (!t.pool) {
-    const undo = await editTaskLine(t, () => null);
-
-    return undoNotice("🗑", Task.of(t).text, undo);
-  }
-
-  await saveRecords({ [t.id]: { pool: undefined } });
-  undoNotice("🗑", Task.of(t).text, () => saveRecords({ [t.id]: { pool: true } }));
 }

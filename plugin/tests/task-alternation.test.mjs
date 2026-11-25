@@ -17,7 +17,8 @@ let taskStore, tick, readTaskEdit, saveTaskEdit, saveNewTask, makeActions;
 beforeTests(async () => {
   ({ taskStore } = await import("#/entities/task/index.js"));
   ({ tick } = await import("#/features/complete-task/index.js"));
-  ({ saveTaskEdit, saveNewTask } = await import("#/controllers/tasks.js"));
+  ({ saveTaskEdit } = await import("#/features/edit-task/index.js"));
+  ({ saveNewTask } = await import("#/features/new-task/index.js"));
   ({ readTaskEdit } = await import("#/entities/task/index.js"));
   ({ makeActions } = await import("#/controllers/calendar.js"));
 });

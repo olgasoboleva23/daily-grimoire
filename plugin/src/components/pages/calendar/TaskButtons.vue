@@ -6,7 +6,7 @@ import { vHoldAction } from "#/shared/lib/holdAction.js";
 import { inject } from "vue";
 import UiButton from "#/shared/ui/UiButton/index.vue";
 import UiDeleteButton from "#/shared/ui/UiDeleteButton/index.vue";
-import { editTask } from "#/components/windows/tasks/TaskWindow/open.js";
+import { editTask } from "#/features/edit-task/index.js";
 
 const props = defineProps({
   task: { type: Object, required: true },

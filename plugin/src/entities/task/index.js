@@ -34,3 +34,5 @@ export { default as TaskText } from "./ui/TaskText.vue";
 export { default as TaskWindow } from "./ui/TaskWindow/index.vue";
 
 export { pickTask } from "./ui/pickTask.js";
+
+export { openTaskWindow } from "./ui/TaskWindow/open.js";

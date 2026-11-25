@@ -2,7 +2,7 @@
 import { T, placeTask, reorderTasks, setDue, taskFromPool } from "#/entities/task/index.js";
 import { tick, skipTask, completeOnItsDay } from "#/features/complete-task/index.js";
 import { togglePause, unplanTask } from "#/pages/calendar/index.js";
-import { deleteTaskLine } from "./tasks.js";
+import { deleteTask } from "#/features/edit-task/index.js";
 
 export function makeActions(ctx) {
   const { today, TASKS } = ctx;
@@ -18,6 +18,6 @@ export function makeActions(ctx) {
     place: (t, day, done) => placeTask(t, day, done, today, TASKS),
     toToday: t => setDue(t, today),
     reorder: (t, to, after, day) => reorderTasks(ctx.model.openOn(day), t, to, after),
-    remove: deleteTaskLine,
+    remove: deleteTask,
   };
 }
