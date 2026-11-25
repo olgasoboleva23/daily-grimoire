@@ -5,7 +5,7 @@ import { vault } from "./stubs/vault.mjs";
 import { COURSES, DISHES, FOOD_DATA, FOOD_LOG, JOURNALS, MARKET_RECORDS } from "#/helpers/paths.js";
 import { forFood } from "#/models/course.js";
 
-let mount, FoodPage, loadFood, DEFAULT_MARKS, DishWindow, Form;
+let mount, FoodPage, loadFood, DEFAULT_MARKS, DishWindow, Search, testWindows;
 before(async () => {
   GlobalRegistrator.register();
   window.moment = () => ({ format: () => "2026-11-04" });   // a Wednesday
@@ -14,7 +14,8 @@ before(async () => {
   ({ loadFood } = await import("#/controllers/food.js"));
   ({ DEFAULT_MARKS } = await import("#/models/food.js"));
   ({ DishWindow } = await import("#/components/pages/recipes/DishWindow/index.ts"));
-  ({ Form } = await import("#/components/uikit/Form/index.ts"));
+  ({ Search } = await import("#/components/uikit/Search/index.ts"));
+  ({ testWindows } = await import("./stubs/windows.mjs"));
 });
 const tick = () => new Promise(r => setTimeout(r));
 const LOG = { "2026-11-02": { eaten: ["m1", "m2", "d1"], note: "сыпь" } };
@@ -125,32 +126,104 @@ test("setFoodNote, removeEaten: one day of log.json changed", async () => {
   assert.deepEqual(JSON.parse(files[FOOD_LOG])["2026-11-02"].eaten, ["m1", "d1"]);
 });
 
-test("editMarks: the marks written to food.json, the task kept, a new mark tagged next", async () => {
+test("saveMarks trims the values, assigns a tag and preserves the training task", async () => {
   const FOOD = { marks: [{ tag: "m2", icon: "🥛", name: "молоко" }], task: "t5" };
   const { files } = vault({ [FOOD_DATA]: JSON.stringify(FOOD) });
-  const { editMarks } = await import("#/controllers/food.js");
-  const { Form } = await import("#/components/uikit/Form/index.ts");
-  const ask = Form.ask;
+  const { saveMarks } = await import("#/controllers/food.js");
 
-  Form.ask = async (app, title, fields, { values }) => ({ marks: [...values.marks, { icon: "🍓", name: " ягоды " }] });
-  try { await editMarks(); } finally { Form.ask = ask; }
-  assert.deepEqual(JSON.parse(files[FOOD_DATA]), { ...FOOD, marks: [...FOOD.marks, { tag: "m3", icon: "🍓", name: "ягоды" }] });
+  await saveMarks([...FOOD.marks, { icon: " 🍓 ", name: " ягоды " }]);
+  assert.deepEqual(JSON.parse(files[FOOD_DATA]), {
+    ...FOOD, marks: [...FOOD.marks, { tag: "m3", icon: "🍓", name: "ягоды" }],
+  });
 });
 
-test("the food page: a dish eaten opens its window, a product its edit form", async () => {
+test("logEaten appends a serving and keeps the day's note", async () => {
+  const { files } = vault({ [FOOD_LOG]: JSON.stringify(LOG) });
+  const { logEaten } = await import("#/controllers/food.js");
+  const date = "2026-11-02";
+
+  await logEaten(date, "m1");
+  assert.deepEqual(JSON.parse(files[FOOD_LOG])[date], {
+    eaten: [...LOG[date].eaten, "m1"], note: LOG[date].note,
+  });
+});
+
+test("the food page: a dish eaten opens its window, a product its Edit item window", async () => {
   vault({ [MARKET_RECORDS]: JSON.stringify({ m1: { name: "каша с 4 ч", type: "food" } }) });
-  const opened = [], open = DishWindow.prototype.open, ask = Form.ask;
-  let asked = null;
+  const windows = testWindows(), opened = [], open = DishWindow.prototype.open;
 
   DishWindow.prototype.open = function () { opened.push(this.dish); };
-  Form.ask = async (_app, title) => { asked = title; return null; };
   try {
     const w = mount(FoodPage, { props: { state: { data: data() } } });
     const [porridge, , pancakes] = w.findAll(".ui-table__row")[0].findAll(".ui-food__item-name");
 
     await pancakes.trigger("click"); await tick();
-    await porridge.trigger("click"); await tick();
-  } finally { DishWindow.prototype.open = open; Form.ask = ask; }
+    await porridge.trigger("click");
+    const edit = await windows.next();
+
+    assert.equal(edit.title, "Edit item");
+    assert.equal(edit.props.id, "m1");
+    await edit.close();
+  } finally { DishWindow.prototype.open = open; windows.restore(); }
   assert.deepEqual(opened, ["d1"]);
-  assert.ok(asked);
+});
+
+test("the food page: ⚙ opens ✦ Marks with the marks of food.json", async () => {
+  const marks = [{ tag: "m1", icon: "🍫", name: "какао" }];
+  const windows = testWindows();
+
+  vault({ [FOOD_DATA]: JSON.stringify({ marks }) });
+  try {
+    const w = mount(FoodPage, { props: { state: { data: data() } } });
+
+    await w.find('[aria-label="the marks"]').trigger("click");
+    const edit = await windows.next();
+
+    assert.equal(edit.title, "✦ Marks");
+    assert.deepEqual(edit.props, { marks });
+    await edit.close();
+  } finally { windows.restore(); }
+});
+
+test("＋ on a day: the search of products and dishes; one picked is logged, a new product " +
+  "or dish first gets its window", async t => {
+  const { files } = vault({
+    [MARKET_RECORDS]: JSON.stringify({ m1: { name: "Peas", type: "food" } }),
+    [DISHES]: JSON.stringify({ d1: { name: "Soup", ingredients: [{ item: "m1", amount: "" }],
+      link: "" } }),
+    [FOOD_LOG]: JSON.stringify({}),
+  });
+  const windows = testWindows(), logged = () => JSON.parse(files[FOOD_LOG])["2026-11-02"].eaten;
+  const answers = [
+    hits => hits.find(c => c.kind === "dish"), hits => hits.find(c => c.create === "product"),
+    hits => hits.find(c => c.create === "dish"),
+  ];
+
+  t.mock.method(Search, "pick", async (_app, title, find) => {
+    assert.equal(title, "What was eaten…");
+    const hits = find("Peas");
+
+    assert.deepEqual(hits.slice(-2).map(c => c.create), ["product", "dish"]);
+    return answers.shift()(hits);
+  });
+  try {
+    const w = mount(FoodPage, { props: { state: { data: data() } } });
+    const add = () => w.findAll(".ui-table__row")[0].find('[aria-label="add what was eaten"]');
+
+    await add().trigger("click"); await tick(); await tick();
+    assert.deepEqual(logged(), ["d1"]);
+    await add().trigger("click");
+    const product = await windows.next();
+
+    assert.equal(product.title, "New product");
+    await product.submit(); await tick();
+    assert.deepEqual(logged(), ["d1", "m2"]);
+    await add().trigger("click");
+    const dish = await windows.next();
+
+    assert.equal(dish.title, "New dish");
+    assert.equal(dish.wrapper.find("input").element.value, "Peas");
+    await dish.close(); await tick();
+    assert.deepEqual(logged(), ["d1", "m2"]);
+  } finally { windows.restore(); }
 });

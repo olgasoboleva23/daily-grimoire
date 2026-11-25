@@ -1,8 +1,9 @@
 <!-- A window's field row (block ui-field): Obsidian's setting row, its name on the left, its
      control (the slot: UiFieldText, UiFieldChoice, UiFieldPick, a native checkbox or select) on
      the right. `toggle`: a checkbox's row (Obsidian's mod-toggle, the narrow control), with its
-     `description` under the name; `text`: a label row, the text shown selectable, its line
-     breaks kept, instead of a control. Its look: index.scss -->
+     `description` under the name ("": an empty line, as Form's check rows had); `text`: a label
+     row, the text shown selectable, its line breaks kept, instead of a control. Its look:
+     index.scss -->
 <script setup>
 defineProps({
   name: { type: String, required: true },
@@ -17,7 +18,7 @@ defineProps({
     <!-- a long name wraps (the field stays in the window), but many buttons never squeeze it -->
     <div class="setting-item-info ui-field__info">
       <div class="setting-item-name">{{ name }}</div>
-      <div v-if="description" class="setting-item-description">{{ description }}</div>
+      <div v-if="description !== null" class="setting-item-description">{{ description }}</div>
     </div>
     <div
       class="setting-item-control ui-field__control"

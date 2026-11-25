@@ -79,26 +79,47 @@ test("the recipes page: the search finds a dish by its name or an ingredient", a
 
 test("the recipes page: no dishes yet says so, + Dish opens the dish form", async () => {
   vault({ [FOOD_DATA]: JSON.stringify({ marks: MARKS }) });
-  const ask = Form.ask;
-  let title = null;
   const w = await page();
 
   assert.match(w.find(".ui-empty").text(), /No dishes yet/);
-  Form.ask = async (_app, t) => { title = t; return null; };
-  try { await w.find(".ui-recipes__add").trigger("click"); await tick(); } finally { Form.ask = ask; }
-  assert.equal(title, "New dish");
+  const windows = testWindows();
+
+  try {
+    await w.find(".ui-recipes__add").trigger("click");
+    const form = await windows.next();
+
+    assert.equal(form.title, "New dish");
+    await form.close();
+  } finally { windows.restore(); }
 });
 
-// 🛒 with Form.ask answering `answer`: what it was asked (its title and the products shown)
-async function cart(button, answer) {
-  const ask = Form.ask, asked = [];
+// 🛒 through the test frame: what its window shows (its title, the dish, the products' lines),
+// then `answer` (a line → its new { on, amount }) applied and Add, or the window closed (null)
+async function cart(button, answer = l => l) {
+  const windows = testWindows();
 
-  Form.ask = async (_app, title, _rows, { values }) => {
-    asked.push([title, values]);
-    return answer && { ...values, ...answer };
-  };
-  try { await button.trigger("click"); await tick(); await tick(); } finally { Form.ask = ask; }
-  return asked;
+  try {
+    await button.trigger("click");
+    const w = await windows.next();
+    const rows = w.wrapper.findAll(".ui-field-list__line:not(.ui-field-list__line--head)");
+    const read = r => ({ on: r.find("input[type=checkbox]").element.checked,
+      name: r.find(".ui-field__label").text(),
+      amount: r.find("input:not([type=checkbox])").element.value });
+    const shown = [w.title, { dish: w.wrapper.find(".ui-field__label").text(),
+      lines: rows.map(read) }];
+
+    if (!answer) await w.close();
+    else {
+      for (const r of rows) {
+        const { on, amount } = answer(read(r));
+
+        await r.find("input[type=checkbox]").setValue(on);
+        await r.find("input:not([type=checkbox])").setValue(amount);
+      }
+      await w.submit();
+    }
+    return shown;
+  } finally { windows.restore(); }
 }
 
 test("the recipes page: a dish's name opens its window; 🛒 asks, then puts its products on the list",
@@ -115,10 +136,10 @@ test("the recipes page: a dish's name opens its window; 🛒 asks, then puts its
     const button = w.findAll(".ui-recipes__cart")[1];
 
     assert.deepEqual(await cart(button, null),
-      [["To the shopping list?", { dish: "Porridge", lines: [
-        { on: true, name: "oats", amount: "1 cup" }, { on: true, name: "milk", amount: "" }] }]]);
+      ["To the shopping list?", { dish: "Porridge", lines: [
+        { on: true, name: "oats", amount: "1 cup" }, { on: true, name: "milk", amount: "" }] }]);
     assert.equal(written[`${MARKET}.md`], "");
-    await cart(button, {});
+    await cart(button);
     assert.deepEqual(written[`${MARKET}.md`].trim().split("\n"),
       ["- [ ] m1 [need:: Porridge · 1 cup]", "- [ ] m2 [need:: Porridge]"]);
     assert.match(Notice.last, /2 → Celestial Market/);
@@ -132,7 +153,7 @@ test("🛒: a product on the list already gets the dish's amount; the notice say
   });
   const w = await page();
 
-  await cart(w.findAll(".ui-recipes__cart")[1], {});
+  await cart(w.findAll(".ui-recipes__cart")[1]);
   assert.deepEqual(written[`${MARKET}.md`].trim().split("\n"), [
     "- [ ] m1 [need:: Muesli · 2 cups] [need:: Porridge · 1 cup]", "- [ ] m2 [need:: Porridge]"]);
   assert.match(Notice.last, /1 → Celestial Market.*1 on the list already/);
@@ -143,8 +164,8 @@ test("the dish window: 🛒 asks too, then puts the dish's products on the list"
   const w = mount(DishView, { props: { dish: "d2", owner: new Component() } });
 
   await tick(); await tick();
-  assert.deepEqual(await cart(w.find(".ui-dish__cart"), {}), [["To the shopping list?",
-    { dish: "Cake from the café", lines: [{ on: true, name: "cocoa", amount: "" }] }]]);
+  assert.deepEqual(await cart(w.find(".ui-dish__cart")), ["To the shopping list?",
+    { dish: "Cake from the café", lines: [{ on: true, name: "cocoa", amount: "" }] }]);
   assert.equal(written[`${MARKET}.md`].trim().split("\n").length, 1);
 });
 
@@ -260,16 +281,8 @@ test("an alternative of two products: «oats / cocoa + milk» on the page, each 
   const w = await page();
 
   assert.equal(w.find(".ui-recipes__ingredients").text(), "oats / cocoa + milk");
-  const ask = Form.ask;
-  let asked;
+  const [, asked] = await cart(w.find(".ui-recipes__cart"), l => ({ ...l, on: !l.on }));
 
-  Form.ask = async (_app, _title, _rows, { values }) => {
-    asked = values;
-    return { ...values, lines: values.lines.map(l => ({ ...l, on: !l.on })) };
-  };
-  try { await w.find(".ui-recipes__cart").trigger("click"); await tick(); await tick(); } finally {
-    Form.ask = ask;
-  }
   assert.deepEqual(asked.lines, [{ on: true, name: "oats", amount: "1 cup" },
     { on: false, name: "↳ cocoa", amount: "2 tsp" }, { on: false, name: "↳ milk", amount: "1 glass" }]);
   assert.deepEqual(written[`${MARKET}.md`].trim().split("\n"),
@@ -286,46 +299,25 @@ test("an alternative of two products: «oats / cocoa + milk» on the page, each 
 test("🛒: an amount changed in the window goes onto the list", async () => {
   const { files: written } = files();
   const w = await page();
-  const ask = Form.ask;
 
-  Form.ask = async (_app, _title, _rows, { values }) =>
-    ({ ...values, lines: values.lines.map(l => ({ ...l, amount: l.name === "oats" ? "2 cups" : "" })) });
-  try {
-    await w.findAll(".ui-recipes__cart")[1].trigger("click"); await tick(); await tick();
-  } finally { Form.ask = ask; }
+  await cart(w.findAll(".ui-recipes__cart")[1],
+    l => ({ ...l, amount: l.name === "oats" ? "2 cups" : "" }));
   assert.match(written[`${MARKET}.md`], /m1 \[need:: Porridge · 2 cups\]/);
 });
 
 test("🛒: a line a checkbox, all ticked; an unticked line stays off the list", async () => {
   const { files: written } = files();
   const w = await page();
-  const ask = Form.ask;
-  let rows;
 
-  Form.ask = async (_app, _title, r, { values }) => {
-    rows = r;
-    return { ...values, lines: values.lines.map(l => ({ ...l, on: l.name !== "milk" })) };
-  };
-  try {
-    await w.findAll(".ui-recipes__cart")[1].trigger("click"); await tick(); await tick();
-  } finally { Form.ask = ask; }
-  const list = rows.find(r => r.key === "lines");
-
-  assert.equal(list.fixed, true);
-  assert.deepEqual(list.list.map(r => r.key), ["on", "name", "amount"]);
+  await cart(w.findAll(".ui-recipes__cart")[1], l => ({ ...l, on: l.name !== "milk" }));
   assert.equal(written[`${MARKET}.md`].trim(), "- [ ] m1 [need:: Porridge · 1 cup]");
 });
 
 test("🛒: all unticked: nothing is added, and the notice says so", async () => {
   const { files: written } = files();
   const w = await page();
-  const ask = Form.ask;
 
-  Form.ask = async (_app, _title, _rows, { values }) =>
-    ({ ...values, lines: values.lines.map(l => ({ ...l, on: false })) });
-  try {
-    await w.findAll(".ui-recipes__cart")[1].trigger("click"); await tick(); await tick();
-  } finally { Form.ask = ask; }
+  await cart(w.findAll(".ui-recipes__cart")[1], l => ({ ...l, on: false }));
   assert.equal(written[`${MARKET}.md`], "");
   assert.match(Notice.last, /nothing ticked/);
 });
@@ -336,19 +328,24 @@ test("✏️ on the page and in the dish window: the form gets each line's alter
     [DISHES]: JSON.stringify({ d1: { ...DISH.d1, ingredients: [
       { item: "m1", amount: "1 cup", alt: [{ item: "m3", amount: "2 tsp" }] }] } }),
   });
-  const ask = Form.ask, asked = [];
+  const windows = testWindows(), asked = [];
+  const form = async () => {
+    const f = await windows.next();
 
-  Form.ask = async (_app, _title, _rows, { values }) => { asked.push(values); return null; };
+    asked.push(f.wrapper.findAll(".ui-field-pick__button").map(b => b.text()));
+    await f.close();
+  };
+
   try {
     const w = await page();
 
-    await w.find("[aria-label='edit the dish']").trigger("click"); await tick(); await tick();
+    await w.find("[aria-label='edit the dish']").trigger("click");
+    await form();
     const win = mount(DishView, { props: { dish: "d1", owner: new Component() } });
 
     await tick(); await tick();
-    await win.find(".ui-dish__edit").trigger("click"); await tick(); await tick();
-  } finally { Form.ask = ask; }
-  assert.equal(asked.length, 2);
-  for (const values of asked)
-    assert.deepEqual(values.ingredients[0].alt.map(a => [a.item, a.amount]), [["m3", "2 tsp"]]);
+    await win.find(".ui-dish__edit").trigger("click");
+    await form();
+  } finally { windows.restore(); }
+  assert.deepEqual(asked, [["oats", "cocoa", "Porridge"], ["oats", "cocoa", "Porridge"]]);
 });

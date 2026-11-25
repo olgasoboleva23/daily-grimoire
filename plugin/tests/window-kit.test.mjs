@@ -268,6 +268,14 @@ test("UiField: Obsidian's setting row; a checkbox's row is a toggle with its des
       "setting-item-control ui-field__control ui-field__control--check");
   });
 
+test("UiField: a toggle with an empty description keeps its (empty) description line", () => {
+  const { el } = draw(`<UiWindow title="t">
+    <UiField name="🍫 cocoa" description="" toggle><input type="checkbox"></UiField>
+  </UiWindow>`);
+
+  assert.equal(el.querySelector(".setting-item-description").textContent, "");
+});
+
 test("UiField: a label row shows its text selectable, its line breaks kept", () => {
   const { el } = draw('<UiWindow title="t"><UiField name="Kept" :text="v.kept" /></UiWindow>',
     { kept: "the cover\nthe tasks" });

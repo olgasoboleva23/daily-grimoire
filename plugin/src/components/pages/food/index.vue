@@ -15,9 +15,11 @@ import { addDays, weekOf } from "#/helpers/dates.js";
 import { dayLabel } from "#/models/course.js";
 import { foodWeek } from "#/models/food.js";
 import { app } from "#/helpers/app.js";
-import {
-  addEaten, editEaten, editMarks, pickTrainingTask, removeEaten, setFoodNote,
-} from "#/controllers/food.js";
+import { pickTrainingTask, removeEaten, setFoodNote } from "#/controllers/food.js";
+import { readMarks } from "#/controllers/widgets/market.js";
+import { openWindow } from "#/components/uikit/Window/open.ts";
+import { addEaten, editEaten } from "#/components/windows/food/eaten.js";
+import MarksWindow from "#/components/windows/food/MarksWindow/index.vue";
 import { openDish } from "#/components/pages/recipes/DishWindow/index.ts";
 
 const ui = inject("ui", null);
@@ -49,6 +51,8 @@ const columns = computed(() => [
   { key: "courses", label: "💊", align: "center", tip: "курс лекарств в этот день" },
   { key: "note", label: "Заметка", class: "ui-food__note" },
 ]);
+
+const editMarks = async () => openWindow(MarksWindow, { marks: await readMarks() });
 
 // a write: a failure said (the page draws again from the files when one works)
 const act = async (write) => {

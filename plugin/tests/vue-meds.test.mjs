@@ -4,7 +4,7 @@ import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { vault } from "./stubs/vault.mjs";
 import { COURSES } from "#/helpers/paths.js";
 
-let mount, reactive, MedsPage, loadMeds, Form, Notice;
+let mount, reactive, MedsPage, loadMeds, testWindows, Notice;
 before(async () => {
   GlobalRegistrator.register();
   window.moment = () => ({ format: () => "2026-11-08" });
@@ -12,7 +12,7 @@ before(async () => {
   ({ reactive } = await import("vue"));
   MedsPage = (await import("#/components/pages/meds/index.vue")).default;
   ({ loadMeds } = await import("#/controllers/meds.js"));
-  ({ Form } = await import("#/components/uikit/Form/index.ts"));
+  ({ testWindows } = await import("./stubs/windows.mjs"));
   ({ Notice } = await import("obsidian"));
 });
 
@@ -137,17 +137,19 @@ test("MedsCourse: a course deleted meanwhile: the mark goes back, said", async (
 
 test("MedsCourse: ✎ in the Курс card edits the course shown", async () => {
   const { w } = await page();
-  const ask = Form.ask;
-  let title = null;
+  const windows = testWindows();
 
-  Form.ask = async (app, t) => { title = t; return null; };
   try {
     await w.findAll(".ui-tabs__tab")[1].trigger("click");
     const card = w.findAll(".ui-card").find(c => c.find(".ui-meds__sum").exists());
 
-    await card.find(".ui-card__title .ui-card__add").trigger("click"); await tick();
-    assert.equal(title, "✦ Edit medication course");
-  } finally { Form.ask = ask; }
+    await card.find(".ui-card__title .ui-card__add").trigger("click");
+    const edit = await windows.next();
+
+    assert.equal(edit.title, "✦ Edit medication course");
+    assert.equal(edit.props.id, "c2");
+    await edit.close();
+  } finally { windows.restore(); }
 });
 
 test("MedsPage: no courses yet says how to make one", async () => {

@@ -1,7 +1,7 @@
 // A medication course: a record of courses.json ({ start, meds, notes, marks: { date: { key:
 // mark } }, dayNotes: { date: text } }, a key a medicine's code and its time of day) and what is
 // derived from it: the columns, a row per day (☐ a due key with no mark, blank past a medicine's
-// days), today's doses by time of day, the counts, the Приём lines, the window's form and values;
+// days), today's doses by time of day, the counts, the Приём lines, the window's values;
 // a mark or a day's note set (a new record). Pure (tests/course.test.mjs).
 import { addDays, weekday } from "#/helpers/dates.js";
 
@@ -24,7 +24,6 @@ const TIME_KEYS = ["morning", "day", "evening"];
 const timesOf = (times = []) => times.flatMap(t => WHEN[t] ?? []);
 const MEAL_TEXT = { before: "перед едой", after: "после еды", sleep: "перед сном" };
 const MEALS = [...Object.values(MEAL_TEXT), ""];
-const pairs = list => list.map(([label, value]) => ({ label, value }));
 
 // a name as typed may carry the dose ("Мастодинон 30 капель"): the words before its first number
 const parts = typed => {
@@ -63,36 +62,6 @@ const medicine = g => {
     meal: MEAL_TEXT[g.meal] ?? "", ranges: rangesOf(g), code: g.code,
   };
 };
-
-// the window of a course, a group per medicine (+ adds one)
-export const courseForm = () => ({
-  rows: [
-    {
-      name: "Medicines", key: "meds", required: ["name"],
-      list: [
-        { name: "Name", key: "name", text: "Мастодинон" },
-        { name: "Dose", key: "dose", text: "30 капель" },
-        { name: "Утром", key: "morning", check: "Ничего не отмечено — один приём в любое время" },
-        { name: "Днём", key: "day", check: "" },
-        { name: "Вечером", key: "evening", check: "" },
-        {
-          name: "Meal", key: "meal",
-          options: pairs([
-            ["перед едой", "before"], ["после еды", "after"], ["перед сном", "sleep"],
-            ["неважно", "any"],
-          ]),
-        },
-        { name: "Days", key: "ranges", text: "1-30, 45-60 (empty: 1-90)" },
-      ],
-    },
-    { name: "Start", key: "start", text: "YYYY-MM-DD (empty: today)" },
-    {
-      name: "Notes", key: "notes", text: "доп. информация: от врача, как принимать…",
-      lines: true,
-    },
-  ],
-  values: {}, required: ["meds"],
-});
 
 // the medicines as the record keeps them: as typed, a code each
 const normal = meds => withCodes(meds).map(g => ({

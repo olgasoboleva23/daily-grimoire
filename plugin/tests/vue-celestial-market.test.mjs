@@ -2,10 +2,10 @@ import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { vault } from "./stubs/vault.mjs";
-import { MARKET } from "#/helpers/paths.js";
+import { MARKET, MARKET_RECORDS } from "#/helpers/paths.js";
 import { Notice } from "obsidian";
 
-let mount, View;
+let mount, View, AddButton, Search, testWindows;
 // the note: green tea on line 3, rice on line 5
 const NOTE = "# Market\n\n## 🌿 Harvest\n- [ ] m1\n\n- [ ] m2\n";
 before(async () => {
@@ -13,6 +13,10 @@ before(async () => {
   window.moment = () => ({ format: () => "2026-11-05" });
   ({ mount } = await import("@vue/test-utils"));
   View = (await import("#/components/pages/dashboard/widgets/market/index.vue")).default;
+  AddButton = (await import("#/components/pages/dashboard/widgets/market/CelestialMarketAdd.vue"))
+    .default;
+  ({ Search } = await import("#/components/uikit/Search/index.ts"));
+  ({ testWindows } = await import("./stubs/windows.mjs"));
 });
 const data = {
   empty: false, left: "2 items left", soon: "salt",
@@ -103,4 +107,31 @@ test("a row's amounts: one shows after the name, several a ⚖ count; a tap on t
     await items[2].find(".ui-market__text").trigger("click");
     assert.deepEqual(w.findAll(".ui-market__item")[2].findAll(".ui-market__needs li")
       .map(l => l.text()), ["Soup"]);
+  });
+
+test("✎ opens the item's Edit item window; ＋ the search of items, a new one its Category",
+  async t => {
+    const windows = testWindows();
+    const { files } = vault({ [MARKET_RECORDS]: JSON.stringify({ m1: { name: "green tea",
+      type: "food" } }), [`${MARKET}.md`]: NOTE });
+
+    try {
+      const w = mount(View, { props: { state: { data } } });
+
+      await w.findAll(".ui-market__item")[0].find('[aria-label="edit item"]').trigger("click");
+      const edit = await windows.next();
+
+      assert.equal(edit.title, "Edit item");
+      assert.equal(edit.props.id, "m1");
+      await edit.close();
+
+      t.mock.method(Search, "pickGrouped", async (_app, _title, find) => find("Kite").at(-1));
+      await mount(AddButton).find("button").trigger("click");
+      const category = await windows.next();
+
+      assert.equal(category.title, "✦ Kite");
+      await category.wrapper.findAll(".ui-field-choice")[0].trigger("click");
+      await category.submit();
+      assert.equal(JSON.parse(files[MARKET_RECORDS]).m3.name, "Kite");
+    } finally { windows.restore(); }
   });

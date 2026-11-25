@@ -14,8 +14,10 @@ import UiTable from "#/components/uikit/UiTable/index.vue";
 import UiTabs from "#/components/uikit/UiTabs/index.vue";
 import { app } from "#/helpers/app.js";
 import config from "#/helpers/config.js";
-import { askDish } from "#/controllers/dishes.js";
-import { ingredientText, toList } from "./cart.js";
+import { openWindow } from "#/components/uikit/Window/open.ts";
+import { openDishForm } from "#/components/windows/recipes/DishFormWindow/open.js";
+import CartWindow from "#/components/windows/recipes/CartWindow/index.vue";
+import { ingredientText } from "./cart.js";
 import { openDish } from "./DishWindow/index.ts";
 
 const props = defineProps({ state: { type: Object, required: true } });
@@ -57,9 +59,11 @@ const act = async write => {
   try { await write(); } catch (e) { console.error(e); new Notice(`✦ Not saved (${e.message})`); }
 };
 
-const cart = id => act(() => toList(d.value.dishes.find(x => x.id === id)));
+const dish = id => d.value.dishes.find(x => x.id === id);
 
-const edit = id => act(() => askDish(app, d.value.dishes.find(x => x.id === id)));
+const cart = id => act(() => openWindow(CartWindow, { dish: dish(id) }));
+
+const edit = id => act(() => openDishForm(dish(id)));
 </script>
 
 <template>
@@ -72,7 +76,7 @@ const edit = id => act(() => askDish(app, d.value.dishes.find(x => x.id === id))
         placeholder="dish or ingredient…"
       />
       <span v-else class="ui-grow" />
-      <UiButton kind="pill" class="ui-recipes__add" @click="act(() => askDish(app))">
+      <UiButton kind="pill" class="ui-recipes__add" @click="act(() => openDishForm())">
         ＋ Dish
       </UiButton>
     </div>

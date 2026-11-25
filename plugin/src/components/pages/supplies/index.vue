@@ -4,7 +4,8 @@
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
 import UiGroupHeader from "#/components/uikit/UiGroupHeader.vue";
-import { editMarketItem, runsLow } from "#/controllers/widgets/market.js";
+import { runsLow } from "#/controllers/widgets/market.js";
+import { openEditItem } from "#/components/windows/market/MarketItemWindow/open.js";
 
 defineProps({ state: { type: Object, required: true } });
 </script>
@@ -21,7 +22,7 @@ defineProps({ state: { type: Object, required: true } });
       >
         <span class="ui-supplies__name ui-grow">{{ r.name }}</span>
         <span class="ui-supplies__info">{{ r.info }}</span>
-        <UiButton v-if="r.id" title="edit item" @click="editMarketItem(r.id)">
+        <UiButton v-if="r.id" title="edit item" @click="openEditItem(r.id)">
           <span class="ui-pencil">✎</span>
         </UiButton>
         <UiButton

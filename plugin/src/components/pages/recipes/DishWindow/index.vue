@@ -9,8 +9,10 @@ import { MarkdownRenderer, Notice } from "obsidian";
 import { confirm } from "#/components/uikit/ConfirmWindow/confirm.js";
 import { openNote } from "#/components/app/open.ts";
 import { app } from "#/helpers/app.js";
-import { askDish, loadRecipes, removeDish } from "#/controllers/dishes.js";
-import { toList } from "../cart.js";
+import { openWindow } from "#/components/uikit/Window/open.ts";
+import { openDishForm } from "#/components/windows/recipes/DishFormWindow/open.js";
+import CartWindow from "#/components/windows/recipes/CartWindow/index.vue";
+import { loadRecipes, removeDish } from "#/controllers/dishes.js";
 
 const props = defineProps({
   dish: { type: String, required: true },
@@ -51,10 +53,10 @@ const act = async write => {
   try { await write(); } catch (e) { console.error(e); new Notice(`✦ Not saved (${e.message})`); }
 };
 
-const cart = () => act(() => toList(d.value));
+const cart = () => act(() => openWindow(CartWindow, { dish: d.value }));
 
 const edit = () => act(async () => {
-  if (await askDish(app, d.value)) await load();
+  if (await openDishForm(d.value)) await load();
 });
 
 function open(e) {

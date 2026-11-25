@@ -1,7 +1,11 @@
+// Medication course writes and the course picker against an in-memory vault.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { vault } from "./stubs/vault.mjs";
-import { editCourse, loadMeds, newCourse, pickCourse, setDayNote, tickMeds } from "#/controllers/meds.js";
+import {
+  createCourse, loadMeds, pickCourse, readCourse, saveCourse, setDayNote, tickMeds,
+} from "#/controllers/meds.js";
+import { formValues } from "#/models/course.js";
 import { COURSES } from "#/helpers/paths.js";
 import { Notice } from "obsidian";
 
@@ -12,8 +16,10 @@ window.moment = () => ({ format: () => "2026-11-08" });
 const REC = {
   start: "2026-11-07",
   meds: [
-    { name: "Аевит", code: "АЕ", dose: "1 таблетка", times: [], meal: "after", ranges: [{ from: 1, to: 2 }] },
-    { name: "Магний 2 таблетки", code: "МГ", dose: "", times: ["morning", "evening"], meal: "before", ranges: [{ from: 1, to: 3 }] },
+    { name: "Аевит", code: "АЕ", dose: "1 таблетка", times: [],
+      meal: "after", ranges: [{ from: 1, to: 2 }] },
+    { name: "Магний 2 таблетки", code: "МГ", dose: "", times: ["morning", "evening"],
+      meal: "before", ranges: [{ from: 1, to: 3 }] },
   ],
   notes: "",
   marks: {
@@ -25,7 +31,7 @@ const REC = {
 const stored = recs => vault({ [COURSES]: JSON.stringify(recs, null, 2) });
 const read = files => JSON.parse(files[COURSES]);
 
-test("tickMeds / setDayNote: one mark or a day's note in courses.json, the medicines untouched", async () => {
+test("tickMeds and setDayNote save the day's data and keep the medicines", async () => {
   const { files } = stored({ c1: REC });
 
   assert.equal(await tickMeds("c1", "2026-11-08", "АЕ", "✅"), true);
@@ -42,67 +48,54 @@ test("tickMeds: a courses.json that isn't JSON rejects, its text untouched", asy
   assert.equal(files[COURSES], "{ broken");
 });
 
-test("editCourse: the window with the record's values; saved: the medicines, the marks and notes kept", async () => {
+test("saveCourse updates the dose and keeps the recorded marks and day notes", async () => {
   const { files } = stored({ c1: REC });
-  let asked;
+  const values = formValues(await readCourse("c1"));
+  const before = JSON.stringify(values);
+  const meds = values.meds.map(m => m.code === "МГ" ? { ...m, dose: "1 таблетка" } : m);
 
-  await editCourse("c1", async (title, rows, o) => {
-    asked = { title, submit: o.submit, values: o.values };
-    return { ...o.values, meds: o.values.meds.map(m => m.code === "МГ" ? { ...m, dose: "1 таблетка" } : m) };
-  });
-  assert.deepEqual([asked.title, asked.submit], ["✦ Edit medication course", "Save"]);
-  assert.equal(asked.values.start, "2026-11-07");
+  assert.equal(await saveCourse("c1", { ...values, meds }, before), "saved");
   const c1 = read(files).c1;
 
   assert.equal(c1.meds[1].dose, "1 таблетка");
   assert.deepEqual([c1.marks, c1.dayNotes], [REC.marks, REC.dayNotes]);
 });
 
-test("editCourse: a course gone: nothing asked or written, a notice", async () => {
-  const { files } = stored({ c1: REC });
-  const before = files[COURSES];
-  let calls = 0;
-
-  await editCourse("c9", async () => { calls++; return null; });
-  assert.equal(calls, 0);
-  assert.equal(files[COURSES], before);
-  assert.equal(Notice.last, "✦ that course is gone");
-});
-
-test("editCourse: the course deleted while its window was open: nothing written, a notice", async () => {
+test("saveCourse reports a deleted course and leaves the file unchanged", async () => {
   const { files } = stored({ c1: REC, c2: REC });
   Notice.last = "";
+  const values = formValues(await readCourse("c1"));
+  const before = JSON.stringify(values);
+  const remaining = files[COURSES] = JSON.stringify({ c2: REC });
 
-  await editCourse("c1", async (t, rows, o) => {
-    files[COURSES] = JSON.stringify({ c2: REC });
-    return o.values;
-  });
-  assert.deepEqual(Object.keys(read(files)), ["c2"]);
+  assert.equal(await readCourse("c1"), null);
+  assert.equal(await saveCourse("c1", values, before), "gone");
+  assert.equal(files[COURSES], remaining);
   assert.equal(Notice.last, "✦ that course is gone");
 });
 
-test("editCourse: a newer dose is not overwritten by a stale window", async () => {
+test("saveCourse rejects a stale edit and keeps the newer dose", async () => {
   const { files } = stored({ c1: REC });
-  let newer;
+  const values = formValues(await readCourse("c1"));
+  const before = JSON.stringify(values);
+  const newer = structuredClone(REC);
+  newer.meds[1].dose = "новая доза";
+  files[COURSES] = JSON.stringify({ c1: newer });
 
-  await editCourse("c1", async (title, rows, o) => {
-    newer = structuredClone(REC);
-    newer.meds[1].dose = "новая доза";
-    files[COURSES] = JSON.stringify({ c1: newer });
-    return { ...o.values, notes: "из старого окна" };
-  });
+  assert.equal(await saveCourse("c1", { ...values, notes: "из старого окна" }, before), "changed");
   assert.deepEqual(read(files).c1, newer);
   assert.match(Notice.last, /course changed meanwhile/);
 });
 
-test("editCourse: new marks and day notes survive a simultaneous property edit", async () => {
+test("saveCourse preserves marks and day notes added since reading the course", async () => {
   const { files } = stored({ c1: REC });
+  const values = formValues(await readCourse("c1"));
+  const before = JSON.stringify(values);
 
-  await editCourse("c1", async (title, rows, o) => {
-    await tickMeds("c1", "2026-11-08", "МГ🌙", "✅");
-    await setDayNote("c1", "2026-11-08", "новая заметка дня");
-    return { ...o.values, notes: "новая заметка курса" };
-  });
+  await tickMeds("c1", "2026-11-08", "МГ🌙", "✅");
+  await setDayNote("c1", "2026-11-08", "новая заметка дня");
+  const next = { ...values, notes: "новая заметка курса" };
+  assert.equal(await saveCourse("c1", next, before), "saved");
   const saved = read(files).c1;
 
   assert.equal(saved.notes, "новая заметка курса");
@@ -110,19 +103,18 @@ test("editCourse: new marks and day notes survive a simultaneous property edit",
   assert.equal(saved.dayNotes["2026-11-08"], "новая заметка дня");
 });
 
-test("newCourse: saving c1 and c2 opens their Medication Vue page in a new tab", async () => {
-  const { app, files } = vault(), opened = [];
-  app.workspace.getLeaf = () => ({ setViewState: async s => { opened.push(s); } });
-  app.workspace.revealLeaf = async () => {};
-  const ask = async () => ({ meds: [{ name: "Аевит" }], start: "", notes: "" });
+test("createCourse returns a new ID and writes the course with today's default start", async () => {
+  const { files } = stored({ c1: REC });
+  const values = { meds: [{ name: "Чай", morning: true, ranges: "1-3" }], notes: " Test " };
+  const id = await createCourse(values);
 
-  assert.equal(await newCourse(ask), "c1");
-  assert.equal(read(files).c1.start, "2026-11-08");
-  assert.equal(await newCourse(ask), "c2");
-  assert.deepEqual(Object.keys(read(files)), ["c1", "c2"]);
-  assert.deepEqual(opened, Array(2).fill({
-    type: "ui-app", active: true, state: { page: "meds", meds: {} },
-  }));
+  assert.equal(id, "c2");
+  const saved = await readCourse(id);
+  assert.equal(saved.start, "2026-11-08");
+  assert.equal(saved.notes, "Test");
+  assert.deepEqual(saved.meds[0].times, ["morning"]);
+  assert.deepEqual(saved.meds[0].ranges, [{ from: 1, to: 3 }]);
+  assert.deepEqual(read(files).c1, REC);
 });
 
 test("pickCourse: none: a notice; one: its id; more: the picker's", async () => {
@@ -143,33 +135,4 @@ test("pickCourse: none: a notice; one: its id; more: the picker's", async () => 
 test("loadMeds: no courses.json: nothing", async () => {
   vault();
   assert.deepEqual(await loadMeds(), { list: [], data: {}, notes: {}, intake: {} });
-});
-
-test("newCourse: days that don't read keep the window open, with what was typed, and say why", async () => {
-  const { app, files } = vault(), asked = [];
-  app.workspace.getLeaf = () => ({ setViewState: async () => {} });
-  app.workspace.revealLeaf = async () => {};
-  const ask = async (title, rows, opts) => {
-    asked.push(opts.values.meds?.[0]?.ranges);
-    return asked.length === 1
-      ? { meds: [{ name: "Аевит", ranges: "1-3O" }], start: "", notes: "" }
-      : { ...opts.values, meds: [{ name: "Аевит", ranges: "1-3" }] };
-  };
-  Notice.last = "";
-  const id = await newCourse(ask);
-
-  assert.equal(id, "c1");
-  assert.equal(asked.length, 2);
-  assert.equal(asked[1], "1-3O");
-  assert.equal(Notice.last.startsWith("✦ days of «Аевит»: can't read «1-3O»"), true);
-  assert.deepEqual(read(files).c1.meds[0].ranges, [{ from: 1, to: 3 }]);
-});
-
-test("newCourse: closing the window after a problem saves nothing", async () => {
-  const { files } = vault();
-  let n = 0;
-  const ask = async () => (n++ ? null : { meds: [{ name: "Аевит", ranges: "bad" }], start: "", notes: "" });
-
-  assert.equal(await newCourse(ask), null);
-  assert.equal(COURSES in files, false);
 });

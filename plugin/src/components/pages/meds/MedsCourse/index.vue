@@ -14,7 +14,8 @@ import UiCheckbox from "#/components/uikit/UiCheckbox/index.vue";
 import UiInput from "#/components/uikit/UiInput/index.vue";
 import UiTable from "#/components/uikit/UiTable/index.vue";
 import { TIMES, next } from "#/models/course.js";
-import { editCourse, setDayNote, tickMeds } from "#/controllers/meds.js";
+import { setDayNote, tickMeds } from "#/controllers/meds.js";
+import { openEditCourse } from "#/components/windows/meds/CourseWindow/open.js";
 import { playMark } from "#/helpers/sounds.js";
 
 const props = defineProps({
@@ -91,7 +92,7 @@ const note = (r, el) => {
           kind="add"
           title="edit course"
           class="ui-card__add"
-          @click="editCourse(id)"
+          @click="openEditCourse(id)"
         ><span class="ui-pencil">✎</span></UiButton>
       </template>
       <div class="ui-meds__sum">

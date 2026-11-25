@@ -5,7 +5,7 @@ import { vault } from "./stubs/vault.mjs";
 import { MARKET, MARKET_RECORDS, PURCHASES, TASKS } from "#/helpers/paths.js";
 import { Notice } from "obsidian";
 
-let mount, h, defineComponent, ShopWidget, SuppliesWidget, taskStore;
+let mount, h, defineComponent, ShopWidget, SuppliesWidget, taskStore, testWindows;
 before(async () => {
   GlobalRegistrator.register();
   window.moment = () => ({ format: () => "2026-11-05" });
@@ -14,6 +14,7 @@ before(async () => {
   ({ h, defineComponent } = await import("vue"));
   ShopWidget = (await import("#/components/pages/shop/index.vue")).default;
   SuppliesWidget = (await import("#/components/pages/supplies/index.vue")).default;
+  ({ testWindows } = await import("./stubs/windows.mjs"));
 });
 // the view inside a stand-in for its card's body, the host's retry provided
 const inBody = (C, data, retry = () => {}) =>
@@ -56,4 +57,22 @@ test("Supplies: the rows by category, running low puts one back on the list; a l
   assert.equal(files[`${MARKET}.md`], "- [ ] m1\n- [ ] m2\n");
   assert.deepEqual(JSON.parse(files[MARKET_RECORDS]).m2, { name: "tea", type: "food" });
   assert.equal(Notice.last, "✦ tea → Celestial Market");
+});
+
+test("Supplies: ✎ opens the item's Edit item window", async () => {
+  const windows = testWindows();
+
+  vault({ [MARKET_RECORDS]: JSON.stringify({ m1: { name: "rice", type: "food" } }) });
+  try {
+    const w = inBody(SuppliesWidget, { empty: false, groups: [{ label: "🌿 Harvest", rows: [
+      { id: "m1", name: "rice", type: "food", due: false, listed: true, info: "" },
+    ] }] });
+
+    await w.find('[aria-label="edit item"]').trigger("click");
+    const edit = await windows.next();
+
+    assert.equal(edit.title, "Edit item");
+    assert.deepEqual(edit.props.before, { name: "rice", type: "food" });
+    await edit.close();
+  } finally { windows.restore(); }
 });

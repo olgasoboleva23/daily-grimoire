@@ -5,10 +5,11 @@ import { mirrorMobileConfig } from "#/controllers/mobileConfig.js";
 import { newTask } from "#/controllers/tasks.js";
 import { migrateTasks } from "#/migrations/tasks.js";
 import { openSettings } from "#/controllers/settings.js";
-import { addMarketItem } from "#/controllers/widgets/market.js";
 import { createNote } from "#/controllers/notes.js";
-import { editCourse, newCourse, pickCourse } from "#/controllers/meds.js";
+import { pickCourse } from "#/controllers/meds.js";
 import { openNewProject } from "#/components/windows/projects/ProjectWindow/open.js";
+import { addMarketItem } from "#/components/windows/market/MarketItemWindow/open.js";
+import { openEditCourse, openNewCourse } from "#/components/windows/meds/CourseWindow/open.js";
 import { openWindow } from "#/components/uikit/Window/open.ts";
 import { askValue } from "#/components/uikit/FieldWindow/ask.js";
 import CollectionItemWindow from "#/components/windows/notes/CollectionItemWindow/index.vue";
@@ -55,11 +56,11 @@ export function registerCommands(plugin: Plugin) {
 
   // a medication course (courses.json), then the Medication page opens; edited: the only one, or
   // the one picked (the ✎ on its card does the same)
-  add("new-meds", "New medication course", async () => void await newCourse());
+  add("new-meds", "New medication course", async () => void await openNewCourse());
   add("edit-meds", "Edit medication course", async () => {
     const id = await pickCourse();
 
-    if (id) await editCourse(id);
+    if (id) await openEditCourse(id);
   });
 
   // a purchase, logged to Purchases.md (the wallet's spent) when the gold covers it

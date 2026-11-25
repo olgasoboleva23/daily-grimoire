@@ -1,13 +1,16 @@
-// Recipe storage, ingredient selection and shopping-list writes against an in-memory vault.
+// Recipe writes, product lookup and shopping-list writes against an in-memory vault.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  addDish, askDish, editDish, loadRecipes, productsToList, removeDish,
+  addDish, editDish, loadRecipes, pickRecipeNote, productsToList, readDish, readProducts,
+  removeDish,
 } from "#/controllers/dishes.js";
-import { addToMarket, loadCelestialMarket } from "#/controllers/widgets/market.js";
-import { addEaten, loadFood } from "#/controllers/food.js";
+import {
+  addToMarket, editMarketItem, loadCelestialMarket, readMarketItem,
+} from "#/controllers/widgets/market.js";
+import { loadFood } from "#/controllers/food.js";
 import { Search } from "#/components/uikit/Search/index.ts";
-import { Form } from "#/components/uikit/Form/index.ts";
+import { Notice } from "obsidian";
 import { foodChoices, foodWeek } from "#/models/food.js";
 import { DISHES, FOOD_DATA, FOOD_LOG, MARKET_NOTE, MARKET_RECORDS } from "#/helpers/paths.js";
 import { KINDS } from "#/models/kinds.js";
@@ -25,7 +28,7 @@ const fixture = () => vault({
   [MARKET_NOTE]: "- [ ] m1\n",
 });
 
-test("a dish joins products in ingredient order, shares each mark once and counts in the week", async () => {
+test("a dish joins products in ingredient order and counts each mark once", async () => {
   const { files } = fixture();
   const data = await loadRecipes();
   assert.deepEqual(data.dishes[0].marks, ["a", "b"]);
@@ -33,7 +36,8 @@ test("a dish joins products in ingredient order, shares each mark once and count
   const date = "2026-11-20", log = { [date]: { eaten: ["d1", "m1", "d8"] } };
   const [day] = foodWeek({ ...await loadFood(), log, days: [date], journals: [], courses: [] });
   assert.deepEqual(day.counts, { a: 2, b: 1 });
-  assert.deepEqual(day.items.map(i => [i.kind, i.name]), [["dish","Soup"], ["item","Peas"], ["dish","d8"]]);
+  assert.deepEqual(day.items.map(i => [i.kind, i.name]),
+    [["dish", "Soup"], ["item", "Peas"], ["dish", "d8"]]);
   files[MARKET_RECORDS] = "{}";
   const missing = (await loadRecipes()).dishes[0];
   assert.equal(missing.missing, true);
@@ -55,7 +59,7 @@ test("choices sort mixed food by recent date, distinct log days, then name", asy
   assert.deepEqual(choices().map(c => c.id), ["m2","d1","m1"]);
 });
 
-test("concurrent dish adds use distinct ids; invalid links preserve data; logged ids survive deletion", async () => {
+test("dish writes allocate distinct IDs, reject bad links and reserve logged IDs", async () => {
   const { files } = fixture();
   delete files[DISHES];
   const ids = await Promise.all([addDish(dish), addDish(dish)]);
@@ -89,7 +93,7 @@ test("market amounts are merged by product and kept by dish across concurrent cl
     [{ dish: "Side", amount: "" }, { dish: "Salad", amount: "(to taste)" }]);
 });
 
-test("manual and recipe additions share one open row and leave purchase history intact", async () => {
+test("manual and recipe additions share an open row and keep purchases", async () => {
   const { files } = fixture();
   const history = "- [x] m1 [completion:: 2026-11-20]\n";
 
@@ -113,34 +117,17 @@ test("a new shopping list keeps both amounts on its first product line", async (
   assert.equal(files[MARKET_NOTE], "- [ ] m1 [need:: Stew · 4] [need:: Soup · 2]\n");
 });
 
-test("dish form saves the picked products and the note path", async () => {
-  const { app, files } = fixture();
-  files["Steps.md"] = "Mix";
-  const id = await askDish(app, {name:"Stew"}, async (_app, _title, rows, options) => {
-    assert.equal(options.values.name,"Stew");
-    assert.equal(rows.find(r => r.key === "ingredients").list[0].show("m1"), "Peas");
-    return { ...dish, link:"Steps.md" };
-  });
-  assert.equal(JSON.parse(files[DISHES])[id].link, "Steps.md");
-});
-
-test("the food picker logs a selected dish and keeps its ingredients as product references", async t => {
+test("a new dish stores product IDs and the selected note path", async () => {
   const { files } = fixture();
-  t.mock.method(Search, "pick", async (_app, _title, choices) => {
-    const hits = choices("Peas");
-    assert.deepEqual(hits.slice(-2).map(choice => choice.create), ["product", "dish"]);
-    return hits.find(choice => choice.kind === "dish");
-  });
+  files["Steps.md"] = "Mix";
+  const id = await addDish({ ...dish, name: " Stew ", link: "Steps.md" });
 
-  await addEaten("2026-11-20");
-  const data = await loadFood();
-  assert.deepEqual(data.log["2026-11-20"].eaten, ["d1"]);
-  assert.deepEqual(data.dishes[0].ingredients, ingredients);
-  assert.deepEqual(data.items.map(item => item.id), ["m1", "m2"]);
-  assert.equal(JSON.parse(files[DISHES]).d1.name, "Soup");
+  assert.deepEqual(await readDish(id), {
+    name: "Stew", type: "", ingredients, link: "Steps.md",
+  });
 });
 
-test("the dish form's note picker makes a recipe note named after the dish (or as typed)",
+test("a recipe note can be created from the dish title and linked to the dish",
   async t => {
     const { app, files } = fixture();
     files["Old.md"] = "x";
@@ -152,12 +139,8 @@ test("the dish form's note picker makes a recipe note named after the dish (or a
       return choices("")[0];
     });
 
-    const id = await askDish(app, { name: "Stew" }, async (_app, _title, rows) => {
-      const note = rows.find(r => r.key === "link");
-
-      assert.equal(note.show(`${KINDS.recipe.folder}/Pie.md`), "Pie");
-      return { ...dish, name: "Stew", link: await note.pick({ name: "Stew" }) };
-    });
+    const link = await pickRecipeNote(app, "Stew");
+    const id = await addDish({ ...dish, name: "Stew", link });
     const path = `${KINDS.recipe.folder}/Stew.md`;
 
     assert.deepEqual(seen, [["+ Stew"], true, "Borscht"]);
@@ -166,9 +149,9 @@ test("the dish form's note picker makes a recipe note named after the dish (or a
     assert.equal(JSON.parse(files[DISHES])[id].link, path);
   });
 
-test("cooked and ordered dishes keep their own type across edits and settings changes", async () => {
+test("dishes keep their type across edits while it is hidden in settings", async () => {
   const { applyConfig } = await import("#/helpers/config.js");
-  const { files, app } = fixture();
+  const { files } = fixture();
   files["Steps.md"] = "Mix";
   const id = await addDish({ ...dish, type: " soup ", link: "Steps.md" });
   const displayed = async () => (await loadRecipes()).dishes.find(d => d.id === id).type;
@@ -176,101 +159,68 @@ test("cooked and ordered dishes keep their own type across edits and settings ch
   try {
     applyConfig({ dishTypes: [] });
     assert.equal(await displayed(), "");
-    const hidden = (await loadRecipes()).dishes.find(d => d.id === id);
-    await askDish(app, hidden, async (_app, _title, _rows, { values }) =>
-      ({ ...values, name: "Renamed" }));
+    const before = JSON.stringify(await readDish(id));
+    assert.equal(await editDish(id, { ...dish, name: "Renamed", type: "", link: "Steps.md" }, {
+      before, offeredTypes: [],
+    }), true);
     assert.equal(JSON.parse(files[DISHES])[id].type, "soup");
   } finally { applyConfig(); }
   assert.equal(await displayed(), "soup");
-  const cooked = (await loadRecipes()).dishes.find(d => d.id === id);
-  await askDish(app, cooked, async (_app, _title, rows, { values }) => {
-    const field = rows[rows.findIndex(r => r.key === "ingredients") + 1];
-    assert.equal(field.key, "type");
-    assert.deepEqual(field.options.map(o => o.value), ["", "soup", "main", "dessert"]);
-    assert.equal(values.type, "soup");
-    return { ...values, link: "", type: "main" };
-  });
+  const before = JSON.stringify(await readDish(id));
+  const offeredTypes = ["soup", "main", "dessert"];
+  assert.equal(await editDish(id, { ...dish, name: "Renamed", type: "main" }, {
+    before, offeredTypes,
+  }), true);
   assert.equal(await displayed(), "main");
   assert.equal(JSON.parse(files[DISHES])[id].link, "");
   assert.equal(await editDish(id, dish), true);
   assert.equal(JSON.parse(files[DISHES])[id].type, "");
 });
 
-test("the dish form: a line's product opens its edit window (not the picker); the line shows the new name",
-  async t => {
-    const { app, files } = fixture();
-    t.mock.method(Search, "pick", async () => assert.fail("no picker on a chosen product"));
-    t.mock.method(Form, "ask", async (_app, title, _rows, { values }) => {
-      assert.equal(title, "Edit item");
-      return { ...values, name: "Green peas" };
-    });
+test("readProducts returns current names and marks for food records only", async () => {
+  const { files } = fixture();
+  const records = JSON.parse(files[MARKET_RECORDS]);
+  records.m4 = { name: "Mint", type: "food" };
+  files[MARKET_RECORDS] = JSON.stringify(records);
+  const before = await readMarketItem("m1");
 
-    await askDish(app, dish, async (_app, _title, rows) => {
-      const product = rows.find(r => r.key === "ingredients").list[0];
-
-      assert.equal(await product.pick({ item: "m1", amount: "2" }), "m1");
-      assert.equal(product.show("m1"), "Green peas");
-      return null;
-    });
-    assert.equal(JSON.parse(files[MARKET_RECORDS]).m1.name, "Green peas");
-  });
+  assert.equal(await editMarketItem("m1", { ...before, name: "Green peas" }, before), true);
+  assert.deepEqual(await readProducts(), [
+    { id: "m1", name: "Green peas", marks: ["a"] },
+    { id: "m2", name: "Beans", marks: ["a", "b"] },
+    { id: "m4", name: "Mint", marks: [] },
+  ]);
+  assert.deepEqual((await readDish("d1")).ingredients, ingredients);
+});
 
 test("an ingredient stores alternatives with separate amounts and can clear them", async () => {
   const { files } = fixture();
-  const alt = [{ item: "m2", amount: "3" }, { item: "m4", amount: "a pinch" }];
-  const line = { item: "m1", amount: "2", alt };
+  const line = { item: "m1", amount: " 2 ",
+    alt: [{ item: "m2", amount: " 3 " }, { amount: "1" }, { item: "m4", amount: "a pinch" }] };
   const id = await addDish({ ...dish, ingredients: [line] });
+  const alt = [{ item: "m2", amount: "3" }, { item: "m4", amount: "a pinch" }];
   const stored = () => JSON.parse(files[DISHES])[id].ingredients;
-  assert.deepEqual(stored(), [line]);
+  assert.deepEqual(stored(), [{ item: "m1", amount: "2", alt }]);
+  await editDish(id, { ...dish, ingredients: [{
+    ...line, alt: [{ item: "m2", amount: " 7 " }, { item: "m4", amount: " 1 " }],
+  }] });
+  assert.deepEqual(stored()[0].alt, [{ item: "m2", amount: "7" }, { item: "m4", amount: "1" }]);
+  assert.equal(line.alt[0].amount, " 3 ");
   await editDish(id, { ...dish, ingredients: [{ ...line, alt: [{ amount: "1" }] }] });
   assert.deepEqual(stored(), [{ item: "m1", amount: "2" }]);
   const loaded = (await loadRecipes()).dishes.find(d => d.id === id);
   assert.deepEqual(loaded.ingredients[0].alt, []);
 });
 
-test("the Or form edits a copy and can save several products, clear or cancel", async t => {
-  const { app } = fixture();
-  const alt = [{ item: "m2", amount: "3" }];
-  t.mock.method(Search, "pick", async (_app, _title, choices) => choices("Lentils").at(-1));
-  t.mock.method(Form, "ask", async (_app, _title, _rows, { values }) => values);
-  let form;
-  await askDish(app, dish, async (_app, title, rows, options) => {
-    if (title.startsWith("Instead of")) return form(title, rows, options);
-    const fields = rows.find(r => r.key === "ingredients").list;
-    assert.deepEqual(fields.map(f => f.name), ["Product", "Or", "Amount"]);
-    const or = fields[1];
-    form = async (heading, [row], { values, submit }) => {
-      assert.equal(heading, "Instead of Peas");
-      assert.equal(submit, "OK");
-      assert.equal(row.key, "alt");
-      values.alt[0].amount = "7";
-      values.alt.push({ item: await row.list[0].pick({}), amount: "1" }, { amount: "2" });
-      return values;
-    };
-    const next = await or.pick({ item: "m1", alt });
-    assert.deepEqual(next.map(a => a.amount), ["7", "1"]);
-    assert.equal(or.show(next), "Beans + Lentils");
-    assert.equal(alt[0].amount, "3");
-    form = title => { assert.equal(title, "Instead of …"); return { alt: [] }; };
-    assert.deepEqual(await or.pick({}), []);
-    form = () => null;
-    assert.equal(await or.pick({ item: "m1", alt }), null);
-    return null;
-  });
-});
-
-test("the dish form rejects changes made since it was opened", async () => {
-  const { app, files } = fixture();
+test("editDish rejects a stale record and keeps the newer ingredients", async () => {
+  const { files } = fixture();
   const updated = { ...dish, ingredients: [{ item: "m1", amount: "200 g" }] };
-  const initial = (await loadRecipes()).dishes[0];
+  const initial = await readDish("d1");
+  const before = JSON.stringify(initial);
 
-  const saved = await askDish(app, initial, async (_app, _title, _rows, { values }) => {
-    await editDish(initial.id, updated);
-    return { ...values, name: "Renamed" };
-  });
-
-  assert.equal(saved, null);
-  const current = JSON.parse(files[DISHES])[initial.id];
-  assert.equal(current.name, dish.name);
-  assert.deepEqual(current.ingredients, updated.ingredients);
+  assert.equal(await editDish("d1", updated), true);
+  const saved = files[DISHES];
+  assert.equal(await editDish("d1", { ...initial, name: "Renamed" }, { before }), false);
+  assert.equal(files[DISHES], saved);
+  assert.match(Notice.last, /dish could not be saved/);
 });

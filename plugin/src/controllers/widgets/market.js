@@ -1,76 +1,57 @@
-// The Celestial Market's controller (00 System/Data/Celestial Market.md) and the Supplies'. The
-// list by category with a round ✓ per item, what runs low soon; Supplies: what is bought again and
-// again, how long since the last time against the usual gap. Writes: an item on the list (＋: a
-// search of everything bought before, the most bought first, or a new one typed), an item bought
-// (✓), an item running low back on the list. The markup: widgets/market/.
-import { dm, todayYmd } from "#/helpers/dates.js";
+// The market catalog and shopping list. Supplies derives its purchase history from the list.
+// Reads back the latest records; writes cover products, marks and shopping rows.
+import { todayYmd } from "#/helpers/dates.js";
 import {
-  MarketItem, catLabel, catOf, historyOf, marketCats, marketChoices, openKeys,
+  MarketItem, catOf, historyOf, marketCats, marketChoices, openKeys,
   supplyStats,
 } from "#/models/market.js";
 import { marksOf } from "#/models/food.js";
 import { Notice } from "obsidian";
 import { collection } from "#/helpers/collection.js";
 import { nextId } from "#/helpers/ids.js";
-import { Search } from "#/components/uikit/Search/index.ts";
-import { Form } from "#/components/uikit/Form/index.ts";
 import { appendLine, editLine, readJson, serial } from "#/helpers/files.js";
-import { findChoices } from "#/helpers/find.js";
 import { parseNote } from "#/models/taskFile.js";
 import { app } from "#/helpers/app.js";
 import { FOOD_DATA, MARKET_NOTE, MARKET_RECORDS } from "#/helpers/paths.js";
 
 const catalog = collection(MARKET_RECORDS);
-const categoryRow = {
-  name: "Category", key: "type",
-  options: marketCats.map(c => ({ label: c.label, value: c.type })),
-};
 
-const markRows = marks => marks.map(m => ({ name: `${m.icon} ${m.name}`, key: m.tag, check: "" }));
-const selected = (marks, values) => marks.filter(m => values[m.tag]).map(m => m.tag);
-const readMarks = async () => marksOf(await readJson(FOOD_DATA, {}));
+export const readMarks = async () => marksOf(await readJson(FOOD_DATA, {}));
 
-export async function addProduct(name, ask = Form.ask.bind(Form)) {
-  const marks = await readMarks();
-  const values = await ask(app, "New product", [
-    { name: "Name", key: "name", text: "Product name" }, ...markRows(marks),
-  ], { values: { name }, required: ["name"], submit: "Add" });
+export const readMarketItem = async id => (await readJson(catalog.path, {}))[id] ?? null;
 
-  if (!values?.name?.trim()) return null;
+export async function addProduct({ name, marks = [] }) {
+  const title = name?.trim();
+
+  if (!title) return null;
   return adding(async () => {
     const { items } = await marketState();
     let id;
+
     await catalog.edit(records => {
       id = nextId("m", [...Object.keys(records), ...items.map(i => i.id)]);
-      records[id] = { name: values.name.trim(), type: "food", marks: selected(marks, values) };
+      records[id] = { name: title, type: "food", marks };
       return records;
     });
     return id;
   });
 }
 
-export async function editMarketItem(id, ask = Form.ask.bind(Form)) {
-  const item = (await readJson(catalog.path, {}))[id];
+export async function editMarketItem(id, values, before) {
+  const { name, type, marks } = values;
 
-  if (!item) return void new Notice("Item no longer exists");
-  const marks = item.type === "food" ? await readMarks() : [];
-  const boxes = Object.fromEntries((item.marks ?? []).map(tag => [tag, true]));
-  const values = await ask(app, "Edit item", [
-    { name: "Name", key: "name", text: "Item name" }, categoryRow, ...markRows(marks),
-  ], { values: { ...item, ...boxes }, required: ["name", "type"], submit: "Save" });
-
-  if (!values) return;
+  if (!name?.trim()) return false;
   const saved = await catalog.update(id, current => {
-    if (current.name !== item.name || current.type !== item.type
-      || JSON.stringify(current.marks) !== JSON.stringify(item.marks)) return null;
-    const next = { ...current, name: values.name.trim(), type: values.type };
+    if (JSON.stringify(current) !== JSON.stringify(before)) return null;
+    const next = { ...current, name: name.trim(), type };
 
-    if (values.type === "food" && item.type === "food") next.marks = selected(marks, values);
+    if (type === "food" && marks !== undefined) next.marks = marks;
     else delete next.marks;
     return next;
   });
 
   if (!saved) new Notice("Item changed. Open it again to edit.");
+  return saved;
 }
 
 const parseMarket = text => parseNote(MARKET_NOTE, text.replace(/\r\n/g, "\n"));
@@ -132,22 +113,11 @@ export async function loadSupplies() {
   return { empty: !stats.length, groups: byCategory(stats, s => catOf(s.type), row) };
 }
 
-export async function addMarketItem() {
+// what the market's ＋ searches: everything bought before or in the catalog, the most bought first
+export async function readMarketChoices() {
   const { history, open, records } = await marketState();
-  const choices = marketChoices(history, open, records);
-  const pick = await Search.pickGrouped(app, "Find or add an item…", q => findChoices(choices, q), {
-    groupOf: c => c.type,
-    label: catLabel,
-    note: c => c.onList ? "on the list" : c.buys ? `×${c.buys} · ${dm(c.last)}` : "not bought yet",
-  });
 
-  if (!pick) return;
-  if (pick.onList) return void new Notice(`✦ ${pick.name} is on the list already`);
-  const type = pick.isNew ? (await Form.ask(app, `✦ ${pick.name}`, [
-    categoryRow,
-  ], { required: ["type"], submit: "Add" }))?.type : pick.type;
-
-  if (type) await addToMarket(pick.name, type, pick.id);
+  return marketChoices(history, open, records);
 }
 
 // Serialize additions so two clicks cannot allocate the same ID or append two open copies.
