@@ -9,7 +9,8 @@ import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
 import UiMissing from "#/shared/ui/UiMissing.vue";
 import UiNoteLink from "#/shared/ui/UiNoteLink.vue";
 import { CYCLE } from "#/shared/config/index.js";
-import { markCycle } from "#/controllers/widgets/cycle.js";
+import { markDay, readCycle } from "#/entities/cycle/index.js";
+import { dataview } from "#/shared/host/index.js";
 import CycleHead from "./CycleHead.vue";
 import CycleRows from "./CycleRows.vue";
 import CycleStats from "./CycleStats.vue";
@@ -27,6 +28,13 @@ const fold = () => {
 };
 
 const folded = computed(() => !open.value && d.value.info);
+
+// An end uses the latest recorded start, including changes since the card was drawn.
+function markCycle(kind, day) {
+  const log = kind === "end" && readCycle(dataview());
+
+  return markDay(kind, log ? log.endFor(day) : day);
+}
 </script>
 
 <template>

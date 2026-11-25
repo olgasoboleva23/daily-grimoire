@@ -3,25 +3,8 @@
 // period, the fertile window, the ovulation), or the last 10 cycles' lengths and period lengths as
 // columns with their average. Writes: "started today / ended yesterday" in Cycle.md. The markup:
 // widgets/cycle (folded by default: a click on the head toggles it, kept per device).
-import { CycleLog } from "#/models/cycleLog.js";
+import { mana, mpLine, mpTable, readCycle } from "#/entities/cycle/index.js";
 import { dm, pageDay, ymd } from "#/shared/lib/dates.js";
-import { mana, mpLine, mpTable } from "#/models/vitals.js";
-import { appendLine } from "#/shared/vault/index.js";
-import { CYCLE } from "#/shared/config/index.js";
-import { dataview } from "#/shared/host/index.js";
-
-// the log of Cycle.md (null without the note): also the period days shaded under the Weight
-// widget's log
-export function cycleLog(dv) {
-  const page = dv.page(CYCLE);
-
-  if (!page) return null;
-  const pick = key => page.file.lists
-    .map(i => i.text.match(new RegExp(`${key}::\\s*(\\d{4}-\\d{2}-\\d{2})`))?.[1])
-    .where(Boolean).array();
-
-  return new CycleLog(pick("start"), pick("end"), page.period ?? 8);
-}
 
 // a day of a cycle: period, ovulation, fertile (the 5 days before the ovulation) or none
 const pill = (c, n) => n <= (c.period ?? 0) ? "period"
@@ -42,7 +25,7 @@ function chart(values) {
 }
 
 export async function loadCycle({ dv }) {
-  const day = ymd(pageDay(dv)), log = cycleLog(dv);
+  const day = ymd(pageDay(dv)), log = readCycle(dv);
   const mark = { kind: "start", text: "started today" };
 
   if (!log) return { day, page: false, info: false, mark, rows: [] };
@@ -75,13 +58,4 @@ export async function loadCycle({ dv }) {
       periods.length && { title: "period", kind: "per", ...chart(periods) },
     ].filter(Boolean),
   };
-}
-
-// "started today / ended yesterday": a line in Cycle.md (once); started: today, ended: yesterday
-// was the last day of the period (CycleLog.endFor)
-export function markCycle(kind, day) {
-  const log = kind === "end" && cycleLog(dataview());
-  const date = log ? log.endFor(day) : day;
-
-  return appendLine(CYCLE, `- ${kind}:: ${date}`, { header: "period:: 8\n\n", unique: true });
 }

@@ -1,6 +1,6 @@
 // The XP widgets' controller. Level: total XP of the tasks done up to the page's day, the level it
 // makes, progress to the next; HP (the missed tasks against today's done ones) and MP (the day of
-// the cycle), rules in models/vitals.js. Life Areas: a radar of XP per area over the last 4 weeks.
+// the cycle). Life Areas: a radar of XP per area over the last 4 weeks.
 // XP Today: the day's XP, its aura level, ↑/↓ against the 7-day average, the month as a heatmap.
 // The markup: widgets/xp/.
 import config from "#/shared/config/index.js";
@@ -8,8 +8,8 @@ import { pageDay, todayYmd, ymd } from "#/shared/lib/dates.js";
 import { T } from "#/models/calendarData.js";
 import { taskStore } from "#/store/tasks.js";
 import { levelInfo, taskXp, xpLegend } from "#/models/xp.js";
-import { mana, mpLine, mpTable, vitals } from "#/models/vitals.js";
-import { cycleLog } from "./cycle.js";
+import { vitals } from "#/models/vitals.js";
+import { mana, mpLine, mpTable, readCycle } from "#/entities/cycle/index.js";
 import { chartColor, chartScale } from "#/shared/lib/chart.js";
 
 export async function loadLevelToday({ dv }) {
@@ -22,7 +22,7 @@ export async function loadLevelToday({ dv }) {
     missed: all.filter(t => t.isOverdue(today)),
     doneToday: all.filter(t => t.doneOn === today),
   });
-  const { base, step } = config.levelCost, mp = mana(cycleLog(dv)?.on(today));
+  const { base, step } = config.levelCost, mp = mana(readCycle(dv)?.on(today));
   const { level, progress, cost } = levelInfo(total, base, step);
   const vital = (name, value, max, title) =>
     ({ name, mod: name.toLowerCase(), value, max, width: value / max * 100, title });

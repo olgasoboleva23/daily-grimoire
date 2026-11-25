@@ -6,7 +6,7 @@
 import { addDays, dm, todayYmd } from "#/shared/lib/dates.js";
 import { WeightLog } from "#/models/weightLog.js";
 import { readJournals } from "#/controllers/journals.js";
-import { cycleLog } from "./cycle.js";
+import { readCycle } from "#/entities/cycle/index.js";
 import { chartColor, chartScale } from "#/shared/lib/chart.js";
 import { edit } from "#/shared/vault/index.js";
 import { amount } from "#/shared/lib/format.js";
@@ -96,7 +96,7 @@ export async function loadWeight({ dv, app }) {
     };
   }
 
-  const cycle = cycleLog(dv), period = days.map(d => !!cycle?.on(d)?.isPeriod);
+  const cycle = readCycle(dv), period = days.map(d => !!cycle?.on(d)?.isPeriod);
   const logs = (await readJournals()).map(({ entries, ...j }) => ({
     ...j, day: today, now: entries.get(today) ?? null,   // today's entry
     chart: logChart(days, days.map(d => entries.get(d) ?? null), period),
