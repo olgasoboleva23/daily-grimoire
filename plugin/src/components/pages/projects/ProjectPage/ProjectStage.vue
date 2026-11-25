@@ -8,7 +8,8 @@ import UiCard from "#/components/uikit/UiCard/index.vue";
 import { askValue } from "#/components/uikit/FieldWindow/ask.js";
 import { openWindow } from "#/components/uikit/Window/open.ts";
 import DeleteStageWindow from "#/components/windows/projects/DeleteStageWindow/index.vue";
-import { addToStage, readStage, renameStage } from "#/controllers/projects.js";
+import { newTask } from "#/components/windows/tasks/TaskWindow/open.js";
+import { addTaskToStage, readStage, renameStage } from "#/controllers/projects.js";
 import ProjectTask from "./ProjectTask.vue";
 
 const props = defineProps({
@@ -36,6 +37,13 @@ async function remove() {
   const stage = await readStage(project, index, name);
 
   if (stage) await openWindow(DeleteStageWindow, { project, index, stage });
+}
+
+async function addTask() {
+  const { project, index, stage: { name } } = props;
+  const id = await newTask();
+
+  if (id) await addTaskToStage(project, index, name, id);
 }
 </script>
 
@@ -67,7 +75,7 @@ async function remove() {
       <UiButton
         kind="text"
         class="ui-project__add"
-        @click="addToStage(project, index, stage.name)"
+        @click="addTask"
       >+ task</UiButton>
     </template>
   </UiCard>

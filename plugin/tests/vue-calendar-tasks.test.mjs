@@ -1,6 +1,8 @@
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
+import { MASTER, STICKERS, TASK_RECORDS } from "#/helpers/paths.js";
+import { vault } from "./stubs/vault.mjs";
 
 // A task as the calendar draws it (TaskText, TaskRow, TaskCard): draggable, its checkbox, its buttons
 let mount, TaskText, TaskRow, TaskCard;
@@ -55,4 +57,75 @@ test("TaskCard: a panel card, its meta line, its buttons (a pool item: add to to
   assert.match(pool, /aria-label="edit pool task"/);
   assert.match(pool, /aria-label="add to today"/);
   assert.doesNotMatch(pool, /skip this time/);
+});
+
+test("the calendar pencil opens Edit task, then passes the named line to Tasks", async () => {
+  const { testWindows } = await import("./stubs/windows.mjs");
+  const { flushPromises } = await import("@vue/test-utils");
+  const { taskStore } = await import("#/store/tasks.js");
+  const { makeActions } = await import("#/controllers/calendar.js");
+  const line = "- [ ] t1 [due:: 2026-11-11]";
+  const records = { t1: { name: "Walk", area: "body" } };
+  const { app, files } = vault({
+    [MASTER]: line, [TASK_RECORDS]: JSON.stringify(records), [`${STICKERS}/leaf.webp`]: "",
+  });
+  app.vault.getResourcePath = file => `app://x/${file.name}`;
+  taskStore.put(MASTER, line);
+  taskStore.putRecords(records);
+  const asked = [];
+  const TASKS = { editTaskLineModal: async l => {
+    asked.push(l);
+    return "- [ ] Walk outside [due:: 2026-11-12]";
+  } };
+  app.plugins.plugins["obsidian-tasks-plugin"] = { apiV1: TASKS };
+  const ctx = { TASKS };
+  const calendar = { task: () => taskStore.tasks[0], ctx, actions: makeActions(ctx) };
+  const windows = testWindows();
+  const row = mount(TaskRow, {
+    props: { task: info(), kind: "open" }, global: { provide: { calendar } },
+  });
+
+  try {
+    await row.get(".ui-task__btns-edit").trigger("click");
+    await flushPromises();
+    assert.equal(windows.all.length, 1);
+    const [w] = windows.all;
+    assert.equal(w.title, "✦ Edit task");
+    const sticker = w.wrapper.get('button[title="leaf.webp"]');
+    assert.equal(sticker.get("img").attributes("src"), "app://x/leaf.webp");
+    await sticker.trigger("click");
+    await w.submit();
+    assert.deepEqual(asked, ["- [ ] Walk [due:: 2026-11-11]"]);
+    assert.equal(files[MASTER], "- [ ] t1 [due:: 2026-11-12]");
+    const stored = JSON.parse(files[TASK_RECORDS]).t1;
+    assert.equal(stored.name, "Walk outside");
+    assert.equal(stored.sticker, "leaf.webp");
+  } finally { windows.restore(); row.unmount(); }
+});
+
+test("the Pool pencil opens Name and Save and updates the record directly", async () => {
+  const { testWindows } = await import("./stubs/windows.mjs");
+  const { flushPromises } = await import("@vue/test-utils");
+  const records = { t1: { name: "Water herbs", pool: true } };
+  const { files } = vault({ [TASK_RECORDS]: JSON.stringify(records) });
+  const task = { id: "t1", pool: true, rec: records.t1 };
+  const calendar = { task: () => task, ctx: { TASKS: null } };
+  const windows = testWindows();
+  const card = mount(TaskCard, {
+    props: { task: info({ pool: true }) }, global: { provide: { calendar } },
+  });
+
+  try {
+    await card.get('[aria-label="edit pool task"]').trigger("click");
+    await flushPromises();
+    assert.equal(windows.all.length, 1);
+    const [w] = windows.all;
+    assert.equal(w.title, "✦ Edit task");
+    assert.equal(w.wrapper.get(".ui-window__submit").text(), "Save");
+    const name = w.wrapper.get('input[placeholder="name"]');
+    assert.equal(name.element.value, "Water herbs");
+    await name.setValue("Feed herbs");
+    await w.submit();
+    assert.equal(JSON.parse(files[TASK_RECORDS]).t1.name, "Feed herbs");
+  } finally { windows.restore(); card.unmount(); }
 });

@@ -6,6 +6,7 @@ import { vHoldAction } from "#/composables/holdAction.js";
 import { inject } from "vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import UiDeleteButton from "#/components/uikit/UiDeleteButton/index.vue";
+import { editTask } from "#/components/windows/tasks/TaskWindow/open.js";
 
 const props = defineProps({
   task: { type: Object, required: true },
@@ -18,7 +19,7 @@ const view = inject("calendar");
 const edit = () => {
   const t = view.task(props.task.key);
 
-  if (t) view.actions.edit(t);
+  if (t) return editTask(t);
 };
 
 const skip = () => {

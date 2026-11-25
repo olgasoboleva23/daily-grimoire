@@ -2,7 +2,7 @@ import { FuzzySuggestModal, Platform, type Plugin, type TFile } from "obsidian";
 import { APP_NAME } from "#/helpers/name.js";
 import { KINDS } from "#/models/kinds.js";
 import { mirrorMobileConfig } from "#/controllers/mobileConfig.js";
-import { newTask } from "#/controllers/tasks.js";
+import { newTask } from "#/components/windows/tasks/TaskWindow/open.js";
 import { migrateTasks } from "#/migrations/tasks.js";
 import { openSettings } from "#/controllers/settings.js";
 import { createNote } from "#/controllers/notes.js";

@@ -1,4 +1,4 @@
-// Project and stage reads and writes. The collection checks the current file before saving.
+// Project and stage reads and writes, including task links checked against the current stage.
 import { Notice } from "obsidian";
 import { app as vaultApp } from "#/helpers/app.js";
 import { nextId } from "#/helpers/ids.js";
@@ -8,7 +8,7 @@ import { importCover } from "#/helpers/images.js";
 import { notes, projects } from "#/store/tasks.js";
 import { parseNote } from "#/models/taskFile.js";
 import { Task } from "#/models/task.js";
-import { editTaskLine, newTask } from "#/controllers/tasks.js";
+import { editTaskLine } from "#/controllers/tasks.js";
 
 export const createProject = ({ name, description = "", status = "active", cover = null }) =>
   projects.add({ name, status, description, result: "", notes: "", cover, stages: [] }, "p");
@@ -192,16 +192,12 @@ export const addStage = (key, name) => projects.edit(all => {
   return all;
 });
 
-// a new task (`ask`: the New task flow) on a stage: found by index and name, so a stage that moved
-// meanwhile is not written to. null when cancelled or changed.
-export async function addToStage(key, index, stageName, ask = newTask) {
-  const id = await ask();
-
-  if (!id) return null;
-  const saved = await projects.update(key, p => {
+export async function addTaskToStage(key, index, stageName, id) {
+  if (!id) return false;
+  return projects.update(key, p => {
     const stage = p.stages?.[index];
 
-    if (stage?.name !== stageName) {
+    if (!stage || stage.name !== stageName) {
       new Notice("✦ project changed, try again");
       return null;
     }
@@ -212,8 +208,6 @@ export async function addToStage(key, index, stageName, ask = newTask) {
         : { ...st, tasks: [...st.tasks, id] }),
     };
   });
-
-  return saved ? id : null;
 }
 
 // a task on a calendar day

@@ -11,7 +11,8 @@ import { app } from "#/helpers/app.js";
 import config from "#/helpers/config.js";
 import { addDays, todayYmd } from "#/helpers/dates.js";
 import { tasksApi } from "#/helpers/plugins.js";
-import { editTaskModal, tickTask } from "#/controllers/tasks.js";
+import { editTask } from "#/components/windows/tasks/TaskWindow/open.js";
+import { tickTask } from "#/controllers/tasks.js";
 import { toCalendar } from "#/controllers/projects.js";
 import { taskInfo } from "#/models/calendarData.js";
 
@@ -43,7 +44,7 @@ function dateMenu(e) {
     <UiCheckbox v-else :static="!canTick" @tick="tickTask(entry.t)" />
     <span class="ui-project__task-text ui-grow"><TaskText :task="info" /></span>
     <template v-if="!entry.done">
-      <UiButton title="edit" @click="editTaskModal(entry.t)">
+      <UiButton title="edit" @click="editTask(entry.t)">
         <span class="ui-pencil">✏️</span>
       </UiButton>
       <UiButton title="to the calendar" @click="dateMenu">📅</UiButton>

@@ -6,7 +6,7 @@ import { vault } from "./stubs/vault.mjs";
 import { taskStore } from "#/store/tasks.js";
 import { PROJECTS } from "#/helpers/paths.js";
 import {
-  createProject, saveProject, addStage, addToStage, toCalendar,
+  createProject, saveProject, addStage, addTaskToStage, toCalendar,
   newProject, editProject, readStage, deleteStage, addLink, removeLink, deleteProject, readProject,
   renameStage,
 } from "#/controllers/projects.js";
@@ -54,19 +54,22 @@ test("saveProject and addStage on a missing key write nothing", async () => {
   assert.equal(files[PROJECTS], before);
 });
 
-test("addToStage: lists the id once; null or a changed stage writes nothing", async () => {
+test("addTaskToStage lists the ID once and refuses a missing ID or changed stage", async () => {
   const { files } = vault();
   await createProject({ name: "Garden" });
   await addStage("p1", "A");
-  assert.equal(await addToStage("p1", 0, "A", async () => "t7"), "t7");
-  await addToStage("p1", 0, "A", async () => "t7");
+  assert.equal(await addTaskToStage("p1", 0, "A", "t7"), true);
+  assert.equal(await addTaskToStage("p1", 0, "A", "t7"), true);
   assert.deepEqual(json(files).p1.stages[0].tasks, ["t7"]);
 
   const before = files[PROJECTS];
-  assert.equal(await addToStage("p1", 0, "A", async () => null), null);
-  assert.equal(await addToStage("p1", 0, "Z", async () => "t8"), null);
-  assert.match(Notice.last, /project changed/);
+  assert.equal(await addTaskToStage("p1", 0, "A", null), false);
   assert.equal(files[PROJECTS], before);
+  await renameStage("p1", 0, "A", "Z");
+  const renamed = files[PROJECTS];
+  assert.equal(await addTaskToStage("p1", 0, "A", "t8"), false);
+  assert.match(Notice.last, /project changed/);
+  assert.equal(files[PROJECTS], renamed);
 });
 
 test("toCalendar puts the task on a day", async () => {
@@ -118,7 +121,7 @@ test("project and stage writes refuse a null project record", async () => {
   const { files } = vault({ [PROJECTS]: '{"p1":null}' });
   assert.equal(await saveProject("p1", { notes: "x" }), false);
   assert.equal(await addStage("p1", "A"), false);
-  assert.equal(await addToStage("p1", 0, "A", async () => "t7"), null);
+  assert.equal(await addTaskToStage("p1", 0, "A", "t7"), false);
   assert.equal(files[PROJECTS], '{"p1":null}');
 });
 
@@ -174,7 +177,7 @@ test("deletion removes the project and preserves tasks, history and other projec
   });
   await createProject({ name: "Garden", cover: "cover.webp" });
   await addStage("p1", "Plant");
-  await addToStage("p1", 0, "Plant", async () => "t1");
+  await addTaskToStage("p1", 0, "Plant", "t1");
   await createProject({ name: "Shed" });
   const before = { ...files };
   assert.equal(await deleteProject("p1", await readProject("p1")), true);
@@ -223,7 +226,7 @@ test("rename and delete a stage by index and name; tasks and the other stages st
   await createProject({ name: "Garden" });
   await addStage("p1", "A");
   await addStage("p1", "B");
-  await addToStage("p1", 0, "A", async () => "t1");
+  await addTaskToStage("p1", 0, "A", "t1");
   assert.equal(await renameStage("p1", 0, "A", " Dig "), true);
   assert.deepEqual(json(files).p1.stages[0], { id: "st1", name: "Dig", tasks: ["t1"] });
   const before = files[PROJECTS];
@@ -247,7 +250,7 @@ test("deleting a stage with a stale snapshot keeps its current data", async () =
   await createProject({ name: "Garden" });
   await addStage("p1", "Dig");
   const stage = await readStage("p1", 0, "Dig");
-  await addToStage("p1", 0, "Dig", async () => "t1");
+  await addTaskToStage("p1", 0, "Dig", "t1");
   const before = { ...files };
   assert.equal(await deleteStage("p1", 0, stage, { deleteTasks: true }), false);
   assert.equal(await deleteStage("p1", 0, stage, { deleteTasks: false }), false);
@@ -264,9 +267,9 @@ test("deleting stage tasks removes only its exclusive open undated copies", asyn
   await createProject({ name: "B" });
   await addStage("p1", "Work");
   await addStage("p2", "Other");
-  await addToStage("p1", 0, "Work", async () => "t1");
-  await addToStage("p1", 0, "Work", async () => "t2");
-  await addToStage("p2", 0, "Other", async () => "t2");
+  await addTaskToStage("p1", 0, "Work", "t1");
+  await addTaskToStage("p1", 0, "Work", "t2");
+  await addTaskToStage("p2", 0, "Other", "t2");
   const stage = await readStage("p1", 0, "Work");
   assert.equal(await deleteStage("p1", 0, stage, { deleteTasks: true }), true);
   assert.equal(files[MASTER], kept);

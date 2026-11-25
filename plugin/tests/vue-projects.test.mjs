@@ -220,7 +220,7 @@ test("a task row: checkbox (✅ static when done), TaskText, ✏️ and 📅 on 
   assert.deepEqual(Menu.last.items.map(i => i.title), ["Today", "Tomorrow", "Pick a date…"]);
 });
 
-test("+ task calls addToStage with the project key, the stage's index and name", async () => {
+test("+ task reuses an existing task's picks and attaches the saved ID to the stage", async () => {
   const pick = Search.pickGrouped;
   Search.pickGrouped = async () => ({ name: "step 9", isNew: false, picks: { difficulty: "easy", area: "body" } });
   app.plugins.plugins["obsidian-tasks-plugin"] = { apiV1: { editTaskLineModal: async () => "- [ ] step 9" } };
@@ -231,6 +231,41 @@ test("+ task calls addToStage with the project key, the stage's index and name",
     assert.deepEqual(saved().stages[1].tasks, ["t4", "t5", "t6", "t7", "t8", "t9"]);
     assert.deepEqual(saved().stages[0].tasks, ["t1", "t2", "t3"]);
   } finally { Search.pickGrouped = pick; }
+});
+
+test("+ task opens New task for a new name and needs difficulty and area", async t => {
+  const windows = testWindows();
+  t.mock.method(Search, "pickGrouped", async () => ({ name: "Harvest", isNew: true }));
+  const native = [];
+  app.plugins.plugins["obsidian-tasks-plugin"] = { apiV1: { editTaskLineModal: async l => {
+    native.push(l);
+    return l;
+  } } };
+
+  try {
+    const { el } = mount({ open: "p1" });
+    button(stages(el)[1], "+ task").click();
+    await until(() => windows.all.length);
+    assert.equal(windows.all.length, 1);
+    const [w] = windows.all;
+    const submit = w.wrapper.get(".ui-window__submit");
+    const fields = w.wrapper.findAll(".ui-field");
+    const choices = name => fields.find(f => f.get(".setting-item-name").text() === name);
+
+    assert.equal(w.title, "✦ New task");
+    assert.equal(submit.text(), "Next →");
+    assert.equal(submit.element.disabled, true);
+    await choices("Difficulty").get('button[title*="Easy"]').trigger("click");
+    assert.equal(submit.element.disabled, true);
+    await choices("Area").get('button[title*="Body"]').trigger("click");
+    assert.equal(submit.element.disabled, false);
+    assert.deepEqual(native, []);
+    await w.submit();
+    await until(() => saved().stages[1].tasks.includes("t9"));
+    assert.deepEqual(native, ["- [ ] Harvest [created:: 2026-11-12]"]);
+    assert.equal(JSON.parse(files[RECORDS]).t9.name, "Harvest");
+    assert.deepEqual(saved().stages[1].tasks, ["t4", "t5", "t6", "t7", "t8", "t9"]);
+  } finally { windows.restore(); }
 });
 
 test("+ stage submits its name to addStage", async () => {

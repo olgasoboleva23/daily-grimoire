@@ -3,7 +3,9 @@ import assert from "node:assert/strict";
 import { Notice } from "obsidian";
 import { setApp } from "#/helpers/app.js";
 import { logPurchase } from "#/controllers/widgets/shop.js";
-import { addTask, saveRecords, newId, editTaskModal, saveNewTask } from "#/controllers/tasks.js";
+import {
+  addTask, newId, readTaskEdit, saveNewTask, saveRecords, saveTaskEdit,
+} from "#/controllers/tasks.js";
 import { makeActions } from "#/controllers/calendar.js";
 import { CalendarData } from "#/models/calendarData.js";
 import { taskStore } from "#/store/tasks.js";
@@ -33,7 +35,6 @@ const vault = (files = {}, records = {}) => {
       create: async (p, text) => { await later(); files[p] = text; },
     },
   };
-  globalThis.__app = app;
   setApp(app);
   return files;
 };
@@ -74,21 +75,14 @@ test("a new id is the biggest one plus one", () => {
   assert.equal(newId(new Map([["t2", {}], ["x", {}], ["tea", {}]])), "t3");
 });
 
-// the Tasks plugin's edit dialog, answering with `edited` (null: cancelled)
-const withTasksApi = (edited, seen = []) => {
-  const app = globalThis.__app;
-  app.plugins.plugins["obsidian-tasks-plugin"] = { apiV1: { editTaskLineModal: async l => (seen.push(l), edited) } };
-  return seen;
-};
 const PICK = { difficulty: "easy", area: "body", daytime: "evening", sticker: "a.webp" };
 
 test("editing a task: the picks and the new name go to its record, its dates to its line", async () => {
   const rec = { name: "walk", difficulty: null, area: null, daytime: null, goal: null, sticker: null, after: null };
   const files = vault({ [MASTER]: "- [ ] t1 [due:: 2026-11-03]\n" }, { t1: rec });
-  const seen = withTasksApi("- [ ] walk far [due:: 2026-11-05]");
   const item = taskStore.tasks[0];
-  await editTaskModal(item, async () => PICK);
-  assert.deepEqual(seen, ["- [ ] walk [due:: 2026-11-03]"]);
+  const read = await readTaskEdit(item);
+  await saveTaskEdit(item, read, PICK, "- [ ] walk far [due:: 2026-11-05]");
   assert.deepEqual(json(files).t1, { ...rec, ...{ difficulty: "easy", area: "body", daytime: "evening", sticker: "a.webp" }, name: "walk far" });
   assert.equal(files[MASTER], "- [ ] t1 [due:: 2026-11-05]\n");
 });
@@ -96,12 +90,12 @@ test("editing a task: the picks and the new name go to its record, its dates to 
 test("pool membership on an existing task preserves its scheduled and completed occurrences", async () => {
   const log = "- [ ] t1 [due:: 2026-11-20]\n- [x] t1 [completion:: 2026-11-13]\n";
   const files = vault({ [MASTER]: log }, { t1: { name: "cook soup" } });
-  withTasksApi("- [ ] cook soup [due:: 2026-11-20]");
+  const item = taskStore.tasks[0];
+  const edited = "- [ ] cook soup [due:: 2026-11-20]";
   for (const pool of [true, false]) {
-    await editTaskModal(taskStore.tasks[0], async preset => {
-      assert.equal(preset.pool, !pool);
-      return { ...preset, pool };
-    });
+    const read = await readTaskEdit(item);
+    assert.equal(read.preset.pool, !pool);
+    await saveTaskEdit(item, read, { ...read.preset, pool }, edited);
     assert.equal(!!json(files).t1.pool, pool);
     assert.equal(files[MASTER], log);
   }
@@ -109,8 +103,8 @@ test("pool membership on an existing task preserves its scheduled and completed 
 
 test("renamed to another task's name: the record is renamed, the two ids stay", async () => {
   const files = vault({ [MASTER]: "- [ ] t1\n- [ ] t2\n" }, { t1: { name: "walk" }, t2: { name: "read" } });
-  withTasksApi("- [ ] read");
-  await editTaskModal(taskStore.tasks[0], async () => PICK);
+  const item = taskStore.tasks[0];
+  await saveTaskEdit(item, await readTaskEdit(item), PICK, "- [ ] read");
   assert.equal(json(files).t1.name, "read");
   assert.equal(json(files).t2.name, "read");
   assert.equal(files[MASTER], "- [ ] t1\n- [ ] t2\n");
@@ -118,50 +112,48 @@ test("renamed to another task's name: the record is renamed, the two ids stay", 
 
 test("a cancelled Tasks dialog writes nothing", async () => {
   const files = vault({ [MASTER]: "- [ ] t1\n" }, { t1: { name: "walk" } });
-  withTasksApi("");
-  await editTaskModal(taskStore.tasks[0], async () => PICK);
+  const item = taskStore.tasks[0];
+  await saveTaskEdit(item, await readTaskEdit(item), PICK, "");
   assert.deepEqual(json(files), { t1: { name: "walk" } });
 });
 
 test("the line changed while the dialogs were open: nothing saved, record and line as they were", async () => {
   const files = vault({ [MASTER]: "- [ ] t1 [due:: 2026-11-03]\n" }, { t1: { name: "walk" } });
-  globalThis.__app.plugins.plugins["obsidian-tasks-plugin"] = { apiV1: { editTaskLineModal: async () => {
-    files[MASTER] = "- [x] t1 [due:: 2026-11-03]\n";   // ticked on another device meanwhile
-    return "- [ ] walk far [due:: 2026-11-05]";
-  } } };
-  await editTaskModal(taskStore.tasks[0], async () => PICK);
+  const item = taskStore.tasks[0];
+  const read = await readTaskEdit(item);
+  files[MASTER] = "- [x] t1 [due:: 2026-11-03]\n";
+  await saveTaskEdit(item, read, PICK, "- [ ] walk far [due:: 2026-11-05]");
   assert.deepEqual(json(files), { t1: { name: "walk" } });
   assert.equal(files[MASTER], "- [x] t1 [due:: 2026-11-03]\n");
 });
 
-// the Tasks dialog: rewrites Master.md to `meanwhile` (another device), then answers `edited`
-const changedMeanwhile = (files, meanwhile, edited) => {
-  globalThis.__app.plugins.plugins["obsidian-tasks-plugin"] = { apiV1: { editTaskLineModal: async () => {
-    files[MASTER] = meanwhile;
-    return edited;
-  } } };
-};
-
 test("the 🔁 rule changed meanwhile, the date edited: line and record untouched", async () => {
   const files = vault({ [MASTER]: "- [ ] t1 [repeat:: every day] [due:: 2026-11-03]\n" }, { t1: { name: "walk" } });
+  const item = taskStore.tasks[0];
+  const read = await readTaskEdit(item);
   const meanwhile = "- [ ] t1 [repeat:: every week] [due:: 2026-11-03]\n";
-  changedMeanwhile(files, meanwhile, "- [ ] walk [repeat:: every day] [due:: 2026-11-05]");
-  await editTaskModal(taskStore.tasks[0], async () => PICK);
+  files[MASTER] = meanwhile;
+  await saveTaskEdit(item, read, PICK, "- [ ] walk [repeat:: every day] [due:: 2026-11-05]");
   assert.equal(files[MASTER], meanwhile);
   assert.deepEqual(json(files), { t1: { name: "walk" } });
 });
 
 test("the line ticked meanwhile, only the picks changed: the record untouched", async () => {
   const files = vault({ [MASTER]: "- [ ] t1 [due:: 2026-11-03]\n" }, { t1: { name: "walk" } });
-  changedMeanwhile(files, "- [x] t1 [due:: 2026-11-03]\n", "- [ ] walk [due:: 2026-11-03]");
-  await editTaskModal(taskStore.tasks[0], async () => PICK);
+  const item = taskStore.tasks[0];
+  const read = await readTaskEdit(item);
+  files[MASTER] = "- [x] t1 [due:: 2026-11-03]\n";
+  await saveTaskEdit(item, read, PICK, "- [ ] walk [due:: 2026-11-03]");
   assert.deepEqual(json(files), { t1: { name: "walk" } });
   assert.equal(files[MASTER], "- [x] t1 [due:: 2026-11-03]\n");
 });
 
 test("a pool item: the window's picks and name go to its record, no line", async () => {
   const files = vault({ [MASTER]: "- [ ] t2\n" }, { t1: { name: "water herbs", pool: true } });
-  await editTaskModal(taskStore.pool[0], async was => (assert.equal(was.name, "water herbs"), { ...PICK, name: "feed herbs" }));
+  const item = taskStore.pool[0];
+  const read = await readTaskEdit(item);
+  assert.equal(read.preset.name, "water herbs");
+  await saveTaskEdit(item, read, { ...PICK, name: "feed herbs" }, null);
   assert.deepEqual(json(files).t1, { name: "feed herbs", pool: true, difficulty: "easy", area: "body", daytime: "evening", sticker: "a.webp" });
   assert.equal(files[MASTER], "- [ ] t2\n");
 });
@@ -262,9 +254,10 @@ test("a tasks.json that isn't valid JSON: New task says so and saves nothing", a
 
 test("a 🔁 task set to done in the Tasks dialog: both lines get the id, the name stays clean", async () => {
   const files = vault({ [MASTER]: "- [ ] t1 [repeat:: every day] [due:: 2026-11-02]\n" }, { t1: { name: "walk" } });
-  withTasksApi("- [ ] walk [repeat:: every day] [due:: 2026-11-03]\n"
-    + "- [x] walk [repeat:: every day] [due:: 2026-11-02] [completion:: 2026-11-02]");
-  await editTaskModal(taskStore.tasks[0], async () => PICK);
+  const item = taskStore.tasks[0];
+  const edited = "- [ ] walk [repeat:: every day] [due:: 2026-11-03]\n"
+    + "- [x] walk [repeat:: every day] [due:: 2026-11-02] [completion:: 2026-11-02]";
+  await saveTaskEdit(item, await readTaskEdit(item), PICK, edited);
   assert.equal(json(files).t1.name, "walk");
   assert.equal(files[MASTER], "- [ ] t1 [repeat:: every day] [due:: 2026-11-03]\n"
     + "- [x] t1 [repeat:: every day] [due:: 2026-11-02] [completion:: 2026-11-02]\n");

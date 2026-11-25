@@ -4,7 +4,7 @@
 import { Task } from "#/models/task.js";
 import { T, canReorder } from "#/models/calendarData.js";
 import {
-  addTask, deleteTaskLine, editTaskLine, editTaskLineWithUndo, editTaskModal,
+  addTask, deleteTaskLine, editTaskLine, editTaskLineWithUndo,
   saveRecords, tickTask,
 } from "./tasks.js";
 
@@ -55,6 +55,6 @@ export function makeActions(ctx) {
   return {
     canSkip, skip, tick: tickTask, unplan, fromPool, place, reorder, doneOnItsDay, toToday,
     pauseOrResume,
-    remove: deleteTaskLine, edit: editTaskModal,
+    remove: deleteTaskLine,
   };
 }

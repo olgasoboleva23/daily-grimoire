@@ -1,16 +1,12 @@
-// The writes of tasks: a task's line rewritten where it is (found again by its words), with an undo
-// notice; the task window (components/uikit/TaskWindow) and the Tasks plugin's edit dialog; a
-// task's record in tasks.json; a new task on top of Master.md (to the pool: a record alone).
+// Reads and writes task edits, keeping metadata in tasks.json and native Tasks lines in
+// Master.md. Pool items have a record only. Calendar writes can return an undo action.
 import { Notice } from "obsidian";
 import { edit, editLine, serial, undoLines } from "#/helpers/files.js";
 import { tasksApi } from "#/helpers/plugins.js";
 import { Task, VariantProblem, nextVariantAfter, variantsProblem } from "#/models/task.js";
-import { taskWindow } from "#/components/uikit/TaskWindow/index.js";
 import { app } from "#/helpers/app.js";
 import { parseNote } from "#/models/taskFile.js";
 import { MASTER, TASK_RECORDS } from "#/helpers/paths.js";
-import { pickTask } from "#/components/uikit/TaskSearch/index.js";
-import { todayYmd } from "#/helpers/dates.js";
 import { nextId } from "#/helpers/ids.js";
 import { records as recordsStore } from "#/store/tasks.js";
 
@@ -129,54 +125,49 @@ export const saveRecords = (patch, expected = null) => recordsStore.edit(all => 
 export const newId = (records, tasks = []) =>
   nextId("t", [...records.keys(), ...tasks.map(t => Task.of(t).id).filter(Boolean)]);
 
-// Edit a task: the task window (difficulty, area, daytime, sticker: to its record), then the Tasks
-// plugin's own edit dialog on its line with the name in place of the id (name: to the record,
-// dates: to the line; works on the phone). Cancelling either changes nothing. A pool item has no
-// line: the window alone, with its name. `ask` is the window (a test gives its own). A line changed
-// meanwhile (another device): nothing saved.
-export const editTaskModal = async (t, ask = taskWindow) => {
-  const id = Task.of(t).id, api = tasksApi();
+// Keep the raw line and record as they were before either window opens.
+export async function readTaskEdit(t) {
+  const original = Task.of(t), id = original.id;
+
+  if (!id) return null;
   const all = await recordsFromDisk();
 
-  if (!all) return;
+  if (!all) return null;
   const record = all[id];
-  const task = new Task(Task.of(t).line, t, record ?? t.rec);
+  const task = new Task(original.line, t, record ?? t.rec);
   let line = null;
 
   if (!t.pool) {
-    const text = await app.vault.cachedRead(app.vault.getAbstractFileByPath(t.path));
+    const file = app.vault.getFileByPath(t.path);
 
-    line = text.split("\n")[t.line];
-    if (!api || !id || !new Task(line ?? "").sameAs(task)) return;
+    if (!file) return null;
+    line = (await app.vault.cachedRead(file)).split("\n")[t.line];
+    if (!line || !new Task(line).sameAs(task)) return null;
   }
 
   const preset = { ...task.picks, pool: !!record?.pool };
 
   if (t.pool) preset.name = task.name;
-  const pick = await ask(preset, false, { variants: t.pool || task.isOpen });
+  return { preset, variants: !!t.pool || task.isOpen, record, line };
+}
 
-  if (!pick) return;
+export async function saveTaskEdit(t, { record, line }, pick, edited) {
+  if (!t.pool && !edited) return;
+  const id = Task.of(t).id;
   const patch = recOf(pick);
 
   if ("pool" in pick) patch.pool = pick.pool || undefined;
-  let next = line;
-
   if (t.pool) {
     if (pick.name) patch.name = pick.name;
-  } else {
-    const edited = await api.editTaskLineModal(new Task(line).named(task.name));
-
-    // "" when cancelled
-    if (!edited) return;
-    const back = Task.unnamed(edited, id);
-
-    patch.name = back.name || task.name;
-    next = back.line;
+    await writeTask(() => saveRecords({ [id]: patch }, { [id]: record }));
+    return;
   }
 
-  if (t.pool) return writeTask(() => saveRecords({ [id]: patch }, { [id]: record }));
-  return writeTask(() => changeTaskLine(t, () => next, patch, { line, record }));
-};
+  const back = Task.unnamed(edited, id);
+
+  patch.name = back.name || new Task(line, t, record ?? t.rec).name;
+  await writeTask(() => changeTaskLine(t, () => back.line, patch, { line, record }));
+}
 
 // A new task from the New task command: `name` (a past task's, or a typed one), the window's
 // picks, the Tasks dialog's result line. The name is the dialog's (its words may have been changed
@@ -187,30 +178,6 @@ export const editTaskModal = async (t, ask = taskWindow) => {
 // from tasks.json and Master.md as they are on disk now (the store sees a write a moment later), so
 // two saves at once never get one id.
 export const saveNewTask = (...args) => writeTask(() => saveNew(...args));
-
-// The New task command: a past task or a typed name, the window's picks, the Tasks dialog; the
-// saved id, or null when cancelled or not saved (saveNew says why itself).
-export async function newTask() {
-  const found = await pickTask();
-
-  if (!found) return null;
-  const ready = !found.isNew && found.picks.difficulty && found.picks.area;
-  const pick = ready ? found.picks : await taskWindow(found.picks ?? {}, true);
-
-  if (!pick) return null;
-  const api = tasksApi();
-
-  if (!api) {
-    new Notice("✦ Tasks plugin is off — task not saved");
-    return null;
-  }
-
-  // created shows how long it waits on the board
-  const result = await api.editTaskLineModal(Task.created(found.name, todayYmd()).line);
-
-  if (!result) return null;
-  return await saveNewTask(found.name, pick, result, found.id) || null;
-}
 
 // a note's text from disk ("" when it's missing)
 const fromDisk = async path => {

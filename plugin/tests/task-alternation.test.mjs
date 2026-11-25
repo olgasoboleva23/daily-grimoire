@@ -1,3 +1,4 @@
+// Recurring-task writes keep the next variant in JSON and retain native Tasks lines.
 import { test, before as beforeTests } from "node:test";
 import assert from "node:assert/strict";
 import { Task, nextVariantAfter } from "#/models/task.js";
@@ -12,11 +13,11 @@ const before = `- [ ] t1 ${rule} [due:: 2026-11-11]`;
 const done = `- [x] t1 ${rule} [due:: 2026-11-11] [completion:: 2026-11-11]`;
 const next = `- [ ] t1 ${rule} [due:: 2026-11-13]`;
 const completed = `${next}\n${done}`;
-let taskStore, tickTask, editTaskModal, saveNewTask, makeActions;
+let taskStore, tickTask, readTaskEdit, saveTaskEdit, saveNewTask, makeActions;
 beforeTests(async () => {
   GlobalRegistrator.register();
   ({ taskStore } = await import("#/store/tasks.js"));
-  ({ tickTask, editTaskModal, saveNewTask } = await import("#/controllers/tasks.js"));
+  ({ tickTask, readTaskEdit, saveTaskEdit, saveNewTask } = await import("#/controllers/tasks.js"));
   ({ makeActions } = await import("#/controllers/calendar.js"));
 });
 function setup(text = before) {
@@ -150,12 +151,18 @@ test("Open tasks use the current name; training history always uses the common n
   assert.equal(new Task(Task.skipLines(done), null, record).text, "Training");
 });
 
-test("The editor saves its selection in JSON and leaves the Tasks log unchanged", async () => {
+test("Task editing reads disk values and saves the selected variant in JSON", async () => {
   const v = setup(`${before}\n${done}`);
-  let shown;
-  v.api.editTaskLineModal = async line => (shown = line);
-  await editTaskModal(v.task, async preset => ({ ...preset, currVariant: "Arms" }));
-  assert.equal(new Task(shown).words, "Training");
+  update(v, { area: "body" });
+  const read = await readTaskEdit(v.task);
+  assert.equal(read.line, before);
+  assert.equal(read.record.name, "Training");
+  assert.equal(read.preset.area, "body");
+  assert.equal(read.preset.currVariant, "Core");
+  assert.equal(read.variants, true);
+  const edited = new Task(read.line).named(read.record.name);
+
+  await saveTaskEdit(v.task, read, { ...read.preset, currVariant: "Arms" }, edited);
   assert.equal(v.files[MASTER], `${before}\n${done}`);
   assert.equal(rec(v).currVariant, "Arms");
   assert.equal(rec(v).name, "Training");
@@ -163,21 +170,59 @@ test("The editor saves its selection in JSON and leaves the Tasks log unchanged"
 
 test("Completion in the editor rotates from its selected variant", async () => {
   const v = setup();
-  await editTaskModal(v.task, async preset => ({ ...preset, currVariant: "Arms" }));
+  const read = await readTaskEdit(v.task);
+  const pick = { ...read.preset, currVariant: "Arms" };
+
+  await saveTaskEdit(v.task, read, pick, completed.replaceAll("t1", "Training"));
   assert.equal(v.files[MASTER], completed);
   assert.equal(rec(v).currVariant, "Core");
 });
 
-test("Cancellation, concurrent record edits and failed modal saves preserve both files", async () => {
-  let v = setup(); v.api.editTaskLineModal = async () => "";
-  await editTaskModal(v.task, async preset => ({ ...preset, currVariant: "Arms" }));
-  assert.equal(v.files[MASTER], before); assert.deepEqual(rec(v), record);
-  v.api.editTaskLineModal = async line => { update(v, { variants: ["Core", "Legs"] }); return line; };
-  await editTaskModal(v.task, async preset => ({ ...preset, currVariant: "Arms" }));
-  assert.equal(v.files[MASTER], before); assert.deepEqual(rec(v).variants, ["Core", "Legs"]);
-  v = setup(); failRecordsOnce(v);
-  await assert.rejects(() => editTaskModal(v.task, async preset => ({ ...preset, currVariant: "Arms" })), /disk/);
-  assert.equal(v.files[MASTER], before); assert.deepEqual(rec(v), record);
+test("Cancellation, concurrent edits and a failed task save preserve both files", async () => {
+  const v = setup();
+  let read = await readTaskEdit(v.task);
+  const pick = { ...read.preset, currVariant: "Arms" };
+  const edited = completed.replaceAll("t1", "Training");
+
+  await saveTaskEdit(v.task, read, pick, "");
+  assert.equal(v.files[MASTER], before);
+  assert.deepEqual(rec(v), record);
+  update(v, { variants: ["Core", "Legs"] });
+  await saveTaskEdit(v.task, read, pick, edited);
+  assert.equal(v.files[MASTER], before);
+  assert.deepEqual(rec(v).variants, ["Core", "Legs"]);
+
+  update(v, record);
+  read = await readTaskEdit(v.task);
+  failRecordsOnce(v);
+  await assert.rejects(() => saveTaskEdit(v.task, read, pick, edited), /disk/);
+  assert.equal(v.files[MASTER], before);
+  assert.deepEqual(rec(v), record);
+});
+
+test("Pool editing uses a null line and saves the name and variant without Tasks", async () => {
+  const v = setup();
+  update(v, { pool: true });
+  taskStore.putRecords({ t1: rec(v) });
+  const t = taskStore.pool[0];
+  delete v.app.plugins.plugins["obsidian-tasks-plugin"];
+  const read = await readTaskEdit(t);
+
+  assert.equal(read.line, null);
+  assert.equal(read.variants, true);
+  assert.equal(read.preset.name, "Training");
+  await saveTaskEdit(t, read, { ...read.preset, name: "Workout", currVariant: "Arms" }, null);
+  assert.equal(v.files[MASTER], before);
+  assert.equal(rec(v).name, "Workout");
+  assert.equal(rec(v).currVariant, "Arms");
+});
+
+test("Reading an edit rejects a task whose file or original occurrence is gone", async () => {
+  const v = setup();
+  v.files[MASTER] = done;
+  assert.equal(await readTaskEdit(v.task), null);
+  delete v.files[MASTER];
+  assert.equal(await readTaskEdit(v.task), null);
 });
 
 test("Creating a recurring task already done advances its JSON queue once", async () => {
@@ -195,22 +240,41 @@ test("A failed new-task save leaves the previous log and queue intact", async ()
   assert.deepEqual(rec(v), record);
 });
 
-test("Task window validates duplicate names and an unavailable choice", async () => {
-  const { Form } = await import("#/components/uikit/Form/index.ts");
-  const { taskWindow } = await import("#/components/uikit/TaskWindow/index.js");
-  const ask = Form.ask;
-  const values = [
-    { variantsText: "Core\nCore", currVariant: "Core" },
-    { variantsText: "Core\nArms", currVariant: "Missing" },
-    { variantsText: "Core\nArms", currVariant: "Arms" },
-  ];
-  vault(); Form.ask = async () => values.shift();
+test("Task window updates next variants and stays open for invalid picks", async () => {
+  const { testWindows } = await import("./stubs/windows.mjs");
+  const { openWindow } = await import("#/components/uikit/Window/open.ts");
+  const TaskWindow = (await import("#/components/windows/tasks/TaskWindow/index.vue")).default;
+  const windows = testWindows();
+
   try {
-    const pick = await taskWindow();
+    const result = openWindow(TaskWindow, {
+      preset: { variants: ["Core", "Arms"], currVariant: "Core" },
+    });
+    const w = await windows.next();
+    const names = w.wrapper.find("textarea");
+    const choose = label => w.wrapper.get(`button[title="${label}"]`).trigger("click");
+
+    assert.equal(w.title, "✦ Edit task");
+    assert.equal(w.wrapper.get(".ui-window__submit").text(), "Next →");
+    await names.setValue("Core\nCore");
+    await w.submit();
+    assert.equal(Notice.last, "Each variant needs a different name");
+    assert.deepEqual(windows.all, [w]);
+    assert.equal(names.element.value, "Core\nCore");
+
+    await names.setValue("Legs\nArms");
+    await w.submit();
+    assert.equal(Notice.last, "Choose the next variant");
+    assert.deepEqual(windows.all, [w]);
+    assert.equal(w.wrapper.find('button[title="Core"]').exists(), false);
+
+    await names.setValue("Core\nArms");
+    await choose("Arms");
+    await w.submit();
+    const pick = await result;
     assert.deepEqual(pick.variants, ["Core", "Arms"]);
     assert.equal(pick.currVariant, "Arms");
-    assert.equal(values.length, 0);
-  } finally { Form.ask = ask; }
+  } finally { windows.restore(); }
 });
 
 
