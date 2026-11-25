@@ -11,7 +11,7 @@ before(async () => {
   window.moment = () => ({ format: () => "2027-01-15" });
   ({ mount } = await import("@vue/test-utils"));
   ({ nextTick } = await import("vue"));
-  PomodoroTimer = (await import("#/components/pages/dashboard/widgets/pomodoro/index.vue")).default;
+  PomodoroTimer = (await import("#/widgets/pomodoro/index.js")).PomodoroTimer;
 });
 after(() => mock.timers.reset());
 

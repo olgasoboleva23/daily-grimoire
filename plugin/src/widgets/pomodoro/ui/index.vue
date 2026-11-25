@@ -3,9 +3,11 @@
 <script>
 import { reactive } from "vue";
 import { Notice } from "obsidian";
-import { save as write, Timer } from "#/widgets/pomodoro/index.js";
+import { save as write } from "../model/repository/pomodoro.js";
+import { Timer } from "../model/timer.js";
 import { app, keepAwake } from "#/shared/host/index.js";
-import { bell, ding, syncMusic } from "#/controllers/widgets/pomodoro.js";
+import { bell, ding } from "./sound.js";
+import { syncMusic } from "./music.js";
 
 const MODE = { focus: "Focus", break: "Break", meditation: "Meditation" };
 const shown = reactive({});
@@ -84,7 +86,7 @@ function act(change) {
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { openWindow } from "#/shared/ui/Window/index.ts";
-import PomodoroWindow from "#/components/windows/pomodoro/PomodoroWindow/index.vue";
+import PomodoroWindow from "./PomodoroWindow/index.vue";
 import PomodoroMini from "./PomodoroMini.vue";
 import PomodoroRing from "./PomodoroRing.vue";
 

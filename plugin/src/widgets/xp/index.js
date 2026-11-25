@@ -2,9 +2,9 @@
 import { taskStore } from "#/entities/task/index.js";
 import { CYCLE } from "#/shared/config/index.js";
 import { loadLevelToday, loadLifeAreas, loadXpToday } from "./model/store.js";
-import XpToday from "#/components/pages/dashboard/widgets/xp/XpToday/index.vue";
-import LevelToday from "#/components/pages/dashboard/widgets/xp/LevelToday/index.vue";
-import LifeAreas from "#/components/pages/dashboard/widgets/xp/LifeAreas/index.vue";
+import XpToday from "./ui/XpToday/index.vue";
+import LevelToday from "./ui/LevelToday/index.vue";
+import LifeAreas from "./ui/LifeAreas/index.vue";
 
 export { XpToday, LevelToday, LifeAreas };
 

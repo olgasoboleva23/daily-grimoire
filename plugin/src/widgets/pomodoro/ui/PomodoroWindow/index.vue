@@ -8,7 +8,7 @@ import UiWindow from "#/shared/ui/UiWindow/index.vue";
 import UiField from "#/shared/ui/UiField/index.vue";
 import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
 import UiFieldChoice from "#/shared/ui/UiFieldChoice/index.vue";
-import { MUSIC } from "#/controllers/widgets/pomodoro.js";
+import { MUSIC } from "../music.js";
 
 const props = defineProps({ settings: { type: Object, required: true } });
 const emit = defineEmits(["done"]);

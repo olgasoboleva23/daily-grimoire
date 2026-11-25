@@ -19,7 +19,7 @@ import { pickTask } from "#/entities/task/index.js";
 import { openWindow } from "#/shared/ui/Window/index.ts";
 import { addEaten, editEaten } from "#/components/windows/food/eaten.js";
 import MarksWindow from "#/components/windows/food/MarksWindow/index.vue";
-import { openDish } from "#/components/pages/recipes/DishWindow/open.js";
+import { openDish } from "#/widgets/dish-window/index.js";
 
 const ui = inject("ui", null);
 const openMeds = e => ui ? ui.go("meds", {}, e)

@@ -1,14 +1,14 @@
 <!-- the four stars of the sessions done (a full set: ×N); the slot goes first (the small row's
      mode) -->
 <script setup>
-import { ICON } from "#/controllers/widgets/pomodoro.js";
+import { ICON } from "./icon.js";
 
 defineProps({ filled: { type: Number, required: true }, sets: { type: String, required: true } });
 </script>
 
 <template>
   <div class="ui-pomodoro__stars ui-flex ui-gap-m">
-    <!-- eslint-disable vue/no-v-html -- the icons are our own constant SVGs (pomodoro.js ICON) -->
+    <!-- eslint-disable vue/no-v-html -- the icons are our own constant SVGs (icon.js) -->
     <slot />
     <div
       v-for="i in 4"

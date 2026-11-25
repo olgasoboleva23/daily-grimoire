@@ -14,7 +14,7 @@ before(async () => {
   ({ mount } = await import("@vue/test-utils"));
   ({ reactive } = await import("vue"));
   RecipesPage = (await import("#/components/pages/recipes/index.vue")).default;
-  ({ openDish } = await import("#/components/pages/recipes/DishWindow/open.js"));
+  ({ openDish } = await import("#/widgets/dish-window/index.js"));
   ({ loadRecipes } = await import("#/widgets/dish-window/index.js"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
 });

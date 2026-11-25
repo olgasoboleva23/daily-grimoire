@@ -10,7 +10,7 @@ before(async () => {
   window.renderChart = async () => ({ destroy() {} });   // the Charts plugin
   ({ mount } = await import("@vue/test-utils"));
   ({ nextTick } = await import("vue"));
-  WeightCard = (await import("#/components/pages/dashboard/widgets/weight/index.vue")).default;
+  WeightCard = (await import("#/widgets/weight/index.js")).WeightCard;
 });
 
 const SKIN = `${JOURNALS}/Skin.md`, GUT = `${JOURNALS}/Gut.md`;

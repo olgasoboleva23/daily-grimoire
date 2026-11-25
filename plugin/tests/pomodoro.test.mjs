@@ -51,7 +51,7 @@ test("meditation: its own length (10 min by default), one session that stops whe
 });
 
 test("the meditation's music: which track plays for a running meditation, none paused, muted or off", async () => {
-  const { musicKey } = await import("#/controllers/widgets/pomodoro.js");
+  const { musicKey } = await import("#/widgets/pomodoro/ui/music.js");
   let now = 1_000;
   const t = new Timer({ music: "bells" }, null, () => now);
   t.reset("meditation");

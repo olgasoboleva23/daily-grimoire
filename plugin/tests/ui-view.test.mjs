@@ -300,7 +300,7 @@ test("Finance route loads its ledger into the Vue page; closing removes its subs
 test("dashboard links select Vue pages even when their old notes do not exist", async () => {
   const { mount } = await import("@vue/test-utils");
   const Finance = (await import("#/widgets/finance/index.js")).financeWidget.view;
-  const Market = (await import("#/components/pages/dashboard/widgets/market/index.vue")).default;
+  const Market = (await import("#/widgets/market/index.js")).CelestialMarket;
   const went = [], notes = [];
   setApp({ metadataCache: { getFirstLinkpathDest: () => null }, workspace: {
     getActiveViewOfType: () => null, openLinkText: (...args) => notes.push(args),

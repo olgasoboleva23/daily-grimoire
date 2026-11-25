@@ -11,9 +11,8 @@ const NOTE = "# Market\n\n## 🌿 Harvest\n- [ ] m1\n\n- [ ] m2\n";
 before(async () => {
   window.moment = () => ({ format: () => "2026-11-05" });
   ({ mount } = await import("@vue/test-utils"));
-  View = (await import("#/components/pages/dashboard/widgets/market/index.vue")).default;
-  AddButton = (await import("#/components/pages/dashboard/widgets/market/CelestialMarketAdd.vue"))
-    .default;
+  View = (await import("#/widgets/market/index.js")).CelestialMarket;
+  AddButton = (await import("#/widgets/market/index.js")).CelestialMarketAdd;
   ({ Search } = await import("#/shared/ui/Search/index.ts"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
 });

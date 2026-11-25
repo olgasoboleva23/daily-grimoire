@@ -1,7 +1,7 @@
 <!-- the full ring: ↺ ▶ ⏭ around the time (a click on it folds back to the small row), the mode and
      session, the stars (not for a meditation), 🧘 / 🍅 (the mode), the lengths and ⚙ -->
 <script setup>
-import { ICON } from "#/controllers/widgets/pomodoro.js";
+import { ICON } from "./icon.js";
 import PomodoroStars from "./PomodoroStars.vue";
 import { vTip } from "#/shared/ui/tooltip.js";
 
@@ -11,7 +11,7 @@ defineEmits(["toggle", "play", "reset", "skip", "gear", "mode"]);
 
 <template>
   <div class="ui-pomodoro__body">
-    <!-- eslint-disable vue/no-v-html -- the icons are our own constant SVGs (pomodoro.js ICON) -->
+    <!-- eslint-disable vue/no-v-html -- the icons are our own constant SVGs (icon.js) -->
     <div class="ui-pomodoro__ring" :style="{ '--p': shown.p }">
       <div class="ui-pomodoro__wing ui-pomodoro__wing--left" />
       <div class="ui-pomodoro__wing ui-pomodoro__wing--right" />

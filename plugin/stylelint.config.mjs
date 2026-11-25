@@ -11,7 +11,7 @@ export default {
     files: ["src/components/**/*.scss", "src/widgets/**/*.scss", "src/shared/ui/**/*.scss", "src/app/styles/_{busy,syncing,scroll-cards}.scss", "src/shared/styles/_tooltip.scss"],
     rules: { "color-no-hex": true, "color-named": "never", "function-disallowed-list": ["rgb", "rgba"] },
   }, {
-    files: ["src/components/pages/dashboard/widgets/xp/LevelToday/index.scss"],
+    files: ["src/widgets/xp/ui/LevelToday/index.scss"],
     rules: { "color-no-hex": null, "function-disallowed-list": null },
   }],
   rules: {

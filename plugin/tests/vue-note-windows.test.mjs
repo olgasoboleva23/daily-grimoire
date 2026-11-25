@@ -21,7 +21,7 @@ before(async () => {
     item: docs.CollectionItemWindow,
     journal: docs.NewJournalWindow,
     buy: (await import("#/features/buy-reward/index.js")).BuyRewardWindow,
-    pomodoro: (await import("#/components/windows/pomodoro/PomodoroWindow/index.vue")).default,
+    pomodoro: (await import("#/widgets/pomodoro/ui/PomodoroWindow/index.vue")).default,
   };
   windows = testWindows();
 });

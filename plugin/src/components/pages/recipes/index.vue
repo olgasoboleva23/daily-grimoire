@@ -16,7 +16,7 @@ import config from "#/shared/config/index.js";
 import { openDishForm } from "#/features/edit-dish/index.js";
 import { openCart } from "#/features/add-to-list/index.js";
 import { ingredientText } from "#/entities/dish/index.js";
-import { openDish } from "./DishWindow/open.js";
+import { openDish } from "#/widgets/dish-window/index.js";
 
 const props = defineProps({ state: { type: Object, required: true } });
 const d = computed(() => props.state.data);

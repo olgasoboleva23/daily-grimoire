@@ -6,8 +6,8 @@ let mount, LevelToday, LifeAreas;
 before(async () => {
   GlobalRegistrator.register();
   ({ mount } = await import("@vue/test-utils"));
-  LevelToday = (await import("#/components/pages/dashboard/widgets/xp/LevelToday/index.vue")).default;
-  LifeAreas = (await import("#/components/pages/dashboard/widgets/xp/LifeAreas/index.vue")).default;
+  LevelToday = (await import("#/widgets/xp/index.js")).LevelToday;
+  LifeAreas = (await import("#/widgets/xp/index.js")).LifeAreas;
 });
 
 test("LevelToday: level, XP, progress and a bar per vital with its reasons as the tooltip", () => {

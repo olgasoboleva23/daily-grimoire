@@ -1,7 +1,7 @@
 // The dashboard shopping list, with its add button and catalog watches.
 import { MARKET_NOTE, MARKET_RECORDS } from "#/shared/config/index.js";
-import CelestialMarket from "#/components/pages/dashboard/widgets/market/index.vue";
-import CelestialMarketAdd from "#/components/pages/dashboard/widgets/market/CelestialMarketAdd.vue";
+import CelestialMarket from "./ui/index.vue";
+import CelestialMarketAdd from "./ui/CelestialMarketAdd.vue";
 import { loadCelestialMarket } from "./model/store.js";
 
 export { CelestialMarket, CelestialMarketAdd };
