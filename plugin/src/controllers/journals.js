@@ -1,13 +1,13 @@
 // The free journals (a note each in JOURNALS: "- YYYY-MM-DD level reason, reason" lines; its name
 // the file's, its `reasons` and `lag` properties): read for the weight card and the food page;
 // created from form values, trashed and updated with today's level and reasons.
-import { app } from "#/helpers/app.js";
+import { app } from "#/shared/host/index.js";
 import { BodyLog } from "#/models/bodyLog.js";
 import { KINDS } from "#/models/kinds.js";
 import { createNote } from "#/controllers/notes.js";
-import { edit } from "#/helpers/files.js";
+import { edit } from "#/shared/vault/index.js";
 import { todayYmd } from "#/shared/lib/dates.js";
-import { JOURNALS } from "#/helpers/paths.js";
+import { JOURNALS } from "#/shared/config/index.js";
 
 // [{ path, name, reasons, lag, entries: Map date → { date, level, reasons } }], by name
 export async function readJournals() {

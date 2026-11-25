@@ -5,7 +5,7 @@
 import { computed, ref } from "vue";
 import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
 import UiTabs from "#/components/uikit/UiTabs/index.vue";
-import { APP_NAME } from "#/helpers/name.js";
+import { APP_NAME } from "#/shared/config/index.js";
 import MedsCourse from "./MedsCourse/index.vue";
 
 const props = defineProps({ state: { type: Object, required: true } });

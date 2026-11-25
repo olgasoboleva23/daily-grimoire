@@ -9,7 +9,7 @@
 // owner it unloads with, close.
 import { Component, Modal, type App } from "obsidian";
 import { h, type Component as VueComponent } from "vue";
-import { app } from "#/helpers/app.js";
+import { app } from "#/shared/host/index.js";
 import { useVueApp } from "#/shared/lib/vueApp.ts";
 
 type Props = Record<string, unknown>;

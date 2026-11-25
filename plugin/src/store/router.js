@@ -4,7 +4,7 @@
 import { readState as readCalendar, SAVED as CALENDAR_SAVED } from "#/store/calendar.js";
 import { readState as readProjects } from "#/store/projects.js";
 import { readState as readRecipes } from "#/store/recipes.js";
-import { pages } from "#/components/app/pages.js";
+import { pages } from "#/shared/config/index.js";
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 

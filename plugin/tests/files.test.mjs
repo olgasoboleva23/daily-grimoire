@@ -1,8 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { appendLine, edit, editJson, editLine, readJson, serial, undoLines } from "#/helpers/files.js";
+import { appendLine, edit, editJson, editLine, readJson, serial, undoLines } from "#/shared/vault/index.js";
 
-import { setApp } from "#/helpers/app.js";
+import { setApp } from "#/shared/host/index.js";
 import { Notice } from "obsidian";
 
 // a vault in memory: path → text, folders as a set

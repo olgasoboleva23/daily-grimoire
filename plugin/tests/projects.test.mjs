@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { Notice } from "obsidian";
 import { vault } from "./stubs/vault.mjs";
 import { taskStore } from "#/store/tasks.js";
-import { PROJECTS } from "#/helpers/paths.js";
+import { PROJECTS } from "#/shared/config/index.js";
 import {
   createProject, saveProject, addStage, addTaskToStage, toCalendar,
   newProject, editProject, readStage, deleteStage, addLink, removeLink, deleteProject, readProject,
@@ -297,7 +297,7 @@ test("links accept http(s), default the title to the URL and match it on removal
 });
 
 test("stage deletion retargets journal entries; project deletion checks ownership", async () => {
-  const { NOTES } = await import("#/helpers/paths.js");
+  const { NOTES } = await import("#/shared/config/index.js");
   const { files } = vault();
   await createProject({ name: "A" });
   await createProject({ name: "B" });

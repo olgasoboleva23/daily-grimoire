@@ -6,18 +6,18 @@
 // (the first read is done), `version` (a Vue ref, bumped on every change: a computed that reads it
 // is worked out again). stageTasks(stage) gives a stage's tasks with their state.
 // useTaskStore(plugin) starts it once the vault is loaded; Master.md, tasks.json, projects.json
-// or config.json (the ⚙ Settings: XP, gold, areas, put into helpers/config.js) saved, made,
+// or config.json (the ⚙ Settings: XP, gold, areas, applied to shared/config) saved, made,
 // deleted or renamed is read again on Obsidian's own event, at once (Dataview's index comes a
 // second later, and only once it's built), so everything drawn from the tasks draws again. The
 // folder's other files (backups) are not read.
 import { computed, ref } from "vue";
-import { app } from "#/helpers/app.js";
-import { APP_NAME } from "#/helpers/name.js";
+import { app } from "#/shared/host/index.js";
+import {
+  APP_NAME, applyConfig, CONFIG, MASTER, NOTES, PROJECTS, TASK_RECORDS,
+} from "#/shared/config/index.js";
 import { parseNote } from "#/shared/lib/noteLines.js";
 import { Task } from "#/models/task.js";
-import { collection } from "#/helpers/collection.js";
-import { applyConfig } from "#/helpers/config.js";
-import { CONFIG, MASTER, NOTES, PROJECTS, TASK_RECORDS } from "#/helpers/paths.js";
+import { collection } from "#/shared/vault/index.js";
 
 let items = [];   // Master.md's items
 

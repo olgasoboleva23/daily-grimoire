@@ -12,7 +12,7 @@ import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
 import UiInput from "#/components/uikit/UiInput/index.vue";
 import UiTable from "#/components/uikit/UiTable/index.vue";
 import UiTabs from "#/components/uikit/UiTabs/index.vue";
-import config from "#/helpers/config.js";
+import config from "#/shared/config/index.js";
 import { openWindow } from "#/components/uikit/Window/open.ts";
 import { openDishForm } from "#/components/windows/recipes/DishFormWindow/open.js";
 import CartWindow from "#/components/windows/recipes/CartWindow/index.vue";

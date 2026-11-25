@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readState, saved, withParams, isStep } from "#/store/router.js";
-import { pages } from "#/components/app/pages.js";
+import { pages } from "#/shared/config/index.js";
 
 test("readState: junk and old shapes become a whole state", () => {
   assert.equal(readState({ page: "nope", calendar: { view: "x" } }).page, "dashboard");

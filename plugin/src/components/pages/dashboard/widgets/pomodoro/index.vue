@@ -4,9 +4,8 @@
 import { reactive } from "vue";
 import { Notice } from "obsidian";
 import { Timer } from "#/models/timer.js";
-import { app } from "#/helpers/app.js";
+import { app, keepAwake } from "#/shared/host/index.js";
 import { bell, ding, save as write, syncMusic } from "#/controllers/widgets/pomodoro.js";
-import { keepAwake } from "#/helpers/wakeLock.js";
 
 const MODE = { focus: "Focus", break: "Break", meditation: "Meditation" };
 const shown = reactive({});

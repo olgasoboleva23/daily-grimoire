@@ -1,15 +1,14 @@
+import "./stubs/dom.mjs";
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { vault } from "./stubs/vault.mjs";
-import { MARKET, MARKET_RECORDS } from "#/helpers/paths.js";
+import { MARKET, MARKET_RECORDS } from "#/shared/config/index.js";
 import { Notice } from "obsidian";
 
 let mount, View, AddButton, Search, testWindows;
 // the note: green tea on line 3, rice on line 5
 const NOTE = "# Market\n\n## 🌿 Harvest\n- [ ] m1\n\n- [ ] m2\n";
 before(async () => {
-  GlobalRegistrator.register();
   window.moment = () => ({ format: () => "2026-11-05" });
   ({ mount } = await import("@vue/test-utils"));
   View = (await import("#/components/pages/dashboard/widgets/market/index.vue")).default;

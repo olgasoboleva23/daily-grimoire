@@ -4,7 +4,7 @@
 // command): a search of everything bought before or in the catalog, a new one asked its Category,
 // then on the list; the product search (a dish's line): a food product, or + new → New product.
 import { Notice, prepareFuzzySearch } from "obsidian";
-import { app } from "#/helpers/app.js";
+import { app } from "#/shared/host/index.js";
 import { dm } from "#/shared/lib/dates.js";
 import { findChoices } from "#/shared/lib/find.js";
 import { catLabel, marketCats } from "#/models/market.js";

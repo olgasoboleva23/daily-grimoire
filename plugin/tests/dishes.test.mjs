@@ -13,7 +13,7 @@ import { Search } from "#/components/uikit/Search/index.ts";
 import { pickRecipeNote } from "#/components/windows/recipes/DishFormWindow/pickRecipeNote.js";
 import { Notice } from "obsidian";
 import { foodChoices, foodWeek } from "#/models/food.js";
-import { DISHES, FOOD_DATA, FOOD_LOG, MARKET_NOTE, MARKET_RECORDS } from "#/helpers/paths.js";
+import { DISHES, FOOD_DATA, FOOD_LOG, MARKET_NOTE, MARKET_RECORDS } from "#/shared/config/index.js";
 import { KINDS } from "#/models/kinds.js";
 import { vault } from "./stubs/vault.mjs";
 
@@ -151,7 +151,7 @@ test("a recipe note can be created from the dish title and linked to the dish",
   });
 
 test("dishes keep their type across edits while it is hidden in settings", async () => {
-  const { applyConfig } = await import("#/helpers/config.js");
+  const { applyConfig } = await import("#/shared/config/index.js");
   const { files } = fixture();
   files["Steps.md"] = "Mix";
   const id = await addDish({ ...dish, type: " soup ", link: "Steps.md" });

@@ -1,15 +1,14 @@
+import "./stubs/dom.mjs";
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { vault } from "./stubs/vault.mjs";
-import { CYCLE } from "#/helpers/paths.js";
+import { CYCLE } from "#/shared/config/index.js";
 
 let mount, CycleWidget;
 // Dataview's array of Cycle.md's list items, as cycleLog reads it (map, where, array)
 const da = a => Object.assign(a, { map: f => da(Array.prototype.map.call(a, f)), where: f => da(a.filter(f)), array: () => [...a] });
 const dataview = { page: () => ({ file: { lists: da([{ text: "- start:: 2026-11-02" }]) }, period: 8 }) };
 before(async () => {
-  GlobalRegistrator.register();
   ({ mount } = await import("@vue/test-utils"));
   CycleWidget = (await import("#/components/pages/dashboard/widgets/cycle/index.vue")).default;
 });

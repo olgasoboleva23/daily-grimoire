@@ -2,7 +2,7 @@
 import { prepareFuzzySearch } from "obsidian";
 import { Search } from "#/components/uikit/Search/index.ts";
 import { createNote } from "#/controllers/notes.js";
-import { app } from "#/helpers/app.js";
+import { app } from "#/shared/host/index.js";
 import { KINDS } from "#/models/kinds.js";
 
 export async function pickRecipeNote(dish = "") {

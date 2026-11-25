@@ -7,7 +7,7 @@
 <script setup>
 import { inject, reactive, ref, watch } from "vue";
 import { Keymap } from "obsidian";
-import { openUi } from "#/components/app/open.ts";
+import { openUi } from "#/shared/host/index.js";
 import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
 import UiMissing from "#/components/uikit/UiMissing.vue";
 import UiGroupHeader from "#/components/uikit/UiGroupHeader.vue";
@@ -15,7 +15,7 @@ import UiNoteLink from "#/components/uikit/UiNoteLink.vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import UiDeleteButton from "#/components/uikit/UiDeleteButton/index.vue";
 import { vTip } from "#/components/uikit/tooltip.js";
-import { MARKET } from "#/helpers/paths.js";
+import { MARKET } from "#/shared/config/index.js";
 import { buyMarketItem, removeMarketItem } from "#/controllers/widgets/market.js";
 import { openEditItem } from "#/components/windows/market/MarketItemWindow/open.js";
 

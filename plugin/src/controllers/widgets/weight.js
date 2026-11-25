@@ -8,9 +8,9 @@ import { WeightLog } from "#/models/weightLog.js";
 import { readJournals } from "#/controllers/journals.js";
 import { cycleLog } from "./cycle.js";
 import { chartColor, chartScale } from "#/shared/lib/chart.js";
-import { edit } from "#/helpers/files.js";
+import { edit } from "#/shared/vault/index.js";
 import { amount } from "#/shared/lib/format.js";
-import { WEIGHT } from "#/helpers/paths.js";
+import { WEIGHT } from "#/shared/config/index.js";
 
 const DAYS = 30;
 

@@ -1,3 +1,4 @@
+import "./stubs/dom.mjs";
 import { after, test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, existsSync } from "node:fs";
@@ -5,15 +6,13 @@ import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { Component } from "obsidian";
 import * as sass from "sass";
 import postcss from "postcss";
-import config, { applyConfig, THEMES } from "#/helpers/config.js";
+import config, { applyConfig, THEMES, CONFIG, THEME_IMAGES } from "#/shared/config/index.js";
 import { settingsValues, toConfig } from "#/models/settings.js";
 import { useTheme } from "#/controllers/theme.js";
 import { useTaskStore, taskStore } from "#/store/tasks.js";
-import { setApp } from "#/helpers/app.js";
-import { CONFIG, THEME_IMAGES } from "#/helpers/paths.js";
+import { setApp } from "#/shared/host/index.js";
 import { chartColor } from "#/shared/lib/chart.js";
 
-GlobalRegistrator.register();
 after(() => { applyConfig(); GlobalRegistrator.unregister(); });
 const settle = () => new Promise(r => setTimeout(r, 5));
 

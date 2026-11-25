@@ -1,13 +1,12 @@
+import "./stubs/dom.mjs";
 import { test, before, after, mock } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { vault } from "./stubs/vault.mjs";
-import { POMODORO } from "#/helpers/paths.js";
+import { POMODORO } from "#/shared/config/index.js";
 
 let mount, nextTick, PomodoroTimer;
 const NOW = 1_800_000_000_000;
 before(async () => {
-  GlobalRegistrator.register();
   mock.timers.enable({ apis: ["Date", "setTimeout", "setInterval"], now: NOW });
   window.moment = () => ({ format: () => "2027-01-15" });
   ({ mount } = await import("@vue/test-utils"));
@@ -103,7 +102,7 @@ test("🧘 switches to meditation: its own clock, no stars; at its end a bell, t
 });
 
 test("closed while the wake lock was still being asked for: the lock that comes is let go at once", async () => {
-  const { keepAwake } = await import("#/helpers/wakeLock.js");
+  const { keepAwake } = await import("#/shared/host/index.js");
   let give;
   const lock = { released: false, release: async () => { lock.released = true; } };
 

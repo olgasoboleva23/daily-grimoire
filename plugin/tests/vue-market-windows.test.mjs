@@ -1,9 +1,9 @@
+import "./stubs/dom.mjs";
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { Notice } from "obsidian";
 import { vault } from "./stubs/vault.mjs";
-import { FOOD_DATA, MARKET_NOTE, MARKET_RECORDS } from "#/helpers/paths.js";
+import { FOOD_DATA, MARKET_NOTE, MARKET_RECORDS } from "#/shared/config/index.js";
 
 // The market's and food's windows (components/windows/{market,food}): a product's window, new or
 // edit, the marks, and the flows that open them (＋ on the market, the product search), through
@@ -11,7 +11,6 @@ import { FOOD_DATA, MARKET_NOTE, MARKET_RECORDS } from "#/helpers/paths.js";
 const MARKS = [{ tag: "m1", icon: "🍫", name: "cocoa" }, { tag: "m2", icon: "🥛", name: "milk" }];
 let Search, testWindows, windows, flows, MarketItemWindow, MarksWindow, openWindow;
 before(async () => {
-  GlobalRegistrator.register();
   window.moment = () => ({ format: () => "2026-11-20" });
   ({ Search } = await import("#/components/uikit/Search/index.ts"));
   ({ testWindows } = await import("./stubs/windows.mjs"));

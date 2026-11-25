@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { setApp } from "#/helpers/app.js";
+import { setApp } from "#/shared/host/index.js";
 import { AudioEngine } from "#/shared/lib/sounds.js";
 
 // an AudioContext in memory: every source started is counted

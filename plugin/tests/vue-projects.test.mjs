@@ -1,9 +1,9 @@
+import "./stubs/dom.mjs";
 import { test, before, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { Menu, Notice } from "obsidian";
 import { vault } from "./stubs/vault.mjs";
-import { CONFIG, PROJECTS } from "#/helpers/paths.js";
+import { CONFIG, PROJECTS } from "#/shared/config/index.js";
 
 // The Projects tab: its list of project cards (cover, status, description, progress, the next task)
 // and a project's page (header, stages, task rows, Result and Notes), and the windows their
@@ -12,11 +12,10 @@ const MASTER = "00 System/Data/Tasks/Master.md";
 const RECORDS = "00 System/Data/Tasks/tasks.json";
 let vue, Projects, taskStore, config, PROMPT_VARIABLES, Search, testWindows, files, app;
 before(async () => {
-  GlobalRegistrator.register();
   window.moment = () => ({ format: () => "2026-11-12" });
   vue = await import("vue");
   ({ testWindows } = await import("./stubs/windows.mjs"));
-  config = (await import("#/helpers/config.js")).default;
+  config = (await import("#/shared/config/index.js")).default;
   ({ PROMPT_VARIABLES } = await import("#/controllers/prompts.js"));
   ({ Search } = await import("#/components/uikit/Search/index.ts"));
   ({ taskStore } = await import("#/store/tasks.js"));

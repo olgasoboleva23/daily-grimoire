@@ -1,13 +1,12 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import { Platform } from "obsidian";
-import config, { themeLabels } from "#/helpers/config.js";
+import config, { themeLabels, DATA, POMODORO } from "#/shared/config/index.js";
 import { taskStore } from "#/store/tasks.js";
-import { app } from "#/helpers/app.js";
+import { app } from "#/shared/host/index.js";
 import { useObsidian } from "#/shared/lib/vueApp.ts";
 import { useBusy, useNewDay } from "#/shared/lib/use.js";
 import { todayYmd } from "#/shared/lib/dates.js";
-import { DATA, POMODORO } from "#/helpers/paths.js";
 import { blocks } from "#/controllers/blocks.js";
 import Widget from "#/components/UiWidget.vue";
 import UiCard from "#/components/uikit/UiCard/index.vue";

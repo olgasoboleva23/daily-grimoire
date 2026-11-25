@@ -1,7 +1,6 @@
 // Loads food, journal and medication data for the Food page.
 // Writes eaten items, day notes, mark definitions and the training task.
-import { readJson } from "#/helpers/files.js";
-import { collection } from "#/helpers/collection.js";
+import { readJson, collection } from "#/shared/vault/index.js";
 import { todayYmd } from "#/shared/lib/dates.js";
 import {
   marksOf, withEaten, withMarks, withNote, withoutEaten, withTask,
@@ -11,7 +10,7 @@ import { readJournals } from "#/controllers/journals.js";
 import { forFood } from "#/models/course.js";
 import { T } from "#/models/calendarData.js";
 import { taskStore } from "#/store/tasks.js";
-import { COURSES, FOOD_DATA, FOOD_LOG } from "#/helpers/paths.js";
+import { COURSES, FOOD_DATA, FOOD_LOG } from "#/shared/config/index.js";
 
 // food.json (the marks and the training task) and log.json (the days): each write one
 // edit of its file

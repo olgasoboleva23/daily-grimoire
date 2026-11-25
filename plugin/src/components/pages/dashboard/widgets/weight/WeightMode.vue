@@ -4,7 +4,7 @@
 import UiAddForm from "#/components/uikit/UiAddForm/index.vue";
 import UiChart from "#/components/uikit/UiChart/index.vue";
 import UiNoteLink from "#/components/uikit/UiNoteLink.vue";
-import { WEIGHT } from "#/helpers/paths.js";
+import { WEIGHT } from "#/shared/config/index.js";
 
 defineProps({ weight: { type: Object, required: true } });
 defineEmits(["save"]);

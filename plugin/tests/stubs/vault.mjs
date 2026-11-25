@@ -2,7 +2,7 @@
 // (`dirs`), a note's properties (`props`), Obsidian's local storage (`local`, the sounds muted),
 // Dataview's api when given (`dataview`); `io.failing` = N: the next N adapter writes throw.
 // Anything else a test needs goes on the returned `app` itself.
-import { setApp } from "#/helpers/app.js";
+import { setApp } from "#/shared/host/index.js";
 
 export function vault(files = {}, { folders = [], props = {}, dataview = null } = {}) {
   const dirs = new Set(folders), local = { "ui-mute": "1" }, io = { failing: 0 };

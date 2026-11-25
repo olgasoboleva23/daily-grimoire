@@ -3,7 +3,7 @@
 // markup: widgets/goals.
 import { dm, pageDay, todayYmd, weekOf, ymd } from "#/shared/lib/dates.js";
 import { Goal } from "#/models/goal.js";
-import { GOALS } from "#/helpers/paths.js";
+import { GOALS } from "#/shared/config/index.js";
 import { T } from "#/models/calendarData.js";
 import { taskStore } from "#/store/tasks.js";
 

@@ -1,16 +1,14 @@
+import "./stubs/dom.mjs";
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { MarkdownRenderer, Notice } from "obsidian";
 import { vault } from "./stubs/vault.mjs";
-import { CONFIG, DISHES, FOOD_DATA, MARKET, MARKET_RECORDS } from "#/helpers/paths.js";
-import config, { applyConfig } from "#/helpers/config.js";
+import config, { CONFIG, DISHES, FOOD_DATA, MARKET, MARKET_RECORDS, applyConfig } from "#/shared/config/index.js";
 
 // The recipe book: the page (the dishes, a search, + Dish, 🛒, ✏️) and a dish's window (its
 // ingredients with amounts, the marks, the recipe note's steps drawn below, 🛒 ✏️ 📄 🗑)
 let mount, reactive, RecipesPage, openDish, loadRecipes, testWindows;
 before(async () => {
-  GlobalRegistrator.register();
   HTMLElement.prototype.setText = function (t) { this.textContent = t; };
   HTMLElement.prototype.addClass = function (c) { this.classList.add(c); };
   ({ mount } = await import("@vue/test-utils"));

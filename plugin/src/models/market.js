@@ -1,7 +1,7 @@
 // The Celestial Market (the shopping list, 00 System/Data/Celestial Market.md) and the supplies
 // bought from it, pure (tested by tests/logic.test.mjs, tests/entities.test.mjs); log and
 // catalog read by: controllers/widgets/market.js.
-import config from "#/helpers/config.js";
+import config from "#/shared/config/index.js";
 import { diffDays } from "#/shared/lib/dates.js";
 import { FIELD, LineItem, lineOf, withField } from "#/shared/lib/lineItem.js";
 

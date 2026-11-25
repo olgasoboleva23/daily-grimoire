@@ -1,13 +1,12 @@
+import "./stubs/dom.mjs";
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
-import { MASTER, STICKERS, TASK_RECORDS } from "#/helpers/paths.js";
+import { MASTER, STICKERS, TASK_RECORDS } from "#/shared/config/index.js";
 import { vault } from "./stubs/vault.mjs";
 
 // A task as the calendar draws it (TaskText, TaskRow, TaskCard): draggable, its checkbox, its buttons
 let mount, TaskText, TaskRow, TaskCard;
 before(async () => {
-  GlobalRegistrator.register();
   ({ mount } = await import("@vue/test-utils"));
   // a component is <Name>.vue, or <Name>/index.vue when it has its own styles
   const load = async n => (await import(`../src/components/pages/calendar/${n}`)).default;

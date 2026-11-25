@@ -1,8 +1,8 @@
 // Sounds: an AudioEngine per file (one shared AudioContext, each file decoded once), the 🔇 switch,
 // the tick sounds. Every sound keeps quiet while muted (the calendar's 🔊 button), the timer's and
 // the shop's too.
-import { app } from "#/helpers/app.js";
-import { SOUNDS } from "#/helpers/paths.js";
+import { app } from "#/shared/host/index.js";
+import { SOUNDS } from "#/shared/config/index.js";
 
 const _audio = { ctx: null, buffers: new Map() };
 const _ctx   = () => _audio.ctx ??= new (window.AudioContext || window.webkitAudioContext)();

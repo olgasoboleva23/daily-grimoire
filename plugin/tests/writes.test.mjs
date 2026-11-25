@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Notice } from "obsidian";
-import { setApp } from "#/helpers/app.js";
+import { setApp } from "#/shared/host/index.js";
 import { logPurchase } from "#/controllers/widgets/shop.js";
 import {
   addTask, newId, readTaskEdit, saveNewTask, saveRecords, saveTaskEdit,

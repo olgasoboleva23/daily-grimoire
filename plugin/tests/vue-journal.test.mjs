@@ -1,9 +1,9 @@
+import "./stubs/dom.mjs";
 import { test, before, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { Notice } from "obsidian";
 import { vault } from "./stubs/vault.mjs";
-import { NOTES, PROJECTS } from "#/helpers/paths.js";
+import { NOTES, PROJECTS } from "#/shared/config/index.js";
 
 // A project's journal: the card on its page (the count, the last entry, the two prompts) and the
 // window with the timeline (newest first, a filter by what an entry is about, + Entry, ✏️, ×)
@@ -12,7 +12,6 @@ const RECORDS = "00 System/Data/Tasks/tasks.json";
 let vue, taskStore, notesOf, openJournal, Card, testWindows, config, files, app;
 
 before(async () => {
-  GlobalRegistrator.register();
   HTMLElement.prototype.setText = function (t) { this.textContent = t; };
   HTMLElement.prototype.addClass = function (c) { this.classList.add(c); };
   window.moment = at => ({ format: f => (f === "YYYY-MM-DDTHH:mm" ? "2026-11-20T10:00" : `~${at}`) });
@@ -21,7 +20,7 @@ before(async () => {
   ({ openJournal } = await import("#/components/pages/projects/JournalWindow/open.js"));
   Card = (await import("#/components/pages/projects/ProjectPage/ProjectJournal.vue")).default;
   ({ testWindows } = await import("./stubs/windows.mjs"));
-  config = (await import("#/helpers/config.js")).default;
+  config = (await import("#/shared/config/index.js")).default;
 });
 
 // made-up: Garden with a stage of two tasks, its three notes and one of another project

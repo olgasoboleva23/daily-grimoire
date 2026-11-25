@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Notice } from "obsidian";
-import { importCover } from "#/helpers/images.js";
+import { importCover } from "#/shared/vault/index.js";
 import { vault } from "./stubs/vault.mjs";
 
 function setup(mime = "image/webp") {

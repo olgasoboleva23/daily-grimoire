@@ -11,10 +11,9 @@ import { useObsidian } from "#/shared/lib/vueApp.ts";
 import {
   useDataviewChanges, useFileChanges, useRedraw, useTabDate, useWhenIndexed,
 } from "#/shared/lib/use.js";
-import { app } from "#/helpers/app.js";
-import { blockDv } from "#/helpers/plugins.js";
+import { app, blockDv } from "#/shared/host/index.js";
 import { taskStore } from "#/store/tasks.js";
-import { TASKS } from "#/helpers/paths.js";
+import { TASKS } from "#/shared/config/index.js";
 import UiCard from "#/components/uikit/UiCard/index.vue";
 import UiFailed from "#/components/uikit/UiFailed.vue";
 

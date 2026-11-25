@@ -34,7 +34,7 @@ test("UiButton: kinds, on, title, extra classes", () => {
 });
 
 test("UiNoteLink: a short link to an app page's note switches the page in place", async () => {
-  const { setApp } = await import("#/helpers/app.js");
+  const { setApp } = await import("#/shared/host/index.js");
   const went = [], opened = [];
   const tab = { go: (...a) => went.push(a) };
   const { UiView } = await import("#/components/app/view.ts");

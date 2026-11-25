@@ -3,12 +3,12 @@
      CycleRows, CycleStats draw. -->
 <script setup>
 import { computed, ref } from "vue";
-import { app } from "#/helpers/app.js";
+import { app } from "#/shared/host/index.js";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
 import UiMissing from "#/components/uikit/UiMissing.vue";
 import UiNoteLink from "#/components/uikit/UiNoteLink.vue";
-import { CYCLE } from "#/helpers/paths.js";
+import { CYCLE } from "#/shared/config/index.js";
 import { markCycle } from "#/controllers/widgets/cycle.js";
 import CycleHead from "./CycleHead.vue";
 import CycleRows from "./CycleRows.vue";

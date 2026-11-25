@@ -7,8 +7,7 @@
 import { computed, inject, nextTick, onMounted, ref, watch } from "vue";
 import { MarkdownRenderer, Notice } from "obsidian";
 import { confirm } from "#/components/uikit/ConfirmWindow/confirm.js";
-import { openNote } from "#/components/app/open.ts";
-import { app } from "#/helpers/app.js";
+import { openNote, app } from "#/shared/host/index.js";
 import { openWindow, WINDOW } from "#/components/uikit/Window/open.ts";
 import UiWindow from "#/components/uikit/UiWindow/index.vue";
 import { openDishForm } from "#/components/windows/recipes/DishFormWindow/open.js";

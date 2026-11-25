@@ -1,14 +1,13 @@
+import "./stubs/dom.mjs";
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { createRequire } from "node:module";
-import { setApp } from "#/helpers/app.js";
+import { setApp } from "#/shared/host/index.js";
 
 const require = createRequire(import.meta.url);
 let vue, mount, Dashboard, DashboardDate, todayYmd;
 const triggered = [];
 before(async () => {
-  GlobalRegistrator.register();
   window.moment = require("moment");
   setApp({ vault: { on: () => ({}) }, workspace: {
     on: () => ({}), trigger: name => triggered.push(name),
@@ -47,7 +46,7 @@ test("a dashboard date restored by Back / Forward is drawn", async () => {
 });
 
 test("the open dashboard changes its market title when the theme changes", async () => {
-  const { applyConfig } = await import("#/helpers/config.js");
+  const { applyConfig } = await import("#/shared/config/index.js");
   const { taskStore } = await import("#/store/tasks.js");
   const { wrapper } = page();
   const marketTitle = () => wrapper.findAllComponents({ name: "UiWidget" })

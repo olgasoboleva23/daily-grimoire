@@ -12,7 +12,7 @@ import { loadWeight } from "#/controllers/widgets/weight.js";
 import {
   COURSES, CYCLE, DISHES, FOOD_DATA, FOOD_LOG, GOALS, JOURNALS, LEDGER, MARKET_NOTE, MARKET_RECORDS,
   CONFIG, PURCHASES, RULES, SAVINGS, SHOP, TASKS, WEIGHT,
-} from "#/helpers/paths.js";
+} from "#/shared/config/index.js";
 import { loadDailyNote } from "#/controllers/widgets/dailyNote.js";
 import { loadPomodoro } from "#/controllers/widgets/pomodoro.js";
 import { loadMeds } from "#/controllers/meds.js";

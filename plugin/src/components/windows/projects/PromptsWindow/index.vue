@@ -8,7 +8,7 @@ import UiField from "#/components/uikit/UiField/index.vue";
 import UiFieldText from "#/components/uikit/UiFieldText/index.vue";
 import { filled } from "#/components/uikit/UiWindow/ready.js";
 import { useWrite } from "#/components/uikit/UiWindow/write.js";
-import config from "#/helpers/config.js";
+import config from "#/shared/config/index.js";
 import { PROMPT_VARIABLES, savePrompts } from "#/controllers/prompts.js";
 
 const emit = defineEmits(["done"]);

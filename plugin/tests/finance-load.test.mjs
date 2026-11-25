@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { vault } from "./stubs/vault.mjs";
 import { loadFinance, loadFinanceLine } from "#/controllers/widgets/finance.js";
-import { LEDGER } from "#/helpers/paths.js";
+import { LEDGER } from "#/shared/config/index.js";
 
 const row = (d, sum) => `| ${d} | 10:00 | ${sum} | Food | shop |`;
 const head = "| date | time | amount | category | description |\n| --- | --- | --- | --- | --- |\n";

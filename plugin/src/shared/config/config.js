@@ -1,5 +1,9 @@
-import { dishType } from "#/models/settings.js";
-import * as prompts from "#/models/promptDefaults.js";
+// Application settings and defaults, applied in place so open views stay up to date.
+import { shallowReactive } from "vue";
+import { dishType } from "./contract.js";
+import { CONFIG } from "./paths.js";
+import { editJson } from "#/shared/vault/index.js";
+import * as prompts from "./promptDefaults.js";
 
 // Areas, difficulties, XP and gold, levels, market categories: the numbers the widgets share.
 // The defaults are below; 00 System/Data/config.json (the ⚙ Settings window) overrides the
@@ -58,7 +62,7 @@ const config = {
   promptStart: prompts.start, promptFinal: prompts.final,
   theme: "winx", difficulties: [], areas: [], levels: [], levelCost: { base: 0, step: 0 },
   xpMap: {}, areaMap: {}, areaIcons: {}, areaColors: {},
-  dishTypes: [],
+  dishTypes: shallowReactive([]),
   marketCategories: [
     { label: "🌿 Harvest", type: "food" },
     { label: "🌸 Bloom", type: "care" },
@@ -113,5 +117,13 @@ export function applyConfig(json = {}) {
 }
 
 applyConfig();
+
+// Merge with the current file. The settings operation applies the result after the write succeeds.
+export async function saveConfig(json) {
+  let merged;
+
+  await editJson(CONFIG, current => (merged = { ...current, ...json }));
+  return merged;
+}
 
 export default config;

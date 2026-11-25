@@ -10,7 +10,7 @@ import TaskButtons from "#/components/pages/calendar/TaskButtons.vue";
 import { T } from "#/models/calendarData.js";
 import { dm } from "#/shared/lib/dates.js";
 import { AudioEngine } from "#/shared/lib/sounds.js";
-import { ASSETS, SOUNDS } from "#/helpers/paths.js";
+import { ASSETS, SOUNDS } from "#/shared/config/index.js";
 import { useDragSource } from "#/composables/drag.js";
 import { useSwipe } from "#/shared/lib/swipe.js";
 

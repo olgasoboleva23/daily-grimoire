@@ -5,9 +5,8 @@
 import { Notice } from "obsidian";
 import { openWindow } from "#/components/uikit/Window/open.ts";
 import { Search } from "#/components/uikit/Search/index.ts";
-import { openUi } from "#/components/app/open.ts";
+import { openUi, app } from "#/shared/host/index.js";
 import { readCourse, readCourseList } from "#/controllers/meds.js";
-import { app } from "#/helpers/app.js";
 import { formValues } from "#/models/course.js";
 import CourseWindow from "./index.vue";
 

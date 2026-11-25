@@ -5,9 +5,9 @@
 import { dm, todayYmd, weekday } from "#/shared/lib/dates.js";
 import { money } from "#/shared/lib/format.js";
 import { SavingsJar } from "#/models/savingsJar.js";
-import { edit } from "#/helpers/files.js";
-import { SAVINGS } from "#/helpers/paths.js";
-import { app } from "#/helpers/app.js";
+import { edit } from "#/shared/vault/index.js";
+import { SAVINGS } from "#/shared/config/index.js";
+import { app } from "#/shared/host/index.js";
 
 const DAYS = ["", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const day = d => `${DAYS[weekday(d)]} ${dm(d)}`;

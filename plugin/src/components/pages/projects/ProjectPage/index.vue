@@ -14,7 +14,7 @@ import { confirm } from "#/components/uikit/ConfirmWindow/confirm.js";
 import { openWindow } from "#/components/uikit/Window/open.ts";
 import { openEditProject } from "#/components/windows/projects/ProjectWindow/open.js";
 import LinkWindow from "#/components/windows/projects/LinkWindow/index.vue";
-import { app } from "#/helpers/app.js";
+import { app } from "#/shared/host/index.js";
 import {
   addStage, saveProject, deleteProject, readProject, removeLink,
 } from "#/controllers/projects.js";

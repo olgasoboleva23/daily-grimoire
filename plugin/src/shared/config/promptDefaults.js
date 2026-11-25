@@ -1,3 +1,4 @@
+// Default prompts used when a project starts or finishes.
 export const start = [
   "Я работаю над проектом «{Project_Name}».",
   "Моя цель (Result): {Project_Result}",

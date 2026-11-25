@@ -1,9 +1,9 @@
+import "./stubs/dom.mjs";
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { Notice } from "obsidian";
 import { vault } from "./stubs/vault.mjs";
-import { COURSES } from "#/helpers/paths.js";
+import { COURSES } from "#/shared/config/index.js";
 
 // A medication course's window (components/windows/meds/CourseWindow), new and edit, through the
 // test frame as its openers do (the commands, the course's ✎): its stacked medicines, days that
@@ -16,7 +16,6 @@ const REC = {
 };
 let testWindows, windows, flows, registerCommands, columns;
 before(async () => {
-  GlobalRegistrator.register();
   window.moment = () => ({ format: () => "2026-11-08" });
   ({ testWindows } = await import("./stubs/windows.mjs"));
   flows = await import("#/components/windows/meds/CourseWindow/open.js");

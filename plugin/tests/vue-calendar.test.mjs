@@ -1,8 +1,8 @@
+import "./stubs/dom.mjs";
 import { test, before, mock } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { createRequire } from "node:module";
-import { setApp } from "#/helpers/app.js";
+import { setApp } from "#/shared/host/index.js";
 import { idTask } from "./stubs/idTask.mjs";
 
 // The calendar page on Vue: a tick's 2 s, the folds, the panel's tab
@@ -10,7 +10,6 @@ const require = createRequire(import.meta.url);
 const TODAY = "2026-11-04";   // a Wednesday
 let vue, Tab, data, actions, state, useLater, dragState, Component;
 before(async () => {
-  GlobalRegistrator.register();
   window.moment = require("moment");
   window.AudioContext = class { decodeAudioData() { return Promise.resolve(null); } };
   HTMLElement.prototype.isShown = () => true;
@@ -393,7 +392,7 @@ test("phone: pool actions add an open copy today; Missed actions complete on the
 
 test("Projects tab: a GroupCard per project with open tasks (a Done one too), a stage title over them, finished tasks hidden", async () => {
   const { taskStore } = await import("#/store/tasks.js");
-  const { MASTER } = await import("#/helpers/paths.js");
+  const { MASTER } = await import("#/shared/config/index.js");
   taskStore.put(MASTER, [
     "- [ ] t1 [due:: 2026-11-10]", "- [x] t2 [completion:: 2026-11-01]", "- [ ] t3", "- [ ] t4",
   ].join("\n"));
@@ -427,7 +426,7 @@ test("Projects tab: a GroupCard per project with open tasks (a Done one too), a 
 
 test("Projects tab: no projects at first, then one with an open task shows its stage", async () => {
   const { taskStore } = await import("#/store/tasks.js");
-  const { MASTER } = await import("#/helpers/paths.js");
+  const { MASTER } = await import("#/shared/config/index.js");
   taskStore.putProjects({});
   const { el } = mount({ tab: "projects" });
   assert.equal(el.querySelector(".ui-cal__stage"), null);
@@ -441,7 +440,7 @@ test("Projects tab: no projects at first, then one with an open task shows its s
 
 test("Projects tab: two stages with one name both show", async () => {
   const { taskStore } = await import("#/store/tasks.js");
-  const { MASTER } = await import("#/helpers/paths.js");
+  const { MASTER } = await import("#/shared/config/index.js");
   taskStore.put(MASTER, "- [ ] t1\n- [ ] t2");
   taskStore.putRecords({ t1: { name: "one" }, t2: { name: "two" } });
   taskStore.putProjects({ x: { name: "X", status: "active", stages: [{ name: "S", tasks: ["t1"] }, { name: "S", tasks: ["t2"] }] } });

@@ -1,9 +1,8 @@
 <script setup>
 import { computed, inject, nextTick, watch } from "vue";
 import { Platform } from "obsidian";
-import config from "#/helpers/config.js";
+import config, { pages } from "#/shared/config/index.js";
 import { taskStore } from "#/store/tasks.js";
-import { pages } from "./pages.js";
 import PageNavigation from "./PageNavigation/index.vue";
 import Widget from "#/components/UiWidget.vue";
 import { blocks } from "#/controllers/blocks.js";

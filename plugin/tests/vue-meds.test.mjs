@@ -1,12 +1,11 @@
+import "./stubs/dom.mjs";
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { vault } from "./stubs/vault.mjs";
-import { COURSES } from "#/helpers/paths.js";
+import { COURSES } from "#/shared/config/index.js";
 
 let mount, reactive, MedsPage, loadMeds, testWindows, Notice;
 before(async () => {
-  GlobalRegistrator.register();
   window.moment = () => ({ format: () => "2026-11-08" });
   ({ mount } = await import("@vue/test-utils"));
   ({ reactive } = await import("vue"));

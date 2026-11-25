@@ -3,10 +3,9 @@ import { Notice } from "obsidian";
 import { openWindow } from "#/components/uikit/Window/open.ts";
 import { pickTask } from "#/components/uikit/TaskSearch/index.js";
 import { readTaskEdit, saveNewTask, saveTaskEdit } from "#/controllers/tasks.js";
-import { app } from "#/helpers/app.js";
+import { app, tasksApi } from "#/shared/host/index.js";
 import { todayYmd } from "#/shared/lib/dates.js";
-import { STICKERS } from "#/helpers/paths.js";
-import { tasksApi } from "#/helpers/plugins.js";
+import { STICKERS } from "#/shared/config/index.js";
 import { Task } from "#/models/task.js";
 import TaskWindow from "./index.vue";
 

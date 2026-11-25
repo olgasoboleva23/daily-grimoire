@@ -5,7 +5,7 @@ import {
 } from "#/controllers/widgets/market.js";
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { MARKET, MARKET_RECORDS } from "#/helpers/paths.js";
+import { MARKET, MARKET_RECORDS } from "#/shared/config/index.js";
 import { vault } from "./stubs/vault.mjs";
 import { supplyStats } from "#/models/market.js";
 

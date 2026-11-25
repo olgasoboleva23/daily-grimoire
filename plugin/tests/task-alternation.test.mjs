@@ -1,10 +1,10 @@
+import "./stubs/dom.mjs";
 // Recurring-task writes keep the next variant in JSON and retain native Tasks lines.
 import { test, before as beforeTests } from "node:test";
 import assert from "node:assert/strict";
 import { Task, nextVariantAfter } from "#/models/task.js";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { vault } from "./stubs/vault.mjs";
-import { MASTER, TASK_RECORDS } from "#/helpers/paths.js";
+import { MASTER, TASK_RECORDS } from "#/shared/config/index.js";
 import { Notice } from "obsidian";
 
 const record = { name: "Training", variants: ["Core", "Arms"], currVariant: "Core", goal: "workout" };
@@ -15,7 +15,6 @@ const next = `- [ ] t1 ${rule} [due:: 2026-11-13]`;
 const completed = `${next}\n${done}`;
 let taskStore, tickTask, readTaskEdit, saveTaskEdit, saveNewTask, makeActions;
 beforeTests(async () => {
-  GlobalRegistrator.register();
   ({ taskStore } = await import("#/store/tasks.js"));
   ({ tickTask, readTaskEdit, saveTaskEdit, saveNewTask } = await import("#/controllers/tasks.js"));
   ({ makeActions } = await import("#/controllers/calendar.js"));

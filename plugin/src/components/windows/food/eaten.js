@@ -2,7 +2,7 @@
 // (recently eaten first), or a new product / dish typed (its window first), then logged on that
 // day. An eaten one's name: its own window (a product: Edit item; a dish: its form).
 import { prepareFuzzySearch } from "obsidian";
-import { app } from "#/helpers/app.js";
+import { app } from "#/shared/host/index.js";
 import { foodChoices } from "#/models/food.js";
 import { Search } from "#/components/uikit/Search/index.ts";
 import { loadFood, logEaten } from "#/controllers/food.js";

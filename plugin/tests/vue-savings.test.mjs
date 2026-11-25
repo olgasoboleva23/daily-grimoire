@@ -1,11 +1,10 @@
+import "./stubs/dom.mjs";
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { vault } from "./stubs/vault.mjs";
 
 let mount, SavingsJars, deposit, paydaySum, testWindows;
 before(async () => {
-  GlobalRegistrator.register();
   globalThis.window.moment = () => ({ format: () => "2026-10-30" });
   ({ mount } = await import("@vue/test-utils"));
   SavingsJars = (await import("#/components/pages/dashboard/widgets/savings/index.vue")).default;

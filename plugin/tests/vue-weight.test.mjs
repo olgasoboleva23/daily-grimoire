@@ -1,12 +1,11 @@
+import "./stubs/dom.mjs";
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { vault } from "./stubs/vault.mjs";
-import { JOURNALS, WEIGHT } from "#/helpers/paths.js";
+import { JOURNALS, WEIGHT } from "#/shared/config/index.js";
 
 let mount, nextTick, WeightCard;
 before(async () => {
-  GlobalRegistrator.register();
   window.moment = () => ({ format: () => "2026-11-05" });
   window.renderChart = async () => ({ destroy() {} });   // the Charts plugin
   ({ mount } = await import("@vue/test-utils"));
@@ -131,7 +130,7 @@ test("loadWeight: every journal of the folder, by name, its reasons, lag and tod
   const { loadWeight } = await import("#/controllers/widgets/weight.js");
 
   vault({ [SKIN]: "- 2026-11-05 2 🍰 sweets\n", [GUT]: "" }, { props: { [SKIN]: { reasons: ["🍰 sweets"], lag: 1 }, [GUT]: {} } });
-  const { logs } = await loadWeight({ dv: { page: () => null }, app: (await import("#/helpers/app.js")).app });
+  const { logs } = await loadWeight({ dv: { page: () => null }, app: (await import("#/shared/host/index.js")).app });
 
   assert.deepEqual(logs.map(l => [l.name, l.path, l.lag, l.reasons]), [["Gut", GUT, 0, []], ["Skin", SKIN, 1, ["🍰 sweets"]]]);
   assert.deepEqual(logs[1].now, { date: "2026-11-05", level: 2, reasons: ["🍰 sweets"] });

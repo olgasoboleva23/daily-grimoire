@@ -1,6 +1,6 @@
 // One Vue app per Obsidian tab or window; unmounted with its owner.
 import { Component } from "obsidian";
-import { app as obsidian } from "#/helpers/app.js";
+import { app as obsidian } from "#/shared/host/index.js";
 import { createApp, onScopeDispose, type Component as VueComponent } from "vue";
 
 interface Options {

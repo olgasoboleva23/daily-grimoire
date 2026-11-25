@@ -1,10 +1,9 @@
 // Medication course reads and writes in courses.json, including dose marks and day notes.
 // The Medication page uses these records for its tabs and intake tables.
 import { Notice } from "obsidian";
-import { readJson } from "#/helpers/files.js";
-import { collection } from "#/helpers/collection.js";
+import { readJson, collection } from "#/shared/vault/index.js";
 import { todayYmd } from "#/shared/lib/dates.js";
-import { COURSES } from "#/helpers/paths.js";
+import { COURSES } from "#/shared/config/index.js";
 import {
   courseData, courseList, courseOf, edited, formValues, intake, withDayNote, withMark,
 } from "#/models/course.js";

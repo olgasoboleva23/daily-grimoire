@@ -4,8 +4,8 @@
 // command.
 // The old emoji parsing lives here only.
 import { Notice } from "obsidian";
-import { app } from "#/helpers/app.js";
-import { GOALS, MASTER, MASTER_OLD, POOL, POOL_OLD, TASK_RECORDS } from "#/helpers/paths.js";
+import { app } from "#/shared/host/index.js";
+import { GOALS, MASTER, MASTER_OLD, POOL, POOL_OLD, TASK_RECORDS } from "#/shared/config/index.js";
 
 const DATE = "\\d{4}-\\d{2}-\\d{2}";
 // the old date emojis and their Dataview fields, in the order the new line writes them

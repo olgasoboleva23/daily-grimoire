@@ -1,10 +1,9 @@
+import "./stubs/dom.mjs";
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { Notice } from "obsidian";
 import { vault } from "./stubs/vault.mjs";
-import { DISHES, FOOD_DATA, MARKET, MARKET_RECORDS } from "#/helpers/paths.js";
-import config from "#/helpers/config.js";
+import config, { DISHES, FOOD_DATA, MARKET, MARKET_RECORDS } from "#/shared/config/index.js";
 
 // The recipe book's windows (components/windows/recipes): the dish form (its ingredients, an
 // ingredient's alternatives in their own window, a product picked or edited in the market's
@@ -24,7 +23,6 @@ const files = (dishes = { d1: DISH }) => vault({
 const TYPES = [{ key: "soup", name: "Soups" }, { key: "main", name: "Mains" }];
 let Search, testWindows, windows, openDishForm, CartWindow, openWindow, loadRecipes;
 before(async () => {
-  GlobalRegistrator.register();
   window.moment = () => ({ format: () => "2026-11-20" });
   ({ Search } = await import("#/components/uikit/Search/index.ts"));
   ({ testWindows } = await import("./stubs/windows.mjs"));

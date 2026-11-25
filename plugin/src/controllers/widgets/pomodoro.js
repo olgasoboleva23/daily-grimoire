@@ -3,11 +3,11 @@
 // session, the mini row, today's stats); the end-of-session sound, the meditation's music and
 // the save. The shared running session and clock live in widgets/pomodoro.
 import { todayYmd } from "#/shared/lib/dates.js";
-import { readJson } from "#/helpers/files.js";
+import { readJson } from "#/shared/vault/index.js";
 import { AudioEngine, isMuted } from "#/shared/lib/sounds.js";
-import { app } from "#/helpers/app.js";
+import { app } from "#/shared/host/index.js";
 import { addStats } from "#/models/timer.js";
-import { ASSETS, POMODORO, SOUNDS } from "#/helpers/paths.js";
+import { ASSETS, POMODORO, SOUNDS } from "#/shared/config/index.js";
 
 /** @typedef {import("#/models/timer.js").Timer} Timer */
 /** @typedef {import("#/models/timer.js").PomodoroData} PomodoroData */

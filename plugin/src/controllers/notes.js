@@ -2,7 +2,7 @@
 // its window's values, in its folder (made when missing).
 import { todayYmd } from "#/shared/lib/dates.js";
 import { Note, notePath } from "#/models/note.js";
-import { app } from "#/helpers/app.js";
+import { app } from "#/shared/host/index.js";
 
 // the note's file, named by the kind from the folder's files (a work task's number), else by the
 // title typed; " 1", " 2"… when taken

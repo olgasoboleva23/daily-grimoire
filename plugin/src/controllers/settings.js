@@ -1,8 +1,7 @@
 // Saves validated settings to config.json, applies them and moves tasks for checked area changes.
 import { Notice } from "obsidian";
-import { applyConfig } from "#/helpers/config.js";
-import { editJson, serial } from "#/helpers/files.js";
-import { CONFIG } from "#/helpers/paths.js";
+import { applyConfig, saveConfig } from "#/shared/config/index.js";
+import { serial } from "#/shared/vault/index.js";
 import { records } from "#/store/tasks.js";
 import { areaRenames, toConfig } from "#/models/settings.js";
 
@@ -44,7 +43,7 @@ export function saveSettings(values) {
     let merged;
 
     try {
-      await editJson(CONFIG, current => (merged = { ...current, ...json }));
+      merged = await saveConfig(json);
     } catch (error) {
       try {
         if (moves.size) await restoreAreas(moves);

@@ -1,13 +1,12 @@
+import "./stubs/dom.mjs";
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { vault } from "./stubs/vault.mjs";
-import { COURSES, DISHES, FOOD_DATA, FOOD_LOG, JOURNALS, MARKET_RECORDS } from "#/helpers/paths.js";
+import { COURSES, DISHES, FOOD_DATA, FOOD_LOG, JOURNALS, MARKET_RECORDS } from "#/shared/config/index.js";
 import { forFood } from "#/models/course.js";
 
 let mount, FoodPage, loadFood, DEFAULT_MARKS, Search, testWindows;
 before(async () => {
-  GlobalRegistrator.register();
   window.moment = () => ({ format: () => "2026-11-04" });   // a Wednesday
   ({ mount } = await import("@vue/test-utils"));
   FoodPage = (await import("#/components/pages/food/index.vue")).default;

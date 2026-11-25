@@ -10,7 +10,7 @@ import UiWindow from "#/components/uikit/UiWindow/index.vue";
 import { filled, groupsFilled } from "#/components/uikit/UiWindow/ready.js";
 import { useWrite } from "#/components/uikit/UiWindow/write.js";
 import { saveSettings } from "#/controllers/settings.js";
-import config, { THEMES } from "#/helpers/config.js";
+import config, { THEMES } from "#/shared/config/index.js";
 import { settingsProblem } from "#/models/settings.js";
 import { taskStore } from "#/store/tasks.js";
 

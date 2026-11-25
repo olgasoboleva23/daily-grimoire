@@ -4,7 +4,7 @@
 import { inject } from "vue";
 import { Keymap } from "obsidian";
 import UiButton from "#/components/uikit/UiButton/index.vue";
-import { openUi } from "#/components/app/open.ts";
+import { openUi } from "#/shared/host/index.js";
 
 const ui = inject("ui", null);
 const open = e => ui ? ui.go("finance", {}, e)

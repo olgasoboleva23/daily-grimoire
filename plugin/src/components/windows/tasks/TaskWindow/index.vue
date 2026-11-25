@@ -7,7 +7,7 @@ import UiField from "#/components/uikit/UiField/index.vue";
 import UiFieldChoice from "#/components/uikit/UiFieldChoice/index.vue";
 import UiFieldText from "#/components/uikit/UiFieldText/index.vue";
 import { filled } from "#/components/uikit/UiWindow/ready.js";
-import config from "#/helpers/config.js";
+import config from "#/shared/config/index.js";
 import { variantNames, variantsProblem } from "#/models/task.js";
 
 const props = defineProps({

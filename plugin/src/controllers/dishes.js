@@ -1,19 +1,13 @@
 // Reads the food catalog and saves dishes with product IDs, amounts and an optional recipe link.
 // Display names and marks come from the market rather than the stored dish.
-import { shallowReactive } from "vue";
 import { Notice } from "obsidian";
-import { collection } from "#/helpers/collection.js";
+import { collection, readJson, serial, validNoteLink } from "#/shared/vault/index.js";
 import { nextId } from "#/shared/lib/ids.js";
-import { readJson, serial } from "#/helpers/files.js";
-import { DISHES, FOOD_DATA, FOOD_LOG, MARKET_RECORDS } from "#/helpers/paths.js";
-import config from "#/helpers/config.js";
+import config, { DISHES, FOOD_DATA, FOOD_LOG, MARKET_RECORDS } from "#/shared/config/index.js";
 import { dishList, marksOf } from "#/models/food.js";
-import { validNoteLink } from "./journal.js";
 import { productsToList } from "./widgets/market.js";
 
 export { productsToList };
-// The open Recipes page computes its tabs from this array; applyConfig updates it in place.
-config.dishTypes = shallowReactive(config.dishTypes);
 
 const dishes = collection(DISHES), write = serial();
 const rows = records => Object.entries(records).map(([id, r]) => ({ ...r, id }));

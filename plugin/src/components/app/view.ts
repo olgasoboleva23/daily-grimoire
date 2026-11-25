@@ -2,12 +2,11 @@ import { ItemView, Keymap, Notice, Platform, type ViewStateResult } from "obsidi
 import { reactive, watch } from "vue";
 import { useVueApp } from "#/shared/lib/vueApp.ts";
 import { isStep, readState, saved, withParams } from "#/store/router.js";
-import { APP_NAME } from "#/helpers/name.js";
-import { pages, UI_VIEW } from "./pages.js";
+import { APP_NAME, pages, UI_VIEW } from "#/shared/config/index.js";
 import UiApp from "./index.vue";
 import styles from "#/styles/shadow.scss";
 
-export { UI_VIEW } from "./pages.js";
+export { UI_VIEW } from "#/shared/config/index.js";
 
 export class UiView extends ItemView {
   navigation = true;   // Obsidian records a history step only for a navigation view

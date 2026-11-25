@@ -3,8 +3,8 @@
 import { computed, inject } from "vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import { goTo } from "#/store/calendar.js";
-import { app } from "#/helpers/app.js";
-import { APP_NAME } from "#/helpers/name.js";
+import { app } from "#/shared/host/index.js";
+import { APP_NAME } from "#/shared/config/index.js";
 
 const view = inject("calendar");
 const base = computed(() => view.ctx.base);

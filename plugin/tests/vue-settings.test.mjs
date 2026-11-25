@@ -1,15 +1,13 @@
+import "./stubs/dom.mjs";
 // Settings entry points, fields and saving through the window test frame.
 import { before, test } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { Notice } from "obsidian";
-import { CONFIG, TASK_RECORDS } from "#/helpers/paths.js";
-import config, { applyConfig } from "#/helpers/config.js";
+import config, { CONFIG, TASK_RECORDS, applyConfig } from "#/shared/config/index.js";
 import { vault } from "./stubs/vault.mjs";
 
 let mount, testWindows, registerCommands, taskStore, PageNavigation;
 before(async () => {
-  GlobalRegistrator.register();
   ({ mount } = await import("@vue/test-utils"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
   ({ registerCommands } = await import("#/commands/commands.ts"));

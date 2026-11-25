@@ -1,8 +1,7 @@
 // Fill, copy and save the shared project prompts. Export the Start prompt's variable help.
 import { Notice } from "obsidian";
-import config from "#/helpers/config.js";
-import { CONFIG } from "#/helpers/paths.js";
-import { editJson } from "#/helpers/files.js";
+import config, { CONFIG } from "#/shared/config/index.js";
+import { editJson } from "#/shared/vault/index.js";
 import { taskStore } from "#/store/tasks.js";
 import { journalOf } from "#/models/journal.js";
 

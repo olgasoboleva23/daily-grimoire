@@ -1,12 +1,11 @@
 // Reads and writes task edits, keeping metadata in tasks.json and native Tasks lines in
 // Master.md. Pool items have a record only. Calendar writes can return an undo action.
 import { Notice } from "obsidian";
-import { edit, editLine, serial, undoLines } from "#/helpers/files.js";
-import { tasksApi } from "#/helpers/plugins.js";
+import { edit, editLine, serial, undoLines } from "#/shared/vault/index.js";
+import { tasksApi, app } from "#/shared/host/index.js";
 import { Task, VariantProblem, nextVariantAfter, variantsProblem } from "#/models/task.js";
-import { app } from "#/helpers/app.js";
 import { parseNote } from "#/shared/lib/noteLines.js";
-import { MASTER, TASK_RECORDS } from "#/helpers/paths.js";
+import { MASTER, TASK_RECORDS } from "#/shared/config/index.js";
 import { nextId } from "#/shared/lib/ids.js";
 import { records as recordsStore } from "#/store/tasks.js";
 

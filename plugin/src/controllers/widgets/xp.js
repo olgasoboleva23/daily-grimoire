@@ -3,7 +3,7 @@
 // the cycle), rules in models/vitals.js. Life Areas: a radar of XP per area over the last 4 weeks.
 // XP Today: the day's XP, its aura level, ↑/↓ against the 7-day average, the month as a heatmap.
 // The markup: widgets/xp/.
-import config from "#/helpers/config.js";
+import config from "#/shared/config/index.js";
 import { pageDay, todayYmd, ymd } from "#/shared/lib/dates.js";
 import { T } from "#/models/calendarData.js";
 import { taskStore } from "#/store/tasks.js";

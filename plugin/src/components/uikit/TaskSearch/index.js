@@ -1,12 +1,12 @@
 // "New task", first step: search every task done or planned before (by area, the most done first)
 // or type a new one.
 import { Search } from "#/components/uikit/Search/index.ts";
-import config from "#/helpers/config.js";
+import config from "#/shared/config/index.js";
 import { dm } from "#/shared/lib/dates.js";
 import { findChoices } from "#/shared/lib/find.js";
 import { Task, taskChoices } from "#/models/task.js";
 import { taskStore } from "#/store/tasks.js";
-import { app } from "#/helpers/app.js";
+import { app } from "#/shared/host/index.js";
 
 export function pickTask() {
   const choices = taskChoices(

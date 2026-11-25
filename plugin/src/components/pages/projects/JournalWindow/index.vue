@@ -9,7 +9,7 @@ import { openWindow, WINDOW } from "#/components/uikit/Window/open.ts";
 import JournalEntryWindow from "#/components/windows/projects/JournalEntryWindow/index.vue";
 import UiTabs from "#/components/uikit/UiTabs/index.vue";
 import UiWindow from "#/components/uikit/UiWindow/index.vue";
-import { openNote } from "#/components/app/open.ts";
+import { openNote } from "#/shared/host/index.js";
 import { removeNote } from "#/controllers/journal.js";
 import { journalOf } from "#/models/journal.js";
 import { taskStore } from "#/store/tasks.js";

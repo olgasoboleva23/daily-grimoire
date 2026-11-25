@@ -1,4 +1,5 @@
-import { FINANCE_PAGE, SHOP, SUPPLIES } from "#/helpers/paths.js";
+// Page names, labels and note links used to open the app tab.
+import { FINANCE_PAGE, SHOP, SUPPLIES } from "./paths.js";
 
 export const UI_VIEW = "ui-app";
 

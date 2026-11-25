@@ -2,9 +2,8 @@
 // when it's missing (models/kinds.js daily). The markup: widgets/DailyNoteOpen.vue.
 import { Platform } from "obsidian";
 import { ymd } from "#/shared/lib/dates.js";
-import { app } from "#/helpers/app.js";
-import { inUi } from "#/components/app/open.ts";
-import { dailyFolder } from "#/helpers/paths.js";
+import { app, inUi } from "#/shared/host/index.js";
+import { dailyFolder } from "#/shared/config/index.js";
 import { Note } from "#/models/note.js";
 import { daily } from "#/models/kinds.js";
 

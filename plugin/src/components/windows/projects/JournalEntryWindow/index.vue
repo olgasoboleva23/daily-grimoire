@@ -12,7 +12,7 @@ import UiFieldText from "#/components/uikit/UiFieldText/index.vue";
 import UiFieldPick from "#/components/uikit/UiFieldPick/index.vue";
 import { filled } from "#/components/uikit/UiWindow/ready.js";
 import { useWrite } from "#/components/uikit/UiWindow/write.js";
-import { app } from "#/helpers/app.js";
+import { app } from "#/shared/host/index.js";
 import { addNote, editNote } from "#/controllers/journal.js";
 import { taskStore } from "#/store/tasks.js";
 

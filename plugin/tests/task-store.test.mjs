@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { parseNote } from "#/shared/lib/noteLines.js";
-import { setApp } from "#/helpers/app.js";
+import { setApp } from "#/shared/host/index.js";
 import { taskStore, useTaskStore, stageTasks, records } from "#/store/tasks.js";
 
 const P = "00 System/Data/Tasks/Master.md", J = "00 System/Data/Tasks/tasks.json";

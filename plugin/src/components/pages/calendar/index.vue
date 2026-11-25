@@ -2,11 +2,10 @@
 import { Notice } from "obsidian";
 import { computed, markRaw, onActivated, provide, ref, watch } from "vue";
 import { useLater, useNewDay, useRedraw } from "#/shared/lib/use.js";
-import { app } from "#/helpers/app.js";
+import { app, tasksApi } from "#/shared/host/index.js";
 import { useObsidian } from "#/shared/lib/vueApp.ts";
-import { tasksApi } from "#/helpers/plugins.js";
 import { taskStore } from "#/store/tasks.js";
-import config from "#/helpers/config.js";
+import config from "#/shared/config/index.js";
 import { todayYmd } from "#/shared/lib/dates.js";
 import { CalendarData, T, findTask, taskInfo } from "#/models/calendarData.js";
 import { baseDate, shownDays } from "#/store/calendar.js";

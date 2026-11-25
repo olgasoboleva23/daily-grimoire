@@ -3,7 +3,7 @@
 // (so one changed meanwhile is not overwritten); a new one may bring its typed name ({ name }).
 // Resolves the dish's id once saved, null closed or gone (the notice).
 import { Notice } from "obsidian";
-import config from "#/helpers/config.js";
+import config from "#/shared/config/index.js";
 import { openWindow } from "#/components/uikit/Window/open.ts";
 import { readDish, readProducts } from "#/controllers/dishes.js";
 import DishFormWindow from "./index.vue";

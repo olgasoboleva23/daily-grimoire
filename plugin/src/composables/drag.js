@@ -8,7 +8,7 @@
 // swipe (swipe.js).
 import { computed, reactive } from "vue";
 import { AudioEngine } from "#/shared/lib/sounds.js";
-import { SOUNDS } from "#/helpers/paths.js";
+import { SOUNDS } from "#/shared/config/index.js";
 import { canReorder } from "#/models/calendarData.js";
 
 const move = new AudioEngine(`${SOUNDS}/snd_scroll_menu.wav`);

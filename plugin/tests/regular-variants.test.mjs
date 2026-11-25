@@ -1,8 +1,8 @@
+import "./stubs/dom.mjs";
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { vault } from "./stubs/vault.mjs";
-import { MASTER, TASK_RECORDS } from "#/helpers/paths.js";
+import { MASTER, TASK_RECORDS } from "#/shared/config/index.js";
 
 let mount, reactive, shallowReactive, nextTick, Regulars, CalendarData, taskInfo;
 const DAY = "2026-11-13";
@@ -12,7 +12,6 @@ const records = {
 const line = () => `- [ ] t1 [repeat:: every week on Monday, Wednesday, Friday when done] [due:: ${DAY}]`;
 
 before(async () => {
-  GlobalRegistrator.register();
   ({ mount } = await import("@vue/test-utils"));
   ({ reactive, shallowReactive, nextTick } = await import("vue"));
   Regulars = (await import("#/components/pages/calendar/CalendarPanel/RegularsTab.vue")).default;

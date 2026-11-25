@@ -1,9 +1,8 @@
 import { Platform, Plugin } from "obsidian";
 import { UI_VIEW, UiView } from "./components/app/view.ts";
-import { openUi } from "./components/app/open.ts";
+import { openUi, setApp } from "#/shared/host/index.js";
 import { registerCommands } from "./commands/commands.ts";
 import { useNotify } from "./composables/notify.js";
-import { setApp } from "./helpers/app.js";
 import { installSounds } from "#/shared/lib/sounds.js";
 import { useTheme } from "./controllers/theme.js";
 import { useTaskStore } from "./store/tasks.js";
@@ -19,7 +18,7 @@ export default class UiPlugin extends Plugin {
     useTheme(this);
     installSounds(this);
     registerCommands(this);
-    // the app tab (its pages: components/app/pages.js); ✨ and the command go to the one used
+    // the app tab (its pages: shared/config/pages.js); ✨ and the command go to the one used
     // last, or open it, pinned, on the dashboard
     this.registerView(UI_VIEW, leaf => new UiView(leaf));
     this.addCommand({ id: "open", name: "Open", callback: () => openUi() });

@@ -2,7 +2,7 @@
 // tasks due that day and still open (by time of day, area, name),
 // then the ones done that day. The markup:
 // widgets/quests/.
-import config from "#/helpers/config.js";
+import config from "#/shared/config/index.js";
 import { pageDay, ymd } from "#/shared/lib/dates.js";
 import { T, taskKey, daytimeMark, daytimeRank } from "#/models/calendarData.js";
 import { taskStore } from "#/store/tasks.js";

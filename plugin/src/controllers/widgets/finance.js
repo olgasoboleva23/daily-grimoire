@@ -1,12 +1,12 @@
-// The finance controller: the per-month ledger notes (one per month, in helpers/paths.js LEDGER) —
+// The finance controller: monthly notes under the configured LEDGER path —
 // a month's totals, categories against their budgets, a 6-month trend and the latest operations;
 // ◀ ▶ step through the months. The data (00 System/Data/Finance) stays in the vault. The markup:
 // pages/finance (the Finance page; its styles also hold the dashboard card's
 // ui-fin__month block), widgets/finance/index.vue (the dashboard's card).
 import { dm } from "#/shared/lib/dates.js";
 import { money } from "#/shared/lib/format.js";
-import { readJson } from "#/helpers/files.js";
-import { LEDGER, RULES } from "#/helpers/paths.js";
+import { readJson } from "#/shared/vault/index.js";
+import { LEDGER, RULES } from "#/shared/config/index.js";
 import { monthReport, parseLedger, summarize } from "#/models/ledger.js";
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August",

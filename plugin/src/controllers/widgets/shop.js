@@ -3,16 +3,15 @@
 // cost:: …), an affordable one bought with a click, the rest greyed out. Writes: a purchase, only
 // when the gold covers it (the Shop card and the Buy reward command), with its sound and notice.
 // The markup: widgets/shop/ShopWidget.
-import config from "#/helpers/config.js";
+import config, { ASSETS, PURCHASES, SHOP } from "#/shared/config/index.js";
 import { amount, AMOUNT } from "#/shared/lib/format.js";
-import { ASSETS, PURCHASES, SHOP } from "#/helpers/paths.js";
 import { Notice } from "obsidian";
 import { todayYmd } from "#/shared/lib/dates.js";
-import { appendLine } from "#/helpers/files.js";
+import { appendLine } from "#/shared/vault/index.js";
 import { T } from "#/models/calendarData.js";
 import { taskStore } from "#/store/tasks.js";
 import { AudioEngine } from "#/shared/lib/sounds.js";
-import { app } from "#/helpers/app.js";
+import { app } from "#/shared/host/index.js";
 
 function earned() {
   let gold = 0;

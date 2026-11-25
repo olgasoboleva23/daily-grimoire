@@ -8,7 +8,7 @@ import {
 import { Search } from "#/components/uikit/Search/index.ts";
 import { pickCourse } from "#/components/windows/meds/CourseWindow/open.js";
 import { formValues } from "#/models/course.js";
-import { COURSES } from "#/helpers/paths.js";
+import { COURSES } from "#/shared/config/index.js";
 import { Notice } from "obsidian";
 
 globalThis.window ??= {};

@@ -1,16 +1,12 @@
 // The ⚙ Settings window's values and config.json (pure; tests/settings.test.mjs): the window shows
 // the config as it is now, its values go back as config.json, a few of them can't be saved, and a
 // renamed area's key (☑ "apply") moves its tasks' records with it.
-export const dishType = ({ key, name }) => ({
-  key: typeof key === "string" ? key.trim().replace(/^#/, "").trim().toLowerCase() : "",
-  name: name?.trim() ?? "",
-});
+import { areaKeyProblem, configProblem, dishType } from "#/shared/config/index.js";
 
-const KEY = /^[a-z0-9-]+$/;
 const AREA = ["key", "icon", "title", "name", "color"];
 const pick = a => Object.fromEntries(AREA.map(k => [k, a[k] ?? null]));
 
-// the window's starting values from `config` (helpers/config.js): the difficulties (a table: key,
+// the window's starting values from `config` (shared/config): the difficulties (a table: key,
 // label, xp, gold), the areas (each with `was`, its key now, and ☑ apply on), XP Today's
 // thresholds, the level cost
 export function settingsValues(config) {
@@ -39,37 +35,19 @@ export const toConfig = v => ({
 // why the values can't be saved, null when they can: an area taken off that still has tasks, a key
 // that isn't lowercase letters, digits and "-", one key twice, XP Today's thresholds out of order
 export function settingsProblem(v, records, config) {
-  const keys = v.areas.map(a => (a.key ?? "").trim()), kept = new Set(v.areas.map(a => a.was));
-  const bad = keys.find(k => !KEY.test(k));
-  const twice = keys.find((k, i) => keys.indexOf(k) !== i);
+  const problem = areaKeyProblem(v);
+
+  if (problem) return problem;
+  const kept = new Set(v.areas.map(a => a.was));
   const recs = [...records.values()];
 
-  if (bad !== undefined) return `the key «${bad}»: lowercase letters, digits and "-" only`;
-  if (twice) return `the key «${twice}» is there twice`;
   for (const a of config.areas.filter(a => !kept.has(a.key))) {
     const n = recs.filter(r => r.area === a.key).length;
 
     if (n) return `«${a.title}» has ${n} tasks: move them to another area first`;
   }
 
-  const seen = new Set();
-
-  for (const row of v.dishTypes) {
-    const { key, name } = dishType(row);
-
-    if (!key || !name) return "each dish type needs a key and a name";
-    if (key === "all" || key === "other") return `the dish type key «${key}» is reserved`;
-    if (seen.has(key)) return `the dish type key «${key}» is there twice`;
-    seen.add(key);
-  }
-
-  if (!(v.spark < v.glow && v.glow < v.aura))
-    return `XP Today: ${config.levels.slice(1, 4).map(l => l.name).join(" < ")}`;
-  if (!Number.isFinite(v.base) || v.base <= 0)
-    return "the first level must cost a finite number greater than zero";
-  if (!Number.isFinite(v.step) || v.step < 0)
-    return "the level increase must be a finite number, zero or more";
-  return null;
+  return configProblem(v, config);
 }
 
 // Area keys that changed with ☑ Apply, from their old keys to the new ones.

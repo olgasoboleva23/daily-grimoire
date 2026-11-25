@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { collection } from "#/helpers/collection.js";
-import { setApp } from "#/helpers/app.js";
+import { collection } from "#/shared/vault/index.js";
+import { setApp } from "#/shared/host/index.js";
 
 const P = "Data/x.json";
 

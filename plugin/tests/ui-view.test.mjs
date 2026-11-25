@@ -1,14 +1,13 @@
+import "./stubs/dom.mjs";
 import { test, before, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { Keymap } from "obsidian";
-import { setApp } from "#/helpers/app.js";
+import { setApp } from "#/shared/host/index.js";
 
 // Vue page lifetimes, Obsidian history and opening a separate tab.
 let UiView, made, unloaded, vue, openUi;
 
 before(async () => {
-  GlobalRegistrator.register();
   // Obsidian's DOM helpers the tab uses
   Object.assign(HTMLElement.prototype, {
     addClass(c) { this.classList.add(c); },
@@ -24,7 +23,7 @@ before(async () => {
     isShown() { return this.style.display !== "none"; },
   });
   ({ UiView } = await import("#/components/app/view.ts"));
-  ({ openUi } = await import("#/components/app/open.ts"));
+  ({ openUi } = await import("#/shared/host/index.js"));
   vue = await import("vue");
   for (const key of ["dashboard", "calendar", "projects"]) {
     const Page = (await import(`../src/components/pages/${key}/index.vue`)).default;
@@ -340,7 +339,7 @@ test("a standalone Finance widget opens its Vue page, Cmd-click in another tab",
 
 test("Medication route: empty state, JSON updates and marks, subscriptions released on leaving", async () => {
   const { vault } = await import("./stubs/vault.mjs");
-  const { COURSES } = await import("#/helpers/paths.js");
+  const { COURSES } = await import("#/shared/config/index.js");
   const { flushPromises } = await import("@vue/test-utils");
   window.moment = () => ({ format: () => "2026-11-13" });
   const { app, files } = vault();

@@ -1,8 +1,8 @@
+import "./stubs/dom.mjs";
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { vault } from "./stubs/vault.mjs";
-import { TASKS } from "#/helpers/paths.js";
+import { TASKS } from "#/shared/config/index.js";
 
 let mount, QuestsCard, loadQuests, taskStore;
 const MASTER = `${TASKS}/Master.md`;
@@ -10,7 +10,6 @@ const dv = day => ({ current: () => ({ date: { toFormat: () => day } }) });
 const tick = () => new Promise(r => setTimeout(r));
 
 before(async () => {
-  GlobalRegistrator.register();
   window.moment = () => ({ format: () => "2026-11-09" });
   ({ taskStore } = await import("#/store/tasks.js"));
   ({ mount } = await import("@vue/test-utils"));

@@ -1,7 +1,10 @@
 import { ItemView, Keymap, type WorkspaceLeaf } from "obsidian";
-import { app } from "#/helpers/app.js";
-import { pageOf, UI_VIEW } from "./pages.js";
-import type { UiView } from "./view.ts";
+import { app } from "./app.js";
+import { pageOf, UI_VIEW } from "#/shared/config/index.js";
+
+interface UiView extends ItemView {
+  go(page: string, params?: object, e?: MouseEvent | null): Promise<void>;
+}
 
 // Opening the app: ✨, the command and the reminders go to the app tab used last, or open one
 // (pinned) on the dashboard; `newTab`: another one, not pinned. With a page: that page in it.

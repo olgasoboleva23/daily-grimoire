@@ -9,7 +9,7 @@ import { Keymap, Notice } from "obsidian";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import UiInput from "#/components/uikit/UiInput/index.vue";
 import UiTable from "#/components/uikit/UiTable/index.vue";
-import { openUi } from "#/components/app/open.ts";
+import { openUi } from "#/shared/host/index.js";
 import { vTip } from "#/components/uikit/tooltip.js";
 import { addDays, weekOf } from "#/shared/lib/dates.js";
 import { dayLabel } from "#/models/course.js";

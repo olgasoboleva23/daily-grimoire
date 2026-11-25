@@ -6,9 +6,9 @@
 import { CycleLog } from "#/models/cycleLog.js";
 import { dm, pageDay, ymd } from "#/shared/lib/dates.js";
 import { mana, mpLine, mpTable } from "#/models/vitals.js";
-import { appendLine } from "#/helpers/files.js";
-import { CYCLE } from "#/helpers/paths.js";
-import { dataview } from "#/helpers/plugins.js";
+import { appendLine } from "#/shared/vault/index.js";
+import { CYCLE } from "#/shared/config/index.js";
+import { dataview } from "#/shared/host/index.js";
 
 // the log of Cycle.md (null without the note): also the period days shaded under the Weight
 // widget's log

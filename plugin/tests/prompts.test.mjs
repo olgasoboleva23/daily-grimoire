@@ -5,8 +5,7 @@ import { Notice } from "obsidian";
 import {
   copyStartPrompt, fillStart, PROMPT_VARIABLES, savePrompts,
 } from "#/controllers/prompts.js";
-import config from "#/helpers/config.js";
-import { CONFIG } from "#/helpers/paths.js";
+import config, { CONFIG } from "#/shared/config/index.js";
 import { taskStore } from "#/store/tasks.js";
 import { vault } from "./stubs/vault.mjs";
 

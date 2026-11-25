@@ -1,6 +1,6 @@
 // Opens Settings from the drawer or the command palette with the current configuration.
 import { openWindow } from "#/components/uikit/Window/open.ts";
-import config from "#/helpers/config.js";
+import config from "#/shared/config/index.js";
 import { settingsValues } from "#/models/settings.js";
 import SettingsWindow from "./index.vue";
 

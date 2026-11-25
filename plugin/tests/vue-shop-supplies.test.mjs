@@ -1,13 +1,12 @@
+import "./stubs/dom.mjs";
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { vault } from "./stubs/vault.mjs";
-import { MARKET, MARKET_RECORDS, PURCHASES, TASKS } from "#/helpers/paths.js";
+import { MARKET, MARKET_RECORDS, PURCHASES, TASKS } from "#/shared/config/index.js";
 import { Notice } from "obsidian";
 
 let mount, h, defineComponent, ShopWidget, SuppliesWidget, taskStore, testWindows;
 before(async () => {
-  GlobalRegistrator.register();
   window.moment = () => ({ format: () => "2026-11-05" });
   ({ taskStore } = await import("#/store/tasks.js"));
   ({ mount } = await import("@vue/test-utils"));

@@ -15,7 +15,7 @@
 // throws, untouched.
 // serial: a queue that runs its jobs one at a time (a failed one doesn't stop the next).
 import { Notice } from "obsidian";
-import { app } from "./app.js";
+import { app } from "#/shared/host/index.js";
 
 export const edit = (path, fn) => {
   const file = app.vault.getFileByPath(path);
@@ -129,3 +129,13 @@ export function serial() {
 /** @param {string} path @param {any} [fallback] */
 export const readJson = async (path, fallback = null) =>
   await app.vault.adapter.exists(path) ? JSON.parse(await app.vault.adapter.read(path)) : fallback;
+
+// A linked note must exist in the vault.
+export const validNoteLink = link => {
+  if (link && (!/\.md$/i.test(link) || !app.vault.getFileByPath(link))) {
+    new Notice("Choose an existing Markdown note");
+    return false;
+  }
+
+  return true;
+};

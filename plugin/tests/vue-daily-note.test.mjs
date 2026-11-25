@@ -1,11 +1,10 @@
+import "./stubs/dom.mjs";
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { vault } from "./stubs/vault.mjs";
 
 let mount, DailyNoteOpen;
 before(async () => {
-  GlobalRegistrator.register();
   ({ mount } = await import("@vue/test-utils"));
   DailyNoteOpen = (await import("#/components/pages/dashboard/widgets/DailyNoteOpen.vue")).default;
 });

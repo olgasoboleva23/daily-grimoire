@@ -1,9 +1,9 @@
+import "./stubs/dom.mjs";
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { Notice } from "obsidian";
 import { vault } from "./stubs/vault.mjs";
-import { PURCHASES } from "#/helpers/paths.js";
+import { PURCHASES } from "#/shared/config/index.js";
 
 // The Cmd+P windows of new notes, journals, the shop and the pomodoro's lengths
 // (components/windows/{notes,journals,shop,pomodoro}), opened through the test frame as their
@@ -11,7 +11,6 @@ import { PURCHASES } from "#/helpers/paths.js";
 const MASTER = "00 System/Data/Tasks/Master.md";
 let openWindow, testWindows, KINDS, taskStore, registerCommands, windows, win;
 before(async () => {
-  GlobalRegistrator.register();
   window.moment = () => ({ format: () => "2026-11-20" });
   ({ openWindow } = await import("#/components/uikit/Window/open.ts"));
   ({ testWindows } = await import("./stubs/windows.mjs"));

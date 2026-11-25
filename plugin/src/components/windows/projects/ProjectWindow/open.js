@@ -2,7 +2,7 @@
 // then the app tab on the new project; Edit project (its page) with the project as it is on disk
 // now, so one changed meanwhile is not overwritten. Resolve to what the window gives, null closed.
 import { openWindow } from "#/components/uikit/Window/open.ts";
-import { openUi } from "#/components/app/open.ts";
+import { openUi } from "#/shared/host/index.js";
 import { changedProject, readProject } from "#/controllers/projects.js";
 import ProjectWindow from "./index.vue";
 

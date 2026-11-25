@@ -4,7 +4,7 @@
 // when the component unloads.
 import { debounce } from "obsidian";
 import { todayYmd } from "./dates.js";
-import { dataview } from "#/helpers/plugins.js";
+import { dataview } from "#/shared/host/index.js";
 
 // redraw(): drawn now when shown, else once it shows (a leaf or the layout changes, the app tab
 // switches its page) — catchUp() asks again

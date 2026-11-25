@@ -2,7 +2,7 @@
      block is in -->
 <script setup>
 import { inject } from "vue";
-import { openNote } from "#/components/app/open.ts";
+import { openNote } from "#/shared/host/index.js";
 import UiButton from "./UiButton/index.vue";
 
 const props = defineProps({

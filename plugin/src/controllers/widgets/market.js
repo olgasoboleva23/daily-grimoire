@@ -7,12 +7,11 @@ import {
 } from "#/models/market.js";
 import { marksOf } from "#/models/food.js";
 import { Notice } from "obsidian";
-import { collection } from "#/helpers/collection.js";
+import { collection, appendLine, editLine, readJson, serial } from "#/shared/vault/index.js";
 import { nextId } from "#/shared/lib/ids.js";
-import { appendLine, editLine, readJson, serial } from "#/helpers/files.js";
 import { parseNote } from "#/shared/lib/noteLines.js";
-import { app } from "#/helpers/app.js";
-import { FOOD_DATA, MARKET_NOTE, MARKET_RECORDS } from "#/helpers/paths.js";
+import { app } from "#/shared/host/index.js";
+import { FOOD_DATA, MARKET_NOTE, MARKET_RECORDS } from "#/shared/config/index.js";
 
 const catalog = collection(MARKET_RECORDS);
 
