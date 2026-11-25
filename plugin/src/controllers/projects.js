@@ -1,13 +1,9 @@
 // Project and stage deletion, and scheduling a stage task.
 import { Notice } from "obsidian";
 import { app as vaultApp } from "#/shared/host/index.js";
-import { MASTER } from "#/shared/config/index.js";
-import { edit } from "#/shared/vault/index.js";
 import { removeOwned, retarget } from "#/pages/projects/index.js";
 import { removeProjectRecord, removeStageRecord } from "#/entities/project/index.js";
-import { parseNote } from "#/shared/lib/noteLines.js";
-import { Task } from "#/entities/task/index.js";
-import { editTaskLine } from "#/controllers/tasks.js";
+import { removeUndatedLines } from "#/entities/task/index.js";
 
 // Check the snapshot from the confirmation and keep covers referenced by another project.
 export async function deleteProject(key, before, trash = f => vaultApp.fileManager.trashFile(f)) {
@@ -30,17 +26,7 @@ export async function deleteStage(key, index, before, { deleteTasks }) {
   await retarget(stageId, key);
   if (exclusive.size) {
     try {
-      await edit(MASTER, text => {
-        const remove = new Set();
-
-        for (const item of parseNote(MASTER, text)) {
-          const t = Task.of(item);
-
-          if (t.isOpen && exclusive.has(t.id) && !t.date && !t.fields.start) remove.add(item.line);
-        }
-
-        return text.split("\n").filter((_, i) => !remove.has(i)).join("\n");
-      });
+      await removeUndatedLines(exclusive);
     } catch (error) {
       new Notice("Этап удалён, но удалить открытые задачи без даты не удалось.");
       throw error;
@@ -49,6 +35,3 @@ export async function deleteStage(key, index, before, { deleteTasks }) {
 
   return true;
 }
-
-// a task on a calendar day
-export const toCalendar = (t, date) => editTaskLine(t, l => new Task(l).setDue(date));

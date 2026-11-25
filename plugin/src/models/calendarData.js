@@ -110,6 +110,9 @@ export class CalendarData {
     this.regulars = this.sortRegulars(tasks.filter(t => T(t).isOpen && T(t).isRecurring));
   }
 
+  // The task group that the calendar passes to a reorder operation.
+  openOn(day) { return this.byDay[day].filter(e => e.kind === "open").map(e => e.t); }
+
   // the week's balance: for each of `areas` (keys), its tasks on the shown days (open + done; a 🔁
   // task's faded repeats don't count) and how many of them are done
   balance(areas) {

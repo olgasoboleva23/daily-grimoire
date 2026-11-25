@@ -9,7 +9,7 @@ export { earned } from "./model/gold.js";
 
 export { taskInfo } from "./model/info.js";
 
-export { canReorder } from "./model/order.js";
+export { canReorder, reorderTasks } from "./model/order.js";
 
 export { ruleText, projectRepeats } from "./model/repeat.js";
 
@@ -21,4 +21,10 @@ export { taskStore } from "./model/store.js";
 
 export { records, recordsFromDisk, saveRecords } from "./model/repository/tasks.js";
 
-export { masterText, prependLine, removePrependedLine } from "./model/repository/master.js";
+export { masterText, removePrependedLine } from "./model/repository/master.js";
+
+export {
+  addTask, changeTaskLine, editTaskLine, readTaskEdit, removeUndatedLines, writeTask,
+} from "./model/lineChange.js";
+
+export { placeTask, setDue, taskFromPool } from "./model/schedule.js";

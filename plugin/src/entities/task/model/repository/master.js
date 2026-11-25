@@ -1,5 +1,4 @@
 // Read Master.md and change its leading task without replacing concurrent edits.
-import { Notice } from "obsidian";
 import { MASTER } from "#/shared/config/index.js";
 import { app } from "#/shared/host/index.js";
 import { edit } from "#/shared/vault/index.js";
@@ -11,21 +10,20 @@ export const masterText = async () => {
   return file ? app.vault.read(file) : "";
 };
 
-// a new task: the line on top of Master.md (false and a notice when Master.md is missing: nothing
-// written); one place for the New task command and the calendar's pool drop
+// False when the task file is missing.
 export async function prependLine(line) {
-  if (!app.vault.getFileByPath(MASTER)) {
-    new Notice(`✦ ${MASTER} not found — task not saved`);
-    return false;
-  }
+  const file = app.vault.getFileByPath(MASTER);
 
-  await edit(MASTER, c => line + "\n" + c);
+  if (!file) return false;
+  await app.vault.process(file, text => line + "\n" + text);
   return true;
 }
+
+export const editMaster = change => edit(MASTER, change);
 
 // Undo a failed new-task save only if its lines are still on top.
 export const removePrependedLine = line => {
   const prefix = `${line}\n`;
 
-  return edit(MASTER, text => text.startsWith(prefix) ? text.slice(prefix.length) : text);
+  return editMaster(text => text.startsWith(prefix) ? text.slice(prefix.length) : text);
 };

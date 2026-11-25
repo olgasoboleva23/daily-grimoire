@@ -12,8 +12,7 @@ import config from "#/shared/config/index.js";
 import { addDays, todayYmd } from "#/shared/lib/dates.js";
 import { editTask } from "#/components/windows/tasks/TaskWindow/open.js";
 import { tickTask } from "#/controllers/tasks.js";
-import { toCalendar } from "#/controllers/projects.js";
-import { taskInfo } from "#/entities/task/index.js";
+import { setDue, taskInfo } from "#/entities/task/index.js";
 
 const props = defineProps({
   entry: { type: Object, required: true },   // stageTasks': { id, t, done }
@@ -26,8 +25,8 @@ function dateMenu(e) {
   const t = props.entry.t, today = todayYmd();
 
   new Menu()
-    .addItem(i => i.setTitle("Today").onClick(() => toCalendar(t, today)))
-    .addItem(i => i.setTitle("Tomorrow").onClick(() => toCalendar(t, addDays(today, 1))))
+    .addItem(i => i.setTitle("Today").onClick(() => setDue(t, today)))
+    .addItem(i => i.setTitle("Tomorrow").onClick(() => setDue(t, addDays(today, 1))))
     .addItem(i => i.setTitle("Pick a date…").onClick(() => picker.value.showPicker()))
     .showAtMouseEvent(e);
 }
@@ -52,7 +51,7 @@ function dateMenu(e) {
         class="ui-project__date"
         tabindex="-1"
         aria-hidden="true"
-        @change="e => e.target.value && toCalendar(entry.t, e.target.value)"
+        @change="e => e.target.value && setDue(entry.t, e.target.value)"
       >
     </template>
   </div>

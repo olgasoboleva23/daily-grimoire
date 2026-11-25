@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import { Notice } from "obsidian";
 import { setApp } from "#/shared/host/index.js";
 import { logPurchase } from "#/controllers/widgets/shop.js";
-import { addTask, readTaskEdit, saveNewTask, saveTaskEdit } from "#/controllers/tasks.js";
-import { saveRecords, newId, taskStore } from "#/entities/task/index.js";
+import { addTask, readTaskEdit, saveRecords, newId, taskStore } from "#/entities/task/index.js";
+import { saveNewTask, saveTaskEdit } from "#/controllers/tasks.js";
 import { makeActions } from "#/controllers/calendar.js";
 import { CalendarData } from "#/models/calendarData.js";
 

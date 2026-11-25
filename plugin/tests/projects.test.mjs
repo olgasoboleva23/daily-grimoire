@@ -3,12 +3,12 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Notice } from "obsidian";
 import { vault } from "./stubs/vault.mjs";
-import { taskStore } from "#/entities/task/index.js";
+import { taskStore, setDue } from "#/entities/task/index.js";
 import { PROJECTS } from "#/shared/config/index.js";
 import {
   createProject, saveProject, addStage, addTaskToStage, newProject, editProject, readStage, addLink, removeLink, readProject, renameStage,
 } from "#/entities/project/index.js";
-import { toCalendar, deleteStage, deleteProject } from "#/controllers/projects.js";
+import { deleteStage, deleteProject } from "#/controllers/projects.js";
 
 const MASTER = "00 System/Data/Tasks/Master.md";
 const RECORDS = "00 System/Data/Tasks/tasks.json";
@@ -71,11 +71,11 @@ test("addTaskToStage lists the ID once and refuses a missing ID or changed stage
   assert.equal(files[PROJECTS], renamed);
 });
 
-test("toCalendar puts the task on a day", async () => {
+test("setDue puts the task on a day", async () => {
   const { files } = vault({ [MASTER]: "- [ ] t1\n", [RECORDS]: '{"t1":{"name":"walk"}}' });
   taskStore.put(MASTER, files[MASTER]);
   taskStore.putRecords({ t1: { name: "walk" } });
-  await toCalendar(taskStore.tasks[0], "2026-11-12");
+  await setDue(taskStore.tasks[0], "2026-11-12");
   assert.equal(files[MASTER], "- [ ] t1 [due:: 2026-11-12]\n");
 });
 

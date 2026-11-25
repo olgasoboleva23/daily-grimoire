@@ -16,7 +16,8 @@ const completed = `${next}\n${done}`;
 let taskStore, tickTask, readTaskEdit, saveTaskEdit, saveNewTask, makeActions;
 beforeTests(async () => {
   ({ taskStore } = await import("#/entities/task/index.js"));
-  ({ tickTask, readTaskEdit, saveTaskEdit, saveNewTask } = await import("#/controllers/tasks.js"));
+  ({ tickTask, saveTaskEdit, saveNewTask } = await import("#/controllers/tasks.js"));
+  ({ readTaskEdit } = await import("#/entities/task/index.js"));
   ({ makeActions } = await import("#/controllers/calendar.js"));
 });
 function setup(text = before) {
