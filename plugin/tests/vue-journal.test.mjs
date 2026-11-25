@@ -196,6 +196,24 @@ test("the card: the count, the last entry in one line, Start and Final", () => {
   assert.ok(buttons.includes("🚀 Start") && buttons.includes("📝 Final"));
 });
 
+test("saving an older journal editor preserves a newer entry", async t => {
+  const windows = testWindows();
+  t.after(windows.restore);
+  const el = await showJournal(windows);
+  el.querySelector(".ui-journal__entry [title=Edit]").click();
+  const w = await windows.next();
+  const newer = { ...notes.n2, text: "Newer text from the other editor" };
+  files[NOTES] = JSON.stringify({ ...notes, n2: newer });
+
+  await w.wrapper.get('input[placeholder="empty: the name of what it is about"]')
+    .setValue("My heading");
+  await w.submit();
+
+  assert.deepEqual(JSON.parse(files[NOTES]).n2, newer);
+  assert.equal(windows.all.at(-1), w);
+  assert.match(Notice.last, /entry changed/);
+});
+
 test("both journal openers use the window and its note link closes it", async () => {
   const windows = testWindows();
   const opened = [];

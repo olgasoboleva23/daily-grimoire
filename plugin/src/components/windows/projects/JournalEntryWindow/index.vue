@@ -39,8 +39,11 @@ function about(key) {
 
 const { entry } = props;
 const choices = entry ? [] : about(props.project);
-const v = reactive(entry
-  ? { title: entry.title, text: entry.text, link: entry.link, at: entry.at }
+const before = entry && {
+  title: entry.title ?? "", text: entry.text ?? "", link: entry.link ?? "", at: entry.at ?? "",
+};
+const v = reactive(before
+  ? { ...before }
   : { about: `project:${props.project}`, title: "", text: "", link: "" });
 const ready = computed(() => !entry || filled(v.at));
 const { busy, run } = useWrite(emit);
@@ -63,7 +66,7 @@ const save = () => run(async () => {
     return void new Notice("✦ write a title, a text or a note");
   const note = { title: v.title.trim(), text: v.text ?? "", link: v.link ?? "" };
 
-  if (entry) return editNote(entry.id, { ...note, at: v.at });
+  if (entry) return editNote(entry.id, { ...note, at: v.at }, before);
   const [kind, id] = v.about.split(":");
 
   return addNote({ owner: { kind: "project", id: props.project }, target: { kind, id }, ...note });

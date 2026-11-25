@@ -25,8 +25,13 @@ export async function addNote({ owner = null, target, title = "", text = "", lin
   return valid(note) ? write(() => notes.add(note, "n")) : null;
 }
 
-export function editNote(id, { title, text, link, at }) {
+export function editNote(id, { title, text, link, at }, before) {
   return write(() => notes.update(id, current => {
+    if (["title", "text", "link", "at"].some(key => (current[key] ?? "") !== before[key])) {
+      new Notice("✦ journal entry changed meanwhile: open its window again");
+      return null;
+    }
+
     const next = { ...current, title, text, link, at };
 
     return valid(next) ? next : null;
