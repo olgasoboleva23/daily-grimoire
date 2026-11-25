@@ -9,11 +9,12 @@ import { PROJECTS } from "#/helpers/paths.js";
 // and a project's page (header, stages, task rows, Result and Notes)
 const MASTER = "00 System/Data/Tasks/Master.md";
 const RECORDS = "00 System/Data/Tasks/tasks.json";
-let vue, Projects, taskStore, Form, Search, files, app;
+let vue, Projects, taskStore, Form, Search, testWindows, files, app;
 before(async () => {
   GlobalRegistrator.register();
   window.moment = () => ({ format: () => "2026-11-12" });
   vue = await import("vue");
+  ({ testWindows } = await import("./stubs/windows.mjs"));
   ({ Form } = await import("#/components/uikit/Form/index.ts"));
   ({ Search } = await import("#/components/uikit/Search/index.ts"));
   ({ taskStore } = await import("#/store/tasks.js"));
@@ -160,6 +161,7 @@ const saved = () => JSON.parse(files[PROJECTS]).p1;
 const until = async ok => { for (let i = 0; i < 50 && !ok(); i++) await new Promise(r => setTimeout(r, 2)); };
 const stages = el => [...el.querySelectorAll(".ui-project__stage")];
 const texts = (el, sel) => [...el.querySelectorAll(sel)].map(e => e.textContent.trim());
+const KEPT = "Journal entries are deleted. Tasks, calendar and history stay.";
 const button = (el, label) => [...el.querySelectorAll("button")].find(b => b.textContent.trim() === label);
 
 test("the header: the name, status, description, 3/8; ← Projects clears state.open", async () => {
@@ -240,57 +242,101 @@ test("+ stage submits its name to addStage", async () => {
   assert.deepEqual(saved().stages[2], { id: "st1", name: "Harvest", tasks: [] });
 });
 
-test("Result and Notes show their text; Edit opens a Form with one lines row and saves the field", async () => {
-  const ask = Form.ask;
-  let asked;
-  Form.ask = async (...args) => { asked = args; return { notes: "water at dusk" }; };
+test("Result and Notes show their text; Edit asks in ✦ Notes (lines), saves it", async () => {
+  const windows = testWindows();
   try {
     const { el } = mount({ open: "p1" });
     assert.equal(el.querySelector(".ui-project__result .ui-project__text").textContent, "a full basket");
     const notes = el.querySelector(".ui-project__notes");
     assert.equal(notes.querySelector(".ui-project__text").textContent, "water at dawn");
     button(notes, "Edit").click();
-    await until(() => saved().notes === "water at dusk");
-    assert.deepEqual(asked.slice(1), [
-      "✦ Notes", [{ name: "Notes", key: "notes", text: "", lines: true }], { values: { notes: "water at dawn" }, submit: "Save" },
-    ]);
-    assert.equal(saved().notes, "water at dusk");
+    const w = await windows.next();
+    assert.deepEqual(w.props, { title: "✦ Notes", name: "Notes", type: "lines",
+      value: "water at dawn", submit: "Save" });
+    await w.wrapper.find("textarea").setValue("water at dusk\n");
+    await w.submit();
+    await until(() => saved().notes === "water at dusk\n");
+    assert.equal(saved().notes, "water at dusk\n");
     assert.equal(saved().result, "a full basket");
-  } finally { Form.ask = ask; }
+    button(el.querySelector(".ui-project__result"), "Edit").click();
+    const r = await windows.next();
+    assert.equal(r.props.title, "✦ Result");
+    await r.close();
+    assert.equal(saved().result, "a full basket");
+  } finally { windows.restore(); }
 });
 
-test("Edit when the project is removed while the Form is open writes nothing and does not throw", async () => {
-  const ask = Form.ask;
-  Form.ask = async () => { taskStore.putProjects({}); files[PROJECTS] = "{}"; return { notes: "late" }; };
+test("Edit of a project removed while its window is open writes nothing, no throw", async () => {
+  const windows = testWindows();
   try {
     const { el } = mount({ open: "p1" });
     button(el.querySelector(".ui-project__notes"), "Edit").click();
+    const w = await windows.next();
+    taskStore.putProjects({}); files[PROJECTS] = "{}";
+    await w.wrapper.find("textarea").setValue("late");
+    await w.submit();
     await new Promise(r => setTimeout(r, 30));
     assert.equal(files[PROJECTS], "{}");
-  } finally { Form.ask = ask; }
+  } finally { windows.restore(); }
 });
 
-test("Edit project opens the shared form; Delete cancels or returns to the list on confirmation", async () => {
+test("stage ✏️ asks the new name in ✦ Rename stage, saves it; closed: nothing", async () => {
+  const windows = testWindows();
+  try {
+    const { el } = mount({ open: "p1" });
+    stages(el)[1].querySelector("[aria-label=rename]").click();
+    const w = await windows.next();
+    assert.deepEqual(w.props, { title: "✦ Rename stage", name: "Name", value: "B", required: true,
+      submit: "Save" });
+    await w.wrapper.find("input").setValue(" Planting ");
+    await w.submit();
+    await until(() => saved().stages[1].name === "Planting");
+    assert.deepEqual(saved().stages.map(s => s.name), ["A", "Planting"]);
+    const before = files[PROJECTS];
+    stages(el)[0].querySelector("[aria-label=rename]").click();
+    await (await windows.next()).close();
+    await new Promise(r => setTimeout(r, 10));
+    assert.equal(files[PROJECTS], before);
+  } finally { windows.restore(); }
+});
+
+test("Edit project opens the shared form", async () => {
   const ask = Form.ask;
   try {
-    const { el, view } = mount({ open: "p1" });
+    const { el } = mount({ open: "p1" });
     Form.ask = async () => ({ name: "Green garden", description: "New beds" });
     button(el, "Edit project").click();
     await until(() => saved().name === "Green garden");
     assert.equal(saved().name, "Green garden");
     assert.equal(saved().stages.length, 2);
-    Form.ask = async () => null;
-    button(el, "Delete project").click();
+  } finally { Form.ask = ask; }
+});
+
+test("Delete project? names the project and what is kept; closed it stays, else back", async () => {
+  const windows = testWindows();
+  try {
+    const shed = mount({ open: "p2" });
+    button(shed.el, "Delete project").click();
+    const s = await windows.next();
+    assert.deepEqual(s.props, { title: "Delete project?", submit: "Delete", lines: [
+      { name: "Project", text: "Shed" },
+      { name: "Kept", text: `${KEPT} The cover goes to the trash.` },
+    ] });
+    await s.close();
     await new Promise(r => setTimeout(r, 10));
-    assert.equal(view.state.open, "p1");
-    assert.ok(saved());
-    Form.ask = async () => ({});
+    assert.equal(shed.view.state.open, "p2");
+    assert.ok(JSON.parse(files[PROJECTS]).p2);
+
+    const { el, view } = mount({ open: "p1" });
     button(el, "Delete project").click();
+    const w = await windows.next();
+    assert.equal(w.props.lines[1].text, KEPT);
+    await w.submit();
     await until(() => view.state.open === null);
     assert.equal(view.state.open, null);
     assert.equal(saved(), undefined);
     taskStore.putProjects(JSON.parse(files[PROJECTS]));
     await vue.nextTick();
     assert.deepEqual(names(el), ["Shed", "Poem", "Kite"]);
-  } finally { Form.ask = ask; }
+  } finally { windows.restore(); }
 });

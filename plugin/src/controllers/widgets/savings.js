@@ -6,7 +6,6 @@ import { dm, todayYmd, weekday } from "#/helpers/dates.js";
 import { money } from "#/helpers/format.js";
 import { SavingsJar } from "#/models/savingsJar.js";
 import { edit } from "#/helpers/files.js";
-import { Form } from "#/components/uikit/Form/index.ts";
 import { SAVINGS } from "#/helpers/paths.js";
 import { app } from "#/helpers/app.js";
 
@@ -56,13 +55,15 @@ function shown(jar, today) {
   };
 }
 
-// deposit(path): the payday's deposit into that jar's note; no per_payday ("your part"): it asks
-// how much
-export async function deposit(path) {
-  const props = app.metadataCache.getCache(path)?.frontmatter ?? {};
-  const sum = props.per_payday ?? (await Form.ask(app, "✦ Deposit",
-    [{ name: "Sum", key: "sum", text: "how much", number: true }],
-    { values: { sum: null }, required: ["sum"], submit: "Put in" }))?.sum;
+// The jar's default amount, or null when the user enters their share.
+export function paydaySum(path) {
+  const sum = app.metadataCache.getCache(path)?.frontmatter?.per_payday;
 
-  if (sum > 0) await edit(path, c => new SavingsJar(c, props).deposit(todayYmd(), sum));
+  return sum == null || !Number.isFinite(Number(sum)) ? null : Number(sum);
+}
+
+// a payday's deposit of `sum` into the jar's note
+export async function deposit(path, sum) {
+  if (Number.isFinite(sum) && sum > 0)
+    await edit(path, text => new SavingsJar(text).deposit(todayYmd(), sum));
 }

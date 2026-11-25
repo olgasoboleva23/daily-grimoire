@@ -1,7 +1,6 @@
-// The writes of projects.json (a project by key p1, p2…): one write each (the projects collection),
-// so two writes never lose each other. A stage found changed meanwhile (another device) writes
-// nothing.
+// Project and stage reads and writes. The collection checks the current file before saving.
 import { Notice } from "obsidian";
+import { app as vaultApp } from "#/helpers/app.js";
 import { nextId } from "#/helpers/ids.js";
 import { MASTER, PROJECTS } from "#/helpers/paths.js";
 import { edit, readJson } from "#/helpers/files.js";
@@ -16,6 +15,16 @@ import { editTaskLine, newTask } from "#/controllers/tasks.js";
 export const createProject = ({ name, description = "", status = "active", cover = null }) =>
   projects.add({ name, status, description, result: "", notes: "", cover, stages: [] }, "p");
 
+export async function newProject({ name, description, status, cover: file }, upload = importCover) {
+  name = name?.trim();
+  if (!name) return null;
+
+  const cover = file ? await upload(vaultApp, file) : null;
+
+  if (file && !cover) return null;
+  return createProject({ name, description: description ?? "", status, cover });
+}
+
 const STATUSES = ["idea", "active", "paused", "done"];
 const projectFields = [
   { name: "Name", key: "name", text: "what it is" },
@@ -23,7 +32,7 @@ const projectFields = [
   { name: "Cover", key: "cover", file: "image/*,.heic,.heif,.tif,.tiff" },
 ];
 
-// A local cover is imported only after submission, then the new project's page is opened.
+// TODO: Remove after U2a switches the New project button and command to the Vue window.
 export async function askNewProject(
   app, ask = (...a) => Form.ask(...a), upload = importCover, open = openUi,
 ) {
@@ -35,74 +44,70 @@ export async function askNewProject(
     },
   ], { values: { status: "active" }, required: ["name"], submit: "Create" });
 
-  if (!v?.name?.trim()) return null;
-  const cover = v.cover ? await upload(app, v.cover) : null;
+  if (!v) return null;
+  const key = await newProject(v, upload);
 
-  if (v.cover && !cover) return null;
-  const key = await createProject({
-    name: v.name.trim(), description: v.description ?? "", status: v.status,
-    cover,
-  });
-  await open("projects", { open: key });
+  if (key) await open("projects", { open: key });
   return key;
 }
 
 // merge fields (name, status, description, result, notes, cover) into a project
 export const saveProject = (key, patch) => projects.update(key, p => ({ ...p, ...patch }));
 
-// Only these fields belong to this form: changes to stages/status/notes may happen meanwhile.
+// Changes outside the edited fields can happen while the project window is open.
 const editable = p => [p.name, p.description ?? "", p.cover ?? null, p.showInCalendar !== false];
+const sameEdit = (p, before) =>
+  p && JSON.stringify(editable(p)) === JSON.stringify(editable(before));
 const changedProject = () => new Notice("✦ project changed or was deleted; open it again");
 
+export const readProject = async key => (await readJson(PROJECTS, {}))[key] ?? null;
+
+export async function editProject(
+  key, { name, description, cover: file, showInCalendar }, before, upload = importCover,
+) {
+  name = name?.trim();
+  if (!name) return false;
+  if (!before || (file && !sameEdit(await readProject(key), before))) {
+    changedProject();
+    return false;
+  }
+
+  const cover = file ? await upload(vaultApp, file) : before.cover ?? null;
+
+  if (file && !cover) return false;
+  const patch = { name, description: description ?? "", cover,
+    showInCalendar: showInCalendar !== false };
+  const saved = await projects.update(key, p => sameEdit(p, before) ? { ...p, ...patch } : null);
+
+  if (!saved) changedProject();
+  return saved;
+}
+
+// TODO: Remove after U2a switches Edit project to the Vue window.
 export async function askEditProject(
   app, key, ask = (...a) => Form.ask(...a), upload = importCover,
 ) {
-  const before = (await readJson(PROJECTS, {}))[key];
+  const before = await readProject(key);
 
   if (!before) return void changedProject();
   const v = await ask(app, "✦ Edit project", [
     ...projectFields,
-    { name: "Показывать во вкладке Projects календаря", key: "showInCalendar",
-      check: "Запланированные задачи остаются в своих днях" },
+    {
+      name: "Показывать во вкладке Projects календаря", key: "showInCalendar",
+      check: "Запланированные задачи остаются в своих днях",
+    },
   ], {
     values: { name: before.name, description: before.description ?? "",
       showInCalendar: before.showInCalendar !== false },
     required: ["name"], submit: "Save",
   });
 
-  if (!v?.name?.trim()) return;
-  const cover = v.cover ? await upload(app, v.cover) : before.cover ?? null;
-
-  if (v.cover && !cover) return;
-  const saved = await projects.update(key, p => {
-    if (JSON.stringify(editable(p)) !== JSON.stringify(editable(before))) return null;
-    return { ...p, name: v.name.trim(), description: v.description ?? "", cover,
-      showInCalendar: v.showInCalendar !== false };
-  });
-
-  if (!saved) changedProject();
+  if (v) await editProject(key, v, before, upload);
 }
 
-// `trash`: moves a file to Obsidian's trash (injected for the tests)
-export async function askDeleteProject(
-  app, key, ask = (...a) => Form.ask(...a), trash = f => app.fileManager.trashFile(f),
-) {
-  const before = (await readJson(PROJECTS, {}))[key];
-
+// Check the snapshot from the confirmation and keep covers referenced by another project.
+export async function deleteProject(key, before, trash = f => vaultApp.fileManager.trashFile(f)) {
   if (!before) return false;
-  const yes = await ask(app, "Delete project?", [
-    { name: "Project", key: "name", label: true },
-    { name: "Kept", key: "kept", label: true },
-  ], {
-    values: {
-      name: before.name,
-      kept: "Journal entries are deleted. Tasks, calendar and history stay."
-        + (before.cover ? " The cover goes to the trash." : ""),
-    },
-    submit: "Delete",
-  });
-
-  if (!yes) return false;
   let shared = false;
   const saved = await projects.edit(all => {
     if (JSON.stringify(all[key]) !== JSON.stringify(before)) return null;
@@ -124,7 +129,7 @@ export async function askDeleteProject(
     for (const [id] of owned) delete all[id];
     return all;
   });
-  const file = before.cover && !shared && app.vault.getFileByPath(before.cover);
+  const file = before.cover && !shared && vaultApp.vault.getFileByPath(before.cover);
 
   if (file) await trash(file);
   return saved;
@@ -142,34 +147,29 @@ function onStage(key, index, name, change) {
   });
 }
 
-export async function askRenameStage(app, key, index, name, ask = (...a) => Form.ask(...a)) {
-  const v = await ask(app, "✦ Rename stage", [{ name: "Name", key: "name", text: "" }],
-    { values: { name }, required: ["name"], submit: "Save" });
-  const next = v?.name?.trim();
+export async function renameStage(key, index, name, next) {
+  next = next?.trim();
 
   if (!next || next === name) return false;
   return onStage(key, index, name, (st, i) => st.map((s, j) => j === i ? { ...s, name: next } : s));
 }
 
-export async function askDeleteStage(app, key, index, name, ask = (...a) => Form.ask(...a)) {
-  const before = (await readJson(PROJECTS, {}))[key]?.stages?.[index];
+export async function readStage(key, index, name) {
+  const stage = (await readProject(key))?.stages?.[index];
 
-  if (!before || before.name !== name) return false;
-  const yes = await ask(app, "Delete stage?", [
-    { name: "Stage", key: "name", label: true },
-    { name: "Также удалить задачи этапа", key: "deleteTasks",
-      check: "Только открытые копии без даты. Задачи других этапов сохранятся." },
-  ], { values: { name, deleteTasks: false }, submit: "Delete" });
+  return stage && stage.name === name ? stage : null;
+}
 
-  if (!yes) return false;
+export async function deleteStage(key, index, before, { deleteTasks }) {
+  if (!before) return false;
   const stageId = before.id;
-  const exclusive = new Set(yes.deleteTasks ? before.tasks : []);
+  const exclusive = new Set(deleteTasks ? before.tasks : []);
   const saved = await projects.edit(all => {
     const stages = all[key]?.stages;
     const stage = stages?.[index];
 
-    if (stage?.id !== stageId || stage?.name !== name
-      || (yes.deleteTasks && JSON.stringify(stage.tasks) !== JSON.stringify(before.tasks))) {
+    if (!stage || stage.id !== stageId || stage.name !== before.name
+      || JSON.stringify(stage.tasks) !== JSON.stringify(before.tasks)) {
       changedProject();
       return null;
     }
@@ -210,25 +210,44 @@ export async function askDeleteStage(app, key, index, name, ask = (...a) => Form
   return saved;
 }
 
+// TODO: Remove after U2a switches Delete stage to the Vue window.
+export async function askDeleteStage(app, key, index, name, ask = (...a) => Form.ask(...a)) {
+  const before = await readStage(key, index, name);
+
+  if (!before) return false;
+  const yes = await ask(app, "Delete stage?", [
+    { name: "Stage", key: "name", label: true },
+    { name: "Также удалить задачи этапа", key: "deleteTasks",
+      check: "Только открытые копии без даты. Задачи других этапов сохранятся." },
+  ], { values: { name, deleteTasks: false }, submit: "Delete" });
+
+  return yes ? deleteStage(key, index, before, yes) : false;
+}
+
 // web links of a project: [{ title, url }], none in the older projects
 const isWebUrl = u => /^https?:\/\/\S+$/i.test(u);
 
-export async function askAddLink(app, key, ask = (...a) => Form.ask(...a)) {
-  const v = await ask(app, "✦ New link", [
-    { name: "Title", key: "title", text: "what it is" },
-    { name: "URL", key: "url", text: "https://…" },
-  ], { required: ["url"], submit: "Add" });
-  const url = v?.url?.trim();
+export async function addLink(key, { title, url }) {
+  url = url?.trim() ?? "";
 
-  if (!url) return false;
   if (!isWebUrl(url)) {
     new Notice("✦ a link must be a web address");
     return false;
   }
 
   return projects.update(key, p => ({
-    ...p, links: [...p.links ?? [], { title: v.title?.trim() || url, url }],
+    ...p, links: [...p.links ?? [], { title: title?.trim() || url, url }],
   }));
+}
+
+// TODO: Remove after U2a switches New link to the Vue window.
+export async function askAddLink(app, key, ask = (...a) => Form.ask(...a)) {
+  const v = await ask(app, "✦ New link", [
+    { name: "Title", key: "title", text: "what it is" },
+    { name: "URL", key: "url", text: "https://…" },
+  ], { required: ["url"], submit: "Add" });
+
+  return v ? addLink(key, v) : false;
 }
 
 // by index and url, so a link that moved meanwhile is not removed instead

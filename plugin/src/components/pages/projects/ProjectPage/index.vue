@@ -1,7 +1,7 @@
 <!-- A project's page (block ui-project): ← Projects, the header card (cover, name, the status
      pill: a menu of the statuses, description, progress) over two columns: the stages (+ stage
      adds one) | the Journal (ProjectJournal), Links (+ link, × removes), Result and Notes,
-     each with Edit (a Form). One column on the phone -->
+     each with Edit (a one-field window). One column on the phone -->
 <script setup>
 import { computed, inject, ref } from "vue";
 import { Menu } from "obsidian";
@@ -9,10 +9,11 @@ import UiAddForm from "#/components/uikit/UiAddForm/index.vue";
 import UiProgress from "#/components/uikit/UiProgress/index.vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import UiCard from "#/components/uikit/UiCard/index.vue";
-import { Form } from "#/components/uikit/Form/index.ts";
+import { askValue } from "#/components/uikit/FieldWindow/ask.js";
+import { confirm } from "#/components/uikit/ConfirmWindow/confirm.js";
 import { app } from "#/helpers/app.js";
 import {
-  addStage, saveProject, askEditProject, askDeleteProject, askAddLink, removeLink,
+  addStage, saveProject, askEditProject, deleteProject, readProject, askAddLink, removeLink,
 } from "#/controllers/projects.js";
 import { stageTasks, taskStore } from "#/store/tasks.js";
 import { FILTERS } from "#/store/projects.js";
@@ -52,13 +53,11 @@ function statusMenu(e) {
 }
 
 async function edit({ key: field, name }) {
-  const project = state.open;  // kept before the Form: the page may be gone when it answers
-  const values = { [field]: page.value.p[field] ?? "" };
-  const got = await Form.ask(
-    app, `✦ ${name}`, [{ name, key: field, text: "", lines: true }], { values, submit: "Save" },
-  );
+  const project = state.open;  // kept before the window: the page may be gone when it answers
+  const text = await askValue({ title: `✦ ${name}`, name, type: "lines",
+    value: page.value.p[field] ?? "", submit: "Save" });
 
-  if (got) await saveProject(project, { [field]: got[field] });
+  if (text !== null) await saveProject(project, { [field]: text });
 }
 
 async function newStage(name) {
@@ -67,10 +66,18 @@ async function newStage(name) {
   stageName.value = "";
 }
 
+// asked with the project as it is on disk; one changed meanwhile is not deleted (deleteProject)
 async function remove() {
   const key = page.value.key;
+  const before = await readProject(key);
 
-  if (await askDeleteProject(app, key) && state.open === key) projects.open(null);
+  if (!before) return;
+  const kept = "Journal entries are deleted. Tasks, calendar and history stay."
+    + (before.cover ? " The cover goes to the trash." : "");
+  const yes = await confirm("Delete project?",
+    [{ name: "Project", text: before.name }, { name: "Kept", text: kept }]);
+
+  if (yes && await deleteProject(key, before) && state.open === key) projects.open(null);
 }
 </script>
 

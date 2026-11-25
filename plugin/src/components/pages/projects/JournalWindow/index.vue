@@ -4,7 +4,7 @@
      the text, the linked note, ✏️ and × -->
 <script setup>
 import { computed, ref } from "vue";
-import { Form } from "#/components/uikit/Form/index.ts";
+import { confirm } from "#/components/uikit/ConfirmWindow/confirm.js";
 import UiTabs from "#/components/uikit/UiTabs/index.vue";
 import { openNote } from "#/components/app/open.ts";
 import { app } from "#/helpers/app.js";
@@ -37,10 +37,7 @@ function open(e, event) {
 }
 
 async function remove(e) {
-  const yes = await Form.ask(app, "Delete entry?", [{ name: "Entry", key: "h", label: true }],
-    { values: { h: e.heading }, submit: "Delete" });
-
-  if (yes) await removeNote(e.id);
+  if (await confirm("Delete entry?", [{ name: "Entry", text: e.heading }])) await removeNote(e.id);
 }
 </script>
 

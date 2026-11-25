@@ -9,7 +9,7 @@ import { NOTES, PROJECTS } from "#/helpers/paths.js";
 // window with the timeline (newest first, a filter by what an entry is about, + Entry, ✏️, ×)
 const MASTER = "00 System/Data/Tasks/Master.md";
 const RECORDS = "00 System/Data/Tasks/tasks.json";
-let vue, taskStore, notesOf, Form, Journal, Card, askEntry, files, app;
+let vue, taskStore, notesOf, Form, Journal, Card, askEntry, testWindows, config, files, app;
 
 before(async () => {
   GlobalRegistrator.register();
@@ -22,6 +22,8 @@ before(async () => {
   Journal = (await import("#/components/pages/projects/JournalWindow/index.vue")).default;
   Card = (await import("#/components/pages/projects/ProjectPage/ProjectJournal.vue")).default;
   ({ askEntry } = await import("#/components/pages/projects/JournalWindow/entry.js"));
+  ({ testWindows } = await import("./stubs/windows.mjs"));
+  config = (await import("#/helpers/config.js")).default;
 });
 
 // made-up: Garden with a stage of two tasks, its three notes and one of another project
@@ -155,4 +157,49 @@ test("the card of a project without entries: no last line, the count 0", async (
   await tick();
   assert.match(el.querySelector(".ui-project__journal-open").textContent, /0/);
   assert.equal(el.querySelector(".ui-project__journal-last"), null);
+});
+
+test("× an entry asks Delete entry? with its heading; closed it stays, else removed", async () => {
+  const windows = testWindows();
+  const el = mount(Journal, { project: "p1" });
+  const remove = i => el.querySelectorAll(".ui-journal__entry [title=Delete]")[i].click();
+
+  try {
+    remove(1);
+    const w = await windows.next();
+
+    assert.deepEqual(w.props, { title: "Delete entry?", submit: "Delete",
+      lines: [{ name: "Entry", text: "Beds chosen" }] });
+    await w.close();
+    assert.ok(JSON.parse(files[NOTES]).n3);
+    remove(1);
+    await (await windows.next()).submit();
+    await tick();
+    assert.deepEqual(Object.keys(JSON.parse(files[NOTES])), ["n1", "n2", "n4"]);
+  } finally { windows.restore(); }
+});
+
+test("🚀 Start asks the task for this session, then copies the prompt; closed: nothing", async t => {
+  const windows = testWindows();
+  const copied = [], start = config.promptStart;
+
+  Object.defineProperty(navigator, "clipboard", {
+    configurable: true, value: { writeText: async text => copied.push(text) },
+  });
+  config.promptStart = "{Project_Name}: {Current_Task_Or_Input}";
+  t.after(() => { config.promptStart = start; windows.restore(); });
+  const el = mount(Card, { project: "p1" });
+  const startButton = [...el.querySelectorAll("button")]
+    .find(b => b.textContent.trim() === "🚀 Start");
+
+  startButton.click();
+  const w = await windows.next();
+
+  assert.deepEqual(w.props, { title: "Start", name: "Task for this session", submit: "Copy" });
+  await w.wrapper.find("input").setValue(" sow the beds ");
+  await w.submit();
+  assert.deepEqual(copied, ["Garden: sow the beds"]);
+  startButton.click();
+  await (await windows.next()).close();
+  assert.deepEqual(copied, ["Garden: sow the beds"]);
 });

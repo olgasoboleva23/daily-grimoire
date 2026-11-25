@@ -1,0 +1,5 @@
+/* A window's text box (UiFieldText), block ui-field-text: a textarea takes its row's width (a text
+   input fills a list's cell: UiFieldList) */
+.ui-field-text {
+  &__textarea { width: 100%; }
+}

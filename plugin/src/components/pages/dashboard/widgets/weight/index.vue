@@ -7,10 +7,11 @@
 import { computed, ref, watch } from "vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import UiMissing from "#/components/uikit/UiMissing.vue";
+import { confirm } from "#/components/uikit/ConfirmWindow/confirm.js";
 import { WEIGHT } from "#/helpers/paths.js";
 import { app } from "#/helpers/app.js";
 import { logWeight } from "#/controllers/widgets/weight.js";
-import { addJournal, deleteJournal, logBody } from "#/controllers/journals.js";
+import { addJournal, logBody, trashJournal } from "#/controllers/journals.js";
 import WeightMode from "./WeightMode.vue";
 import BodyLogMode from "./BodyLogMode.vue";
 
@@ -42,6 +43,11 @@ const newJournal = async () => {
   const path = await addJournal();
 
   if (path) pick(path);
+};
+
+// 🗑 a journal: asked first, then into the trash (Obsidian's, as set: recoverable)
+const deleteJournal = async ({ path, name }) => {
+  if (await confirm(`✦ Delete the journal «${name}»?`)) await trashJournal(path);
 };
 
 // the picks: the journal's today, again when its file or the day changes
@@ -94,7 +100,7 @@ const saveLog = () =>
       v-model:reasons="reasons"
       :log="log"
       @save="saveLog"
-      @delete="deleteJournal(log.path, log.name)"
+      @delete="deleteJournal(log)"
     />
     <UiMissing v-else-if="w.missing" :path="WEIGHT" />
     <WeightMode

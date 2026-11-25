@@ -37,10 +37,9 @@ export async function addJournal() {
   return v ? (await createNote(KINDS.journal, v, KINDS.journal.folder)).path : null;
 }
 
-// 🗑 a journal: asked first, then into the trash (Obsidian's, as set: recoverable)
-export async function deleteJournal(path, name) {
-  const yes = await Form.ask(app, `✦ Delete the journal «${name}»?`, [], { submit: "Delete" });
-  const file = yes && app.vault.getFileByPath(path);
+// a journal into the trash (Obsidian's, as set: recoverable)
+export async function trashJournal(path) {
+  const file = app.vault.getFileByPath(path);
 
   if (file) await app.fileManager.trashFile(file);
 }

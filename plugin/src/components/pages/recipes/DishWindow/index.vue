@@ -6,7 +6,7 @@
 <script setup>
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { MarkdownRenderer, Notice } from "obsidian";
-import { Form } from "#/components/uikit/Form/index.ts";
+import { confirm } from "#/components/uikit/ConfirmWindow/confirm.js";
 import { openNote } from "#/components/app/open.ts";
 import { app } from "#/helpers/app.js";
 import { askDish, loadRecipes, removeDish } from "#/controllers/dishes.js";
@@ -63,8 +63,7 @@ function open(e) {
 }
 
 const remove = () => act(async () => {
-  const yes = await Form.ask(app, "Delete dish?", [{ name: "Dish", key: "name", label: true }],
-    { values: { name: d.value.name }, submit: "Delete" });
+  const yes = await confirm("Delete dish?", [{ name: "Dish", text: d.value.name }]);
 
   if (yes && await removeDish(props.dish)) emit("close");
 });

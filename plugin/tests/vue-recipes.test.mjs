@@ -8,7 +8,7 @@ import config from "#/helpers/config.js";
 
 // The recipe book: the page (the dishes, a search, + Dish, 🛒, ✏️) and a dish's window (its
 // ingredients with amounts, the marks, the recipe note's steps drawn below, 🛒 ✏️ 📄 🗑)
-let mount, reactive, RecipesPage, DishView, DishWindow, Form, loadRecipes, Component;
+let mount, reactive, RecipesPage, DishView, DishWindow, Form, loadRecipes, Component, testWindows;
 before(async () => {
   GlobalRegistrator.register();
   HTMLElement.prototype.setText = function (t) { this.textContent = t; };
@@ -21,6 +21,7 @@ before(async () => {
   ({ DishWindow } = await import("#/components/pages/recipes/DishWindow/index.ts"));
   ({ Form } = await import("#/components/uikit/Form/index.ts"));
   ({ loadRecipes } = await import("#/controllers/dishes.js"));
+  ({ testWindows } = await import("./stubs/windows.mjs"));
 });
 const tick = () => new Promise(r => setTimeout(r));
 
@@ -174,19 +175,29 @@ test("the dish window: an ordered dish has no steps; a gone product is marked", 
   assert.ok(w.find(".ui-dish__ingredient--gone").exists());
 });
 
-test("the dish window: 🗑 asks, then deletes the dish and closes", async () => {
-  const { files: written } = files();
-  const ask = Form.ask;
-  const w = mount(DishView, { props: { dish: "d2", owner: new Component() } });
+test("the dish window: 🗑 asks Delete dish? with its name; closed it stays, Delete deletes, closes",
+  async () => {
+    const { files: written } = files();
+    const windows = testWindows();
+    const w = mount(DishView, { props: { dish: "d2", owner: new Component() } });
 
-  await tick(); await tick();
-  Form.ask = async () => ({});
-  try { await w.find(".ui-dish__delete").trigger("click"); await tick(); await tick(); } finally {
-    Form.ask = ask;
-  }
-  assert.deepEqual(Object.keys(JSON.parse(written[DISHES])), ["d1"]);
-  assert.equal(w.emitted("close").length, 1);
-});
+    try {
+      await tick(); await tick();
+      await w.find(".ui-dish__delete").trigger("click");
+      const no = await windows.next();
+
+      assert.deepEqual(no.props, { title: "Delete dish?", submit: "Delete",
+        lines: [{ name: "Dish", text: "Cake from the café" }] });
+      await no.close();
+      assert.deepEqual(Object.keys(JSON.parse(written[DISHES])), ["d1", "d2"]);
+      assert.equal(w.emitted("close"), undefined);
+      await w.find(".ui-dish__delete").trigger("click");
+      await (await windows.next()).submit();
+      await tick();
+      assert.deepEqual(Object.keys(JSON.parse(written[DISHES])), ["d1"]);
+      assert.equal(w.emitted("close").length, 1);
+    } finally { windows.restore(); }
+  });
 
 test("the recipes page: a tab a course, its count following the search; the tab is saved state",
   async () => {

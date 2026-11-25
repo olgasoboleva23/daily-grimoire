@@ -1,3 +1,4 @@
+// Fill, copy and save the shared project prompts. Export the Start prompt's variable help.
 import { Notice } from "obsidian";
 import config from "#/helpers/config.js";
 import { CONFIG } from "#/helpers/paths.js";
@@ -27,16 +28,14 @@ async function copy(text) {
   }
 }
 
-export async function copyStartPrompt(app, projectKey) {
-  const v = await Form.ask(app, "Start", [{ name: "Task for this session", key: "task", text: "" }],
-    { submit: "Copy" });
+export async function copyStartPrompt(projectKey, task) {
   const project = taskStore.projects.get(projectKey);
 
-  if (!v || !project) return;
+  if (!project) return;
   const entries = journalOf(projectKey, { projects: taskStore.projects, tasks: taskStore.records,
     notes: taskStore.notes });
 
-  await copy(fillStart(config.promptStart, project, entries, v.task ?? ""));
+  await copy(fillStart(config.promptStart, project, entries, task ?? ""));
 }
 
 export const copyFinalPrompt = () => copy(config.promptFinal);
@@ -49,8 +48,17 @@ const VARIABLES = [
   ["Last_3_Journal_Entries", "три последние записи журнала; нет записей — строка убирается"],
   ["Current_Task_Or_Input", "задача на сессию, спрашивается перед копированием"],
 ];
-const variables = VARIABLES.map(([name, what]) => `{${name}} — ${what}`).join("\n");
 
+export const PROMPT_VARIABLES = VARIABLES.map(([name, what]) => `{${name}} — ${what}`).join("\n");
+
+export async function savePrompts({ promptStart, promptFinal }) {
+  const patch = { promptStart: promptStart.trim(), promptFinal: promptFinal.trim() };
+
+  await editJson(CONFIG, current => ({ ...current, ...patch }));
+  Object.assign(config, patch);
+}
+
+// TODO: Remove with the Form import after U2b switches prompt editing to the Vue window.
 export async function editPrompts(app) {
   const v = await Form.ask(app, "Промпты проекта", [
     { tab: "Start", name: "Start", key: "promptStart", text: "", lines: true },
@@ -58,12 +66,8 @@ export async function editPrompts(app) {
     { tab: "Final", name: "Final", key: "promptFinal", text: "", lines: true },
     { tab: "Final", name: "Переменные", key: "none", label: true },
   ], { values: { promptStart: config.promptStart, promptFinal: config.promptFinal,
-    vars: variables, none: "нет: копируется как есть" },
+    vars: PROMPT_VARIABLES, none: "нет: копируется как есть" },
     required: ["promptStart", "promptFinal"], submit: "Сохранить" });
 
-  if (!v) return;
-  const patch = { promptStart: v.promptStart.trim(), promptFinal: v.promptFinal.trim() };
-
-  await editJson(CONFIG, current => ({ ...current, ...patch }));
-  Object.assign(config, patch);
+  if (v) await savePrompts(v);
 }

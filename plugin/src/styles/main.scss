@@ -1,6 +1,7 @@
 // The document sheet: what Obsidian's own windows draw. The tab (pages, widgets) has its own sheet,
 // shadow.scss, so only these partials are here: fonts, tokens for the Form / Search
-// windows, those windows, the tooltip, the syncing badge, the tabs component, the file explorer's colours.
+// windows, those windows and the window kit's fields (UiField*), the tooltip, the syncing badge,
+// the tabs component, the file explorer's colours.
 // Keep the order: rules of the same weight win by order.
 @use "fonts";
 @use "utilities";
@@ -9,6 +10,11 @@
 @use "themes";
 @use "../components/uikit/Search";
 @use "../components/uikit/Form";
+@use "../components/uikit/UiField";
+@use "../components/uikit/UiFieldText";
+@use "../components/uikit/UiFieldChoice";
+@use "../components/uikit/UiFieldPick";
+@use "../components/uikit/UiFieldList";
 @use "../components/pages/projects/JournalWindow";
 @use "../components/pages/recipes/DishWindow";
 @use "host";

@@ -1,0 +1,4 @@
+/* A window's choice (UiFieldChoice), block ui-field-choice on each button: a picture's height */
+.ui-field-choice {
+  &__img { height: 24px; }
+}

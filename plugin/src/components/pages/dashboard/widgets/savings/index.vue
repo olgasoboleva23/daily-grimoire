@@ -3,9 +3,18 @@
 <script setup>
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
-import { deposit } from "#/controllers/widgets/savings.js";
+import { askValue } from "#/components/uikit/FieldWindow/ask.js";
+import { deposit, paydaySum } from "#/controllers/widgets/savings.js";
 
 defineProps({ state: { type: Object, required: true } });
+
+// ✓ done: the jar's per_payday; without one ("your part") the sum is asked
+async function done(path) {
+  const sum = paydaySum(path) ?? await askValue({ title: "✦ Deposit", name: "Sum", type: "number",
+    placeholder: "how much", required: true, submit: "Put in" });
+
+  if (sum !== null) await deposit(path, sum);
+}
 </script>
 
 <template>
@@ -42,7 +51,7 @@ defineProps({ state: { type: Object, required: true } });
       </div>
       <div v-if="j.due" class="ui-jar__due ui-row ui-between ui-gap-m">
         <span>{{ j.due.when }}: <b class="ui-jar__due-sum">put in {{ j.due.sum }}</b></span>
-        <UiButton kind="pill" @click="deposit(j.path)">✓ done</UiButton>
+        <UiButton kind="pill" @click="done(j.path)">✓ done</UiButton>
       </div>
       <div class="ui-jar__next ui-text-center">next payday: {{ j.next }}</div>
     </div>

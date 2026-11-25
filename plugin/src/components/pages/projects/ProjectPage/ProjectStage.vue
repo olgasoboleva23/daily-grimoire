@@ -5,8 +5,9 @@
 import { computed, ref } from "vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import UiCard from "#/components/uikit/UiCard/index.vue";
+import { askValue } from "#/components/uikit/FieldWindow/ask.js";
 import { app } from "#/helpers/app.js";
-import { addToStage, askDeleteStage, askRenameStage } from "#/controllers/projects.js";
+import { addToStage, askDeleteStage, renameStage } from "#/controllers/projects.js";
 import ProjectTask from "./ProjectTask.vue";
 
 const props = defineProps({
@@ -18,6 +19,15 @@ const done = computed(() => props.stage.entries.filter(e => e.done).length);
 const total = computed(() => props.stage.entries.length);
 const complete = computed(() => total.value > 0 && done.value === total.value);
 const folded = ref(complete.value);
+
+// the stage as it was clicked: one that changed meanwhile is not renamed (renameStage)
+async function rename() {
+  const { project, index, stage: { name } } = props;
+  const next = await askValue({ title: "✦ Rename stage", name: "Name", value: name, required: true,
+    submit: "Save" });
+
+  if (next !== null) await renameStage(project, index, name, next);
+}
 </script>
 
 <template>
@@ -30,7 +40,7 @@ const folded = ref(complete.value);
       <span class="ui-project__stage-name ui-grow">{{ stage.name }}</span>
       <span class="ui-project__stage-count">{{ done }}/{{ total }}</span>
       <span v-if="complete" class="ui-project__stage-done">✓</span>
-      <UiButton title="rename" @click="askRenameStage(app, project, index, stage.name)">
+      <UiButton title="rename" @click="rename">
         <span class="ui-pencil">✏️</span>
       </UiButton>
       <UiButton title="delete" @click="askDeleteStage(app, project, index, stage.name)">

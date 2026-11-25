@@ -1,0 +1,7 @@
+/* A window's pick (UiFieldPick), block ui-field-pick: a long value (a note's name) cut with … */
+.ui-field-pick {
+  &__button {
+    min-width: 0; max-width: 100%;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+}

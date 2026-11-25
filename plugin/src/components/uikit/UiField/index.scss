@@ -1,0 +1,17 @@
+/* A window's field row (UiField), block ui-field on Obsidian's setting row: its name, its control;
+   a label row's text; a file input in it */
+.ui-field {
+  // over Obsidian's .setting-item-info / -control (0,1,0): a long name wraps, but many buttons
+  // never squeeze it; the buttons wrap
+  & &__info { min-width: 8em; }
+  & &__control {
+    min-width: 0;   // a long pick (a note's name) shrinks to the window, cut with …
+    flex-wrap: wrap;
+    // Obsidian stretches phone inputs to their control's width; a checkbox stays square.
+    &--check { flex: 0 0 var(--checkbox-size); }
+  }
+  // a label row's text: its line breaks kept, selectable (to copy a prompt's variable)
+  &__label { white-space: pre-wrap; user-select: text; }
+  // a native file input (a project's cover) stays in the window
+  &__upload { max-width: 100%; }
+}

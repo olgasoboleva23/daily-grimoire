@@ -75,22 +75,24 @@ test("Weight: ＋ after the journal's pill makes a new journal in its window and
 });
 
 test("Weight: 🗑 by a journal's list asks first, then puts the journal in the trash; closed: nothing", async () => {
-  const { Form } = await import("#/components/uikit/Form/index.ts");
-  const ask = Form.ask;
+  const { testWindows } = await import("./stubs/windows.mjs");
+  const windows = testWindows();
   const { files } = vault({ [SKIN]: "- 2026-11-05 1\n", [GUT]: "" });
   const w = mount(WeightCard, { props: { state: { data } } });
 
-  await w.findAll(".ui-weight__modes button")[1].trigger("click");
-  let asked;
+  try {
+    await w.findAll(".ui-weight__modes button")[1].trigger("click");
+    await w.find(".ui-weight__delete").trigger("click");
+    const no = await windows.next();
 
-  Form.ask = async (app, title) => { asked = title; return null; };
-  await w.find(".ui-weight__delete").trigger("click"); await new Promise(r => setTimeout(r));
-  assert.equal(files[SKIN], "- 2026-11-05 1\n");
-  assert.match(asked, /Skin/);
-  Form.ask = async () => ({});
-  await w.find(".ui-weight__delete").trigger("click"); await new Promise(r => setTimeout(r));
-  Form.ask = ask;
-  assert.equal(SKIN in files, false);
+    assert.deepEqual(no.props,
+      { title: "✦ Delete the journal «Skin»?", lines: [], submit: "Delete" });
+    await no.close();
+    assert.equal(files[SKIN], "- 2026-11-05 1\n");
+    await w.find(".ui-weight__delete").trigger("click");
+    await (await windows.next()).submit();
+    assert.equal(SKIN in files, false);
+  } finally { windows.restore(); }
 });
 
 test("Weight: the log's picks follow the data: a new day starts empty", async () => {
@@ -134,4 +136,13 @@ test("Weight: what's typed while the save writes stays in the field; the saved o
   await w.find("input").setValue("60.4");   // typed while it writes
   release(); await new Promise(r => setTimeout(r)); await nextTick();
   assert.equal(w.find("input").element.value, "60.4");
+});
+
+test("trashJournal sends only the selected journal to Obsidian's trash", async () => {
+  const { trashJournal } = await import("#/controllers/journals.js");
+  const { files } = vault({ [SKIN]: "- 2026-11-05 1\n", [GUT]: "- 2026-11-05 2\n" });
+
+  await trashJournal(SKIN);
+  await trashJournal(SKIN);
+  assert.deepEqual(files, { [GUT]: "- 2026-11-05 2\n" });
 });
