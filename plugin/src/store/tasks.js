@@ -10,7 +10,7 @@
 // deleted or renamed is read again on Obsidian's own event, at once (Dataview's index comes a
 // second later, and only once it's built), so everything drawn from the tasks draws again. The
 // folder's other files (backups) are not read.
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { app } from "#/helpers/app.js";
 import { APP_NAME } from "#/helpers/name.js";
 import { parseNote } from "#/models/taskFile.js";
@@ -75,9 +75,9 @@ export const taskStore = {
 
 const ours = path => PATHS.includes(path);
 
-// a stage's tasks, each once: its open line, else its done line (a skipped-only or unknown id is
-// left out), as { id, t, done }, in the stage's order
-export function stageTasks(stage) {
+// Build one index for all stages. An open line takes precedence over a done line.
+const stageEntries = computed(() => {
+  void taskStore.version.value;
   const lines = new Map();
 
   for (const t of taskStore.tasks) {
@@ -88,6 +88,13 @@ export function stageTasks(stage) {
       lines.set(id, { id, t, done: task.isDone });
     }
   }
+
+  return lines;
+});
+
+// A stage's tasks, each once, in the stage's order.
+export function stageTasks(stage) {
+  const lines = stageEntries.value;
 
   return [...new Set(stage.tasks ?? [])].map(id => lines.get(id)).filter(Boolean);
 }
