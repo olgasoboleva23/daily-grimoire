@@ -9,7 +9,8 @@ import UiField from "#/shared/ui/UiField/index.vue";
 import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
 import UiFieldChoice from "#/shared/ui/UiFieldChoice/index.vue";
 import { filled, useWrite } from "#/shared/ui/Window/index.ts";
-import { createDoc, KINDS } from "#/entities/doc/index.js";
+import { createDoc } from "../../model/doc.js";
+import { KINDS } from "../../model/kind.js";
 
 const props = defineProps({
   kind: { type: String, required: true },   // watch, read, game

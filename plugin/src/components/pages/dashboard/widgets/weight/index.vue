@@ -8,7 +8,7 @@ import { computed, ref, watch } from "vue";
 import UiButton from "#/shared/ui/UiButton/index.vue";
 import UiMissing from "#/shared/ui/UiMissing.vue";
 import { confirm, openWindow } from "#/shared/ui/Window/index.ts";
-import NewJournalWindow from "#/components/windows/journals/NewJournalWindow/index.vue";
+import { NewJournalWindow } from "#/entities/doc/index.js";
 import { WEIGHT } from "#/shared/config/index.js";
 import { app } from "#/shared/host/index.js";
 import { logWeight, logBody, trashJournal } from "#/entities/weight/index.js";

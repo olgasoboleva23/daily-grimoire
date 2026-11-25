@@ -6,7 +6,7 @@ import { vault } from "./stubs/vault.mjs";
 import { PURCHASES } from "#/shared/config/index.js";
 
 // The Cmd+P windows of new notes, journals, the shop and the pomodoro's lengths
-// (components/windows/{notes,journals,shop,pomodoro}), opened through the test frame as their
+// (entities/doc/ui and components/windows/{shop,pomodoro}), opened through the test frame as their
 // openers do, and the commands that open them. Made-up titles only.
 const MASTER = "00 System/Data/Tasks/Master.md";
 let openWindow, testWindows, KINDS, taskStore, registerCommands, windows, win;
@@ -14,13 +14,14 @@ before(async () => {
   window.moment = () => ({ format: () => "2026-11-20" });
   ({ openWindow } = await import("#/shared/ui/Window/index.ts"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
-  ({ KINDS } = await import("#/entities/doc/index.js"));
+  const docs = await import("#/entities/doc/index.js");
+  KINDS = docs.KINDS;
   ({ taskStore } = await import("#/store/tasks.js"));
   ({ registerCommands } = await import("#/commands/commands.ts"));
   const load = async name => (await import(`#/components/windows/${name}/index.vue`)).default;
   win = {
-    item: await load("notes/CollectionItemWindow"),
-    journal: await load("journals/NewJournalWindow"),
+    item: docs.CollectionItemWindow,
+    journal: docs.NewJournalWindow,
     buy: await load("shop/BuyRewardWindow"),
     pomodoro: await load("pomodoro/PomodoroWindow"),
   };

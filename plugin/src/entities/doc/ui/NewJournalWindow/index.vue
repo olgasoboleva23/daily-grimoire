@@ -9,7 +9,8 @@ import UiField from "#/shared/ui/UiField/index.vue";
 import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
 import UiFieldList from "#/shared/ui/UiFieldList/index.vue";
 import { filled, useWrite } from "#/shared/ui/Window/index.ts";
-import { createDoc, KINDS } from "#/entities/doc/index.js";
+import { createDoc } from "../../model/doc.js";
+import { KINDS } from "../../model/kind.js";
 
 const emit = defineEmits(["done"]);
 

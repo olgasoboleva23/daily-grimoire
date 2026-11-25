@@ -1,6 +1,6 @@
 import { FuzzySuggestModal, Platform, type Plugin, type TFile } from "obsidian";
 import { APP_NAME } from "#/shared/config/index.js";
-import { createDoc, KINDS } from "#/entities/doc/index.js";
+import { CollectionItemWindow, createDoc, KINDS, NewJournalWindow } from "#/entities/doc/index.js";
 import { mirrorMobileConfig } from "#/controllers/mobileConfig.js";
 import { newTask } from "#/components/windows/tasks/TaskWindow/open.js";
 import { migrateTasks } from "#/migrations/tasks.js";
@@ -11,8 +11,6 @@ import {
   openEditCourse, openNewCourse, pickCourse,
 } from "#/entities/course/index.js";
 import { openWindow, askValue } from "#/shared/ui/Window/index.ts";
-import CollectionItemWindow from "#/components/windows/notes/CollectionItemWindow/index.vue";
-import NewJournalWindow from "#/components/windows/journals/NewJournalWindow/index.vue";
 import BuyRewardWindow from "#/components/windows/shop/BuyRewardWindow/index.vue";
 
 
