@@ -1,4 +1,5 @@
-import { Task, taskStore, records } from "#/entities/task/index.js";
+import { Task, taskStore } from "#/entities/task/index.js";
+import { records } from "#/entities/task/model/repository/tasks.js";
 import { projectStore, stageIndex, stageTasks } from "#/entities/project/index.js";
 import { test } from "node:test";
 import assert from "node:assert/strict";

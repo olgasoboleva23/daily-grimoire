@@ -1,6 +1,6 @@
 // Convert and validate settings form values, save them and move tasks for checked area changes.
 import { Notice } from "obsidian";
-import { records } from "#/entities/task/index.js";
+import { moveAreas, restoreAreas } from "#/entities/task/index.js";
 import {
   applyConfig, areaKeyProblem, configProblem, dishType, saveConfig,
 } from "#/shared/config/index.js";
@@ -60,46 +60,19 @@ export const areaMoves = v =>
 
 const save = serial();
 
-// Revert only the area changes this save made, keeping other edits to the tasks.
-function restoreAreas(moves) {
-  return records.edit(tasks => {
-    let restored = false;
-
-    for (const [id, { from, to }] of moves) {
-      if (tasks[id]?.area !== to) continue;
-      tasks[id].area = from;
-      restored = true;
-    }
-
-    return restored ? tasks : null;
-  });
-}
-
 export function saveSettings(values) {
   const json = toConfig(values);
   const areas = areaMoves(values);
 
   return save(async () => {
-    const moves = new Map();
-
-    if (areas.size) await records.edit(tasks => {
-      for (const [id, task] of Object.entries(tasks)) {
-        const from = task?.area, to = areas.get(from);
-
-        if (!to) continue;
-        moves.set(id, { from, to });
-        task.area = to;
-      }
-
-      return moves.size ? tasks : null;
-    });
+    const moved = await moveAreas(areas);
     let merged;
 
     try {
       merged = await saveConfig(json);
     } catch (error) {
       try {
-        if (moves.size) await restoreAreas(moves);
+        if (moved.size) await restoreAreas(moved);
       } catch (restoreError) {
         throw new AggregateError([error, restoreError], "Could not save settings or restore areas");
       }
@@ -108,9 +81,8 @@ export function saveSettings(values) {
     }
 
     applyConfig(merged);
-    const moved = moves.size;
 
-    new Notice(`✦ Settings saved${moved ? ` · ${moved} tasks moved` : ""}`);
-    return { moved };
+    new Notice(`✦ Settings saved${moved.size ? ` · ${moved.size} tasks moved` : ""}`);
+    return { moved: moved.size };
   });
 }

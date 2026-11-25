@@ -1,6 +1,8 @@
 // Public entry for task.
 export { variantsProblem, recordOf } from "./contract/task.js";
 
+export { moveAreas, restoreAreas } from "./model/area.js";
+
 export { taskChoices } from "./model/choice.js";
 
 export { dayGroup, daytimeMark, daytimeRank } from "./model/daytime.js";
@@ -19,7 +21,7 @@ export { VariantProblem, nextVariantAfter } from "./model/variant.js";
 
 export { taskStore } from "./model/store.js";
 
-export { records, recordsFromDisk, saveRecords } from "./model/repository/tasks.js";
+export { recordsFromDisk, saveRecords } from "./model/repository/tasks.js";
 
 export { masterText, removePrependedLine } from "./model/repository/master.js";
 
