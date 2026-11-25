@@ -6,8 +6,9 @@ import { computed, ref } from "vue";
 import UiButton from "#/components/uikit/UiButton/index.vue";
 import UiCard from "#/components/uikit/UiCard/index.vue";
 import { askValue } from "#/components/uikit/FieldWindow/ask.js";
-import { app } from "#/helpers/app.js";
-import { addToStage, askDeleteStage, renameStage } from "#/controllers/projects.js";
+import { openWindow } from "#/components/uikit/Window/open.ts";
+import DeleteStageWindow from "#/components/windows/projects/DeleteStageWindow/index.vue";
+import { addToStage, readStage, renameStage } from "#/controllers/projects.js";
 import ProjectTask from "./ProjectTask.vue";
 
 const props = defineProps({
@@ -28,6 +29,14 @@ async function rename() {
 
   if (next !== null) await renameStage(project, index, name, next);
 }
+
+// asked with the stage as it is on disk: one that moved or changed meanwhile is not deleted
+async function remove() {
+  const { project, index, stage: { name } } = props;
+  const stage = await readStage(project, index, name);
+
+  if (stage) await openWindow(DeleteStageWindow, { project, index, stage });
+}
 </script>
 
 <template>
@@ -43,7 +52,7 @@ async function rename() {
       <UiButton title="rename" @click="rename">
         <span class="ui-pencil">✏️</span>
       </UiButton>
-      <UiButton title="delete" @click="askDeleteStage(app, project, index, stage.name)">
+      <UiButton title="delete" @click="remove">
         🗑️
       </UiButton>
       <UiButton

@@ -5,13 +5,13 @@
 <script setup>
 import { computed, ref } from "vue";
 import { confirm } from "#/components/uikit/ConfirmWindow/confirm.js";
+import { openWindow } from "#/components/uikit/Window/open.ts";
+import JournalEntryWindow from "#/components/windows/projects/JournalEntryWindow/index.vue";
 import UiTabs from "#/components/uikit/UiTabs/index.vue";
 import { openNote } from "#/components/app/open.ts";
-import { app } from "#/helpers/app.js";
 import { removeNote } from "#/controllers/journal.js";
 import { journalOf } from "#/models/journal.js";
 import { taskStore } from "#/store/tasks.js";
-import { askEntry } from "./entry.js";
 
 const props = defineProps({ project: { type: String, required: true } });
 const emit = defineEmits(["close"]);
@@ -36,6 +36,10 @@ function open(e, event) {
   emit("close");
 }
 
+// + Entry (no entry) and ✏️ (the entry): the entry's window
+const entryWindow = (entry = null) =>
+  openWindow(JournalEntryWindow, { project: props.project, entry });
+
 async function remove(e) {
   if (await confirm("Delete entry?", [{ name: "Entry", text: e.heading }])) await removeNote(e.id);
 }
@@ -45,7 +49,7 @@ async function remove(e) {
   <div class="ui-journal">
     <div class="ui-journal__bar">
       <UiTabs v-model="kind" :tabs="tabs" />
-      <button class="mod-cta" @click="askEntry(app, project)">+ Entry</button>
+      <button class="mod-cta" @click="entryWindow()">+ Entry</button>
     </div>
     <div v-if="!shown.length" class="ui-journal__empty">No entries yet</div>
     <ol class="ui-journal__list">
@@ -62,7 +66,7 @@ async function remove(e) {
           <button v-if="e.link" class="ui-journal__link" @click="open(e, $event)">
             📄 {{ noteName(e.link) }}
           </button>
-          <button class="clickable-icon" title="Edit" @click="askEntry(app, project, e)">✏️</button>
+          <button class="clickable-icon" title="Edit" @click="entryWindow(e)">✏️</button>
           <button class="clickable-icon" title="Delete" @click="remove(e)">×</button>
         </div>
       </li>

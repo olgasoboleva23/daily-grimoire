@@ -5,7 +5,6 @@ import { CONFIG } from "#/helpers/paths.js";
 import { editJson } from "#/helpers/files.js";
 import { taskStore } from "#/store/tasks.js";
 import { journalOf } from "#/models/journal.js";
-import { Form } from "#/components/uikit/Form/index.ts";
 
 export function fillStart(template, project, entries, input) {
   const journal = entries.slice(0, 3).map(e =>
@@ -56,18 +55,4 @@ export async function savePrompts({ promptStart, promptFinal }) {
 
   await editJson(CONFIG, current => ({ ...current, ...patch }));
   Object.assign(config, patch);
-}
-
-// TODO: Remove with the Form import after U2b switches prompt editing to the Vue window.
-export async function editPrompts(app) {
-  const v = await Form.ask(app, "Промпты проекта", [
-    { tab: "Start", name: "Start", key: "promptStart", text: "", lines: true },
-    { tab: "Start", name: "Переменные", key: "vars", label: true },
-    { tab: "Final", name: "Final", key: "promptFinal", text: "", lines: true },
-    { tab: "Final", name: "Переменные", key: "none", label: true },
-  ], { values: { promptStart: config.promptStart, promptFinal: config.promptFinal,
-    vars: PROMPT_VARIABLES, none: "нет: копируется как есть" },
-    required: ["promptStart", "promptFinal"], submit: "Сохранить" });
-
-  if (v) await savePrompts(v);
 }

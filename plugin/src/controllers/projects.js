@@ -5,8 +5,6 @@ import { nextId } from "#/helpers/ids.js";
 import { MASTER, PROJECTS } from "#/helpers/paths.js";
 import { edit, readJson } from "#/helpers/files.js";
 import { importCover } from "#/helpers/images.js";
-import { Form } from "#/components/uikit/Form/index.ts";
-import { openUi } from "#/components/app/open.ts";
 import { notes, projects } from "#/store/tasks.js";
 import { parseNote } from "#/models/taskFile.js";
 import { Task } from "#/models/task.js";
@@ -23,32 +21,6 @@ export async function newProject({ name, description, status, cover: file }, upl
 
   if (file && !cover) return null;
   return createProject({ name, description: description ?? "", status, cover });
-}
-
-const STATUSES = ["idea", "active", "paused", "done"];
-const projectFields = [
-  { name: "Name", key: "name", text: "what it is" },
-  { name: "Description", key: "description", text: "a line about it", lines: true },
-  { name: "Cover", key: "cover", file: "image/*,.heic,.heif,.tif,.tiff" },
-];
-
-// TODO: Remove after U2a switches the New project button and command to the Vue window.
-export async function askNewProject(
-  app, ask = (...a) => Form.ask(...a), upload = importCover, open = openUi,
-) {
-  const v = await ask(app, "✦ New project", [
-    ...projectFields,
-    {
-      name: "Status", key: "status",
-      options: STATUSES.map(s => ({ label: `${s[0].toUpperCase()}${s.slice(1)}`, value: s })),
-    },
-  ], { values: { status: "active" }, required: ["name"], submit: "Create" });
-
-  if (!v) return null;
-  const key = await newProject(v, upload);
-
-  if (key) await open("projects", { open: key });
-  return key;
 }
 
 // merge fields (name, status, description, result, notes, cover) into a project
@@ -81,28 +53,6 @@ export async function editProject(
 
   if (!saved) changedProject();
   return saved;
-}
-
-// TODO: Remove after U2a switches Edit project to the Vue window.
-export async function askEditProject(
-  app, key, ask = (...a) => Form.ask(...a), upload = importCover,
-) {
-  const before = await readProject(key);
-
-  if (!before) return void changedProject();
-  const v = await ask(app, "✦ Edit project", [
-    ...projectFields,
-    {
-      name: "Показывать во вкладке Projects календаря", key: "showInCalendar",
-      check: "Запланированные задачи остаются в своих днях",
-    },
-  ], {
-    values: { name: before.name, description: before.description ?? "",
-      showInCalendar: before.showInCalendar !== false },
-    required: ["name"], submit: "Save",
-  });
-
-  if (v) await editProject(key, v, before, upload);
 }
 
 // Check the snapshot from the confirmation and keep covers referenced by another project.
@@ -210,20 +160,6 @@ export async function deleteStage(key, index, before, { deleteTasks }) {
   return saved;
 }
 
-// TODO: Remove after U2a switches Delete stage to the Vue window.
-export async function askDeleteStage(app, key, index, name, ask = (...a) => Form.ask(...a)) {
-  const before = await readStage(key, index, name);
-
-  if (!before) return false;
-  const yes = await ask(app, "Delete stage?", [
-    { name: "Stage", key: "name", label: true },
-    { name: "Также удалить задачи этапа", key: "deleteTasks",
-      check: "Только открытые копии без даты. Задачи других этапов сохранятся." },
-  ], { values: { name, deleteTasks: false }, submit: "Delete" });
-
-  return yes ? deleteStage(key, index, before, yes) : false;
-}
-
 // web links of a project: [{ title, url }], none in the older projects
 const isWebUrl = u => /^https?:\/\/\S+$/i.test(u);
 
@@ -238,16 +174,6 @@ export async function addLink(key, { title, url }) {
   return projects.update(key, p => ({
     ...p, links: [...p.links ?? [], { title: title?.trim() || url, url }],
   }));
-}
-
-// TODO: Remove after U2a switches New link to the Vue window.
-export async function askAddLink(app, key, ask = (...a) => Form.ask(...a)) {
-  const v = await ask(app, "✦ New link", [
-    { name: "Title", key: "title", text: "what it is" },
-    { name: "URL", key: "url", text: "https://…" },
-  ], { required: ["url"], submit: "Add" });
-
-  return v ? addLink(key, v) : false;
 }
 
 // by index and url, so a link that moved meanwhile is not removed instead

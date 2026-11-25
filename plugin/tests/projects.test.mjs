@@ -6,7 +6,7 @@ import { vault } from "./stubs/vault.mjs";
 import { taskStore } from "#/store/tasks.js";
 import { PROJECTS } from "#/helpers/paths.js";
 import {
-  createProject, saveProject, addStage, addToStage, toCalendar, askNewProject,
+  createProject, saveProject, addStage, addToStage, toCalendar,
   newProject, editProject, readStage, deleteStage, addLink, removeLink, deleteProject, readProject,
   renameStage,
 } from "#/controllers/projects.js";
@@ -75,24 +75,6 @@ test("toCalendar puts the task on a day", async () => {
   taskStore.putRecords({ t1: { name: "walk" } });
   await toCalendar(taskStore.tasks[0], "2026-11-12");
   assert.equal(files[MASTER], "- [ ] t1 [due:: 2026-11-12]\n");
-});
-
-test("askNewProject opens the app tab on the new project", async () => {
-  const { files, app } = vault();
-  const seen = [];
-  const open = async (...a) => seen.push(a);
-  const ask = async (_app, _title, _rows, o) => {
-    assert.equal(o.values.status, "active");
-    return { name: "Garden", description: "beds", status: "idea", cover: { name: "garden.png" } };
-  };
-
-  assert.equal(await askNewProject(app, ask, async () => "03 Resources/Media/a.webp", open), "p1");
-  assert.deepEqual(json(files).p1.cover, "03 Resources/Media/a.webp");
-  assert.equal(json(files).p1.status, "idea");
-  assert.deepEqual(seen, [["projects", { open: "p1" }]]);
-
-  assert.equal(await askNewProject(app, async () => null), null);
-  assert.deepEqual(Object.keys(json(files)), ["p1"]);
 });
 
 test("newProject saves the cover returned by the uploader", async () => {

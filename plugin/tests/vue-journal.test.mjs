@@ -9,7 +9,7 @@ import { NOTES, PROJECTS } from "#/helpers/paths.js";
 // window with the timeline (newest first, a filter by what an entry is about, + Entry, ✏️, ×)
 const MASTER = "00 System/Data/Tasks/Master.md";
 const RECORDS = "00 System/Data/Tasks/tasks.json";
-let vue, taskStore, notesOf, Form, Journal, Card, askEntry, testWindows, config, files, app;
+let vue, taskStore, notesOf, Journal, Card, testWindows, config, files, app;
 
 before(async () => {
   GlobalRegistrator.register();
@@ -17,11 +17,9 @@ before(async () => {
   HTMLElement.prototype.addClass = function (c) { this.classList.add(c); };
   window.moment = at => ({ format: f => (f === "YYYY-MM-DDTHH:mm" ? "2026-11-20T10:00" : `~${at}`) });
   vue = await import("vue");
-  ({ Form } = await import("#/components/uikit/Form/index.ts"));
   ({ taskStore, notes: notesOf } = await import("#/store/tasks.js"));
   Journal = (await import("#/components/pages/projects/JournalWindow/index.vue")).default;
   Card = (await import("#/components/pages/projects/ProjectPage/ProjectJournal.vue")).default;
-  ({ askEntry } = await import("#/components/pages/projects/JournalWindow/entry.js"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
   config = (await import("#/helpers/config.js")).default;
 });
@@ -96,48 +94,87 @@ test("the window of a project without entries says so", () => {
   assert.match(el.querySelector(".ui-journal__empty").textContent, /No entries yet/);
 });
 
-test("+ Entry: About lists the project, its stages and tasks; the note is owned by the project", async () => {
-  const ask = Form.ask;
-  let rows;
+// + Entry and ✏️ open the entry's window (windows/projects/JournalEntryWindow) in the test frame
+const entryButton = el => [...el.querySelectorAll("button")].find(b => b.textContent === "+ Entry");
 
-  Form.ask = async (_app, _title, r) => {
-    rows = r;
-    return { about: "stage:st1", title: " ", text: "chose beds", link: "" };
-  };
-  try { await askEntry(app, "p1"); } finally { Form.ask = ask; }
-  assert.deepEqual(rows.find(r => r.key === "about").select.map(c => c.label),
-    ["Project · Garden", "Stage 01 · Beds", "Task · dig", "Task · rake"]);
+test("+ Entry: About lists the project, its stages and tasks; the note is owned by the project", async () => {
+  const windows = testWindows();
+  const el = mount(Journal, { project: "p1" });
+
+  try {
+    entryButton(el).click();
+    const w = await windows.next();
+
+    assert.equal(w.title, "✦ New entry");
+    assert.deepEqual(w.wrapper.findAll(".setting-item-name").map(n => n.text()),
+      ["About", "Title", "Text", "Note"]);
+    const about = w.wrapper.find("select.dropdown");
+
+    assert.deepEqual(about.findAll("option").map(o => o.text()),
+      ["Project · Garden", "Stage 01 · Beds", "Task · dig", "Task · rake"]);
+    assert.equal(about.element.value, "project:p1");
+    assert.deepEqual([w.wrapper.find("input"), w.wrapper.find("textarea")]
+      .map(i => i.attributes("placeholder")),
+    ["empty: the name of what it is about", "what came out of it"]);
+    assert.equal(w.wrapper.find(".ui-field-pick__button").text(), "Choose…");
+    assert.equal(w.wrapper.find(".ui-window__submit").text(), "Add");
+    await about.setValue("stage:st1");
+    await w.wrapper.find("input").setValue(" ");
+    await w.wrapper.find("textarea").setValue("chose beds");
+    await w.submit();
+  } finally { windows.restore(); }
   const saved = Object.values(JSON.parse(files[NOTES])).at(-1);
 
   assert.deepEqual(saved.owner, { kind: "project", id: "p1" });
   assert.deepEqual(saved.target, { kind: "stage", id: "st1" });
+  assert.equal(saved.title, "");
   assert.equal(saved.text, "chose beds");
 });
 
-test("+ Entry with nothing written: nothing saved, a Notice says why", async () => {
-  const ask = Form.ask;
+test("+ Entry with nothing written: nothing saved, a Notice says why, the window stays", async () => {
+  const windows = testWindows();
+  const el = mount(Journal, { project: "p1" });
   const before = files[NOTES];
 
-  Form.ask = async () => ({ about: "project:p1", title: "", text: "", link: "" });
-  try { await askEntry(app, "p1"); } finally { Form.ask = ask; }
-  assert.equal(files[NOTES], before);
-  assert.match(Notice.last, /title, a text or a note/);
+  try {
+    entryButton(el).click();
+    const w = await windows.next();
+
+    await w.submit();
+    assert.equal(files[NOTES], before);
+    assert.match(Notice.last, /title, a text or a note/);
+    assert.equal(windows.all.length, 1);
+  } finally { windows.restore(); }
 });
 
 test("✏️ an entry: its fields prefilled, About not asked again, the edit saved", async () => {
-  const ask = Form.ask;
-  let rows, values;
+  const windows = testWindows();
+  const el = mount(Journal, { project: "p1" });
 
-  Form.ask = async (_app, _title, r, o) => {
-    rows = r; values = o.values;
-    return { ...o.values, title: "Dug the beds" };
-  };
   try {
-    await askEntry(app, "p1", { id: "n2", ...notes.n2 });
-  } finally { Form.ask = ask; }
-  assert.equal(rows.some(r => r.key === "about"), false);
-  assert.equal(values.link, "Notes/soil.md");
+    el.querySelectorAll(".ui-journal__entry [title=Edit]")[0].click();   // n2, the newest
+    const w = await windows.next();
+
+    assert.equal(w.title, "✦ Edit entry");
+    assert.deepEqual(w.wrapper.findAll(".setting-item-name").map(n => n.text()),
+      ["Title", "Text", "Note", "When"]);
+    const [title, when] = w.wrapper.findAll("input");
+
+    assert.equal(title.element.value, "");
+    assert.equal(w.wrapper.find("textarea").element.value, "dug it");
+    assert.equal(w.wrapper.find(".ui-field-pick__button").text(), "Notes/soil.md");
+    assert.equal(when.element.value, "2026-11-10T18:30");
+    assert.equal(when.attributes("placeholder"), "YYYY-MM-DDTHH:mm");
+    assert.equal(w.wrapper.find(".ui-window__submit").text(), "Save");
+    await when.setValue("");
+    assert.equal(w.wrapper.find(".ui-window__submit").element.disabled, true);
+    await when.setValue("2026-11-10T18:30");
+    await title.setValue("Dug the beds");
+    await w.submit();
+    assert.equal(windows.all.length, 0);
+  } finally { windows.restore(); }
   assert.equal(JSON.parse(files[NOTES]).n2.title, "Dug the beds");
+  assert.equal(JSON.parse(files[NOTES]).n2.link, "Notes/soil.md");
 });
 
 test("the card: the count, the last entry in one line, Start and Final", () => {

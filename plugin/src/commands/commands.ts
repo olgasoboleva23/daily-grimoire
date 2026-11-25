@@ -10,7 +10,7 @@ import { addMarketItem } from "#/controllers/widgets/market.js";
 import { logPurchase } from "#/controllers/widgets/shop.js";
 import { createNote } from "#/controllers/notes.js";
 import { editCourse, newCourse, pickCourse } from "#/controllers/meds.js";
-import { askNewProject } from "#/controllers/projects.js";
+import { openNewProject } from "#/components/windows/projects/ProjectWindow/open.js";
 
 
 // The commands in Cmd+P ("Daily Grimoire: …"); each one window, then saved.
@@ -40,7 +40,7 @@ export function registerCommands(plugin: Plugin) {
   }
 
   // a project: name, description, status, an optional cover; then the Projects tab opens on it
-  add("new-project", "New project", async () => void await askNewProject(app));
+  add("new-project", "New project", async () => void await openNewProject());
 
   // a medication course (courses.json), then the Medication page opens; edited: the only one, or
   // the one picked (the ✎ on its card does the same)

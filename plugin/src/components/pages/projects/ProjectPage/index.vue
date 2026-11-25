@@ -11,9 +11,12 @@ import UiButton from "#/components/uikit/UiButton/index.vue";
 import UiCard from "#/components/uikit/UiCard/index.vue";
 import { askValue } from "#/components/uikit/FieldWindow/ask.js";
 import { confirm } from "#/components/uikit/ConfirmWindow/confirm.js";
+import { openWindow } from "#/components/uikit/Window/open.ts";
+import { openEditProject } from "#/components/windows/projects/ProjectWindow/open.js";
+import LinkWindow from "#/components/windows/projects/LinkWindow/index.vue";
 import { app } from "#/helpers/app.js";
 import {
-  addStage, saveProject, askEditProject, deleteProject, readProject, askAddLink, removeLink,
+  addStage, saveProject, deleteProject, readProject, removeLink,
 } from "#/controllers/projects.js";
 import { stageTasks, taskStore } from "#/store/tasks.js";
 import { FILTERS } from "#/store/projects.js";
@@ -59,6 +62,8 @@ async function edit({ key: field, name }) {
 
   if (text !== null) await saveProject(project, { [field]: text });
 }
+
+const newLink = () => openWindow(LinkWindow, { project: page.value.key });
 
 async function newStage(name) {
   if (!name.trim()) return;
@@ -114,7 +119,7 @@ async function remove() {
         page.p.description }}</div>
       <UiProgress v-if="page.total" :value="page.done" :max="page.total" />
       <div class="ui-row ui-gap-s">
-        <UiButton kind="chip" @click="askEditProject(app, page.key)">Edit project</UiButton>
+        <UiButton kind="chip" @click="openEditProject(page.key)">Edit project</UiButton>
         <UiButton kind="chip" @click="remove">Delete project</UiButton>
       </div>
     </UiCard>
@@ -152,7 +157,7 @@ async function remove() {
             <UiButton title="remove" @click="removeLink(page.key, i, l.url)">×</UiButton>
           </div>
           <div class="ui-row ui-gap-s">
-            <UiButton kind="chip" class="ui-project__edit" @click="askAddLink(app, page.key)">
+            <UiButton kind="chip" class="ui-project__edit" @click="newLink">
               + link
             </UiButton>
           </div>

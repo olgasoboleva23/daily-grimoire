@@ -1,21 +1,23 @@
 import { test, before, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
-import { Menu } from "obsidian";
+import { Menu, Notice } from "obsidian";
 import { vault } from "./stubs/vault.mjs";
-import { PROJECTS } from "#/helpers/paths.js";
+import { CONFIG, PROJECTS } from "#/helpers/paths.js";
 
 // The Projects tab: its list of project cards (cover, status, description, progress, the next task)
-// and a project's page (header, stages, task rows, Result and Notes)
+// and a project's page (header, stages, task rows, Result and Notes), and the windows their
+// buttons open
 const MASTER = "00 System/Data/Tasks/Master.md";
 const RECORDS = "00 System/Data/Tasks/tasks.json";
-let vue, Projects, taskStore, Form, Search, testWindows, files, app;
+let vue, Projects, taskStore, config, PROMPT_VARIABLES, Search, testWindows, files, app;
 before(async () => {
   GlobalRegistrator.register();
   window.moment = () => ({ format: () => "2026-11-12" });
   vue = await import("vue");
   ({ testWindows } = await import("./stubs/windows.mjs"));
-  ({ Form } = await import("#/components/uikit/Form/index.ts"));
+  config = (await import("#/helpers/config.js")).default;
+  ({ PROMPT_VARIABLES } = await import("#/controllers/prompts.js"));
   ({ Search } = await import("#/components/uikit/Search/index.ts"));
   ({ taskStore } = await import("#/store/tasks.js"));
   Projects = (await import("#/components/pages/projects/index.vue")).default;
@@ -300,18 +302,6 @@ test("stage ✏️ asks the new name in ✦ Rename stage, saves it; closed: noth
   } finally { windows.restore(); }
 });
 
-test("Edit project opens the shared form", async () => {
-  const ask = Form.ask;
-  try {
-    const { el } = mount({ open: "p1" });
-    Form.ask = async () => ({ name: "Green garden", description: "New beds" });
-    button(el, "Edit project").click();
-    await until(() => saved().name === "Green garden");
-    assert.equal(saved().name, "Green garden");
-    assert.equal(saved().stages.length, 2);
-  } finally { Form.ask = ask; }
-});
-
 test("Delete project? names the project and what is kept; closed it stays, else back", async () => {
   const windows = testWindows();
   try {
@@ -339,4 +329,191 @@ test("Delete project? names the project and what is kept; closed it stays, else 
     await vue.nextTick();
     assert.deepEqual(names(el), ["Shed", "Poem", "Kite"]);
   } finally { windows.restore(); }
+});
+
+// the projects' windows (components/windows/projects/), opened from their buttons, answered
+// through the test frame
+const fieldNames = w => w.wrapper.findAll(".setting-item-name").map(n => n.text());
+const submitButton = w => w.wrapper.find(".ui-window__submit");
+// a made-up Image Converter: every cover becomes Media/<name>.webp
+const converter = () => {
+  app.plugins.plugins["image-converter"] = {
+    settings: { selectedConversionPreset: "WebP",
+      conversionPresets: [{ name: "WebP", outputFormat: "WEBP", quality: 80 }] },
+    imageProcessor: { processImage: async () => new Uint8Array([1]).buffer },
+    supportedImageFormats: { getMimeTypeFromFile: async () => "image/webp",
+      getExtensionsFromMimeType: () => ["webp"] },
+  };
+  app.fileManager.getAvailablePathForAttachment = async name => `Media/${name}`;
+  app.vault.createBinary = async (path, data) => { files[path] = data; return { path }; };
+};
+const chooseFile = async (w, file) => {
+  const input = w.wrapper.find("input[type=file]");
+  Object.defineProperty(input.element, "files", { value: [file] });
+  await input.trigger("change");
+};
+
+test("✦ New project: Status lit Active, Create greyed until a name; the cover saved, its page opened", async () => {
+  const windows = testWindows(), seen = [];
+  app.workspace.getLeavesOfType = () => [{ view: { go: async (...a) => seen.push(a) } }];
+  app.workspace.revealLeaf = async () => {};
+  try {
+    const { el } = mount();
+    button(el, "✦ New project").click();
+    const w = await windows.next();
+    assert.equal(w.title, "✦ New project");
+    assert.deepEqual(fieldNames(w), ["Name", "Description", "Cover", "Status"]);
+    assert.deepEqual([w.wrapper.find("input.ui-field-text__input"), w.wrapper.find("textarea")]
+      .map(i => i.attributes("placeholder")), ["what it is", "a line about it"]);
+    assert.equal(w.wrapper.find("input[type=file]").attributes("accept"),
+      "image/*,.heic,.heif,.tif,.tiff");
+    assert.deepEqual(w.wrapper.findAll(".ui-field-choice").map(c => c.text()),
+      ["Idea", "Active", "Paused", "Done"]);
+    assert.equal(w.wrapper.find(".mod-cta.ui-field-choice").text(), "Active");
+    assert.equal(submitButton(w).text(), "Create");
+    assert.equal(submitButton(w).element.disabled, true);
+
+    await w.wrapper.find("input.ui-field-text__input").setValue(" Orchard ");
+    await w.wrapper.find("textarea").setValue("apples\npears");
+    await w.wrapper.findAll(".ui-field-choice")[0].trigger("click");
+    await chooseFile(w, new File(["image"], "orchard.png"));
+    await w.submit();
+    // no Image Converter: the cover can't be saved, the window stays with what was typed
+    assert.match(Notice.last, /image-converter/);
+    assert.equal(windows.all.length, 1);
+    assert.equal(JSON.parse(files[PROJECTS]).p5, undefined);
+
+    converter();
+    await w.submit();
+    await until(() => seen.length);
+    const { name, description, status, cover } = JSON.parse(files[PROJECTS]).p5;
+    assert.deepEqual({ name, description, status, cover },
+      { name: "Orchard", description: "apples\npears", status: "idea", cover: "Media/orchard.webp" });
+    assert.deepEqual(seen, [["projects", { open: "p5" }]]);
+    assert.equal(windows.all.length, 0);
+  } finally { windows.restore(); }
+});
+
+test("Edit project: its values from disk and the calendar checkbox; Save writes them", async () => {
+  const windows = testWindows();
+  try {
+    const { el } = mount({ open: "p1" });
+    button(el, "Edit project").click();
+    const w = await windows.next();
+    assert.equal(w.title, "✦ Edit project");
+    assert.deepEqual(fieldNames(w),
+      ["Name", "Description", "Cover", "Показывать во вкладке Projects календаря"]);
+    assert.equal(w.wrapper.find(".mod-toggle .setting-item-description").text(),
+      "Запланированные задачи остаются в своих днях");
+    assert.equal(w.wrapper.find("input.ui-field-text__input").element.value, "Garden");
+    assert.equal(w.wrapper.find("textarea").element.value, "beds by the wall");
+    const check = w.wrapper.find("input[type=checkbox]");
+    assert.equal(check.element.checked, true);
+    assert.equal(submitButton(w).text(), "Save");
+
+    await w.wrapper.find("input.ui-field-text__input").setValue("Green garden");
+    await check.setValue(false);
+    await w.submit();
+    await until(() => saved().name === "Green garden");
+    assert.equal(saved().showInCalendar, false);
+    assert.equal(saved().description, "beds by the wall");
+    assert.equal(saved().stages.length, 2);
+    assert.equal(windows.all.length, 0);
+
+    // gone from disk meanwhile: the notice, no window
+    files[PROJECTS] = "{}";
+    button(el, "Edit project").click();
+    await until(() => /changed or was deleted/.test(Notice.last));
+    assert.match(Notice.last, /changed or was deleted/);
+    assert.equal(windows.all.length, 0);
+  } finally { windows.restore(); }
+});
+
+test("🗑️ a stage: Delete stage? names it; closed nothing, the checkbox deletes its open tasks", async () => {
+  const windows = testWindows();
+  try {
+    const { el } = mount({ open: "p1" });
+    const master = files[MASTER];
+    stages(el)[0].querySelector("[aria-label=delete]").click();
+    const a = await windows.next();
+    assert.equal(a.title, "Delete stage?");
+    assert.deepEqual(fieldNames(a), ["Stage", "Также удалить задачи этапа"]);
+    assert.equal(a.wrapper.find(".ui-field__label").text(), "A");
+    assert.equal(a.wrapper.find(".mod-toggle .setting-item-description").text(),
+      "Только открытые копии без даты. Задачи других этапов сохранятся.");
+    assert.equal(a.wrapper.find("input[type=checkbox]").element.checked, false);
+    assert.equal(submitButton(a).text(), "Delete");
+    await a.close();
+    assert.equal(saved().stages.length, 2);
+
+    stages(el)[1].querySelector("[aria-label=delete]").click();
+    const b = await windows.next();
+    await b.wrapper.find("input[type=checkbox]").setValue(true);
+    await b.submit();
+    await until(() => saved().stages.length === 1);
+    assert.deepEqual(saved().stages.map(s => s.name), ["A"]);
+    await until(() => files[MASTER] !== master);
+    assert.equal(files[MASTER], "- [x] t1\n- [x] t2\n- [x] t3");
+  } finally { windows.restore(); }
+});
+
+test("+ link: ✦ New link, Add greyed until a URL; not a web address or a failed write: it stays", async () => {
+  const windows = testWindows();
+  try {
+    const { el } = mount({ open: "p1" });
+    button(el, "+ link").click();
+    const w = await windows.next();
+    assert.equal(w.title, "✦ New link");
+    assert.deepEqual(fieldNames(w), ["Title", "URL"]);
+    const [title, url] = w.wrapper.findAll("input");
+    assert.deepEqual([title, url].map(i => i.attributes("placeholder")), ["what it is", "https://…"]);
+    assert.equal(submitButton(w).text(), "Add");
+    assert.equal(submitButton(w).element.disabled, true);
+
+    await title.setValue("Seeds");
+    await url.setValue("seeds shop");
+    await w.submit();
+    assert.match(Notice.last, /web address/);
+    assert.equal(windows.all.length, 1);
+
+    const process = app.vault.process;
+    app.vault.process = async () => { throw new Error("disk"); };
+    await url.setValue("https://example.com/seeds");
+    await w.submit();
+    app.vault.process = process;
+    assert.equal(Notice.last, "✦ Not saved (disk)");
+    assert.equal(windows.all.length, 1);
+
+    await w.submit();
+    assert.deepEqual(saved().links, [{ title: "Seeds", url: "https://example.com/seeds" }]);
+    assert.equal(windows.all.length, 0);
+  } finally { windows.restore(); }
+});
+
+test("Промпты: tabs Start and Final, a text and its variables each; Сохранить saves both", async t => {
+  const windows = testWindows();
+  const { promptStart, promptFinal } = config;
+  t.after(() => { Object.assign(config, { promptStart, promptFinal }); windows.restore(); });
+  files[CONFIG] = "{}";
+  Object.assign(config, { promptStart: "Start {Project_Name}", promptFinal: "Final" });
+  const { el } = mount();
+  button(el, "Промпты").click();
+  const w = await windows.next();
+  assert.equal(w.title, "Промпты проекта");
+  assert.deepEqual(w.wrapper.findAll(".ui-tabs__tab").map(b => b.text()), ["Start", "Final"]);
+  const [start, final] = w.wrapper.findAll(".ui-window__pane");
+  assert.deepEqual(start.findAll(".setting-item-name").map(n => n.text()), ["Start", "Переменные"]);
+  assert.deepEqual(final.findAll(".setting-item-name").map(n => n.text()), ["Final", "Переменные"]);
+  assert.equal(start.find(".ui-field__label").text(), PROMPT_VARIABLES);
+  assert.equal(final.find(".ui-field__label").text(), "нет: копируется как есть");
+  assert.equal(start.find("textarea").element.value, "Start {Project_Name}");
+  assert.equal(submitButton(w).text(), "Сохранить");
+
+  await final.find("textarea").setValue("");
+  assert.equal(submitButton(w).element.disabled, true);
+  await final.find("textarea").setValue(" Wrap up ");
+  await w.submit();
+  assert.deepEqual(JSON.parse(files[CONFIG]),
+    { promptStart: "Start {Project_Name}", promptFinal: "Wrap up" });
+  assert.equal(windows.all.length, 0);
 });
