@@ -3,6 +3,12 @@
 // spending is negative.
 import { amount as toAmount } from "#/shared/lib/format.js";
 
+export const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August",
+  "September", "October", "November", "December"];
+
+export const MONTHS_SHORT = ["jan", "feb", "mar", "apr", "may", "jun",
+  "jul", "aug", "sep", "oct", "nov", "dec"];
+
 // transfers move money between your own accounts or split bills: not spending or income
 const TRANSFER = "Переводы";
 

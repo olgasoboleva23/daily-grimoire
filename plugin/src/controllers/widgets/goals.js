@@ -2,7 +2,7 @@
 // often it was done. A missed goal task stays on its day (the calendar's Missed? lists it). The
 // markup: widgets/goals.
 import { dm, pageDay, todayYmd, weekOf, ymd } from "#/shared/lib/dates.js";
-import { Goal } from "#/models/goal.js";
+import { readGoals } from "#/entities/goal/index.js";
 import { GOALS } from "#/shared/config/index.js";
 import { T } from "#/models/calendarData.js";
 import { taskStore } from "#/store/tasks.js";
@@ -12,8 +12,7 @@ export async function loadGoals({ dv, app }) {
 
   if (!app.vault.getAbstractFileByPath(path)) return { missing: true, path };
   const selected = ymd(pageDay(dv)), today = todayYmd(), week = weekOf(selected);
-  const goals = dv.pages(`"${GOALS}"`).file.lists
-    .map(i => Goal.parse(i.text)).where(Boolean).array();
+  const goals = readGoals(dv);
   const tasks = taskStore.tasks.map(T);
 
   return {

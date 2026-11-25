@@ -2,7 +2,7 @@ import { Platform } from "obsidian";
 import { dataview } from "#/shared/host/index.js";
 import { useDataviewChanges, useNewDay, useWhenIndexed } from "#/shared/lib/use.js";
 import { todayYmd } from "#/shared/lib/dates.js";
-import { Goal, reminders, dayCounts } from "#/models/goal.js";
+import { readGoals, reminders, dayCounts } from "#/entities/goal/index.js";
 import { GOALS, TASKS } from "#/shared/config/index.js";
 import { T } from "#/models/calendarData.js";
 import { taskStore } from "#/store/tasks.js";
@@ -40,8 +40,7 @@ export function useNotify(plugin, open) {
     clear();
     const d = todayYmd();
     const tasks = dueTasks().filter(t => t.date === d).map(t => ({ text: t.text, goal: t.goal }));
-    const goals = dataview().pages(`"${GOALS}"`).file.lists
-      .map(i => Goal.parse(i.text)).where(Boolean).array();
+    const goals = readGoals(dataview());
 
     for (const r of reminders(tasks, goals)) {
       const ms = window.moment(`${d} ${r.at}`, "YYYY-MM-DD HH:mm").diff(window.moment());

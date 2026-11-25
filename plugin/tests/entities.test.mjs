@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Task } from "#/models/task.js";
 import { weekOf } from "#/shared/lib/dates.js";
-import { Goal, reminders } from "#/models/goal.js";
+import { Goal, reminders } from "#/entities/goal/index.js";
 import { CycleLog } from "#/entities/cycle/index.js";
 import { WeightLog } from "#/models/weightLog.js";
 import { BodyLog } from "#/models/bodyLog.js";
@@ -196,7 +196,7 @@ test("CycleLog.recent: the current cycle so far, then the finished ones, newest 
 });
 
 test("the morning summary: today's open tasks and the overdue ones as the calendar's Missed? counts them", async () => {
-  const { dayCounts } = await import("#/models/goal.js");
+  const { dayCounts } = await import("#/entities/goal/index.js");
   const t = (status, due, goal = null) => new Task(`- [${status}] t1 [due:: ${due}]`, null, { goal });
   const tasks = [t(" ", "2026-11-10"), t(" ", "2026-11-08"), t(" ", "2026-11-07", "workout"),
     t("-", "2026-11-06"), t("x", "2026-11-05"), t(" ", "2026-11-12")];

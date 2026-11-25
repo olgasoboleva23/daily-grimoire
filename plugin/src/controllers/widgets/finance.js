@@ -5,56 +5,14 @@
 // ui-fin__month block), widgets/finance/index.vue (the dashboard's card).
 import { dm } from "#/shared/lib/dates.js";
 import { money } from "#/shared/lib/format.js";
-import { readJson } from "#/shared/vault/index.js";
-import { LEDGER, RULES } from "#/shared/config/index.js";
-import { monthReport, parseLedger, summarize } from "#/models/ledger.js";
+import { LEDGER } from "#/shared/config/index.js";
+import {
+  loadLedger, MONTHS, MONTHS_SHORT, monthReport, summarize,
+} from "#/entities/ledger/index.js";
 
-const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August",
-  "September", "October", "November", "December"];
-const MONTHS_SHORT = ["jan", "feb", "mar", "apr", "may", "jun",
-  "jul", "aug", "sep", "oct", "nov", "dec"];
 // palette cycled across categories, in ui token order
 const PALETTE = ["--ui-pink", "--ui-gold", "--ui-purple", "--ui-lavender", "--ui-blue",
   "--ui-pink-deep", "--ui-gold-deep", "--ui-purple-light"];
-
-// a month's rows by its note's path, with the modification time they were read at: a load reads
-// only the notes that changed since (both Finance widgets share it)
-const parsed = new Map();
-
-// the pipe tables themselves (no Dataview fields): a cash row added by hand counts like an
-// imported one
-async function readLedger(app) {
-  const listing = await app.vault.adapter.list(LEDGER).catch(() => null);
-
-  if (!listing) return {};
-  const months = {};
-
-  for (const file of listing.files.filter(f => f.endsWith(".md"))) {
-    const mtime = (await app.vault.adapter.stat(file))?.mtime ?? null;
-
-    if (!parsed.has(file) || mtime === null || parsed.get(file).mtime !== mtime) {
-      parsed.set(file, { mtime, rows: parseLedger(await app.vault.adapter.read(file)) });
-    }
-
-    const { rows } = parsed.get(file);
-
-    if (rows.length) months[file.slice(file.lastIndexOf("/") + 1, -3)] = rows;
-  }
-
-  return months;
-}
-
-// the ledger, the budgets, its months in order and the one to start on: this month, else the
-// latest
-async function ledgerState(app) {
-  const [ledger, rules] = await Promise.all([readLedger(app), readJson(RULES, { budgets: {} })]);
-  const months = Object.keys(ledger).sort();
-  const now = new Date();
-  const thisMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-  const start = months.includes(thisMonth) ? thisMonth : months.at(-1);
-
-  return { ledger, budgets: rules.budgets ?? {}, months, start };
-}
 
 // one month as the page shows it
 function shownMonth(ledger, budgets, months, current) {
@@ -87,7 +45,7 @@ function shownMonth(ledger, budgets, months, current) {
 
 // every month, ready to show: ◀ ▶ switch between them in the view, no reading again
 export async function loadFinance({ app }) {
-  const { ledger, budgets, months, start } = await ledgerState(app);
+  const { ledger, budgets, months, start } = await loadLedger(app);
 
   if (!months.length) return { empty: true, path: LEDGER };
   const byMonth = Object.fromEntries(months.map(m => [m, shownMonth(ledger, budgets, months, m)]));
@@ -112,7 +70,7 @@ function category(name, value, max, color, budget) {
 
 // The dashboard's Finance card: this month's (else the latest's) spent and income on one line
 export async function loadFinanceLine({ app }) {
-  const { ledger, months, start } = await ledgerState(app);
+  const { ledger, months, start } = await loadLedger(app);
 
   if (!months.length) return { empty: true };
   const { spent, income } = summarize(ledger[start]);

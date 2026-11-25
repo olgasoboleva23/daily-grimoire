@@ -3,15 +3,15 @@
 // cost:: …), an affordable one bought with a click, the rest greyed out. Writes: a purchase, only
 // when the gold covers it (the Shop card and the Buy reward command), with its sound and notice.
 // The markup: widgets/shop/ShopWidget.
-import config, { ASSETS, PURCHASES, SHOP } from "#/shared/config/index.js";
-import { amount, AMOUNT } from "#/shared/lib/format.js";
+import config, { ASSETS } from "#/shared/config/index.js";
+import {
+  appendPurchase, balance, indexedPurchases, readPurchases, readRewards,
+} from "#/entities/shop/index.js";
 import { Notice } from "obsidian";
 import { todayYmd } from "#/shared/lib/dates.js";
-import { appendLine } from "#/shared/vault/index.js";
 import { T } from "#/models/calendarData.js";
 import { taskStore } from "#/store/tasks.js";
 import { AudioEngine } from "#/shared/lib/sounds.js";
-import { app } from "#/shared/host/index.js";
 
 function earned() {
   let gold = 0;
@@ -23,28 +23,11 @@ function earned() {
   return gold;
 }
 
-// a purchase's cost: the line's last field ("… | 1984 | 20" costs 20; 2,5 or 1 000 too)
-const cost = text => amount(text.split("|").at(-1)) ?? 0;
-
-const spent = lines => [...lines].reduce((a, l) => a + cost(l), 0);
-
-const balance = dv =>
-  earned() - spent([...dv.pages(`"${PURCHASES}"`).file.lists].map(l => l.text));
-
 export async function loadShop({ dv }) {
-  const gold = balance(dv), items = [];
-
-  for (const list of dv.pages(`"${SHOP}"`).file.lists) {
-    const name = list.text.match(/name::\s*(.+)/);
-    const cost = list.text.match(new RegExp(`cost::\\s*(${AMOUNT.source})`));
-
-    if (name && cost) items.push({ name: name[1].trim(), cost: amount(cost[1]) });
-  }
+  const gold = balance(earned(), indexedPurchases(dv)), items = readRewards(dv);
 
   return { balance: gold, items: items.map(i => ({ ...i, affordable: gold >= i.cost })) };
 }
-
-const PURCHASES_NOTE = `${PURCHASES}.md`;
 
 // a purchase, only when the gold covers it (the Shop card and the Buy reward command): false when
 // it doesn't. One at a time, the spent gold read from the file itself: Dataview sees a purchase a
@@ -53,13 +36,10 @@ let queue = Promise.resolve();
 
 export function logPurchase(name, price) {
   const buy = queue.then(async () => {
-    const file = app.vault.getFileByPath(PURCHASES_NOTE);
-    const text = file ? await app.vault.read(file) : "";
-    const lines = text.split("\n").filter(l => l.startsWith("- "));
+    const lines = await readPurchases();
 
-    if (earned() - spent(lines) < price) return false;
-    await appendLine(PURCHASES_NOTE, `- ${todayYmd()} | ${name} | ${price}`,
-      { header: "# Purchases\n\n" });
+    if (balance(earned(), lines) < price) return false;
+    await appendPurchase(name, price, todayYmd());
     return true;
   });
   queue = buy.catch(() => {});
