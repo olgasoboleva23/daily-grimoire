@@ -3,7 +3,7 @@
 <script setup>
 import { inject } from "vue";
 import { Keymap } from "obsidian";
-import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
 import { openUi } from "#/shared/host/index.js";
 
 const ui = inject("ui", null);

@@ -1,9 +1,9 @@
 <!-- Supplies: by category, each with how long since the last time (or that it's listed) and
      "running low" -->
 <script setup>
-import UiButton from "#/components/uikit/UiButton/index.vue";
-import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
-import UiGroupHeader from "#/components/uikit/UiGroupHeader.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
+import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
+import UiGroupHeader from "#/shared/ui/UiGroupHeader.vue";
 import { runsLow } from "#/controllers/widgets/market.js";
 import { openEditItem } from "#/components/windows/market/MarketItemWindow/open.js";
 

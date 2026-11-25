@@ -5,13 +5,11 @@
 <script setup>
 import { computed, inject, ref } from "vue";
 import { Menu } from "obsidian";
-import UiAddForm from "#/components/uikit/UiAddForm/index.vue";
-import UiProgress from "#/components/uikit/UiProgress/index.vue";
-import UiButton from "#/components/uikit/UiButton/index.vue";
-import UiCard from "#/components/uikit/UiCard/index.vue";
-import { askValue } from "#/components/uikit/FieldWindow/ask.js";
-import { confirm } from "#/components/uikit/ConfirmWindow/confirm.js";
-import { openWindow } from "#/components/uikit/Window/open.ts";
+import UiAddForm from "#/shared/ui/UiAddForm/index.vue";
+import UiProgress from "#/shared/ui/UiProgress/index.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
+import UiCard from "#/shared/ui/UiCard/index.vue";
+import { askValue, confirm, openWindow } from "#/shared/ui/Window/index.ts";
 import { openEditProject } from "#/components/windows/projects/ProjectWindow/open.js";
 import LinkWindow from "#/components/windows/projects/LinkWindow/index.vue";
 import { app } from "#/shared/host/index.js";

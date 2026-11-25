@@ -3,7 +3,7 @@
      ({ name, type, placeholder, … }); onBackground: a whiter field, a darker placeholder
      directly on the page background (a project's "+ stage") -->
 <script setup>
-import UiInput from "#/components/uikit/UiInput/index.vue";
+import UiInput from "#/shared/ui/UiInput/index.vue";
 
 defineProps({
   input: { type: Object, default: () => ({}) },

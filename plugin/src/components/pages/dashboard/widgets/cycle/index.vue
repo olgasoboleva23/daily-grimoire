@@ -4,10 +4,10 @@
 <script setup>
 import { computed, ref } from "vue";
 import { app } from "#/shared/host/index.js";
-import UiButton from "#/components/uikit/UiButton/index.vue";
-import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
-import UiMissing from "#/components/uikit/UiMissing.vue";
-import UiNoteLink from "#/components/uikit/UiNoteLink.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
+import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
+import UiMissing from "#/shared/ui/UiMissing.vue";
+import UiNoteLink from "#/shared/ui/UiNoteLink.vue";
 import { CYCLE } from "#/shared/config/index.js";
 import { markCycle } from "#/controllers/widgets/cycle.js";
 import CycleHead from "./CycleHead.vue";

@@ -4,11 +4,10 @@
      the text, the linked note, ✏️ and × -->
 <script setup>
 import { computed, inject, ref } from "vue";
-import { confirm } from "#/components/uikit/ConfirmWindow/confirm.js";
-import { openWindow, WINDOW } from "#/components/uikit/Window/open.ts";
+import { confirm, openWindow, WINDOW } from "#/shared/ui/Window/index.ts";
 import JournalEntryWindow from "#/components/windows/projects/JournalEntryWindow/index.vue";
-import UiTabs from "#/components/uikit/UiTabs/index.vue";
-import UiWindow from "#/components/uikit/UiWindow/index.vue";
+import UiTabs from "#/shared/ui/UiTabs/index.vue";
+import UiWindow from "#/shared/ui/UiWindow/index.vue";
 import { openNote } from "#/shared/host/index.js";
 import { removeNote } from "#/controllers/journal.js";
 import { journalOf } from "#/models/journal.js";

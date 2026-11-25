@@ -1,6 +1,6 @@
 // Picks a Markdown note or creates one from the recipe template for the dish.
 import { prepareFuzzySearch } from "obsidian";
-import { Search } from "#/components/uikit/Search/index.ts";
+import { Search } from "#/shared/ui/Search/index.ts";
 import { createNote } from "#/controllers/notes.js";
 import { app } from "#/shared/host/index.js";
 import { KINDS } from "#/models/kinds.js";

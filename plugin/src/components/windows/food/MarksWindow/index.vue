@@ -3,11 +3,10 @@
      saveMarks wrote (a mark keeps its tag, a new one gets the next) -->
 <script setup>
 import { computed, reactive } from "vue";
-import UiWindow from "#/components/uikit/UiWindow/index.vue";
-import UiFieldText from "#/components/uikit/UiFieldText/index.vue";
-import UiFieldList from "#/components/uikit/UiFieldList/index.vue";
-import { groupsFilled } from "#/components/uikit/UiWindow/ready.js";
-import { useWrite } from "#/components/uikit/UiWindow/write.js";
+import UiWindow from "#/shared/ui/UiWindow/index.vue";
+import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
+import UiFieldList from "#/shared/ui/UiFieldList/index.vue";
+import { groupsFilled, useWrite } from "#/shared/ui/Window/index.ts";
 import { saveMarks } from "#/controllers/food.js";
 
 const props = defineProps({

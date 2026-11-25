@@ -2,8 +2,8 @@
      rows, the button (`submit`, "Delete" by default). Resolves true on the button or Enter; its
      opener does the deleting -->
 <script setup>
-import UiWindow from "#/components/uikit/UiWindow/index.vue";
-import UiField from "#/components/uikit/UiField/index.vue";
+import UiWindow from "#/shared/ui/UiWindow/index.vue";
+import UiField from "#/shared/ui/UiField/index.vue";
 
 defineProps({
   title: { type: String, required: true },

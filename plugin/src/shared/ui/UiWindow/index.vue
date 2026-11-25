@@ -1,4 +1,4 @@
-<!-- The shell every window's template starts with (opened by openWindow, uikit/Window/open.ts):
+<!-- The shell for windows opened through shared/ui/Window/index.ts:
      the frame's title, the tabs (UiTabs) with a pane each (#tab:<name>; all mounted, the hidden
      ones keep their values), the fields without a tab (default slot), then the button (#footer:
      something next to it; no `submit`: no button row, the viewers). The button and the frame's
@@ -7,8 +7,8 @@
      field styling lives with each component (UiField*) -->
 <script setup>
 import { inject, provide, ref, watchEffect } from "vue";
-import UiTabs from "#/components/uikit/UiTabs/index.vue";
-import { WINDOW } from "#/components/uikit/Window/open.ts";
+import UiTabs from "#/shared/ui/UiTabs/index.vue";
+import { WINDOW } from "#/shared/ui/Window/index.ts";
 
 const props = defineProps({
   title: { type: String, required: true },

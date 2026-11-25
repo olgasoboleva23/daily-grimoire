@@ -1,7 +1,7 @@
 <!-- the head: the day (in the period: highlighted; its MP in the tooltip, v-tip), its phase,
      the next start; a click folds or unfolds (@fold) -->
 <script setup>
-import { vTip } from "#/components/uikit/tooltip.js";
+import { vTip } from "#/shared/ui/tooltip.js";
 
 defineProps({ head: { type: Object, required: true }, open: { type: Boolean, required: true } });
 defineEmits(["fold"]);

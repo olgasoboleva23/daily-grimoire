@@ -6,8 +6,8 @@
 <script setup>
 import { inject, ref } from "vue";
 import { Platform } from "obsidian";
-import UiNav from "#/components/uikit/UiNav/index.vue";
-import UiDrawer from "#/components/uikit/UiDrawer/index.vue";
+import UiNav from "#/shared/ui/UiNav/index.vue";
+import UiDrawer from "#/shared/ui/UiDrawer/index.vue";
 import { openUi } from "#/shared/host/index.js";
 import { pages, APP_NAME } from "#/shared/config/index.js";
 import { openSettings } from "#/components/windows/settings/SettingsWindow/open.js";

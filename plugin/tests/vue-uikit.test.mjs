@@ -11,7 +11,7 @@ before(async () => {
   ({ mount } = await import("@vue/test-utils"));
   ({ nextTick } = await import("vue"));
   // a component is <Name>.vue, or <Name>/index.vue when it has its own styles
-  const load = async n => (await import(`../src/components/uikit/${n}`)).default;
+  const load = async n => (await import(`../src/shared/ui/${n}`)).default;
   ui = Object.fromEntries(await Promise.all(["UiButton", "UiNoteLink", "UiEmpty", "UiMissing", "UiFailed",
     "UiGroupHeader", "UiAddForm", "UiCard", "UiTable"].map(async n => {
     const styled = ["UiButton", "UiEmpty", "UiAddForm", "UiCard", "UiTable"].includes(n);
@@ -102,7 +102,7 @@ test("UiTable: the columns' heads and classes, a row per item named by row-class
 });
 
 test("Search.pickGrouped: a header over each group's first row, the name and its note; a new one has neither", async () => {
-  const { Search } = await import("#/components/uikit/Search/index.ts");
+  const { Search } = await import("#/shared/ui/Search/index.ts");
   const pick = Search.pick, drawn = [];
   const el = { createDiv: o => (drawn.push(o.text ?? o.cls), el), createSpan: o => drawn.push(o.text) };
   Search.pick = async (app, placeholder, find, render) => find("q").forEach(c => render(c, el));
@@ -132,7 +132,7 @@ test("UiCard: wings by default, :wings=false draws it without (the --wingless mo
 });
 
 test("UiTabs: on the page background (a page without a card) the light look", async () => {
-  const UiTabs = (await import("../src/components/uikit/UiTabs/index.vue")).default;
+  const UiTabs = (await import("#/shared/ui/UiTabs/index.vue")).default;
   const tabs = [{ key: "all", text: "All" }];
   const plain = mount(UiTabs, { props: { tabs } }), onBackground = mount(UiTabs, { props: { tabs, onBackground: true } });
 
@@ -152,7 +152,7 @@ const navItems = [
   { key: "calendar", icon: "🗓", text: "Calendar" },
   { key: "other", icon: "⋯", text: "Other" },
 ];
-const loadNav = async () => (await import("../src/components/uikit/UiNav/index.vue")).default;
+const loadNav = async () => (await import("#/shared/ui/UiNav/index.vue")).default;
 
 test("UiNav: three items, the current one on, a click says which", async () => {
   const nav = mount(await loadNav(), { props: { items: navItems, current: "calendar" } });
@@ -187,7 +187,7 @@ test("UiNav: on the phone the bottom bar, no hover states", async () => {
 });
 
 test("UiDrawer: closed draws nothing; open, Esc and the backdrop close it", async () => {
-  const UiDrawer = (await import("../src/components/uikit/UiDrawer/index.vue")).default;
+  const UiDrawer = (await import("#/shared/ui/UiDrawer/index.vue")).default;
   const closed = mount(UiDrawer, { props: { open: false }, slots: { default: "rows" } });
   assert.equal(closed.find(".ui-drawer").exists(), false);
 
@@ -202,7 +202,7 @@ test("UiDrawer: closed draws nothing; open, Esc and the backdrop close it", asyn
 });
 
 test("UiDrawer: a labelled dialog; open, it takes the focus, closed, gives it back", async () => {
-  const UiDrawer = (await import("../src/components/uikit/UiDrawer/index.vue")).default;
+  const UiDrawer = (await import("#/shared/ui/UiDrawer/index.vue")).default;
   const other = document.body.appendChild(document.createElement("button"));
   other.focus();
   const drawer = mount(UiDrawer, { props: { label: "Other" }, attachTo: document.body });
@@ -221,7 +221,7 @@ test("UiDrawer: a labelled dialog; open, it takes the focus, closed, gives it ba
 });
 
 test("UiDrawer: desktop Tab stays in the panel, so Escape still closes it", async () => {
-  const UiDrawer = (await import("../src/components/uikit/UiDrawer/index.vue")).default;
+  const UiDrawer = (await import("#/shared/ui/UiDrawer/index.vue")).default;
   const other = document.body.appendChild(document.createElement("button"));
   other.focus();
   const drawer = mount(UiDrawer, {
@@ -256,7 +256,7 @@ test("UiDrawer: desktop Tab stays in the panel, so Escape still closes it", asyn
 });
 
 test("UiDrawer: the phone sheet leaves the bottom navigation reachable", async () => {
-  const UiDrawer = (await import("../src/components/uikit/UiDrawer/index.vue")).default;
+  const UiDrawer = (await import("#/shared/ui/UiDrawer/index.vue")).default;
   const other = document.body.appendChild(document.createElement("button"));
   const dashboard = document.body.appendChild(document.createElement("button"));
   other.focus();
@@ -290,7 +290,7 @@ test("UiNav: the current item is the page; the one whose drawer is open, expande
 test("UiDeleteButton: the first click arms it (✓?, «click again») for 3 s, the second deletes",
   async t => {
     t.mock.timers.enable({ apis: ["setTimeout"] });
-    const Del = (await import("../src/components/uikit/UiDeleteButton/index.vue")).default;
+    const Del = (await import("#/shared/ui/UiDeleteButton/index.vue")).default;
     const w = mount(Del, { props: { title: "delete task" } });
     const b = () => w.find("button");
 

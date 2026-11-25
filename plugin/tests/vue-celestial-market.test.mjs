@@ -14,7 +14,7 @@ before(async () => {
   View = (await import("#/components/pages/dashboard/widgets/market/index.vue")).default;
   AddButton = (await import("#/components/pages/dashboard/widgets/market/CelestialMarketAdd.vue"))
     .default;
-  ({ Search } = await import("#/components/uikit/Search/index.ts"));
+  ({ Search } = await import("#/shared/ui/Search/index.ts"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
 });
 const data = {

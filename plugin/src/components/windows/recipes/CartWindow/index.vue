@@ -7,11 +7,11 @@
 <script setup>
 import { reactive } from "vue";
 import { Notice } from "obsidian";
-import UiWindow from "#/components/uikit/UiWindow/index.vue";
-import UiField from "#/components/uikit/UiField/index.vue";
-import UiFieldText from "#/components/uikit/UiFieldText/index.vue";
-import UiFieldList from "#/components/uikit/UiFieldList/index.vue";
-import { useWrite } from "#/components/uikit/UiWindow/write.js";
+import UiWindow from "#/shared/ui/UiWindow/index.vue";
+import UiField from "#/shared/ui/UiField/index.vue";
+import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
+import UiFieldList from "#/shared/ui/UiFieldList/index.vue";
+import { useWrite } from "#/shared/ui/Window/index.ts";
 import { productsToList } from "#/controllers/dishes.js";
 
 // loadRecipes's: { name, ingredients: [{ item, amount, name, alt: [{ item, amount, name }] }] }

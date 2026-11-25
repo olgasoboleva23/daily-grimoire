@@ -1,8 +1,8 @@
 <!-- Goals: per goal "X of Y this week", Mon–Sun dots (done, missed, planned or none; the page's day
      ringed), the minimum version and how often it was done -->
 <script setup>
-import { vTip } from "#/components/uikit/tooltip.js";
-import UiMissing from "#/components/uikit/UiMissing.vue";
+import { vTip } from "#/shared/ui/tooltip.js";
+import UiMissing from "#/shared/ui/UiMissing.vue";
 
 defineProps({ state: { type: Object, required: true } });
 </script>

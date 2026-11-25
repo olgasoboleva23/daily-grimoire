@@ -4,11 +4,10 @@
 <script setup>
 import { Notice } from "obsidian";
 import { computed, reactive } from "vue";
-import UiWindow from "#/components/uikit/UiWindow/index.vue";
-import UiField from "#/components/uikit/UiField/index.vue";
-import UiFieldText from "#/components/uikit/UiFieldText/index.vue";
-import { filled } from "#/components/uikit/UiWindow/ready.js";
-import { useWrite } from "#/components/uikit/UiWindow/write.js";
+import UiWindow from "#/shared/ui/UiWindow/index.vue";
+import UiField from "#/shared/ui/UiField/index.vue";
+import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
+import { filled, useWrite } from "#/shared/ui/Window/index.ts";
 import { logPurchase } from "#/controllers/widgets/shop.js";
 
 const emit = defineEmits(["done"]);

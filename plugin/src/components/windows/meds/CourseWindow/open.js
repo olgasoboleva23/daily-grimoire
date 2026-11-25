@@ -3,8 +3,8 @@
 // picked, the ✎ on its card) with its values as they are on disk now, so a course changed
 // meanwhile is not overwritten. Resolve to what the window gives, null closed.
 import { Notice } from "obsidian";
-import { openWindow } from "#/components/uikit/Window/open.ts";
-import { Search } from "#/components/uikit/Search/index.ts";
+import { openWindow } from "#/shared/ui/Window/index.ts";
+import { Search } from "#/shared/ui/Search/index.ts";
 import { openUi, app } from "#/shared/host/index.js";
 import { readCourse, readCourseList } from "#/controllers/meds.js";
 import { formValues } from "#/models/course.js";

@@ -4,7 +4,7 @@
      name a row. The look (index.scss): the rows parted by gold dashes, the header in Cinzel; a
      column's class goes on its header and cells -->
 <script setup>
-import { vTip } from "#/components/uikit/tooltip.js";
+import { vTip } from "#/shared/ui/tooltip.js";
 
 defineProps({
   columns: { type: Array, required: true },

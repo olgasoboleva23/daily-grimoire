@@ -4,9 +4,9 @@
      archivist's summary) -->
 <script setup>
 import { computed } from "vue";
-import UiButton from "#/components/uikit/UiButton/index.vue";
-import UiCard from "#/components/uikit/UiCard/index.vue";
-import { askValue } from "#/components/uikit/FieldWindow/ask.js";
+import UiButton from "#/shared/ui/UiButton/index.vue";
+import UiCard from "#/shared/ui/UiCard/index.vue";
+import { askValue } from "#/shared/ui/Window/index.ts";
 import { copyFinalPrompt, copyStartPrompt } from "#/controllers/prompts.js";
 import { journalOf } from "#/models/journal.js";
 import { taskStore } from "#/store/tasks.js";

@@ -3,7 +3,7 @@
 <script setup>
 import { inject } from "vue";
 import { openNote } from "#/shared/host/index.js";
-import UiButton from "./UiButton/index.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
 
 const props = defineProps({
   path: { type: String, required: true },

@@ -7,13 +7,13 @@
 <script setup>
 import { computed, inject, ref } from "vue";
 import { Notice } from "obsidian";
-import UiButton from "#/components/uikit/UiButton/index.vue";
-import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
-import UiInput from "#/components/uikit/UiInput/index.vue";
-import UiTable from "#/components/uikit/UiTable/index.vue";
-import UiTabs from "#/components/uikit/UiTabs/index.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
+import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
+import UiInput from "#/shared/ui/UiInput/index.vue";
+import UiTable from "#/shared/ui/UiTable/index.vue";
+import UiTabs from "#/shared/ui/UiTabs/index.vue";
 import config from "#/shared/config/index.js";
-import { openWindow } from "#/components/uikit/Window/open.ts";
+import { openWindow } from "#/shared/ui/Window/index.ts";
 import { openDishForm } from "#/components/windows/recipes/DishFormWindow/open.js";
 import CartWindow from "#/components/windows/recipes/CartWindow/index.vue";
 import { ingredientText } from "./cart.js";

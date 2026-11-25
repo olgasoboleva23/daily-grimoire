@@ -1,6 +1,6 @@
 <!-- ✓N: the done tasks hidden (✓ done off), their labels one per line in its title -->
 <script setup>
-import { vTip } from "#/components/uikit/tooltip.js";
+import { vTip } from "#/shared/ui/tooltip.js";
 import { computed, inject } from "vue";
 
 const props = defineProps({ entries: { type: Array, required: true } });

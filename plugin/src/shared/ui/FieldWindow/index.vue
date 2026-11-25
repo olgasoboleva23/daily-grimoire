@@ -4,11 +4,11 @@
      a number a Number); its opener does the writing -->
 <script setup>
 import { computed, ref } from "vue";
-import UiWindow from "#/components/uikit/UiWindow/index.vue";
-import UiField from "#/components/uikit/UiField/index.vue";
-import UiFieldText from "#/components/uikit/UiFieldText/index.vue";
-import UiFieldChoice from "#/components/uikit/UiFieldChoice/index.vue";
-import { filled } from "#/components/uikit/UiWindow/ready.js";
+import UiWindow from "#/shared/ui/UiWindow/index.vue";
+import UiField from "#/shared/ui/UiField/index.vue";
+import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
+import UiFieldChoice from "#/shared/ui/UiFieldChoice/index.vue";
+import { filled } from "#/shared/ui/Window/index.ts";
 
 const props = defineProps({
   title: { type: String, required: true },

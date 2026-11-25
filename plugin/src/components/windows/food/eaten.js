@@ -4,7 +4,7 @@
 import { prepareFuzzySearch } from "obsidian";
 import { app } from "#/shared/host/index.js";
 import { foodChoices } from "#/models/food.js";
-import { Search } from "#/components/uikit/Search/index.ts";
+import { Search } from "#/shared/ui/Search/index.ts";
 import { loadFood, logEaten } from "#/controllers/food.js";
 import { readDish } from "#/controllers/dishes.js";
 import {

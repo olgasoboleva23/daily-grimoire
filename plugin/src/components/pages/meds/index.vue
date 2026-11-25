@@ -3,8 +3,8 @@
      how to make one -->
 <script setup>
 import { computed, ref } from "vue";
-import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
-import UiTabs from "#/components/uikit/UiTabs/index.vue";
+import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
+import UiTabs from "#/shared/ui/UiTabs/index.vue";
 import { APP_NAME } from "#/shared/config/index.js";
 import MedsCourse from "./MedsCourse/index.vue";
 

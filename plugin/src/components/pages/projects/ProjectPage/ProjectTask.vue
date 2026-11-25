@@ -4,8 +4,8 @@
 <script setup>
 import { computed, ref } from "vue";
 import { Menu } from "obsidian";
-import UiButton from "#/components/uikit/UiButton/index.vue";
-import UiCheckbox from "#/components/uikit/UiCheckbox/index.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
+import UiCheckbox from "#/shared/ui/UiCheckbox/index.vue";
 import TaskText from "#/components/pages/calendar/TaskText.vue";
 import { app, tasksApi } from "#/shared/host/index.js";
 import config from "#/shared/config/index.js";

@@ -3,7 +3,7 @@
 <script setup>
 import { computed, inject } from "vue";
 import { vHoldAction } from "#/shared/lib/holdAction.js";
-import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
 import GroupCard from "./GroupCard.vue";
 import TaskText from "#/components/pages/calendar/TaskText.vue";
 import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";

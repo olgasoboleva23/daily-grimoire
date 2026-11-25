@@ -2,13 +2,12 @@
 <script setup>
 import { computed, reactive } from "vue";
 import { Notice } from "obsidian";
-import UiField from "#/components/uikit/UiField/index.vue";
-import UiFieldChoice from "#/components/uikit/UiFieldChoice/index.vue";
-import UiFieldList from "#/components/uikit/UiFieldList/index.vue";
-import UiFieldText from "#/components/uikit/UiFieldText/index.vue";
-import UiWindow from "#/components/uikit/UiWindow/index.vue";
-import { filled, groupsFilled } from "#/components/uikit/UiWindow/ready.js";
-import { useWrite } from "#/components/uikit/UiWindow/write.js";
+import UiField from "#/shared/ui/UiField/index.vue";
+import UiFieldChoice from "#/shared/ui/UiFieldChoice/index.vue";
+import UiFieldList from "#/shared/ui/UiFieldList/index.vue";
+import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
+import UiWindow from "#/shared/ui/UiWindow/index.vue";
+import { filled, groupsFilled, useWrite } from "#/shared/ui/Window/index.ts";
 import { saveSettings } from "#/controllers/settings.js";
 import config, { THEMES } from "#/shared/config/index.js";
 import { settingsProblem } from "#/models/settings.js";

@@ -4,8 +4,8 @@
 <script setup>
 import { vHoldAction } from "#/shared/lib/holdAction.js";
 import { inject } from "vue";
-import UiButton from "#/components/uikit/UiButton/index.vue";
-import UiDeleteButton from "#/components/uikit/UiDeleteButton/index.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
+import UiDeleteButton from "#/shared/ui/UiDeleteButton/index.vue";
 import { editTask } from "#/components/windows/tasks/TaskWindow/open.js";
 
 const props = defineProps({

@@ -2,7 +2,7 @@
      when another day shows. @go(date): another day (null: today) -->
 <script setup>
 import { addDays } from "#/shared/lib/dates.js";
-import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
 
 const props = defineProps({
   date: { type: String, required: true },    // the day it shows

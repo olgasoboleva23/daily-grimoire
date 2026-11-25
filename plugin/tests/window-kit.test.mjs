@@ -2,7 +2,7 @@ import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
 
-// The windows' kit: openWindow and its frames (uikit/Window/open.ts, the test frame in
+// The windows' kit: openWindow and its frames (shared/ui/Window/index.ts, the test frame in
 // stubs/windows.mjs), the shell UiWindow, the fields (UiField, UiFieldText, UiFieldChoice,
 // UiFieldPick, UiFieldList) and the two kit windows (ConfirmWindow, FieldWindow). Today's Form
 // window's cases (tests/form.test.mjs) restated on the pieces: the same markup, the same values.
@@ -15,19 +15,19 @@ before(async () => {
   ({ mount } = await import("@vue/test-utils"));
   vue = await import("vue");
   ({ Modal } = await import("obsidian"));
-  open = await import("#/components/uikit/Window/open.ts");
+  open = await import("#/shared/ui/Window/index.ts");
   ({ testWindows } = await import("./stubs/windows.mjs"));
-  ({ confirm } = await import("#/components/uikit/ConfirmWindow/confirm.js"));
-  ({ askValue } = await import("#/components/uikit/FieldWindow/ask.js"));
-  ({ filled, groupsFilled } = await import("#/components/uikit/UiWindow/ready.js"));
+  ({ confirm } = await import("#/shared/ui/Window/index.ts"));
+  ({ askValue } = await import("#/shared/ui/Window/index.ts"));
+  ({ filled, groupsFilled } = await import("#/shared/ui/Window/index.ts"));
   drawModals();
   kit = {
-    UiWindow: (await import("#/components/uikit/UiWindow/index.vue")).default,
-    UiField: (await import("#/components/uikit/UiField/index.vue")).default,
-    UiFieldText: (await import("#/components/uikit/UiFieldText/index.vue")).default,
-    UiFieldChoice: (await import("#/components/uikit/UiFieldChoice/index.vue")).default,
-    UiFieldPick: (await import("#/components/uikit/UiFieldPick/index.vue")).default,
-    UiFieldList: (await import("#/components/uikit/UiFieldList/index.vue")).default,
+    UiWindow: (await import("#/shared/ui/UiWindow/index.vue")).default,
+    UiField: (await import("#/shared/ui/UiField/index.vue")).default,
+    UiFieldText: (await import("#/shared/ui/UiFieldText/index.vue")).default,
+    UiFieldChoice: (await import("#/shared/ui/UiFieldChoice/index.vue")).default,
+    UiFieldPick: (await import("#/shared/ui/UiFieldPick/index.vue")).default,
+    UiFieldList: (await import("#/shared/ui/UiFieldList/index.vue")).default,
   };
 });
 

@@ -91,3 +91,11 @@ export function setFrame(next: Frame): Frame {
 
 export const openWindow = (component: VueComponent, props: Props = {}) =>
   new Promise<unknown>(resolve => frame.open(component, props, resolve));
+
+export { confirm } from "../ConfirmWindow/confirm.js";
+
+export { askValue } from "../FieldWindow/ask.js";
+
+export { filled, groupsFilled } from "../UiWindow/ready.js";
+
+export { useWrite } from "../UiWindow/write.js";

@@ -1,6 +1,6 @@
 // Opens Daily Grimoire's task window and the native Tasks dialog, then saves their results.
 import { Notice } from "obsidian";
-import { openWindow } from "#/components/uikit/Window/open.ts";
+import { openWindow } from "#/shared/ui/Window/index.ts";
 import { pickTask } from "#/components/uikit/TaskSearch/index.js";
 import { readTaskEdit, saveNewTask, saveTaskEdit } from "#/controllers/tasks.js";
 import { app, tasksApi } from "#/shared/host/index.js";

@@ -12,7 +12,7 @@ const MASTER = "00 System/Data/Tasks/Master.md";
 let openWindow, testWindows, KINDS, taskStore, registerCommands, windows, win;
 before(async () => {
   window.moment = () => ({ format: () => "2026-11-20" });
-  ({ openWindow } = await import("#/components/uikit/Window/open.ts"));
+  ({ openWindow } = await import("#/shared/ui/Window/index.ts"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
   ({ KINDS } = await import("#/models/kinds.js"));
   ({ taskStore } = await import("#/store/tasks.js"));

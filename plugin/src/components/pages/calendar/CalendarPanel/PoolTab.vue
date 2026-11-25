@@ -2,7 +2,7 @@
      to today -->
 <script setup>
 import { computed, inject } from "vue";
-import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
+import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
 import GroupCard from "./GroupCard.vue";
 import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";
 import { byArea } from "#/helpers/panelGroups.js";

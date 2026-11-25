@@ -3,7 +3,7 @@
      goes back to 🗑. title: its tip at rest. A task's and a market line's 🗑 -->
 <script setup>
 import { onBeforeUnmount, ref } from "vue";
-import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
 
 defineProps({ title: { type: String, default: "delete" } });
 const emit = defineEmits(["delete"]);

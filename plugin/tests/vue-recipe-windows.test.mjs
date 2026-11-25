@@ -24,9 +24,9 @@ const TYPES = [{ key: "soup", name: "Soups" }, { key: "main", name: "Mains" }];
 let Search, testWindows, windows, openDishForm, CartWindow, openWindow, loadRecipes;
 before(async () => {
   window.moment = () => ({ format: () => "2026-11-20" });
-  ({ Search } = await import("#/components/uikit/Search/index.ts"));
+  ({ Search } = await import("#/shared/ui/Search/index.ts"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
-  ({ openWindow } = await import("#/components/uikit/Window/open.ts"));
+  ({ openWindow } = await import("#/shared/ui/Window/index.ts"));
   ({ openDishForm } = await import("#/components/windows/recipes/DishFormWindow/open.js"));
   ({ loadRecipes } = await import("#/controllers/dishes.js"));
   CartWindow = (await import("#/components/windows/recipes/CartWindow/index.vue")).default;

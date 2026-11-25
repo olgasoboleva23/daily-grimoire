@@ -4,13 +4,13 @@
      complete), its box ticks it; a click elsewhere on the card opens the project -->
 <script setup>
 import { computed, inject } from "vue";
-import UiButton from "#/components/uikit/UiButton/index.vue";
-import UiCard from "#/components/uikit/UiCard/index.vue";
-import UiCheckbox from "#/components/uikit/UiCheckbox/index.vue";
-import UiProgress from "#/components/uikit/UiProgress/index.vue";
-import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
-import UiTabs from "#/components/uikit/UiTabs/index.vue";
-import { openWindow } from "#/components/uikit/Window/open.ts";
+import UiButton from "#/shared/ui/UiButton/index.vue";
+import UiCard from "#/shared/ui/UiCard/index.vue";
+import UiCheckbox from "#/shared/ui/UiCheckbox/index.vue";
+import UiProgress from "#/shared/ui/UiProgress/index.vue";
+import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
+import UiTabs from "#/shared/ui/UiTabs/index.vue";
+import { openWindow } from "#/shared/ui/Window/index.ts";
 import { openNewProject } from "#/components/windows/projects/ProjectWindow/open.js";
 import PromptsWindow from "#/components/windows/projects/PromptsWindow/index.vue";
 import { app, tasksApi } from "#/shared/host/index.js";

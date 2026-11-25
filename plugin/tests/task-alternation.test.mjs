@@ -241,7 +241,7 @@ test("A failed new-task save leaves the previous log and queue intact", async ()
 
 test("Task window updates next variants and stays open for invalid picks", async () => {
   const { testWindows } = await import("./stubs/windows.mjs");
-  const { openWindow } = await import("#/components/uikit/Window/open.ts");
+  const { openWindow } = await import("#/shared/ui/Window/index.ts");
   const TaskWindow = (await import("#/components/windows/tasks/TaskWindow/index.vue")).default;
   const windows = testWindows();
 

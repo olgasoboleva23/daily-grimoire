@@ -1,9 +1,9 @@
 <!-- a free journal: a level 0–3 and today's reasons (v-model:level, v-model:reasons), each click
      saved (@save), the 30 days' bars, ✦ list (its note), 🗑 (@delete) -->
 <script setup>
-import UiButton from "#/components/uikit/UiButton/index.vue";
-import UiChart from "#/components/uikit/UiChart/index.vue";
-import UiNoteLink from "#/components/uikit/UiNoteLink.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
+import UiChart from "#/shared/ui/UiChart/index.vue";
+import UiNoteLink from "#/shared/ui/UiNoteLink.vue";
 
 defineProps({ log: { type: Object, required: true } });
 const emit = defineEmits(["save", "delete"]);

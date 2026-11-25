@@ -1,6 +1,6 @@
 <!-- A box with a mark (block ui-check): ☐ empty, ✅ purple with a tick (as Obsidian draws a done
      task), ❌ pink with a cross. A button that emits "tick" and plays the mark's sound
-     (helpers/sounds.js: a gem for ✅, the slowed gem back to ☐, a chime for ❌); `static`: a plain
+     (shared/lib/sounds.js: a gem for ✅, the slowed gem back to ☐, a chime for ❌); `static`: a plain
      box, for a legend or inside another button; `size` s: a small one -->
 <script setup>
 import { playMark } from "#/shared/lib/sounds.js";

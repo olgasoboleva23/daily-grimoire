@@ -12,9 +12,9 @@ const MARKS = [{ tag: "m1", icon: "ðŸ«", name: "cocoa" }, { tag: "m2", icon: "ð
 let Search, testWindows, windows, flows, MarketItemWindow, MarksWindow, openWindow;
 before(async () => {
   window.moment = () => ({ format: () => "2026-11-20" });
-  ({ Search } = await import("#/components/uikit/Search/index.ts"));
+  ({ Search } = await import("#/shared/ui/Search/index.ts"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
-  ({ openWindow } = await import("#/components/uikit/Window/open.ts"));
+  ({ openWindow } = await import("#/shared/ui/Window/index.ts"));
   flows = await import("#/components/windows/market/MarketItemWindow/open.js");
   MarketItemWindow = (await import("#/components/windows/market/MarketItemWindow/index.vue"))
     .default;

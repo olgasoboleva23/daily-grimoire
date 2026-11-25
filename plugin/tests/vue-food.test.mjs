@@ -12,7 +12,7 @@ before(async () => {
   FoodPage = (await import("#/components/pages/food/index.vue")).default;
   ({ loadFood } = await import("#/controllers/food.js"));
   ({ DEFAULT_MARKS } = await import("#/models/food.js"));
-  ({ Search } = await import("#/components/uikit/Search/index.ts"));
+  ({ Search } = await import("#/shared/ui/Search/index.ts"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
 });
 const tick = () => new Promise(r => setTimeout(r));

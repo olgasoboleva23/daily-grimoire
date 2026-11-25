@@ -4,10 +4,10 @@
      widget applies them) -->
 <script setup>
 import { computed, reactive } from "vue";
-import UiWindow from "#/components/uikit/UiWindow/index.vue";
-import UiField from "#/components/uikit/UiField/index.vue";
-import UiFieldText from "#/components/uikit/UiFieldText/index.vue";
-import UiFieldChoice from "#/components/uikit/UiFieldChoice/index.vue";
+import UiWindow from "#/shared/ui/UiWindow/index.vue";
+import UiField from "#/shared/ui/UiField/index.vue";
+import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
+import UiFieldChoice from "#/shared/ui/UiFieldChoice/index.vue";
 import { MUSIC } from "#/controllers/widgets/pomodoro.js";
 
 const props = defineProps({ settings: { type: Object, required: true } });

@@ -6,18 +6,18 @@
 <script setup>
 import { computed, inject, ref } from "vue";
 import { Keymap, Notice } from "obsidian";
-import UiButton from "#/components/uikit/UiButton/index.vue";
-import UiInput from "#/components/uikit/UiInput/index.vue";
-import UiTable from "#/components/uikit/UiTable/index.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
+import UiInput from "#/shared/ui/UiInput/index.vue";
+import UiTable from "#/shared/ui/UiTable/index.vue";
 import { openUi } from "#/shared/host/index.js";
-import { vTip } from "#/components/uikit/tooltip.js";
+import { vTip } from "#/shared/ui/tooltip.js";
 import { addDays, weekOf } from "#/shared/lib/dates.js";
 import { dayLabel } from "#/models/course.js";
 import { foodWeek } from "#/models/food.js";
 import { pickTask } from "#/components/uikit/TaskSearch/index.js";
 import { removeEaten, setFoodNote, setTrainingTask } from "#/controllers/food.js";
 import { readMarks } from "#/controllers/widgets/market.js";
-import { openWindow } from "#/components/uikit/Window/open.ts";
+import { openWindow } from "#/shared/ui/Window/index.ts";
 import { addEaten, editEaten } from "#/components/windows/food/eaten.js";
 import MarksWindow from "#/components/windows/food/MarksWindow/index.vue";
 import { openDish } from "#/components/pages/recipes/DishWindow/open.js";

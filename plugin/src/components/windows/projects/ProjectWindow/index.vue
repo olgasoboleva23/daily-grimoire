@@ -5,12 +5,11 @@
      was on disk when the window opened) -->
 <script setup>
 import { computed, reactive } from "vue";
-import UiWindow from "#/components/uikit/UiWindow/index.vue";
-import UiField from "#/components/uikit/UiField/index.vue";
-import UiFieldText from "#/components/uikit/UiFieldText/index.vue";
-import UiFieldChoice from "#/components/uikit/UiFieldChoice/index.vue";
-import { filled } from "#/components/uikit/UiWindow/ready.js";
-import { useWrite } from "#/components/uikit/UiWindow/write.js";
+import UiWindow from "#/shared/ui/UiWindow/index.vue";
+import UiField from "#/shared/ui/UiField/index.vue";
+import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
+import UiFieldChoice from "#/shared/ui/UiFieldChoice/index.vue";
+import { filled, useWrite } from "#/shared/ui/Window/index.ts";
 import { editProject, newProject } from "#/controllers/projects.js";
 
 const props = defineProps({

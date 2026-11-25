@@ -83,7 +83,7 @@ function act(change) {
 
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from "vue";
-import { openWindow } from "#/components/uikit/Window/open.ts";
+import { openWindow } from "#/shared/ui/Window/index.ts";
 import PomodoroWindow from "#/components/windows/pomodoro/PomodoroWindow/index.vue";
 import PomodoroMini from "./PomodoroMini.vue";
 import PomodoroRing from "./PomodoroRing.vue";

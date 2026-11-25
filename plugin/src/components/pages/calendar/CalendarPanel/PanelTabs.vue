@@ -1,7 +1,7 @@
 <!-- the panel's tabs, each with its count -->
 <script setup>
 import { computed, inject } from "vue";
-import UiTabs from "#/components/uikit/UiTabs/index.vue";
+import UiTabs from "#/shared/ui/UiTabs/index.vue";
 import { taskStore } from "#/store/tasks.js";
 import { openProjects } from "#/helpers/panelGroups.js";
 

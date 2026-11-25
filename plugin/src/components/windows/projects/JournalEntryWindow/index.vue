@@ -6,12 +6,11 @@
 <script setup>
 import { computed, reactive } from "vue";
 import { FuzzySuggestModal, Notice } from "obsidian";
-import UiWindow from "#/components/uikit/UiWindow/index.vue";
-import UiField from "#/components/uikit/UiField/index.vue";
-import UiFieldText from "#/components/uikit/UiFieldText/index.vue";
-import UiFieldPick from "#/components/uikit/UiFieldPick/index.vue";
-import { filled } from "#/components/uikit/UiWindow/ready.js";
-import { useWrite } from "#/components/uikit/UiWindow/write.js";
+import UiWindow from "#/shared/ui/UiWindow/index.vue";
+import UiField from "#/shared/ui/UiField/index.vue";
+import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
+import UiFieldPick from "#/shared/ui/UiFieldPick/index.vue";
+import { filled, useWrite } from "#/shared/ui/Window/index.ts";
 import { app } from "#/shared/host/index.js";
 import { addNote, editNote } from "#/controllers/journal.js";
 import { taskStore } from "#/store/tasks.js";

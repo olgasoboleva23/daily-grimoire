@@ -1,9 +1,9 @@
 <!-- Savings: a jar per goal (its picture greyed above what's saved, the bar, a ✦ stamp per
      deposit), the payday's "put in" with ✓ done until the deposit is in, the next paydays -->
 <script setup>
-import UiButton from "#/components/uikit/UiButton/index.vue";
-import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
-import { askValue } from "#/components/uikit/FieldWindow/ask.js";
+import UiButton from "#/shared/ui/UiButton/index.vue";
+import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
+import { askValue } from "#/shared/ui/Window/index.ts";
 import { deposit, paydaySum } from "#/controllers/widgets/savings.js";
 
 defineProps({ state: { type: Object, required: true } });

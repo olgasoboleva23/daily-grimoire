@@ -6,7 +6,7 @@ let mount, UiTabs;
 before(async () => {
   GlobalRegistrator.register();
   ({ mount } = await import("@vue/test-utils"));
-  UiTabs = (await import("../src/components/uikit/UiTabs/index.vue")).default;
+  UiTabs = (await import("#/shared/ui/UiTabs/index.vue")).default;
 });
 
 test("UiTabs: scroll keeps the tabs in one row", () => {

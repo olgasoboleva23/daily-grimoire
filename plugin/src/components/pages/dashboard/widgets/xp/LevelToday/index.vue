@@ -1,7 +1,7 @@
 <!-- Level and XP: the level, total XP, progress to the next level; HP and MP bars, their reasons in
      the tooltip (v-tip) -->
 <script setup>
-import { vTip } from "#/components/uikit/tooltip.js";
+import { vTip } from "#/shared/ui/tooltip.js";
 
 defineProps({ state: { type: Object, required: true } });
 </script>

@@ -1,7 +1,7 @@
 <!-- Projects: a card per project with open tasks (a Done one too), a stage's name over them -->
 <script setup>
 import { computed, inject } from "vue";
-import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
+import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
 import GroupCard from "./GroupCard.vue";
 import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";
 import { T } from "#/models/calendarData.js";

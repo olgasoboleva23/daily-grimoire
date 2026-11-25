@@ -5,7 +5,7 @@ import { vault } from "./stubs/vault.mjs";
 import {
   createCourse, loadMeds, readCourse, saveCourse, setDayNote, tickMeds,
 } from "#/controllers/meds.js";
-import { Search } from "#/components/uikit/Search/index.ts";
+import { Search } from "#/shared/ui/Search/index.ts";
 import { pickCourse } from "#/components/windows/meds/CourseWindow/open.js";
 import { formValues } from "#/models/course.js";
 import { COURSES } from "#/shared/config/index.js";

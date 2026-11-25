@@ -5,10 +5,9 @@
      and the picks live here; WeightMode and BodyLogMode draw them. -->
 <script setup>
 import { computed, ref, watch } from "vue";
-import UiButton from "#/components/uikit/UiButton/index.vue";
-import UiMissing from "#/components/uikit/UiMissing.vue";
-import { confirm } from "#/components/uikit/ConfirmWindow/confirm.js";
-import { openWindow } from "#/components/uikit/Window/open.ts";
+import UiButton from "#/shared/ui/UiButton/index.vue";
+import UiMissing from "#/shared/ui/UiMissing.vue";
+import { confirm, openWindow } from "#/shared/ui/Window/index.ts";
 import NewJournalWindow from "#/components/windows/journals/NewJournalWindow/index.vue";
 import { WEIGHT } from "#/shared/config/index.js";
 import { app } from "#/shared/host/index.js";

@@ -3,9 +3,9 @@
      true once deleteStage wrote, against `stage`: the stage as it was on disk when it opened -->
 <script setup>
 import { ref } from "vue";
-import UiWindow from "#/components/uikit/UiWindow/index.vue";
-import UiField from "#/components/uikit/UiField/index.vue";
-import { useWrite } from "#/components/uikit/UiWindow/write.js";
+import UiWindow from "#/shared/ui/UiWindow/index.vue";
+import UiField from "#/shared/ui/UiField/index.vue";
+import { useWrite } from "#/shared/ui/Window/index.ts";
 import { deleteStage } from "#/controllers/projects.js";
 
 const props = defineProps({

@@ -3,7 +3,7 @@
      scroll: one row, scrolls sideways when the tabs do not fit (the courses); a tab's `title`:
      its tip -->
 <script setup>
-import { vTip } from "#/components/uikit/tooltip.js";
+import { vTip } from "#/shared/ui/tooltip.js";
 
 defineProps({
   tabs: { type: Array, required: true },

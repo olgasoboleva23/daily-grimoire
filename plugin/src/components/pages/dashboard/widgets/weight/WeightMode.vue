@@ -1,9 +1,9 @@
 <!-- the weight: the last value and the change vs a week ago, a field for today (v-model: what's
      typed; @save), the 30-day line, ✦ list -->
 <script setup>
-import UiAddForm from "#/components/uikit/UiAddForm/index.vue";
-import UiChart from "#/components/uikit/UiChart/index.vue";
-import UiNoteLink from "#/components/uikit/UiNoteLink.vue";
+import UiAddForm from "#/shared/ui/UiAddForm/index.vue";
+import UiChart from "#/shared/ui/UiChart/index.vue";
+import UiNoteLink from "#/shared/ui/UiNoteLink.vue";
 import { WEIGHT } from "#/shared/config/index.js";
 
 defineProps({ weight: { type: Object, required: true } });

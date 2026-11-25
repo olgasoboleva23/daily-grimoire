@@ -8,11 +8,11 @@
 <script setup>
 import { computed } from "vue";
 import { Notice } from "obsidian";
-import UiButton from "#/components/uikit/UiButton/index.vue";
-import UiCard from "#/components/uikit/UiCard/index.vue";
-import UiCheckbox from "#/components/uikit/UiCheckbox/index.vue";
-import UiInput from "#/components/uikit/UiInput/index.vue";
-import UiTable from "#/components/uikit/UiTable/index.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
+import UiCard from "#/shared/ui/UiCard/index.vue";
+import UiCheckbox from "#/shared/ui/UiCheckbox/index.vue";
+import UiInput from "#/shared/ui/UiInput/index.vue";
+import UiTable from "#/shared/ui/UiTable/index.vue";
 import { TIMES, next } from "#/models/course.js";
 import { setDayNote, tickMeds } from "#/controllers/meds.js";
 import { openEditCourse } from "#/components/windows/meds/CourseWindow/open.js";

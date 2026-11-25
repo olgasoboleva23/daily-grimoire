@@ -2,7 +2,7 @@
      day), the done ones ✓ done hides as ✓N. A click on the box's edge, its pill or a group
      heading folds / unfolds the day (saved) -->
 <script setup>
-import { vTip } from "#/components/uikit/tooltip.js";
+import { vTip } from "#/shared/ui/tooltip.js";
 import { computed, inject } from "vue";
 import TaskRow from "./TaskRow.vue";
 import DoneMarks from "./DoneMarks.vue";

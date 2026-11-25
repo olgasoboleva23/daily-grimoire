@@ -1,8 +1,8 @@
 <!-- Quests: the tab's day, what is left of its plan (open tasks due that day), then what was done
      that day; a box ticks a task through the Tasks plugin, a done one's box takes it back -->
 <script setup>
-import UiCheckbox from "#/components/uikit/UiCheckbox/index.vue";
-import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
+import UiCheckbox from "#/shared/ui/UiCheckbox/index.vue";
+import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
 import { tickTask } from "#/controllers/tasks.js";
 
 defineProps({ state: { type: Object, required: true } });

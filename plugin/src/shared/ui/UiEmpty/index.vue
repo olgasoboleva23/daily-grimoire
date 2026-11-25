@@ -1,7 +1,7 @@
 <!-- An empty message, with an optional action in the slot.
      onBackground uses UiCard to keep it readable directly on the page background. -->
 <script setup>
-import UiCard from "#/components/uikit/UiCard/index.vue";
+import UiCard from "#/shared/ui/UiCard/index.vue";
 
 defineProps({
   onBackground: { type: Boolean, default: false },

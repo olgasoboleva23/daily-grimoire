@@ -4,7 +4,7 @@
 <script setup>
 import { vHoldAction } from "#/shared/lib/holdAction.js";
 import { computed, inject, reactive, watch } from "vue";
-import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
 import TaskText from "#/components/pages/calendar/TaskText.vue";
 import TaskButtons from "#/components/pages/calendar/TaskButtons.vue";
 import { T } from "#/models/calendarData.js";

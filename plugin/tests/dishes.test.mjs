@@ -9,7 +9,7 @@ import {
   addToMarket, editMarketItem, loadCelestialMarket, readMarketItem,
 } from "#/controllers/widgets/market.js";
 import { loadFood } from "#/controllers/food.js";
-import { Search } from "#/components/uikit/Search/index.ts";
+import { Search } from "#/shared/ui/Search/index.ts";
 import { pickRecipeNote } from "#/components/windows/recipes/DishFormWindow/pickRecipeNote.js";
 import { Notice } from "obsidian";
 import { foodChoices, foodWeek } from "#/models/food.js";

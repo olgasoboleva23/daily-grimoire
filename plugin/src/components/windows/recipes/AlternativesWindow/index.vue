@@ -4,10 +4,10 @@
      the dish form keeps them on the line, the dish's write saves them -->
 <script setup>
 import { reactive } from "vue";
-import UiWindow from "#/components/uikit/UiWindow/index.vue";
-import UiFieldText from "#/components/uikit/UiFieldText/index.vue";
-import UiFieldPick from "#/components/uikit/UiFieldPick/index.vue";
-import UiFieldList from "#/components/uikit/UiFieldList/index.vue";
+import UiWindow from "#/shared/ui/UiWindow/index.vue";
+import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
+import UiFieldPick from "#/shared/ui/UiFieldPick/index.vue";
+import UiFieldList from "#/shared/ui/UiFieldList/index.vue";
 
 const props = defineProps({
   item: { type: String, default: null },     // the ingredient's name (none picked yet: …)

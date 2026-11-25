@@ -11,8 +11,7 @@ import { addMarketItem } from "#/components/windows/market/MarketItemWindow/open
 import {
   openEditCourse, openNewCourse, pickCourse,
 } from "#/components/windows/meds/CourseWindow/open.js";
-import { openWindow } from "#/components/uikit/Window/open.ts";
-import { askValue } from "#/components/uikit/FieldWindow/ask.js";
+import { openWindow, askValue } from "#/shared/ui/Window/index.ts";
 import CollectionItemWindow from "#/components/windows/notes/CollectionItemWindow/index.vue";
 import NewJournalWindow from "#/components/windows/journals/NewJournalWindow/index.vue";
 import BuyRewardWindow from "#/components/windows/shop/BuyRewardWindow/index.vue";

@@ -2,7 +2,7 @@
 <script setup>
 import { ref } from "vue";
 import { isMuted, toggleMute } from "#/shared/lib/sounds.js";
-import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
 import { openDaily } from "#/controllers/widgets/dailyNote.js";
 
 defineProps({ state: { type: Object, required: true } });

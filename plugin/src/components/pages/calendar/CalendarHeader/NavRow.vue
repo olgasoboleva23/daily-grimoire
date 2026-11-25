@@ -3,7 +3,7 @@
 <script setup>
 import { computed, inject } from "vue";
 import { Platform } from "obsidian";
-import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
 import { T } from "#/models/calendarData.js";
 import { goTo } from "#/store/calendar.js";
 import { addDays, addMonths } from "#/shared/lib/dates.js";

@@ -6,10 +6,9 @@
 <script setup>
 import { computed, inject, nextTick, onMounted, ref, watch } from "vue";
 import { MarkdownRenderer, Notice } from "obsidian";
-import { confirm } from "#/components/uikit/ConfirmWindow/confirm.js";
+import { confirm, openWindow, WINDOW } from "#/shared/ui/Window/index.ts";
 import { openNote, app } from "#/shared/host/index.js";
-import { openWindow, WINDOW } from "#/components/uikit/Window/open.ts";
-import UiWindow from "#/components/uikit/UiWindow/index.vue";
+import UiWindow from "#/shared/ui/UiWindow/index.vue";
 import { openDishForm } from "#/components/windows/recipes/DishFormWindow/open.js";
 import CartWindow from "#/components/windows/recipes/CartWindow/index.vue";
 import { loadRecipes, removeDish } from "#/controllers/dishes.js";

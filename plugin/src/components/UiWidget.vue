@@ -14,8 +14,8 @@ import {
 import { app, blockDv } from "#/shared/host/index.js";
 import { taskStore } from "#/store/tasks.js";
 import { TASKS } from "#/shared/config/index.js";
-import UiCard from "#/components/uikit/UiCard/index.vue";
-import UiFailed from "#/components/uikit/UiFailed.vue";
+import UiCard from "#/shared/ui/UiCard/index.vue";
+import UiFailed from "#/shared/ui/UiFailed.vue";
 
 const props = defineProps({ definition: { type: Object, required: true } });
 const root = ref(null), owner = useObsidian(), state = reactive({ data: null, error: null });

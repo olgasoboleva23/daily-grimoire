@@ -5,7 +5,7 @@
      A place's own classes: class="…" on it (Vue adds them after these). Its text is the slot; a
      click is the parent's @click -->
 <script setup>
-import { vTip } from "#/components/uikit/tooltip.js";
+import { vTip } from "#/shared/ui/tooltip.js";
 
 defineProps({
   kind: { type: String, default: "round" },

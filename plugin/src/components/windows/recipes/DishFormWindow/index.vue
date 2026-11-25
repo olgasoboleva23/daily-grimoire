@@ -7,15 +7,13 @@
      against `before`: the dish as it was on disk when the window opened) -->
 <script setup>
 import { computed, reactive } from "vue";
-import UiWindow from "#/components/uikit/UiWindow/index.vue";
-import UiField from "#/components/uikit/UiField/index.vue";
-import UiFieldText from "#/components/uikit/UiFieldText/index.vue";
-import UiFieldChoice from "#/components/uikit/UiFieldChoice/index.vue";
-import UiFieldPick from "#/components/uikit/UiFieldPick/index.vue";
-import UiFieldList from "#/components/uikit/UiFieldList/index.vue";
-import { filled, groupsFilled } from "#/components/uikit/UiWindow/ready.js";
-import { useWrite } from "#/components/uikit/UiWindow/write.js";
-import { openWindow } from "#/components/uikit/Window/open.ts";
+import UiWindow from "#/shared/ui/UiWindow/index.vue";
+import UiField from "#/shared/ui/UiField/index.vue";
+import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
+import UiFieldChoice from "#/shared/ui/UiFieldChoice/index.vue";
+import UiFieldPick from "#/shared/ui/UiFieldPick/index.vue";
+import UiFieldList from "#/shared/ui/UiFieldList/index.vue";
+import { filled, groupsFilled, useWrite, openWindow } from "#/shared/ui/Window/index.ts";
 import {
   openEditItem, pickOrAddProduct,
 } from "#/components/windows/market/MarketItemWindow/open.js";

@@ -3,7 +3,7 @@
 <script setup>
 import { ICON } from "#/controllers/widgets/pomodoro.js";
 import PomodoroStars from "./PomodoroStars.vue";
-import { vTip } from "#/components/uikit/tooltip.js";
+import { vTip } from "#/shared/ui/tooltip.js";
 
 defineProps({ shown: { type: Object, required: true } });
 defineEmits(["toggle", "play", "reset", "skip", "gear", "mode"]);

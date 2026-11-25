@@ -1,4 +1,4 @@
-// The test frame for windows (uikit/Window/open.ts): testWindows() puts it in place of Obsidian's
+// The test frame for windows (shared/ui/Window/index.ts): testWindows() puts it in place of Obsidian's
 // Modal, so a test opens a window the way its opener does and answers it. It loads Vue: import it
 // after happy-dom is registered (`await import("./stubs/windows.mjs")` in before()).
 //   const windows = testWindows();      // windows.restore() at the end
@@ -11,7 +11,7 @@
 // dish form over a product window); `all` is the ones still open.
 import { flushPromises, mount } from "@vue/test-utils";
 import { Component } from "obsidian";
-import { enterKey, setFrame, WINDOW } from "#/components/uikit/Window/open.ts";
+import { enterKey, setFrame, WINDOW } from "#/shared/ui/Window/index.ts";
 
 const settle = async () => {
   await flushPromises();

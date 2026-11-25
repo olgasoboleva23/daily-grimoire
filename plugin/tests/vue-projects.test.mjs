@@ -17,7 +17,7 @@ before(async () => {
   ({ testWindows } = await import("./stubs/windows.mjs"));
   config = (await import("#/shared/config/index.js")).default;
   ({ PROMPT_VARIABLES } = await import("#/controllers/prompts.js"));
-  ({ Search } = await import("#/components/uikit/Search/index.ts"));
+  ({ Search } = await import("#/shared/ui/Search/index.ts"));
   ({ taskStore } = await import("#/store/tasks.js"));
   Projects = (await import("#/components/pages/projects/index.vue")).default;
 });

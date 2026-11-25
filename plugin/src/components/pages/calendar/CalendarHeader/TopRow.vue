@@ -1,7 +1,7 @@
 <!-- the top row: the date field, ＋ task -->
 <script setup>
 import { computed, inject } from "vue";
-import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
 import { goTo } from "#/store/calendar.js";
 import { app } from "#/shared/host/index.js";
 import { APP_NAME } from "#/shared/config/index.js";

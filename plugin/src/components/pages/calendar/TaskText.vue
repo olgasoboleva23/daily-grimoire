@@ -1,7 +1,7 @@
 <!-- a task's difficulty stars (in the area's colour), its text, its sticker (withIcon: the area's
      icon in front) -->
 <script setup>
-import { vTip } from "#/components/uikit/tooltip.js";
+import { vTip } from "#/shared/ui/tooltip.js";
 import { daytimeMark } from "#/models/calendarData.js";
 import { computed } from "vue";
 

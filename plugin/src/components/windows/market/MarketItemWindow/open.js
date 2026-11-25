@@ -8,9 +8,8 @@ import { app } from "#/shared/host/index.js";
 import { dm } from "#/shared/lib/dates.js";
 import { findChoices } from "#/shared/lib/find.js";
 import { catLabel, marketCats } from "#/models/market.js";
-import { openWindow } from "#/components/uikit/Window/open.ts";
-import { askValue } from "#/components/uikit/FieldWindow/ask.js";
-import { Search } from "#/components/uikit/Search/index.ts";
+import { openWindow, askValue } from "#/shared/ui/Window/index.ts";
+import { Search } from "#/shared/ui/Search/index.ts";
 import {
   addToMarket, readMarketChoices, readMarketItem, readMarks,
 } from "#/controllers/widgets/market.js";

@@ -4,7 +4,7 @@
      FinanceLatest draw it. -->
 <script setup>
 import { computed, ref } from "vue";
-import UiEmpty from "#/components/uikit/UiEmpty/index.vue";
+import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
 import FinanceTotals from "./FinanceTotals.vue";
 import FinanceCategories from "./FinanceCategories.vue";
 import FinanceTrend from "./FinanceTrend.vue";

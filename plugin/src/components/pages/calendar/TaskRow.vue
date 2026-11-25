@@ -8,9 +8,9 @@
      phone a left swipe reveals its actions -->
 <script setup>
 import { vHoldAction } from "#/shared/lib/holdAction.js";
-import { vTip } from "#/components/uikit/tooltip.js";
+import { vTip } from "#/shared/ui/tooltip.js";
 import { computed, inject, ref } from "vue";
-import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
 import TaskText from "./TaskText.vue";
 import TaskButtons from "./TaskButtons.vue";
 import { useDragSource, useReorder } from "#/composables/drag.js";

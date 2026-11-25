@@ -2,11 +2,11 @@
 <script setup>
 import { computed, reactive } from "vue";
 import { Notice } from "obsidian";
-import UiWindow from "#/components/uikit/UiWindow/index.vue";
-import UiField from "#/components/uikit/UiField/index.vue";
-import UiFieldChoice from "#/components/uikit/UiFieldChoice/index.vue";
-import UiFieldText from "#/components/uikit/UiFieldText/index.vue";
-import { filled } from "#/components/uikit/UiWindow/ready.js";
+import UiWindow from "#/shared/ui/UiWindow/index.vue";
+import UiField from "#/shared/ui/UiField/index.vue";
+import UiFieldChoice from "#/shared/ui/UiFieldChoice/index.vue";
+import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
+import { filled } from "#/shared/ui/Window/index.ts";
 import config from "#/shared/config/index.js";
 import { variantNames, variantsProblem } from "#/models/task.js";
 

@@ -3,10 +3,9 @@
      tasks), its task rows and + task (the New task window, then the id onto this stage) -->
 <script setup>
 import { computed, ref } from "vue";
-import UiButton from "#/components/uikit/UiButton/index.vue";
-import UiCard from "#/components/uikit/UiCard/index.vue";
-import { askValue } from "#/components/uikit/FieldWindow/ask.js";
-import { openWindow } from "#/components/uikit/Window/open.ts";
+import UiButton from "#/shared/ui/UiButton/index.vue";
+import UiCard from "#/shared/ui/UiCard/index.vue";
+import { askValue, openWindow } from "#/shared/ui/Window/index.ts";
 import DeleteStageWindow from "#/components/windows/projects/DeleteStageWindow/index.vue";
 import { newTask } from "#/components/windows/tasks/TaskWindow/open.js";
 import { addTaskToStage, readStage, renameStage } from "#/controllers/projects.js";

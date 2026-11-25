@@ -2,7 +2,7 @@
      each piece labelled with its icon and done / all, the done part brighter; an area with none
      this week a grey icon after it. A piece: only that area's tasks; again: all -->
 <script setup>
-import { vTip } from "#/components/uikit/tooltip.js";
+import { vTip } from "#/shared/ui/tooltip.js";
 import { computed, inject } from "vue";
 
 const view = inject("calendar");

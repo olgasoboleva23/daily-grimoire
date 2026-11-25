@@ -9,7 +9,7 @@ before(async () => {
   ({ Component } = await import("obsidian"));
   ({ useVueApp } = await import("#/shared/lib/vueApp.ts"));
   ({ h, ref, nextTick } = await import("vue"));
-  Drawer = (await import("#/components/uikit/UiDrawer/index.vue")).default;
+  Drawer = (await import("#/shared/ui/UiDrawer/index.vue")).default;
 });
 
 test("the tab's shadow drawer traps Tab, closes on Escape and restores the actual button's focus", async () => {
@@ -62,7 +62,7 @@ test("task sounds recognise a checkbox across the shadow boundary and in native 
 });
 
 test("shadow tooltips use the native body popup, update and clean up on leave, click and unmount", async () => {
-  const { vTip } = await import("#/components/uikit/tooltip.js");
+  const { vTip } = await import("#/shared/ui/tooltip.js");
   const host = document.body.appendChild(document.createElement("div"));
   const root = host.attachShadow({ mode: "open" });
   const button = root.appendChild(document.createElement("button"));

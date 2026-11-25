@@ -4,7 +4,7 @@
      leaves; phone: the bottom bar, an icon above a small label -->
 <script setup>
 import { ref } from "vue";
-import UiButton from "#/components/uikit/UiButton/index.vue";
+import UiButton from "#/shared/ui/UiButton/index.vue";
 
 const props = defineProps({
   items: { type: Array, required: true },
