@@ -10,9 +10,8 @@ import { findChoices } from "#/shared/lib/find.js";
 import { catLabel, marketCats } from "#/models/market.js";
 import { openWindow, askValue } from "#/shared/ui/Window/index.ts";
 import { Search } from "#/shared/ui/Search/index.ts";
-import {
-  addToMarket, readMarketChoices, readMarketItem, readMarks,
-} from "#/controllers/widgets/market.js";
+import { addToMarket, readMarketChoices, readMarketItem } from "#/controllers/widgets/market.js";
+import { readMarks } from "#/entities/food-log/index.js";
 import { readProducts } from "#/controllers/dishes.js";
 import MarketItemWindow from "./index.vue";
 

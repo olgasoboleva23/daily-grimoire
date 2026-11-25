@@ -5,17 +5,14 @@ import {
   MarketItem, catOf, historyOf, marketCats, marketChoices, openKeys,
   supplyStats,
 } from "#/models/market.js";
-import { marksOf } from "#/models/food.js";
 import { Notice } from "obsidian";
 import { collection, appendLine, editLine, readJson, serial } from "#/shared/vault/index.js";
 import { nextId } from "#/shared/lib/ids.js";
 import { parseNote } from "#/shared/lib/noteLines.js";
 import { app } from "#/shared/host/index.js";
-import { FOOD_DATA, MARKET_NOTE, MARKET_RECORDS } from "#/shared/config/index.js";
+import { MARKET_NOTE, MARKET_RECORDS } from "#/shared/config/index.js";
 
 const catalog = collection(MARKET_RECORDS);
-
-export const readMarks = async () => marksOf(await readJson(FOOD_DATA, {}));
 
 export const readMarketItem = async id => (await readJson(catalog.path, {}))[id] ?? null;
 

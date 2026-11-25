@@ -1,23 +1,8 @@
-// The food journal (pure; tests/food.test.mjs). The products are the market's items of type
-// food (Market/items.json: { name, type, marks: [tag] }); a dish (dishes.json: { name, type,
-// ingredients: [{ item, amount, alt?: [{ item, amount }] }], link }) uses its main products' marks.
-// food.json: the marks ({ tag, icon, name }: a tag kept once made, so a mark renamed keeps its
-// products) and the training task's id. log.json: a day by date, { eaten: [product or dish id],
-// note }; a day with nothing eaten and no note isn't kept. The picker's order: recently eaten
-// first. The week's rows for the food page: what was eaten with its marks' icons, the marks
-// counted, each free journal's level after its lag (a rash shows the next day), the medication
-// courses on that day, the note.
+// The food page menu, recent choices and weekly journal rows.
 import { addDays, diffDays } from "#/shared/lib/dates.js";
 import { byName } from "#/shared/lib/find.js";
 import { inRanges, rangesOf } from "#/shared/lib/ranges.js";
-
-export const DEFAULT_MARKS = [
-  { tag: "m1", icon: "🍫", name: "какао" },
-  { tag: "m2", icon: "🥛", name: "молоко" },
-  { tag: "m3", icon: "🥛↓", name: "безлактозное молоко" },
-];
-
-export const marksOf = data => data.marks ?? DEFAULT_MARKS;
+import { dayNote, eaten } from "#/entities/food-log/index.js";
 
 export function dishList({ items, dishes }) {
   const products = new Map(items.map(p => [p.id, p]));
@@ -72,37 +57,6 @@ export function foodChoices({ items, dishes, marks, log, today }) {
     .map(({ id, kind, name, ingredients, icons }) =>
       ({ id, kind, name, ingredients, icons, recent: last.has(id) }));
 }
-
-export const withMarks = (data, marks) => ({ ...data, marks });
-
-export const withTask = (data, id) => ({ ...data, task: id });
-
-export const eaten = (log, date) => log[date]?.eaten ?? [];
-
-export const dayNote = (log, date) => log[date]?.note ?? "";
-
-// the log with the day set; an empty one dropped
-function withDay(log, date, day) {
-  if (day.eaten.length || day.note) return { ...log, [date]: day };
-  const rest = { ...log };
-
-  delete rest[date];
-  return rest;
-}
-
-export const withEaten = (log, date, id) =>
-  withDay(log, date, { eaten: [...eaten(log, date), id], note: dayNote(log, date) });
-
-// the day's n-th eaten taken off (out of range: the log as it was)
-export function withoutEaten(log, date, n) {
-  const list = eaten(log, date);
-
-  if (n < 0 || n >= list.length) return log;
-  return withDay(log, date, { eaten: list.filter((_, i) => i !== n), note: dayNote(log, date) });
-}
-
-export const withNote = (log, date, text) =>
-  withDay(log, date, { eaten: eaten(log, date), note: text.trim() });
 
 // journals: [{ path, name, lag, entries: Map date → { level, reasons } }]; courses: [{ id, name,
 // start, days, meds: [{ code, name, days }], taken: Map date → the codes with a ✅ that day }]

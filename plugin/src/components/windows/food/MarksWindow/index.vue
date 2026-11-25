@@ -7,7 +7,7 @@ import UiWindow from "#/shared/ui/UiWindow/index.vue";
 import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
 import UiFieldList from "#/shared/ui/UiFieldList/index.vue";
 import { groupsFilled, useWrite } from "#/shared/ui/Window/index.ts";
-import { saveMarks } from "#/controllers/food.js";
+import { saveMarks } from "#/entities/food-log/index.js";
 
 const props = defineProps({
   marks: { type: Array, required: true },   // [{ tag, icon, name }]

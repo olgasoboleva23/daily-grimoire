@@ -3,8 +3,9 @@
 import { Notice } from "obsidian";
 import { collection, readJson, serial, validNoteLink } from "#/shared/vault/index.js";
 import { nextId } from "#/shared/lib/ids.js";
-import config, { DISHES, FOOD_DATA, FOOD_LOG, MARKET_RECORDS } from "#/shared/config/index.js";
-import { dishList, marksOf } from "#/models/food.js";
+import config, { DISHES, MARKET_RECORDS } from "#/shared/config/index.js";
+import { marksOf, readFood, readLog } from "#/entities/food-log/index.js";
+import { dishList } from "#/models/food.js";
 import { productsToList } from "./widgets/market.js";
 
 export { productsToList };
@@ -21,7 +22,7 @@ export async function readProducts() {
 
 export async function readFoodCatalog() {
   const [items, raw, food] = await Promise.all([
-    readProducts(), readJson(DISHES, {}), readJson(FOOD_DATA, {}),
+    readProducts(), readJson(DISHES, {}), readFood(),
   ]);
 
   return {
@@ -62,7 +63,7 @@ export const addDish = values => write(async () => {
 
   if (!next) return null;
   // The log may still refer to a deleted dish. Never reuse that id.
-  const logged = Object.values(await readJson(FOOD_LOG, {})).flatMap(d => d.eaten ?? []);
+  const logged = Object.values(await readLog()).flatMap(d => d.eaten ?? []);
   let id;
   await dishes.edit(all => {
     id = nextId("d", [...Object.keys(all), ...logged]);

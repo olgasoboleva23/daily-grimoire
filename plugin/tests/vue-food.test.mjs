@@ -11,7 +11,7 @@ before(async () => {
   ({ mount } = await import("@vue/test-utils"));
   FoodPage = (await import("#/components/pages/food/index.vue")).default;
   ({ loadFood } = await import("#/controllers/food.js"));
-  ({ DEFAULT_MARKS } = await import("#/models/food.js"));
+  ({ DEFAULT_MARKS } = await import("#/entities/food-log/index.js"));
   ({ Search } = await import("#/shared/ui/Search/index.ts"));
   ({ testWindows } = await import("./stubs/windows.mjs"));
 });
@@ -116,7 +116,7 @@ test("loadFood: no files yet: the default marks, nothing eaten, no task", async 
 
 test("setFoodNote, removeEaten: one day of log.json changed", async () => {
   const { files } = vault({ [FOOD_LOG]: JSON.stringify(LOG) });
-  const { removeEaten, setFoodNote } = await import("#/controllers/food.js");
+  const { removeEaten, setFoodNote } = await import("#/entities/food-log/index.js");
 
   await setFoodNote("2026-11-02", " пятна ");
   assert.equal(JSON.parse(files[FOOD_LOG])["2026-11-02"].note, "пятна");
@@ -127,7 +127,7 @@ test("setFoodNote, removeEaten: one day of log.json changed", async () => {
 test("saveMarks trims the values, assigns a tag and preserves the training task", async () => {
   const FOOD = { marks: [{ tag: "m2", icon: "🥛", name: "молоко" }], task: "t5" };
   const { files } = vault({ [FOOD_DATA]: JSON.stringify(FOOD) });
-  const { saveMarks } = await import("#/controllers/food.js");
+  const { saveMarks } = await import("#/entities/food-log/index.js");
 
   await saveMarks([...FOOD.marks, { icon: " 🍓 ", name: " ягоды " }]);
   assert.deepEqual(JSON.parse(files[FOOD_DATA]), {
@@ -137,7 +137,7 @@ test("saveMarks trims the values, assigns a tag and preserves the training task"
 
 test("logEaten appends a serving and keeps the day's note", async () => {
   const { files } = vault({ [FOOD_LOG]: JSON.stringify(LOG) });
-  const { logEaten } = await import("#/controllers/food.js");
+  const { logEaten } = await import("#/entities/food-log/index.js");
   const date = "2026-11-02";
 
   await logEaten(date, "m1");

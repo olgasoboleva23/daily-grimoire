@@ -5,7 +5,8 @@ import { prepareFuzzySearch } from "obsidian";
 import { app } from "#/shared/host/index.js";
 import { foodChoices } from "#/models/food.js";
 import { Search } from "#/shared/ui/Search/index.ts";
-import { loadFood, logEaten } from "#/controllers/food.js";
+import { loadFood } from "#/controllers/food.js";
+import { logEaten } from "#/entities/food-log/index.js";
 import { readDish } from "#/controllers/dishes.js";
 import {
   openEditItem, openNewProduct,

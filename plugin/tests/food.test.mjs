@@ -1,9 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { dishList, foodChoices, foodWeek } from "#/models/food.js";
 import {
-  DEFAULT_MARKS, dayNote, dishList, eaten, foodChoices, foodWeek, marksOf, withEaten,
-  withMarks, withNote, withoutEaten, withTask,
-} from "#/models/food.js";
+  DEFAULT_MARKS, dayNote, eaten, marksOf, withEaten, withMarks, withNote, withoutEaten, withTask,
+} from "#/entities/food-log/index.js";
 import { forFood } from "#/entities/course/index.js";
 
 const MARKS = [{ tag: "m1", icon: "🍫", name: "какао" }];
