@@ -43,28 +43,36 @@ import FoodPage from "#/components/pages/food/index.vue";
 // the widgets: name → { view: the .vue, load(ctx): its data, cardButton: a .vue next to the
 // card's title, bodyClass: a class on the card's body, watches: the files it reads (a folder:
 // ending in /): only their changes load it again (any other note's doesn't), follows: false to
-// load once }, where ctx is { dv, app, sourcePath } (dv: blockDv)
+// load once, dataview: the paths read through Dataview (including [] for its date API) }
 const TASK_FILES = `${TASKS}/`, LEDGER_FILES = `${LEDGER}/`;
 
 export const blocks = {
-  xpToday: { view: XpToday, load: loadXpToday, watches: [TASK_FILES] },
-  quests: { view: QuestsCard, load: loadQuests, watches: [TASK_FILES] },
-  levelToday: { view: LevelToday, load: loadLevelToday, watches: [TASK_FILES, CYCLE] },
-  lifeAreas: { view: LifeAreas, load: loadLifeAreas, watches: [TASK_FILES] },
+  xpToday: { dataview: [], view: XpToday, load: loadXpToday, watches: [TASK_FILES] },
+  quests: { dataview: [], view: QuestsCard, load: loadQuests, watches: [TASK_FILES] },
+  levelToday: {
+    view: LevelToday, load: loadLevelToday, dataview: [CYCLE], watches: [TASK_FILES, CYCLE],
+  },
+  lifeAreas: { dataview: [], view: LifeAreas, load: loadLifeAreas, watches: [TASK_FILES] },
   shop: {
     view: ShopWidget, load: loadShop, bodyClass: "ui-shop",
+    dataview: [`${SHOP}.md`, `${PURCHASES}.md`],
     watches: [TASK_FILES, `${SHOP}.md`, `${PURCHASES}.md`],
   },
   supplies: { view: SuppliesWidget, load: loadSupplies, watches: [MARKET_NOTE, MARKET_RECORDS] },
-  goals: { view: GoalsWidget, load: loadGoals, watches: [`${GOALS}.md`, TASK_FILES] },
+  goals: {
+    view: GoalsWidget, load: loadGoals, dataview: [`${GOALS}.md`],
+    watches: [`${GOALS}.md`, TASK_FILES],
+  },
   savings: { view: SavingsJars, load: loadSavings, watches: [`${SAVINGS}/`] },
-  cycle: { view: CycleWidget, load: loadCycle, watches: [CYCLE] },
+  cycle: { dataview: [CYCLE], view: CycleWidget, load: loadCycle, watches: [CYCLE] },
   finance: { view: FinanceMonths, load: loadFinance, watches: [LEDGER_FILES, RULES] },
   financeMonth: { view: FinanceLine, load: loadFinanceLine, watches: [LEDGER_FILES, RULES] },
   // a reload keeps the typed picks
-  weight: { view: WeightCard, load: loadWeight, watches: [WEIGHT, `${JOURNALS}/`, CYCLE] },
+  weight: {
+    view: WeightCard, load: loadWeight, dataview: [CYCLE], watches: [WEIGHT, `${JOURNALS}/`, CYCLE],
+  },
   // the tab's date only (useTabDate)
-  dailyNote: { view: DailyNoteOpen, load: loadDailyNote, watches: [] },
+  dailyNote: { dataview: [], view: DailyNoteOpen, load: loadDailyNote, watches: [] },
   pomodoro: { view: PomodoroTimer, load: loadPomodoro, follows: false },
   celestialMarket: {
     view: CelestialMarket,

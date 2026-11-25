@@ -64,19 +64,18 @@ onMounted(() => {
 
   catchUp = redraws.catchUp;
   owner.registerEvent(app.workspace.on("ui:theme", redraw));
-  const taskFiles = `${TASKS}/`, others = def.watches?.filter(w => w !== taskFiles);
-  const watched = others && (path =>
-    others.some(w => w.endsWith("/") ? path.startsWith(w) : path === w));
+  const taskFiles = `${TASKS}/`, dataview = def.dataview;
+  const native = def.watches?.filter(path => path !== taskFiles && !dataview?.includes(path));
 
   if (def.watches?.includes(taskFiles)) owner.register(watch(taskStore.version, redraw));
-  const linked = def.watchesNote && (path => def.watchesNote(state.data, path));
+  if (native?.length || def.watchesNote) useFileChanges(owner, redraw, path =>
+    native?.some(w => w.endsWith("/") ? path.startsWith(w) : path === w)
+      || def.watchesNote?.(state.data, path), true);
+  if (dataview?.length)
+    useDataviewChanges(owner, redraw, { watched: path => dataview.includes(path) });
 
-  useDataviewChanges(owner, redraw, { watched, linked, note: def.note, delay: 1000 });
-  const plain = others?.filter(w => !w.endsWith("/") && !w.endsWith(".md"));
-
-  if (plain?.length) useFileChanges(owner, redraw, plain);
   useTabDate(owner, el(), retry);
-  useWhenIndexed(owner, retry);
+  if (dataview) useWhenIndexed(owner, retry); else retry();
 });
 defineExpose({ state, refresh });
 </script>

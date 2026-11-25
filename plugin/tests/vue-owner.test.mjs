@@ -1,7 +1,7 @@
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
-import { setApp } from "#/helpers/app.js";
+import { app, setApp } from "#/helpers/app.js";
 
 let VueHost, defineComponent, h, nextTick;
 // an app whose events the test fires: on(name, fn) → a ref; fire(name, …args)
@@ -78,7 +78,7 @@ test("an error shows with retry, which loads again", async () => {
 });
 
 test("a Dataview change reloads it; a hidden block only once it shows", async () => {
-  const s = slow(), { host, el } = mount({ load: s.load });
+  const s = slow(), { host, el } = mount({ load: s.load, dataview: ["x.md"] });
   s.loads[0].ok({ n: 1 }); await settle();
   el.dataset.hidden = "1";
   bus.fire("dataview:metadata-change", "update", { path: "x.md" });
@@ -92,7 +92,7 @@ test("a Dataview change reloads it; a hidden block only once it shows", async ()
 test("a card's block without a box of its own (display: contents) counts as shown", async () => {
   const el = document.body.appendChild(document.createElement("div"));
   el.style.display = "contents";
-  const s = slow(), { host } = mount({ load: s.load }, el);
+  const s = slow(), { host } = mount({ load: s.load, dataview: ["x.md"] }, el);
   s.loads[0].ok({ n: 1 }); await settle();
   bus.fire("dataview:metadata-change", "update", { path: "x.md" });
   assert.equal(s.loads.length, 2);
@@ -171,7 +171,7 @@ test("watches: a widget reloads for a change in its own files only", async () =>
   s.loads[0].ok({ n: 1 }); await settle();
   bus.fire("dataview:metadata-change", "update", { path: "00 System/Data/Tasks/Master.md" });
   assert.equal(s.loads.length, 1);
-  bus.fire("dataview:metadata-change", "update", { path: "00 System/Data/Weight.md" });
+  bus.fire("modify", { path: "00 System/Data/Weight.md" });
   assert.equal(s.loads.length, 2);
   host.unload();
 });
@@ -187,6 +187,25 @@ test("watches: the task files reload it from the plugin's store, at once, not th
   taskStore.put("00 System/Data/Tasks/Master.md", "- [ ] a"); await settle();
   assert.equal(s.loads.length, 2);
   host.unload();
+});
+
+test("a widget reading a folder starts before Dataview and follows the vault's events", async () => {
+  const s = slow();
+  const index = app.plugins.plugins.dataview.api.index;
+
+  index.initialized = false;
+  const { host } = mount({ load: s.load, watches: ["Ledger/"] });
+  try {
+    assert.equal(s.loads.length, 1);
+    s.loads[0].ok({ n: 1 }); await settle();
+    bus.fire("modify", { path: "Notes/Today.md" });
+    assert.equal(s.loads.length, 1);
+    bus.fire("modify", { path: "Ledger/2026-11.md" });
+    assert.equal(s.loads.length, 2);
+  } finally {
+    host.unload();
+    index.initialized = true;
+  }
 });
 
 test("a watched JSON file (Dataview doesn't index it) reloads on the vault's own events, another doesn't", async () => {

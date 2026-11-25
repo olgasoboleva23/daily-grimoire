@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { useRedraw, useNewDay, useBusy, useDataviewChanges, useWhenIndexed, useTabDate } from "#/composables/use.js";
+import { useRedraw, useNewDay, useBusy, useDataviewChanges, useFileChanges, useWhenIndexed, useTabDate } from "#/composables/use.js";
 import { openNote } from "#/components/app/open.ts";
 import { setApp } from "#/helpers/app.js";
 
@@ -62,18 +62,12 @@ test("useBusy: a write to a watched file adds the class, a write elsewhere doesn
   assert.equal(el.classList.has("x--busy"), true);
 });
 
-test("useDataviewChanges: a re-indexed file it watches runs fn, another doesn't; the note option also listens to that note", () => {
+test("useDataviewChanges: a re-indexed file it watches runs fn, another does not", () => {
   const c = component(), seen = [];
   useDataviewChanges(c, () => seen.push("tasks"), { watched: p => p.startsWith("Tasks/") });
   c.events["dataview:metadata-change"][0]("update", { path: "Notes/a.md" });
   c.events["dataview:metadata-change"][0]("update", { path: "Tasks/a.md" });
   assert.deepEqual(seen, ["tasks"]);
-  const w = component(), drawn = [];
-  useDataviewChanges(w, () => drawn.push(1), { note: "Home.md" });
-  w.events["dataview:metadata-change"][0]("update", { path: "Any.md" });   // no watched: any file
-  w.events.changed[0]({ path: "Other.md" });
-  w.events.changed[0]({ path: "Home.md" });
-  assert.equal(drawn.length, 2);
 });
 
 test("useWhenIndexed: now when Dataview's index is ready (or Dataview is off), else once it's built, one time", () => {
@@ -148,7 +142,7 @@ test("Recipes follows the currently linked notes on indexing, rename and deletio
   const c = component(), dish = { link: "Menu/A.md" };
   let draws = 0;
   const linked = path => blocks.recipes.watchesNote({ dishes: [dish] }, path);
-  useDataviewChanges(c, () => draws++, { linked });
+  useFileChanges(c, () => draws++, linked, true);
   c.events.changed[0]({ path: "Daily.md" });
   c.events.changed[0]({ path: dish.link });
   dish.link = "Elsewhere/B.md";

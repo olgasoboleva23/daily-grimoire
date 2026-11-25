@@ -45,30 +45,18 @@ export function useBusy(c, watched, el, cls) {
   }));
 }
 
-// fn() a moment (delay ms) after Dataview re-indexes a file that watched(path) says yes to (no
-// watched: any file); with `note`, also when that note changes (Obsidian's own event, before
-// Dataview has it)
+// fn() after Dataview re-indexes a file this widget reads through it.
 /**
  * @param {any} c @param {() => void} fn
- * @param {{ watched?: (path: string) => boolean, linked?: (path: string) => boolean,
- *   note?: string, delay?: number }} [options]
+ * @param {{ watched?: (path: string) => boolean, delay?: number }} [options]
  */
-export function useDataviewChanges(c, fn, options = {}) {
-  const { watched = null, linked = null, note = null, delay = 1000 } = options;
+export function useDataviewChanges(c, fn, { watched, delay = 1000 } = {}) {
   const later = debounce(fn, delay, true);
+
   c.register(() => later.cancel());
   c.registerEvent(c.app.metadataCache.on("dataview:metadata-change", (_type, file) => {
     if (!watched || watched(file?.path ?? "")) later();
   }));
-  if (note || linked) c.registerEvent(c.app.metadataCache.on("changed", f => {
-    if (f.path === note || linked?.(f.path)) later();
-  }));
-  if (linked) {
-    c.registerEvent(c.app.vault.on("delete", f => linked(f.path) && later()));
-    c.registerEvent(c.app.vault.on("rename", (f, old) => {
-      if (linked(old) || linked(f.path)) later();
-    }));
-  }
 }
 
 // fn() each time Dataview's index is built (a cold start: Dataview reads the vault after the tabs
@@ -76,18 +64,19 @@ export function useDataviewChanges(c, fn, options = {}) {
 export const useIndexReady = (c, fn) =>
   c.registerEvent(c.app.metadataCache.on("dataview:index-ready", fn));
 
-// fn() a moment (delay ms) after Obsidian's own event for a file in `paths` (exact paths):
-// for the files Dataview doesn't index, like .json
-export function useFileChanges(c, fn, paths, delay = 1000) {
+// fn() after Obsidian changes a matching file or updates the metadata for a matching note.
+export function useFileChanges(c, fn, watched, metadata = false) {
+  const delay = 1000;
   const later = debounce(fn, delay, true);
   c.register(() => later.cancel());
 
   for (const ev of ["modify", "create", "delete"]) {
-    c.registerEvent(c.app.vault.on(ev, f => paths.includes(f.path) && later()));
+    c.registerEvent(c.app.vault.on(ev, f => watched(f.path) && later()));
   }
 
   c.registerEvent(c.app.vault.on("rename", (f, old) =>
-    (paths.includes(f.path) || paths.includes(old)) && later()));
+    (watched(f.path) || watched(old)) && later()));
+  if (metadata) c.registerEvent(c.app.metadataCache.on("changed", f => watched(f.path) && later()));
 }
 
 // fn() once Dataview's index is there: now (or now when Dataview is off: fn shows what's missing),

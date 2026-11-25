@@ -31,6 +31,7 @@ export function useTheme(plugin) {
   // The store reads config before its version changes; apply before widgets rebuild charts.
   plugin.register(watch(() => (taskStore.version.value, config.theme), apply,
     { immediate: true, flush: "sync" }));
-  useFileChanges(plugin, apply, images);   // an image can arrive after config during sync
+  // An image can arrive after config during sync.
+  useFileChanges(plugin, apply, path => images.includes(path));
   plugin.register(clear);
 }
