@@ -2,7 +2,7 @@ import "./stubs/dom.mjs";
 // Recurring-task writes keep the next variant in JSON and retain native Tasks lines.
 import { test, before as beforeTests } from "node:test";
 import assert from "node:assert/strict";
-import { Task, nextVariantAfter } from "#/models/task.js";
+import { Task, nextVariantAfter } from "#/entities/task/index.js";
 import { vault } from "./stubs/vault.mjs";
 import { MASTER, TASK_RECORDS } from "#/shared/config/index.js";
 import { Notice } from "obsidian";

@@ -8,7 +8,8 @@ import { useObsidian } from "#/shared/lib/vueApp.ts";
 import { taskStore } from "#/store/tasks.js";
 import config from "#/shared/config/index.js";
 import { todayYmd } from "#/shared/lib/dates.js";
-import { CalendarData, T, findTask, taskInfo } from "#/models/calendarData.js";
+import { CalendarData, calendarTaskInfo } from "#/models/calendarData.js";
+import { T, findTask } from "#/entities/task/index.js";
 import { baseDate, shownDays } from "#/store/calendar.js";
 import { makeActions } from "#/controllers/calendar.js";
 import { dragState } from "#/composables/drag.js";
@@ -27,7 +28,7 @@ const view = {
   state, waits: useLater(owner), drag: dragState(),
   get ctx() { return data.value; },
   get actions() { return data.value.actions; },
-  info: t => taskInfo(t, data.value, app),
+  info: t => calendarTaskInfo(t, data.value, app),
   task(key) {
     const t = data.value.model && findTask(key, data.value.model.all);
 

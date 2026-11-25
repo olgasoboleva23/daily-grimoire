@@ -6,7 +6,7 @@ import { vTip } from "#/shared/ui/tooltip.js";
 import { computed, inject } from "vue";
 import TaskRow from "./TaskRow.vue";
 import DoneMarks from "./DoneMarks.vue";
-import { dayGroup } from "#/models/calendarData.js";
+import { dayGroup } from "#/entities/task/index.js";
 
 const TIMES = [["morning", "🌅 morning"], ["evening", "🌙 evening"], ["other", "🔁 other"]];
 const EDGE = [

@@ -13,13 +13,12 @@ import { addDays, todayYmd } from "#/shared/lib/dates.js";
 import { editTask } from "#/components/windows/tasks/TaskWindow/open.js";
 import { tickTask } from "#/controllers/tasks.js";
 import { toCalendar } from "#/controllers/projects.js";
-import { taskInfo } from "#/models/calendarData.js";
+import { taskInfo } from "#/entities/task/index.js";
 
 const props = defineProps({
   entry: { type: Object, required: true },   // stageTasks': { id, t, done }
 });
-const ctx = { infos: new Map(), config, actions: { canSkip: () => false } };
-const info = computed(() => taskInfo(props.entry.t, ctx, app));
+const info = computed(() => taskInfo(props.entry.t, config, app));
 const canTick = computed(() => !!tasksApi());
 const picker = ref(null);
 

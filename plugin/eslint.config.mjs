@@ -45,5 +45,5 @@ export default defineConfig([
     "vue/max-attributes-per-line": ["warn", { singleline: { max: 3 } }],
   } },
   // a 🔁 rule is read by `(m = rule.match(…)) ? … :` chains, on purpose
-  { files: ["src/models/repeats.js"], rules: { "no-cond-assign": "off" } },
+  { files: ["src/entities/task/model/repeat.js"], rules: { "no-cond-assign": "off" } },
 ]);

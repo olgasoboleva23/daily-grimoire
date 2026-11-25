@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { Task } from "#/models/task.js";
+import { Task } from "#/entities/task/index.js";
 import { weekOf } from "#/shared/lib/dates.js";
 import { Goal, reminders } from "#/entities/goal/index.js";
 import { CycleLog } from "#/entities/cycle/index.js";

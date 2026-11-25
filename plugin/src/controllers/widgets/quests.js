@@ -4,7 +4,7 @@
 // widgets/quests/.
 import config from "#/shared/config/index.js";
 import { pageDay, ymd } from "#/shared/lib/dates.js";
-import { T, taskKey, daytimeMark, daytimeRank } from "#/models/calendarData.js";
+import { T, taskKey, daytimeMark, daytimeRank } from "#/entities/task/index.js";
 import { taskStore } from "#/store/tasks.js";
 
 export async function loadQuests({ dv }) {

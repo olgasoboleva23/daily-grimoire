@@ -3,10 +3,11 @@
 import { Notice } from "obsidian";
 import { edit, editLine, serial, undoLines } from "#/shared/vault/index.js";
 import { tasksApi, app } from "#/shared/host/index.js";
-import { Task, VariantProblem, nextVariantAfter, variantsProblem } from "#/models/task.js";
+import {
+  Task, VariantProblem, newId, nextVariantAfter, recordOf, variantsProblem,
+} from "#/entities/task/index.js";
 import { parseNote } from "#/shared/lib/noteLines.js";
 import { MASTER, TASK_RECORDS } from "#/shared/config/index.js";
-import { nextId } from "#/shared/lib/ids.js";
 import { records as recordsStore } from "#/store/tasks.js";
 
 // One write at a time, including its queue change and undo; dialogs do not hold the queue.
@@ -98,13 +99,6 @@ async function changeTaskLine(t, fn, patch = {}, expected = null) {
   });
 }
 
-// The task window's picks as record fields.
-const recOf = p => ({
-  difficulty: p.difficulty ?? null, area: p.area ?? null, daytime: p.daytime ?? null,
-  sticker: p.sticker ?? null,
-  ..."variants" in p ? { variants: p.variants, currVariant: p.currVariant } : {},
-});
-
 // Merge a patch into tasks.json ({ id: fields } merges into the record), one write; an optional
 // snapshot rejects stale modal edits. The file is made when missing.
 // Between devices, Remotely Save still uses last writer wins.
@@ -118,11 +112,6 @@ export const saveRecords = (patch, expected = null) => recordsStore.edit(all => 
   for (const [id, p] of Object.entries(patch)) all[id] = { ...all[id], ...p };
   return all;
 });
-
-// the next free id: the biggest t<N> of the records and of the lines (a line whose record was lost
-// to a sync conflict keeps its id) plus one; other keys are skipped
-export const newId = (records, tasks = []) =>
-  nextId("t", [...records.keys(), ...tasks.map(t => Task.of(t).id).filter(Boolean)]);
 
 // Keep the raw line and record as they were before either window opens.
 export async function readTaskEdit(t) {
@@ -153,7 +142,7 @@ export async function readTaskEdit(t) {
 export async function saveTaskEdit(t, { record, line }, pick, edited) {
   if (!t.pool && !edited) return;
   const id = Task.of(t).id;
-  const patch = recOf(pick);
+  const patch = recordOf(pick);
 
   if ("pool" in pick) patch.pool = pick.pool || undefined;
   if (t.pool) {
@@ -209,7 +198,7 @@ async function saveNew(name, pick, result, oldId = null) {
 
   const patch = {
     ...old ? {} : { goal: null, after: null },
-    ...recOf(pick), name: final, ...pick.pool ? { pool: true } : {},
+    ...recordOf(pick), name: final, ...pick.pool ? { pool: true } : {},
   };
   const record = { ...records.get(id), ...patch };
   const problem = variantsProblem(record.variants ?? [], record.currVariant);

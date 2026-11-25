@@ -9,7 +9,7 @@
 import { computed, reactive } from "vue";
 import { AudioEngine } from "#/shared/lib/sounds.js";
 import { SOUNDS } from "#/shared/config/index.js";
-import { canReorder } from "#/models/calendarData.js";
+import { canReorder } from "#/entities/task/index.js";
 
 const move = new AudioEngine(`${SOUNDS}/snd_scroll_menu.wav`);
 const gem = new AudioEngine(`${SOUNDS}/snd_pickup_gem01.wav`);

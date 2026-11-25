@@ -7,7 +7,7 @@ import { computed, inject, reactive, watch } from "vue";
 import UiButton from "#/shared/ui/UiButton/index.vue";
 import TaskText from "#/components/pages/calendar/TaskText.vue";
 import TaskButtons from "#/components/pages/calendar/TaskButtons.vue";
-import { T } from "#/models/calendarData.js";
+import { T } from "#/entities/task/index.js";
 import { dm } from "#/shared/lib/dates.js";
 import { AudioEngine } from "#/shared/lib/sounds.js";
 import { ASSETS, SOUNDS } from "#/shared/config/index.js";

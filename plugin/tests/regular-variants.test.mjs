@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { vault } from "./stubs/vault.mjs";
 import { MASTER, TASK_RECORDS } from "#/shared/config/index.js";
 
-let mount, reactive, shallowReactive, nextTick, Regulars, CalendarData, taskInfo;
+let mount, reactive, shallowReactive, nextTick, Regulars, CalendarData, calendarTaskInfo;
 const DAY = "2026-11-13";
 const records = {
   t1: { name: "Training", variants: ["Core", "Arms"], goal: "workout", difficulty: "medium", area: "body" },
@@ -15,7 +15,7 @@ before(async () => {
   ({ mount } = await import("@vue/test-utils"));
   ({ reactive, shallowReactive, nextTick } = await import("vue"));
   Regulars = (await import("#/components/pages/calendar/CalendarPanel/RegularsTab.vue")).default;
-  ({ CalendarData, taskInfo } = await import("#/models/calendarData.js"));
+  ({ CalendarData, calendarTaskInfo } = await import("#/models/calendarData.js"));
 });
 
 function draw(active = "Core", recs = records, paused = false) {
@@ -29,7 +29,7 @@ function draw(active = "Core", recs = records, paused = false) {
   };
   const view = shallowReactive({ ctx: context(active, recs, paused), drag: {},
     actions: {}, task: () => null,
-    info(t) { return taskInfo(t, view.ctx, info.app); },
+    info(t) { return calendarTaskInfo(t, view.ctx, info.app); },
   });
   const w = mount(Regulars, { global: { provide: { calendar: view, flipped: reactive(new Set()) } } });
   return { w, update: (id, all = recs, pause = false) => { view.ctx = context(id, all, pause); } };

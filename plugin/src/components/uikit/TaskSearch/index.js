@@ -4,7 +4,7 @@ import { Search } from "#/shared/ui/Search/index.ts";
 import config from "#/shared/config/index.js";
 import { dm } from "#/shared/lib/dates.js";
 import { findChoices } from "#/shared/lib/find.js";
-import { Task, taskChoices } from "#/models/task.js";
+import { Task, taskChoices } from "#/entities/task/index.js";
 import { taskStore } from "#/store/tasks.js";
 import { app } from "#/shared/host/index.js";
 

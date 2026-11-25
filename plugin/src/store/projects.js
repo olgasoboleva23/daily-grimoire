@@ -3,7 +3,7 @@
 
 import { computed } from "vue";
 import { stageIndex } from "#/entities/project/index.js";
-import { T } from "#/models/calendarData.js";
+import { T } from "#/entities/task/index.js";
 import { taskStore } from "#/store/tasks.js";
 
 export const stageEntries = computed(() => {

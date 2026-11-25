@@ -6,7 +6,7 @@ import { edit } from "#/shared/vault/index.js";
 import { notes } from "#/store/tasks.js";
 import { removeProjectRecord, removeStageRecord } from "#/entities/project/index.js";
 import { parseNote } from "#/shared/lib/noteLines.js";
-import { Task } from "#/models/task.js";
+import { Task } from "#/entities/task/index.js";
 import { editTaskLine } from "#/controllers/tasks.js";
 
 // Check the snapshot from the confirmation and keep covers referenced by another project.

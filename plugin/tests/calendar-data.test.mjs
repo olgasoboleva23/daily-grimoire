@@ -1,7 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { weekOf } from "#/shared/lib/dates.js";
-import { T, CalendarData, canReorder } from "#/models/calendarData.js";
+import { T, canReorder } from "#/entities/task/index.js";
+import { CalendarData } from "#/models/calendarData.js";
 import { idTask } from "./stubs/idTask.mjs";
 
 // the store's tasks: { status, text, path, line, rec }, from a readable spec (idTask)
@@ -104,7 +105,7 @@ test("meta lines", () => {
 });
 
 test("a task's key finds the same task again: by its line, after lines moved, never another task", async () => {
-  const { taskKey, findTask } = await import("#/models/calendarData.js");
+  const { taskKey, findTask } = await import("#/entities/task/index.js");
   const at = (line, status, spec) => ({ status, ...idTask(spec), path: "Tasks/Master.md", line });
   const workout = at(10, " ", "#area/body workout [due:: 2026-10-30]"), skipped = at(11, "-", "#area/body workout [due:: 2026-10-28] [cancelled:: 2026-10-28]");
   const key = taskKey(workout);
@@ -186,8 +187,8 @@ test("a day's parts: a task whose record has after: <id> stands right under the 
   assert.equal(m.dayParts("2026-10-29", shown).routineRows[0].follows, undefined);
 });
 
-test("taskInfo: what a part shows of a task — its key, area, text, label, its sticker as an image, whether it can be skipped; once per draw", async () => {
-  const { taskInfo } = await import("#/models/calendarData.js");
+test("calendarTaskInfo: what a part shows of a task — its key, area, text, label, its sticker as an image, whether it can be skipped; once per draw", async () => {
+  const { calendarTaskInfo } = await import("#/models/calendarData.js");
   const t = { ...idTask("#⭐easy #area/body stretch ![[fist.webp|28]] [repeat:: every day] [due:: 2026-11-03]"), status: " ", path: "Tasks/Master.md", line: 4 };
   let lookups = 0;
   const app = {
@@ -195,9 +196,9 @@ test("taskInfo: what a part shows of a task — its key, area, text, label, its 
     vault: { getResourcePath: f => `app://${f.path}` },
   };
   const ctx = { infos: new Map(), config: { areaIcons: { "body": "🌺" }, areaColors: { body: "#e8609a" } }, actions: { canSkip: () => true } };
-  const i = taskInfo(t, ctx, app);
+  const i = calendarTaskInfo(t, ctx, app);
   assert.deepEqual({ ...i, key: typeof i.key }, { key: "string", area: "body", color: "#e8609a", difficulty: "easy", goal: false, text: "stretch", pool: false, label: "🌺 stretch", sticker: "app://Assets/fist.webp", canSkip: true, canUnplan: false, daytime: null });
-  assert.equal(taskInfo(t, ctx, app), i);   // the same object again, no new lookups
+  assert.equal(calendarTaskInfo(t, ctx, app), i);   // the same object again, no new lookups
   assert.equal(lookups, 1);
 });
 
@@ -247,12 +248,12 @@ test("a day's one-offs go morning, none, evening, then by order; the 🔁 box ke
   assert.deepEqual(texts(data([late, plain, early, early2]).byDay[TODAY].map(e => e.t)), ["early2", "early", "plain", "late"]);
 });
 
-test("taskInfo: a one-off's time is shown, a 🔁 task's is left to its box heading", async () => {
-  const { taskInfo } = await import("#/models/calendarData.js");
+test("calendarTaskInfo: a one-off's time is shown, a 🔁 task's is left to its box heading", async () => {
+  const { calendarTaskInfo } = await import("#/models/calendarData.js");
   const app = { metadataCache: { getFirstLinkpathDest: () => null }, vault: {} };
   const ctx = { infos: new Map(), config: { areaIcons: {}, areaColors: {} }, actions: { canSkip: () => false } };
-  assert.equal(taskInfo(task(" ", "tea #time/evening [due:: 2026-10-28]"), ctx, app).daytime, "evening");
-  assert.equal(taskInfo(task(" ", "run #time/evening [repeat:: every day] [due:: 2026-10-28]"), ctx, app).daytime, null);
+  assert.equal(calendarTaskInfo(task(" ", "tea #time/evening [due:: 2026-10-28]"), ctx, app).daytime, "evening");
+  assert.equal(calendarTaskInfo(task(" ", "run #time/evening [repeat:: every day] [due:: 2026-10-28]"), ctx, app).daytime, null);
 });
 
 test("a follower can stay after either member of an alternating pair", () => {

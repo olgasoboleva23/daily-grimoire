@@ -5,7 +5,7 @@ import { computed, inject } from "vue";
 import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
 import GroupCard from "./GroupCard.vue";
 import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";
-import { T } from "#/models/calendarData.js";
+import { T } from "#/entities/task/index.js";
 import { diffDays } from "#/shared/lib/dates.js";
 import { areaTitle } from "#/helpers/panelGroups.js";
 

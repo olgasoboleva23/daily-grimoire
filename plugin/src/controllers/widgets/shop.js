@@ -3,28 +3,18 @@
 // cost:: …), an affordable one bought with a click, the rest greyed out. Writes: a purchase, only
 // when the gold covers it (the Shop card and the Buy reward command), with its sound and notice.
 // The markup: widgets/shop/ShopWidget.
-import config, { ASSETS } from "#/shared/config/index.js";
+import { ASSETS } from "#/shared/config/index.js";
 import {
   appendPurchase, balance, indexedPurchases, readPurchases, readRewards,
 } from "#/entities/shop/index.js";
 import { Notice } from "obsidian";
 import { todayYmd } from "#/shared/lib/dates.js";
-import { T } from "#/models/calendarData.js";
+import { earned } from "#/entities/task/index.js";
 import { taskStore } from "#/store/tasks.js";
 import { AudioEngine } from "#/shared/lib/sounds.js";
 
-function earned() {
-  let gold = 0;
-
-  for (const t of taskStore.tasks.map(T)) {
-    if (t.isDone) gold += config.difficulties.find(d => d.key === t.difficulty)?.gold ?? 0;
-  }
-
-  return gold;
-}
-
 export async function loadShop({ dv }) {
-  const gold = balance(earned(), indexedPurchases(dv)), items = readRewards(dv);
+  const gold = balance(earned(taskStore.tasks), indexedPurchases(dv)), items = readRewards(dv);
 
   return { balance: gold, items: items.map(i => ({ ...i, affordable: gold >= i.cost })) };
 }
@@ -38,7 +28,7 @@ export function logPurchase(name, price) {
   const buy = queue.then(async () => {
     const lines = await readPurchases();
 
-    if (balance(earned(), lines) < price) return false;
+    if (balance(earned(taskStore.tasks), lines) < price) return false;
     await appendPurchase(name, price, todayYmd());
     return true;
   });

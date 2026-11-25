@@ -16,7 +16,7 @@ import { openNewProject } from "#/entities/project/index.js";
 import PromptsWindow from "#/components/windows/projects/PromptsWindow/index.vue";
 import { app, tasksApi } from "#/shared/host/index.js";
 import { tickTask } from "#/controllers/tasks.js";
-import { T } from "#/models/calendarData.js";
+import { T } from "#/entities/task/index.js";
 import { FILTERS, stageEntries } from "#/store/projects.js";
 import { coverUrl } from "../cover.js";
 import ProjectStatus from "../ProjectStatus/index.vue";

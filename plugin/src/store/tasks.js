@@ -16,7 +16,7 @@ import {
   APP_NAME, applyConfig, CONFIG, MASTER, NOTES, PROJECTS, TASK_RECORDS,
 } from "#/shared/config/index.js";
 import { parseNote } from "#/shared/lib/noteLines.js";
-import { Task } from "#/models/task.js";
+import { Task } from "#/entities/task/index.js";
 import { projectStore, projects } from "#/entities/project/index.js";
 import { collection } from "#/shared/vault/index.js";
 

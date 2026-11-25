@@ -4,8 +4,9 @@ import { Notice } from "obsidian";
 import { setApp } from "#/shared/host/index.js";
 import { logPurchase } from "#/controllers/widgets/shop.js";
 import {
-  addTask, newId, readTaskEdit, saveNewTask, saveRecords, saveTaskEdit,
+  addTask, readTaskEdit, saveNewTask, saveRecords, saveTaskEdit,
 } from "#/controllers/tasks.js";
+import { newId } from "#/entities/task/index.js";
 import { makeActions } from "#/controllers/calendar.js";
 import { CalendarData } from "#/models/calendarData.js";
 import { taskStore } from "#/store/tasks.js";

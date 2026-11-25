@@ -8,7 +8,7 @@ import UiFieldChoice from "#/shared/ui/UiFieldChoice/index.vue";
 import UiFieldText from "#/shared/ui/UiFieldText/index.vue";
 import { filled } from "#/shared/ui/Window/index.ts";
 import config from "#/shared/config/index.js";
-import { variantNames, variantsProblem } from "#/models/task.js";
+import { variantNames, variantsProblem } from "#/entities/task/index.js";
 
 const props = defineProps({
   preset: { type: Object, default: () => ({}) },

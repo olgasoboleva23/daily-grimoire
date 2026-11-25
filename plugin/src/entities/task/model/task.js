@@ -10,8 +10,9 @@
 // (t is kept as .src, for its path and line) or a raw line with new Task(line, null, rec).
 // A pool item is a record with pool: true, no line; its copies on the days are ordinary tasks with
 // its id.
+import { nextId } from "#/shared/lib/ids.js";
 import { addDays, diffDays } from "#/shared/lib/dates.js";
-import { projectRepeats } from "./repeats.js";
+import { projectRepeats } from "./repeat.js";
 import { ANY, FIELD, LineItem, lineOf, withField } from "#/shared/lib/lineItem.js";
 
 // the fields that put a task on a day
@@ -172,57 +173,27 @@ export const historyOf = list => {
   return by;
 };
 
-// Every record of tasks.json (pool ones too) once, for the "New task" search: its name and picks,
-// how many lines with its id are done and when last; by `areaOrder` (area keys, the rest after),
-// then the most done and the most recent first.
-export function taskChoices(tasks, records, areaOrder) {
-  const done = historyOf(tasks.filter(t => t.id && t.isDone));
-  const rank = area => areaOrder.indexOf(area) >>> 0;
+export const T = t => (t.uiTask ??= Task.of(t));   // a Dataview task's Task, made once
 
-  return [...records].map(([id, r]) => ({
-    id, name: r.name ?? id, area: r.area ?? null,
-    picks: new Task("", null, r).picks,
-    done: done.get(id)?.count ?? 0, last: done.get(id)?.last || null,
-  })).sort((a, b) => rank(a.area) - rank(b.area) || b.done - a.done
-    || (b.last ?? "").localeCompare(a.last ?? ""));
+// A task's key in the calendar's rows (TaskRow, TaskCard, Missed): its file, line, status and id
+// (its words without one). It names the same task in every draw: findTask() takes the task at that
+// line if it still has that id and that status, else the nearest one in the file that has them
+// (lines move when a task is added on top), else none — never another task.
+const stateOf = t => t.pool ? "p" : t.status;
+
+export const taskKey = t => [t.path, t.line, stateOf(t), T(t).key].join("|");
+
+export function findTask(key, tasks) {
+  const [path, line, state, ...rest] = String(key).split("|");
+
+  if (!rest.length) return null;
+  const text = rest.join("|"), want = Number(line);
+  const same = tasks.filter(t => t.path === path && stateOf(t) === state && T(t).key === text);
+
+  return same.sort((a, b) => Math.abs(a.line - want) - Math.abs(b.line - want))[0] ?? null;
 }
 
-// A 🔁 task's variants in turn: the current one belongs to tasks.json. Tasks owns the lines,
-// dates and recurrence; a completion with a generated next copy advances the JSON queue once.
-// a record or a log the queue can't move on: shown to the user, nothing written
-export class VariantProblem extends Error {}
-
-export const variantNames = text => text.split("\n").map(s => s.trim()).filter(Boolean);
-
-export function variantsProblem(variants, next) {
-  if (!Array.isArray(variants) || variants.some(v => typeof v !== "string" || !v.trim()))
-    return "Variant names must be non-empty text";
-  if (new Set(variants.map(v => v.toLowerCase())).size !== variants.length)
-    return "Each variant needs a different name";
-  if (variants.length && !variants.includes(next)) return "Choose the next variant";
-  return null;
-}
-
-export function nextVariantAfter(before, after, record, others = []) {
-  const current = new Task(before);
-  const variants = record?.variants ?? [];
-
-  if (!variants.length || !current.isOpen || !after) return null;
-  const lines = after.split("\n"), tasks = lines.map(l => new Task(l));
-  const done = tasks.filter(t => t.id === current.id && t.isDone);
-  const open = tasks.filter(t => t.id === current.id && t.isOpen && t.isRecurring);
-
-  if (!done.length || !open.length) return null;
-  const variant = record.currVariant ?? variants[0];
-  const problem = variantsProblem(variants, variant);
-
-  if (problem) throw new VariantProblem(problem);
-  if (done.length !== 1 || open.length !== 1)
-    throw new VariantProblem(`Ambiguous variant copies for ${current.id}`);
-  if (others.some(l => {
-    const t = new Task(l);
-
-    return t.isOpen && t.id === current.id;
-  })) throw new VariantProblem("Task has another open copy; resolve it before completing");
-  return variants[(variants.indexOf(variant) + 1) % variants.length];
-}
+// the next free id: the biggest t<N> of the records and of the lines (a line whose record was lost
+// to a sync conflict keeps its id) plus one; other keys are skipped
+export const newId = (records, tasks = []) =>
+  nextId("t", [...records.keys(), ...tasks.map(t => Task.of(t).id).filter(Boolean)]);

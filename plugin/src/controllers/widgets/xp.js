@@ -5,7 +5,7 @@
 // The markup: widgets/xp/.
 import config from "#/shared/config/index.js";
 import { pageDay, todayYmd, ymd } from "#/shared/lib/dates.js";
-import { T } from "#/models/calendarData.js";
+import { T } from "#/entities/task/index.js";
 import { taskStore } from "#/store/tasks.js";
 import { levelInfo, taskXp, xpLegend } from "#/models/xp.js";
 import { vitals } from "#/models/vitals.js";

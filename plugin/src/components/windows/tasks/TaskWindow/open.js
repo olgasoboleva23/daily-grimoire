@@ -6,7 +6,7 @@ import { readTaskEdit, saveNewTask, saveTaskEdit } from "#/controllers/tasks.js"
 import { app, tasksApi } from "#/shared/host/index.js";
 import { todayYmd } from "#/shared/lib/dates.js";
 import { STICKERS } from "#/shared/config/index.js";
-import { Task } from "#/models/task.js";
+import { Task } from "#/entities/task/index.js";
 import TaskWindow from "./index.vue";
 
 function openTaskWindow(props) {

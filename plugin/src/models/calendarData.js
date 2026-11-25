@@ -1,32 +1,14 @@
-// The calendar's model, no DOM (CalendarData), and the keys that name a task in its markup.
-// Tasks are Dataview tasks ({ status, text, path, line }), each with its Task.
-import { Task, historyOf } from "./task.js";
+// Calendar history and entries for the days and panels drawn by the calendar.
+import {
+  T, Task, daytimeRank, historyOf, projectRepeats, taskInfo,
+} from "#/entities/task/index.js";
 import { addDays, diffDays, dm, weekday } from "#/shared/lib/dates.js";
-import { projectRepeats } from "./repeats.js";
-
-export const T = t => (t.uiTask ??= Task.of(t));   // a Dataview task's Task, made once
 
 const ORDER = { open: 0, ghost: 1, done: 2 };
 
-// a day's group: one-offs, or a 🔁 task by its time of day (morning, evening, other)
-export const dayGroup = t => !T(t).isRecurring ? "one"
-  : ["morning", "evening"].includes(T(t).daytime) ? T(t).daytime : "other";
-
-// the mark of a task's time of day, "" without one
-export const daytimeMark = time => ({ morning: "🌅 ", evening: "🌙 " })[time] ?? "";
-
-// morning → none → evening
-export const daytimeRank = time => ["morning", null, "evening"].indexOf(time);
 // a one-off's place by time; a 🔁 task keeps its box's groups, so counts as none
 const slot = t => daytimeRank(T(t).isRecurring ? null : T(t).daytime);
 
-// a task dragged onto another of its day: it moves before or after it only within its group and
-// (the order is the record's), among its siblings (a subtask under its parent), and neither follows
-// a lead (#after: it stays under it); both need an id. Told apart by id, not by object: the
-// dragged task is from the draw its drag began in, and the tab may draw again before the drop
-export const canReorder = (a, b) => !!T(a).id && !!T(b).id && T(a).id !== T(b).id
-  && a.parent === b.parent
-  && dayGroup(a) === dayGroup(b) && T(a).daytime === T(b).daytime && !T(a).after && !T(b).after;
 // a task with #after/id/<id> right under the task with #id/<id> when both are in `list` (after its
 // earlier followers), with .follows set to it; the rest in their order
 const chain = list => {
@@ -189,43 +171,14 @@ export class CalendarData {
   }
 }
 
-// A task's key in the calendar's rows (TaskRow, TaskCard, Missed): its file, line, status and id
-// (its words without one). It names the same task in every draw: findTask() takes the task at that
-// line if it still has that id and that status, else the nearest one in the file that has them
-// (lines move when a task is added on top), else none — never another task.
-const stateOf = t => t.pool ? "p" : t.status;
+// A calendar view caches presentation within one draw and adds its own available actions.
+export function calendarTaskInfo(t, ctx, app) {
+  if (!ctx.infos.has(t)) {
+    const canSkip = ctx.actions.canSkip(t);
 
-export const taskKey = t => [t.path, t.line, stateOf(t), T(t).key].join("|");
+    ctx.infos.set(t, { ...taskInfo(t, ctx.config, app),
+      canSkip, canUnplan: !!T(t).date && !canSkip });
+  }
 
-export function findTask(key, tasks) {
-  const [path, line, state, ...rest] = String(key).split("|");
-
-  if (!rest.length) return null;
-  const text = rest.join("|"), want = Number(line);
-  const same = tasks.filter(t => t.path === path && stateOf(t) === state && T(t).key === text);
-
-  return same.sort((a, b) => Math.abs(a.line - want) - Math.abs(b.line - want))[0] ?? null;
-}
-
-// what a part shows of a task, with its key; made once per draw (ctx.infos). `app`
-// finds the sticker's picture, ctx.actions whether it can be skipped
-export function taskInfo(t, ctx, app) {
-  const known = ctx.infos.get(t);
-
-  if (known) return known;
-  const task = T(t), area = task.area;
-  const stickerFile = task.sticker && app.metadataCache.getFirstLinkpathDest(task.sticker, t.path);
-  const i = {
-    key: taskKey(t), area, color: ctx.config.areaColors[area] ?? null,
-    difficulty: task.difficulty, goal: !!task.goal, text: task.text,
-    pool: !!t.pool,
-    daytime: task.isRecurring ? null : task.daytime,   // a 🔁 task's is its box heading's
-    label: `${ctx.config.areaIcons[area] ?? ""} ${task.text}`.trim(),
-    sticker: stickerFile ? app.vault.getResourcePath(stickerFile) : null,
-
-    canSkip: ctx.actions.canSkip(t),
-    canUnplan: !!task.date && !ctx.actions.canSkip(t),
-  };
-  ctx.infos.set(t, i);
-  return i;
+  return ctx.infos.get(t);
 }

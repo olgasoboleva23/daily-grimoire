@@ -4,7 +4,7 @@ import { computed, inject } from "vue";
 import UiEmpty from "#/shared/ui/UiEmpty/index.vue";
 import GroupCard from "./GroupCard.vue";
 import TaskCard from "#/components/pages/calendar/TaskCard/index.vue";
-import { T } from "#/models/calendarData.js";
+import { T } from "#/entities/task/index.js";
 import { calendarProjects } from "#/helpers/panelGroups.js";
 
 const EMPTY_PROJECTS = "Projects are kept in projects.json";

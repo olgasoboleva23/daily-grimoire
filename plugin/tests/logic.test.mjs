@@ -3,11 +3,10 @@ import assert from "node:assert/strict";
 import { monthGrid, weekOf } from "#/shared/lib/dates.js";
 import { supplyStats, marketChoices } from "#/models/market.js";
 import { findChoices } from "#/shared/lib/find.js";
-import { projectRepeats, ruleText } from "#/models/repeats.js";
+import { Task, projectRepeats, ruleText } from "#/entities/task/index.js";
 import { levelInfo, xpLegend } from "#/models/xp.js";
 import { vitals } from "#/models/vitals.js";
 import { mana, mpPhases, mpLine, mpTable } from "#/entities/cycle/index.js";
-import { Task } from "#/models/task.js";
 
 // 2026-10-19 is a Monday
 test("weeks", () => {

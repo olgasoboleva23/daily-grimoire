@@ -1,4 +1,5 @@
 import "./stubs/dom.mjs";
+import { T, findTask } from "#/entities/task/index.js";
 import { projectStore } from "#/entities/project/index.js";
 import { test, before, mock } from "node:test";
 import assert from "node:assert/strict";
@@ -51,15 +52,15 @@ function mount(over = {}, tasksApi = {}, source = { tasks: TASKS(), poolLines: [
     model: new data.CalendarData({ ...source, days, today: TODAY }),
     config: { areas: [{ key: "body", label: "🌺 Body", icon: "🌺", color: "#e8609a" }], areaIcons: {}, areaMap: {}, areaColors: {} },
   });
-  const text = data.T;
+  const text = T;
   ctx.actions = { ...actions.makeActions(ctx), tick: t => ticked.push(t),
     place: (t, day, done) => placed.push([text(t).text, day, done]), unplan: t => unplanned.push(text(t).text),
     reorder: (t, to, after) => moved.push([text(t).text, text(to).text, after]) };
   const tab = new Component();   // the tab: owns the ticks waiting their 2 s
 
   tab.load();
-  const view = { state: st, ctx, actions: ctx.actions, waits: useLater(tab), drag: dragState(), info: t => data.taskInfo(t, ctx, { metadataCache:
-    { getFirstLinkpathDest: () => null }, vault: {} }), task: k => data.findTask(k, ctx.model.all) };
+  const view = { state: st, ctx, actions: ctx.actions, waits: useLater(tab), drag: dragState(), info: t => data.calendarTaskInfo(t, ctx, { metadataCache:
+    { getFirstLinkpathDest: () => null }, vault: {} }), task: k => findTask(k, ctx.model.all) };
   const el = document.body.appendChild(document.createElement("div"));
   createApp(Tab).provide("calendar", view).mount(el);
   return { el, st, ticked, placed, moved, unplanned, tab, view };
@@ -101,7 +102,7 @@ test("a tick is written 2 s later; unticked in time, nothing", async () => {
     mock.timers.tick(1999);
     assert.equal(ticked.length, 0);
     mock.timers.tick(1);
-    assert.deepEqual(ticked.map(t => data.T(t).text), ["walk"]);
+    assert.deepEqual(ticked.map(t => T(t).text), ["walk"]);
     const stretch = el.querySelector(".ui-cal__routine-list .ui-cal__task--open input");
     stretch.checked = true; stretch.dispatchEvent(new Event("change"));
     mock.timers.tick(1500);
@@ -266,12 +267,12 @@ test("phone: left swipes of either length reveal actions, a right swipe closes t
     touch(primary, "touchstart", 0, 0);
     mock.timers.tick(1500);
     fire(primary, "touchend");
-    assert.deepEqual(ticked.map(t => data.T(t).text), ["walk"]);
+    assert.deepEqual(ticked.map(t => T(t).text), ["walk"]);
     swipe(card(el, "plan trip"), -180);
     await vue.nextTick();
     card(el, "plan trip").querySelector(".ui-task__primary").click();
     await vue.nextTick();
-    assert.deepEqual(ticked.map(t => data.T(t).text), ["walk", "plan trip"]);
+    assert.deepEqual(ticked.map(t => T(t).text), ["walk", "plan trip"]);
     assert.equal(card(el, "plan trip"), undefined);
     const write = row(el, "write");
     swipe(write, -60);
@@ -294,7 +295,7 @@ test("phone: left swipes of either length reveal actions, a right swipe closes t
     fire(move, "touchend");
     assert.deepEqual(unplanned, ["write"]);
     const removed = [];
-    view.actions.remove = t => removed.push(data.T(t).text);
+    view.actions.remove = t => removed.push(T(t).text);
     const stretch = row(el, "stretch");
     swipe(stretch, -60);
     await vue.nextTick();
@@ -359,9 +360,9 @@ test("phone: pool actions add an open copy today; Missed actions complete on the
       poolLines: [{ id: "t900", rec: { name: "pool chore" }, path: "Pool.md" }],
     });
     const added = [], completed = [], today = [];
-    view.actions.fromPool = (t, day, done) => added.push([data.T(t).text, day, done]);
-    view.actions.doneOnItsDay = t => completed.push([data.T(t).text, data.T(t).date]);
-    view.actions.toToday = t => today.push(data.T(t).text);
+    view.actions.fromPool = (t, day, done) => added.push([T(t).text, day, done]);
+    view.actions.doneOnItsDay = t => completed.push([T(t).text, T(t).date]);
+    view.actions.toToday = t => today.push(T(t).text);
     const pool = card(el, "pool chore");
     swipe(pool, -60);
     await vue.nextTick();
